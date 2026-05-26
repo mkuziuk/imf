@@ -1,0 +1,6 @@
+jupyterlab
+ipykernel
+nbconvert
+matplotlib
+numpy
+pandas
