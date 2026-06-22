@@ -167,12 +167,23 @@ To make the sequential residual updates comparable across the full stage grid, t
 notebook uses one shared \(y\)-axis range for every panel in this grid. Other
 notebook plots keep their own automatic vertical scaling.
 
-\begin{figure}[H]
+\begin{figure}[p]
 \centering
-\includegraphics[width=\linewidth,height=0.78\textheight,keepaspectratio]{figures/gd_imrf/imf_stages.png}
-\caption{For each stage, the notebook shows the residual before filtering, the IMF
-removed at that stage, and the residual after subtraction. This grid is the only
-plot group with fixed shared \(y\)-axis limits.}
+\makebox[\linewidth][c]{%
+\includegraphics[width=1.12\linewidth,height=0.84\textheight,keepaspectratio]{figures/gd_imrf/imf_stages_top.png}%
+}
+\caption{Residual updates and removed IMFs for the first half of the stage grid.
+Each row shows the residual before filtering, the removed IMF, and the residual
+after subtraction.}
+\end{figure}
+
+\begin{figure}[p]
+\centering
+\makebox[\linewidth][c]{%
+\includegraphics[width=1.12\linewidth,height=0.84\textheight,keepaspectratio]{figures/gd_imrf/imf_stages_bottom.png}%
+}
+\caption{Residual updates and removed IMFs for the second half of the stage grid.
+Both halves use the same shared \(y\)-axis limits from the notebook.}
 \end{figure}
 
 The decomposition reconstructs the observation up to numerical precision:
