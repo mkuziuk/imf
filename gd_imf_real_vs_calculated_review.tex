@@ -37,7 +37,7 @@ from the same signal and noise settings. The notebook compares two cases:
 \text{With contamination }p=0.2: & \text{clean robust IMF vs. observed robust IMF}.
 \end{array}
 \]
-Thus the clean reference uses the same contrast as the estimator in each case.
+Thus the clean reference uses the same contrast as the estimator in each case.\newline
 
 There are two different error quantities in the notebook.
 
@@ -66,8 +66,7 @@ without recursive residual subtraction. In the linear case this quantity is
 \[
 d_k = W_{h_k}\varepsilon.
 \]
-This is the quantity to use when checking the heuristic that larger windows have
-smaller noise error, and that the error grows as the window size decreases.
+This is the quantity showing that the error grows as the window size decreases.
 \end{enumerate}
 
 The notebook reports both \(e_k\) and \(d_k\). The robust case is nonlinear, so
