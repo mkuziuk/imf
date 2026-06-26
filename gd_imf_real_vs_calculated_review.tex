@@ -39,9 +39,19 @@ from the same signal and noise settings. The notebook compares two cases:
 \]
 Thus the clean reference uses the same contrast as the estimator in each case.
 
-The component errors below are errors of the recursive IMF components, not
-single-pass smoothing errors at each bandwidth. In the linear case, let
-\(W_{h_k}\) denote the weighted-mean smoother at bandwidth \(h_k\). Then
+There are two different error quantities in the notebook.
+
+\begin{enumerate}
+\item The \emph{recursive IMF-component error} is the error in the component that
+is actually extracted at stage \(k\):
+\[
+e_k(t)=\widetilde S^{(k)}_{\mathrm{calculated}}(t)
+-\widetilde S^{(k)}_{\mathrm{real}}(t).
+\]
+This is the error shown in the IMF grids. It is not just the stage-\(k\) smoother
+applied to the original noise, because stage \(k\) is fitted to the current
+residual after stages \(1,\ldots,k-1\) have already been subtracted. In the linear
+case, if \(W_{h_k}\) is the weighted-mean smoother at bandwidth \(h_k\), then
 \[
 e_1 = W_{h_1}\varepsilon,
 \qquad
@@ -49,18 +59,22 @@ e_k =
 W_{h_k}(I-W_{h_{k-1}})\cdots(I-W_{h_1})\varepsilon
 \quad (k>1).
 \]
-Thus the heuristic that larger windows have smaller noise error applies to the
-single-pass quantities
+
+\item The \emph{single-pass error} is the diagnostic error obtained by applying
+the stage-\(k\) smoother directly to the original clean and noisy observations,
+without recursive residual subtraction. In the linear case this quantity is
 \[
-d_k = W_{h_k}\varepsilon,
+d_k = W_{h_k}\varepsilon.
 \]
-while the recursive IMF errors also include the previous residual subtractions.
-The notebook reports both \(e_k\) and this single-pass diagnostic \(d_k\). The
-robust case is nonlinear, so \(d_k\) is computed as the difference between one
-robust local fit applied to \(Y\) and one robust local fit applied to \(X\) at the
-same bandwidth. The same interpretation applies because
-\(\widetilde S^{(k)}\) is always fitted to the current residual \(Y^{(k)}\), not
-to the original observation \(Y\).
+This is the quantity to use when checking the heuristic that larger windows have
+smaller noise error, and that the error grows as the window size decreases.
+\end{enumerate}
+
+The notebook reports both \(e_k\) and \(d_k\). The robust case is nonlinear, so
+\(d_k\) is computed as the difference between one robust local fit applied to
+\(Y\) and one robust local fit applied to \(X\) at the same bandwidth. The same
+distinction still applies because \(\widetilde S^{(k)}\) is always fitted to the
+current residual \(Y^{(k)}\), not directly to the original observation \(Y\).
 
 For the linear case, the contrast is quadratic,
 \[
@@ -140,13 +154,14 @@ The scalar error trend for each IMF count \(k\) is the RMSE over the time grid:
 \operatorname{RMSE}(e_k)
 = \left(\frac{1}{n}\sum_{t=1}^n e_k(t)^2\right)^{1/2}.
 \]
-The trend plots fit a line
+For the coefficient summaries, the notebook fits a line
 \[
 r_k = \beta_1 k + \beta_0
 \]
 to \(\operatorname{RMSE}(e_k)\), \(\operatorname{RMSE}(d_k)\),
 \(\operatorname{RMSE}(a^{-k/2}e_k)\), and
-\(\operatorname{RMSE}(a^{-k/2}d_k)\).
+\(\operatorname{RMSE}(a^{-k/2}d_k)\). The error plots themselves show only the
+stage-wise RMSE values.
 
 All four decompositions reconstruct their respective inputs up to numerical
 precision:
