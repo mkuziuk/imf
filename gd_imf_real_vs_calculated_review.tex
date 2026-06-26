@@ -39,6 +39,29 @@ from the same signal and noise settings. The notebook compares two cases:
 \]
 Thus the clean reference uses the same contrast as the estimator in each case.
 
+The component errors below are errors of the recursive IMF components, not
+single-pass smoothing errors at each bandwidth. In the linear case, let
+\(W_{h_k}\) denote the weighted-mean smoother at bandwidth \(h_k\). Then
+\[
+e_1 = W_{h_1}\varepsilon,
+\qquad
+e_k =
+W_{h_k}(I-W_{h_{k-1}})\cdots(I-W_{h_1})\varepsilon
+\quad (k>1).
+\]
+Thus the heuristic that larger windows have smaller noise error applies to the
+single-pass quantities
+\[
+d_k = W_{h_k}\varepsilon,
+\]
+while the recursive IMF errors also include the previous residual subtractions.
+The notebook reports both \(e_k\) and this single-pass diagnostic \(d_k\). The
+robust case is nonlinear, so \(d_k\) is computed as the difference between one
+robust local fit applied to \(Y\) and one robust local fit applied to \(X\) at the
+same bandwidth. The same interpretation applies because
+\(\widetilde S^{(k)}\) is always fitted to the current residual \(Y^{(k)}\), not
+to the original observation \(Y\).
+
 For the linear case, the contrast is quadratic,
 \[
 \rho(r)=\frac{r^2}{2},
@@ -80,11 +103,11 @@ Symbol / name & Notebook value & Meaning \\
 \hline
 \(n\) & \(\texttt{1000}\) & Number of sample points. \\
 \(t\) & \([0,1]\) & Normalized design interval. \\
-\(\sigma\) & \(\texttt{0.2}\) & Gaussian noise scale. \\
-\(H\) & \(2\sigma = 0.4\) & Robust contrast smoothing scale. \\
+\(\sigma\) & \(\texttt{0.4}\) & Gaussian noise scale. \\
+\(H\) & \(2\sigma = 0.8\) & Robust contrast smoothing scale. \\
 \(K\) & Epanechnikov & Kernel used for all local windows. \\
 \(a\) & \(\sqrt{2}\) & Window shrink factor used by the schedule. \\
-\(\sqrt{a}\) & \(\sqrt{\sqrt{2}}\approx1.189\) & Multiplier used in the scaled-error panels. \\
+\(a^{-k/2}\) & stage-dependent & Factor used in the scaled-error panels. \\
 window sizes & \begin{tabular}[t]{@{}l@{}}\(501,355,251,177,125,\)\\
 \(89,63,45,31\)\end{tabular} & Number of sampled
 points in each symmetric local window. \\
@@ -102,13 +125,15 @@ For every IMF stage \(k\), the notebook computes
 e_k(t)=\widetilde S^{(k)}_{\mathrm{calculated}}(t)
 - \widetilde S^{(k)}_{\mathrm{real}}(t),
 \]
-and the scaled error
+the recursive scaled error
 \[
-\sqrt{a}\,e_k(t).
+a^{-k/2}e_k(t)=\frac{e_k(t)}{a^{k/2}}.
 \]
-The grid plots show the real IMF, calculated IMF, error, and scaled error. Within
-each grid, both IMF columns use one shared min/max \(y\)-axis range, the error column
-uses its own min/max range, and the scaled-error column uses its own min/max range.
+It also computes the single-pass diagnostic \(d_k\) and its scaled version
+\(a^{-k/2}d_k\). The grid plots show the real IMF, calculated IMF, recursive
+error \(e_k\), and recursive scaled error \(a^{-k/2}e_k\). Within each grid, both
+IMF columns use one shared min/max \(y\)-axis range, the error column uses its
+own min/max range, and the scaled-error column uses its own min/max range.
 
 The scalar error trend for each IMF count \(k\) is the RMSE over the time grid:
 \[
@@ -119,9 +144,9 @@ The trend plots fit a line
 \[
 r_k = \beta_1 k + \beta_0
 \]
-to both \(\operatorname{RMSE}(e_k)\) and
-\(\operatorname{RMSE}(\sqrt{a}\,e_k)\). The notebook also repeats the fit after
-excluding the first IMF.
+to \(\operatorname{RMSE}(e_k)\), \(\operatorname{RMSE}(d_k)\),
+\(\operatorname{RMSE}(a^{-k/2}e_k)\), and
+\(\operatorname{RMSE}(a^{-k/2}d_k)\).
 
 All four decompositions reconstruct their respective inputs up to numerical
 precision:
@@ -139,7 +164,7 @@ the maximum absolute contamination value is about \(1.348\).
 For the no-contamination case, the real IMF is the linear IMF of the clean signal.
 The calculated IMF is the linear IMF of the Gaussian-noise-only observation. The
 first two grid columns compare these IMFs directly. The third and fourth columns show
-\(e_k(t)\) and \(\sqrt{a}\,e_k(t)\).
+\(e_k(t)\) and \(a^{-k/2}e_k(t)\).
 
 \begin{figure}[H]
 \centering
@@ -162,28 +187,21 @@ column-wise \(y\)-axis ranges as stages 1--5.}
 \begin{figure}[H]
 \centering
 \includegraphics[width=\linewidth]{figures/gd_imf_real_vs_calculated/linear_error_trends.png}
-\caption{No-contamination error RMSE trends over IMF count, including all IMF
-stages.}
-\end{figure}
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=\linewidth]{figures/gd_imf_real_vs_calculated/linear_error_trends_without_imf1.png}
-\caption{No-contamination error RMSE trends over IMF count after excluding IMF 1
-from the fit.}
+\caption{No-contamination recursive and single-pass error RMSE trends over IMF
+count, including all IMF stages.}
 \end{figure}
 
 \begin{table}[H]
 \centering
 \small
-\begin{tabular}{@{}lrrr@{}}
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.56\linewidth}rr@{}}
 \hline
-Metric & Minimum stage & Slope \(\beta_1\) & Intercept \(\beta_0\) \\
+Metric & Slope \(\beta_1\) & Intercept \(\beta_0\) \\
 \hline
-\(\operatorname{RMSE}(e_k)\) & 1 & \(1.024\times10^{-3}\) & \(4.432\times10^{-3}\) \\
-\(\operatorname{RMSE}(\sqrt{a}\,e_k)\) & 1 & \(1.218\times10^{-3}\) & \(5.270\times10^{-3}\) \\
-\(\operatorname{RMSE}(e_k)\) & 2 & \(1.729\times10^{-3}\) & \(-2.71\times10^{-4}\) \\
-\(\operatorname{RMSE}(\sqrt{a}\,e_k)\) & 2 & \(2.056\times10^{-3}\) & \(-3.22\times10^{-4}\) \\
+Recursive IMF \(\operatorname{RMSE}(e_k)\) & \(2.048\times10^{-3}\) & \(8.864\times10^{-3}\) \\
+Single-pass \(\operatorname{RMSE}(d_k)\) & \(8.878\times10^{-3}\) & \(6.608\times10^{-3}\) \\
+Recursive IMF \(\operatorname{RMSE}(a^{-k/2}e_k)\) & \(-8.52\times10^{-4}\) & \(1.228\times10^{-2}\) \\
+Single-pass \(\operatorname{RMSE}(a^{-k/2}d_k)\) & \(3.0\times10^{-5}\) & \(1.918\times10^{-2}\) \\
 \hline
 \end{tabular}
 \caption{Fitted line coefficients for the no-contamination linear error trends.}
@@ -218,28 +236,21 @@ column-wise \(y\)-axis ranges as stages 1--5.}
 \begin{figure}[H]
 \centering
 \includegraphics[width=\linewidth]{figures/gd_imf_real_vs_calculated/robust_error_trends.png}
-\caption{Contaminated robust error RMSE trends over IMF count, including all IMF
-stages.}
-\end{figure}
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=\linewidth]{figures/gd_imf_real_vs_calculated/robust_error_trends_without_imf1.png}
-\caption{Contaminated robust error RMSE trends over IMF count after excluding IMF 1
-from the fit.}
+\caption{Contaminated robust recursive and single-pass error RMSE trends over IMF
+count, including all IMF stages.}
 \end{figure}
 
 \begin{table}[H]
 \centering
 \small
-\begin{tabular}{@{}lrrr@{}}
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.56\linewidth}rr@{}}
 \hline
-Metric & Minimum stage & Slope \(\beta_1\) & Intercept \(\beta_0\) \\
+Metric & Slope \(\beta_1\) & Intercept \(\beta_0\) \\
 \hline
-\(\operatorname{RMSE}(e_k)\) & 1 & \(8.13\times10^{-4}\) & \(6.734\times10^{-3}\) \\
-\(\operatorname{RMSE}(\sqrt{a}\,e_k)\) & 1 & \(9.67\times10^{-4}\) & \(8.008\times10^{-3}\) \\
-\(\operatorname{RMSE}(e_k)\) & 2 & \(1.802\times10^{-3}\) & \(1.41\times10^{-4}\) \\
-\(\operatorname{RMSE}(\sqrt{a}\,e_k)\) & 2 & \(2.143\times10^{-3}\) & \(1.67\times10^{-4}\) \\
+Recursive IMF \(\operatorname{RMSE}(e_k)\) & \(1.917\times10^{-3}\) & \(1.035\times10^{-2}\) \\
+Single-pass \(\operatorname{RMSE}(d_k)\) & \(8.792\times10^{-3}\) & \(1.020\times10^{-2}\) \\
+Recursive IMF \(\operatorname{RMSE}(a^{-k/2}e_k)\) & \(-1.046\times10^{-3}\) & \(1.374\times10^{-2}\) \\
+Single-pass \(\operatorname{RMSE}(a^{-k/2}d_k)\) & \(-2.72\times10^{-4}\) & \(2.221\times10^{-2}\) \\
 \hline
 \end{tabular}
 \caption{Fitted line coefficients for the contaminated robust error trends.}
