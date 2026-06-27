@@ -21,8 +21,10 @@ The notebook
 extends the gradient-descent IMF experiment from
 \texttt{gd\_imrf.ipynb}. The signal, observation generator, window schedule,
 kernel, robust contrast, lookup grid, and robust gradient-descent implementation
-are kept the same. The new goal is to compare a clean-reference IMF with the IMF
-calculated from a noisy observation.
+follow the same experiment structure. The clean signal is now a reproducible,
+less-structured synthetic signal with baseline, chirp, transient, and texture
+components. The goal is to compare a clean-reference IMF with the IMF calculated
+from a noisy observation.
 
 The observation model is
 \[
@@ -261,10 +263,10 @@ count, including all IMF stages.}
 \hline
 Metric & Slope \(\beta_1\) & Intercept \(\beta_0\) \\
 \hline
-Recursive IMF \(\operatorname{RMSE}(e_k)\) & \(1.917\times10^{-3}\) & \(1.035\times10^{-2}\) \\
-Single-pass \(\operatorname{RMSE}(d_k)\) & \(8.792\times10^{-3}\) & \(1.020\times10^{-2}\) \\
-Recursive IMF \(\operatorname{RMSE}(a^{-k/2}e_k)\) & \(-1.046\times10^{-3}\) & \(1.374\times10^{-2}\) \\
-Single-pass \(\operatorname{RMSE}(a^{-k/2}d_k)\) & \(-2.72\times10^{-4}\) & \(2.221\times10^{-2}\) \\
+Recursive IMF \(\operatorname{RMSE}(e_k)\) & \(1.851\times10^{-3}\) & \(1.078\times10^{-2}\) \\
+Single-pass \(\operatorname{RMSE}(d_k)\) & \(8.684\times10^{-3}\) & \(1.145\times10^{-2}\) \\
+Recursive IMF \(\operatorname{RMSE}(a^{-k/2}e_k)\) & \(-1.098\times10^{-3}\) & \(1.408\times10^{-2}\) \\
+Single-pass \(\operatorname{RMSE}(a^{-k/2}d_k)\) & \(-3.727\times10^{-4}\) & \(2.310\times10^{-2}\) \\
 \hline
 \end{tabular}
 \caption{Fitted line coefficients for the contaminated robust error trends.}
