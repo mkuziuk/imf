@@ -6,7 +6,7 @@ one-dimensional signals with Gaussian noise and one-sided exponential contaminat
 ## Files
 
 - `IMF.pdf`: reference note for intrinsic robust multiscale filtering.
-- `imf_imrf_comparison.ipynb`: baseline IMF comparison using local mean, median, and
+- `imf_irmf_comparison.ipynb`: baseline IMF comparison using local mean, median, and
   weighted median filters.
 - `robust_gradient_descent_imf.ipynb`: standalone robust IMF notebook using smooth
   robust local fitting, gradient descent, and parallel execution.

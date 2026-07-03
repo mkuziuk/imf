@@ -19,7 +19,7 @@
 The notebook
 \href{https://github.com/mkuziuk/imf/blob/main/gd_imf_real_vs_calculated.ipynb}{gd\_imf\_real\_vs\_calculated.ipynb}
 extends the gradient-descent IMF experiment from
-\texttt{gd\_imrf.ipynb}. The signal, observation generator, window schedule,
+\texttt{gd\_irmf.ipynb}. The signal, observation generator, window schedule,
 kernel, robust contrast, lookup grid, and robust gradient-descent implementation
 follow the same experiment structure. The clean signal is now a reproducible,
 less-structured synthetic signal with baseline, chirp, transient, and texture
@@ -83,7 +83,7 @@ For the linear case, the contrast is quadratic,
 \]
 so each local fit is the Epanechnikov-weighted mean in the current residual window.
 For the robust case, the notebook uses the smooth robust contrast from
-\texttt{gd\_imrf.ipynb},
+\texttt{gd\_irmf.ipynb},
 \[
 \rho_H(r)
 = r\,\operatorname{erf}\left(\frac{r}{\sqrt{2}H}\right)
@@ -99,13 +99,13 @@ with score
 \centering
 \includegraphics[width=\linewidth]{figures/gd_imf_real_vs_calculated/observations.png}
 \caption{The two observations used in the comparison. The first has Gaussian noise
-only. The second uses contamination probability \(p=0.2\), with contaminated points
-shown in red.}
+only. The second uses contamination probability \(p=0.2\) and contamination scale
+\(0.6\), with contaminated points shown in red.}
 \end{figure}
 
 \section{Setup and Metrics}
 
-The main parameters match the current run of \texttt{gd\_imrf.ipynb}.
+The main parameters match the current run of \texttt{gd\_irmf.ipynb}.
 
 \begin{table}[H]
 \centering
@@ -122,13 +122,15 @@ Symbol / name & Notebook value & Meaning \\
 \(H\) & \(2\sigma = 0.8\) & Robust contrast smoothing scale. \\
 \(K\) & Epanechnikov & Kernel used for all local windows. \\
 \(a\) & \(\sqrt{2}\) & Window shrink factor used by the schedule. \\
-\(a^{-k/2}\) & stage-dependent & Factor used in the scaled-error panels. \\
+\(a^{-k/2}\) & stage-dependent & Factor used for all scaled error diagnostics,
+including RMSE trends, sup-error trends, signed-error boxplots, and IMF-grid
+scaled-error panels. \\
 window sizes & \begin{tabular}[t]{@{}l@{}}\(501,355,251,177,125,\)\\
 \(89,63,45,31\)\end{tabular} & Number of sampled
 points in each symmetric local window. \\
 radius & \((\texttt{window\_size}-1)/2\) & Discrete half-width. The label
 \texttt{window} in the plots refers to \texttt{window\_size}, not radius. \\
-contamination & probability \(0.2\), scale \(0.2\), seed \(777\) & Synthetic
+contamination & probability \(0.2\), scale \(0.6\), seed \(777\) & Synthetic
 contamination settings for the robust comparison. \\
 \hline
 \end{tabular}
@@ -161,17 +163,32 @@ r_k = \beta_1 k + \beta_0
 \]
 to \(\operatorname{RMSE}(e_k)\), \(\operatorname{RMSE}(d_k)\),
 \(\operatorname{RMSE}(a^{-k/2}e_k)\), and
-\(\operatorname{RMSE}(a^{-k/2}d_k)\). The error plots themselves show only the
-stage-wise RMSE values.
+\(\operatorname{RMSE}(a^{-k/2}d_k)\). The RMSE trend plots show these
+stage-wise values.
+
+The notebook also reports sup-error diagnostics,
+\[
+\lVert e_k\rVert_\infty=\max_{1\leq t\leq n}|e_k(t)|,
+\qquad
+\lVert d_k\rVert_\infty=\max_{1\leq t\leq n}|d_k(t)|.
+\]
+The scaled sup-error trend also uses \(a^{-k/2}\), so the plotted scaled quantities are
+\[
+\lVert a^{-k/2}e_k\rVert_\infty
+\quad\text{and}\quad
+\lVert a^{-k/2}d_k\rVert_\infty.
+\]
+The error boxplots show signed samples over the time grid, not absolute errors;
+the scaled boxplot panels divide the signed values by \(a^{k/2}\).
 
 All four decompositions reconstruct their respective inputs up to numerical
 precision:
 \[
 \left\|Y-\left(\sum_k \widetilde S^{(k)} + Y^{(\mathrm{final})}\right)\right\|_\infty
-\approx 2.22\times 10^{-16}.
+\approx 8.88\times 10^{-16}.
 \]
 The realized contamination fraction in the \(p=0.2\) observation is \(0.175\), and
-the maximum absolute contamination value is about \(1.348\).
+the maximum absolute contamination value is about \(4.043118\).
 
 \section{Notebook Review}
 
@@ -207,6 +224,20 @@ column-wise \(y\)-axis ranges as stages 1--5.}
 count, including all IMF stages.}
 \end{figure}
 
+\begin{figure}[H]
+\centering
+\includegraphics[width=\linewidth]{figures/gd_imf_real_vs_calculated/linear_sup_error_trends.png}
+\caption{No-contamination recursive and single-pass sup-error trends over IMF
+count. The scaled panels use \(a^{-k/2}\).}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\linewidth]{figures/gd_imf_real_vs_calculated/linear_error_boxplots.png}
+\caption{No-contamination signed-error distributions over the time grid. The
+scaled panels divide the signed errors by \(a^{k/2}\).}
+\end{figure}
+
 \begin{table}[H]
 \centering
 \small
@@ -221,6 +252,22 @@ Single-pass \(\operatorname{RMSE}(a^{-k/2}d_k)\) & \(3.0\times10^{-5}\) & \(1.91
 \hline
 \end{tabular}
 \caption{Fitted line coefficients for the no-contamination linear error trends.}
+\end{table}
+
+\begin{table}[H]
+\centering
+\small
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.56\linewidth}rr@{}}
+\hline
+Metric & Slope \(\beta_1\) & Intercept \(\beta_0\) \\
+\hline
+Recursive IMF \(\lVert e_k\rVert_\infty\) & \(9.722\times10^{-3}\) & \(5.737\times10^{-3}\) \\
+Single-pass \(\lVert d_k\rVert_\infty\) & \(3.104\times10^{-2}\) & \(-2.125\times10^{-2}\) \\
+Recursive IMF \(\lVert a^{-k/2}e_k\rVert_\infty\) & \(-3.41\times10^{-4}\) & \(2.244\times10^{-2}\) \\
+Single-pass \(\lVert a^{-k/2}d_k\rVert_\infty\) & \(3.211\times10^{-3}\) & \(3.115\times10^{-2}\) \\
+\hline
+\end{tabular}
+\caption{Fitted line coefficients for the no-contamination linear sup-error trends.}
 \end{table}
 
 \subsection{Contamination Probability \(p=0.2\)}
@@ -256,6 +303,20 @@ column-wise \(y\)-axis ranges as stages 1--5.}
 count, including all IMF stages.}
 \end{figure}
 
+\begin{figure}[H]
+\centering
+\includegraphics[width=\linewidth]{figures/gd_imf_real_vs_calculated/robust_sup_error_trends.png}
+\caption{Contaminated robust recursive and single-pass sup-error trends over IMF
+count. The scaled panels use \(a^{-k/2}\).}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\linewidth]{figures/gd_imf_real_vs_calculated/robust_error_boxplots.png}
+\caption{Contaminated robust signed-error distributions over the time grid. The
+scaled panels divide the signed errors by \(a^{k/2}\).}
+\end{figure}
+
 \begin{table}[H]
 \centering
 \small
@@ -263,13 +324,29 @@ count, including all IMF stages.}
 \hline
 Metric & Slope \(\beta_1\) & Intercept \(\beta_0\) \\
 \hline
-Recursive IMF \(\operatorname{RMSE}(e_k)\) & \(1.851\times10^{-3}\) & \(1.078\times10^{-2}\) \\
-Single-pass \(\operatorname{RMSE}(d_k)\) & \(8.684\times10^{-3}\) & \(1.145\times10^{-2}\) \\
-Recursive IMF \(\operatorname{RMSE}(a^{-k/2}e_k)\) & \(-1.098\times10^{-3}\) & \(1.408\times10^{-2}\) \\
-Single-pass \(\operatorname{RMSE}(a^{-k/2}d_k)\) & \(-3.727\times10^{-4}\) & \(2.310\times10^{-2}\) \\
+Recursive IMF \(\operatorname{RMSE}(e_k)\) & \(1.771\times10^{-3}\) & \(1.353\times10^{-2}\) \\
+Single-pass \(\operatorname{RMSE}(d_k)\) & \(9.346\times10^{-3}\) & \(1.615\times10^{-2}\) \\
+Recursive IMF \(\operatorname{RMSE}(a^{-k/2}e_k)\) & \(-1.401\times10^{-3}\) & \(1.677\times10^{-2}\) \\
+Single-pass \(\operatorname{RMSE}(a^{-k/2}d_k)\) & \(-6.58\times10^{-4}\) & \(2.789\times10^{-2}\) \\
 \hline
 \end{tabular}
 \caption{Fitted line coefficients for the contaminated robust error trends.}
+\end{table}
+
+\begin{table}[H]
+\centering
+\small
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.56\linewidth}rr@{}}
+\hline
+Metric & Slope \(\beta_1\) & Intercept \(\beta_0\) \\
+\hline
+Recursive IMF \(\lVert e_k\rVert_\infty\) & \(1.598\times10^{-2}\) & \(8.72\times10^{-4}\) \\
+Single-pass \(\lVert d_k\rVert_\infty\) & \(3.861\times10^{-2}\) & \(-2.418\times10^{-2}\) \\
+Recursive IMF \(\lVert a^{-k/2}e_k\rVert_\infty\) & \(7.6\times10^{-5}\) & \(2.976\times10^{-2}\) \\
+Single-pass \(\lVert a^{-k/2}d_k\rVert_\infty\) & \(3.755\times10^{-3}\) & \(4.101\times10^{-2}\) \\
+\hline
+\end{tabular}
+\caption{Fitted line coefficients for the contaminated robust sup-error trends.}
 \end{table}
 
 \end{document}

@@ -16,7 +16,7 @@
 
 \section{Task}
 
-The notebook \href{https://github.com/mkuziuk/imf/blob/main/gd_imrf.ipynb}{gd\_imrf.ipynb}
+The notebook \href{https://github.com/mkuziuk/imf/blob/main/gd_irmf.ipynb}{gd\_irmf.ipynb}
 implements a small demonstration of intrinsic multiscale filtering (IMF) for a
 one-dimensional noisy signal. As in \texttt{IMF.pdf}, the observation is written as
 \[
@@ -92,12 +92,12 @@ contamination & probability \(0.2\), scale \(0.2\), seed \(777\) & Synthetic
 one-sided contamination settings. \\
 \hline
 \end{tabular}
-\caption{Main parameters used in \texttt{gd\_imrf.ipynb}.}
+\caption{Main parameters used in \texttt{gd\_irmf.ipynb}.}
 \end{table}
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=\linewidth]{figures/gd_imrf/observed_signal.png}
+\includegraphics[width=\linewidth]{figures/gd_irmf/observed_signal.png}
 \caption{Synthetic observation used in the notebook, with the clean signal and
 contaminated points shown for reference.}
 \end{figure}
@@ -144,7 +144,7 @@ In the current run, the maximum lookup errors on a dense validation grid are abo
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=\linewidth]{figures/gd_imrf/lookup_grid.png}
+\includegraphics[width=\linewidth]{figures/gd_irmf/lookup_grid.png}
 \caption{Direct formulas compared with lookup-grid interpolation for the robust score
 and Gaussian exponent.}
 \end{figure}
@@ -170,7 +170,7 @@ notebook plots keep their own automatic vertical scaling.
 \begin{figure}[p]
 \centering
 \makebox[\linewidth][c]{%
-\includegraphics[width=1.12\linewidth,height=0.84\textheight,keepaspectratio]{figures/gd_imrf/imf_stages_top.png}%
+\includegraphics[width=1.12\linewidth,height=0.84\textheight,keepaspectratio]{figures/gd_irmf/imf_stages_top.png}%
 }
 \caption{Residual updates and removed IMFs for the first half of the stage grid.
 Each row shows the residual before filtering, the removed IMF, and the residual
@@ -180,7 +180,7 @@ after subtraction.}
 \begin{figure}[p]
 \centering
 \makebox[\linewidth][c]{%
-\includegraphics[width=1.12\linewidth,height=0.84\textheight,keepaspectratio]{figures/gd_imrf/imf_stages_bottom.png}%
+\includegraphics[width=1.12\linewidth,height=0.84\textheight,keepaspectratio]{figures/gd_irmf/imf_stages_bottom.png}%
 }
 \caption{Residual updates and removed IMFs for the second half of the stage grid.
 Both halves use the same shared \(y\)-axis limits from the notebook.}
@@ -198,7 +198,7 @@ about \(0.986\), and the final residual RMS is about \(0.218\).
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=\linewidth]{figures/gd_imrf/final_comparison.png}
+\includegraphics[width=\linewidth]{figures/gd_irmf/final_comparison.png}
 \caption{The final notebook comparison overlays the noisy observation, clean signal,
 and sum of IMFs, then shows the final residual separately.}
 \end{figure}
