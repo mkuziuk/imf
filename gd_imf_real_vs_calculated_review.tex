@@ -349,4 +349,87 @@ Single-pass \(\lVert a^{-k/2}d_k\rVert_\infty\) & \(3.755\times10^{-3}\) & \(4.1
 \caption{Fitted line coefficients for the contaminated robust sup-error trends.}
 \end{table}
 
+\section{Contamination and Noise Limit Sweep}
+
+The companion notebook
+\texttt{gd\_imf\_real\_vs\_calculated\_limits.ipynb} repeats the same
+clean-reference comparison over a coarse grid of observation settings. The sweep
+uses
+\[
+\sigma\in\{0.1,0.2,0.4,0.6,0.8\},\qquad
+p\in\{0,0.05,0.1,0.2,0.35,0.5,0.65,0.8\},
+\]
+and contamination scale
+\[
+\{0.2,0.4,0.6,1,1.5,2,3,4\}.
+\]
+Each grid point is evaluated with three deterministic coupled repeats, so the
+same base Gaussian and contamination draws are reused as the probability and
+scale parameters vary. The robust decomposition uses \(H=2\sigma\). This sweep is
+descriptive: it shows how the diagnostics degrade across the grid rather than
+declaring a pass/fail boundary.
+
+The two aggregate metrics shown below are computed from the recursive IMF errors
+only. The mean scaled RMSE is
+\[
+\frac{1}{K}\sum_{k=1}^K \operatorname{RMSE}(a^{-k/2}e_k),
+\]
+and the max scaled sup error is
+\[
+\max_{1\leq k\leq K}\lVert a^{-k/2}e_k\rVert_\infty.
+\]
+The baseline-relative degradation maps divide each metric by the same method's
+\(p=0\) baseline at the same \(\sigma\) and contamination scale.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\linewidth]{figures/gd_imf_real_vs_calculated_limits/error_surfaces_mean_scaled_rmse.png}
+\caption{Limit-sweep error surfaces for the median mean scaled RMSE. The color
+scale is shared across both methods and all \(\sigma\) panels, so colors can be
+compared directly between linear and robust rows.}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\linewidth]{figures/gd_imf_real_vs_calculated_limits/error_surfaces_max_scaled_sup_error.png}
+\caption{Limit-sweep error surfaces for the median max scaled sup error. The
+single color scale is shared across both methods and all \(\sigma\) panels for
+this metric.}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\linewidth]{figures/gd_imf_real_vs_calculated_limits/baseline_degradation_mean_scaled_rmse.png}
+\caption{Baseline-relative degradation for mean scaled RMSE. Each value is the
+median metric divided by the corresponding \(p=0\) baseline for the same method,
+\(\sigma\), and contamination scale. The centered color scale is shared across
+the figure; contour labels mark \(2\times\), \(4\times\), and \(8\times\)
+degradation where present.}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\linewidth]{figures/gd_imf_real_vs_calculated_limits/baseline_degradation_max_scaled_sup_error.png}
+\caption{Baseline-relative degradation for max scaled sup error. The centered
+color scale is shared across both methods and all \(\sigma\) panels, with
+\(2\times\), \(4\times\), and \(8\times\) contours shown where the surface
+crosses those levels.}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\linewidth]{figures/gd_imf_real_vs_calculated_limits/current_setting_slices.png}
+\caption{Slices through the current review setting. The left column varies
+contamination probability at \(\sigma=0.4\) and contamination scale \(0.6\); the
+right column varies contamination scale at \(\sigma=0.4\) and \(p=0.2\). Within
+each metric row, the two panels use the same \(y\)-axis scale and show median
+with interquartile bands across the three repeats.}
+\end{figure}
+
+Across the sweep, the surface plots provide the broad phase diagram, while the
+baseline-relative maps show how quickly each method departs from its own
+noise-only behavior. The current-setting slices locate the review example
+\((\sigma,p,\text{scale})=(0.4,0.2,0.6)\) inside that grid and make the local
+dependence on \(p\) and contamination scale easier to read.
+
 \end{document}
