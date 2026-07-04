@@ -432,4 +432,108 @@ noise-only behavior. The current-setting slices locate the review example
 \((\sigma,p,\text{scale})=(0.4,0.2,0.6)\) inside that grid and make the local
 dependence on \(p\) and contamination scale easier to read.
 
+\section{Observation Model Comparison}
+
+The preceding sections use the additive contamination model
+\[
+Y_i = X_i + G_i + M_i C_i,
+\]
+where \(G_i\) is Gaussian noise, \(M_i\) is the contamination mask, and \(C_i\)
+is the signed exponential contamination value. The comparison notebook
+\texttt{gd\_imf\_observation\_model\_comparison.ipynb} contrasts this model with
+a masked pure-noise contamination model,
+\[
+Y_i =
+\begin{cases}
+X_i + G_i, & M_i = 0,\\
+G_i + C_i, & M_i = 1.
+\end{cases}
+\]
+Thus contaminated points lose the clean-signal contribution, while ordinary
+points keep the same clean signal plus Gaussian noise model. The no-contamination
+linear plots are not repeated here because \(p=0\) makes the contamination mask
+empty, so both observation models are identical. All figures in this section use
+axes or color normalizations computed jointly across the two observation models.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\linewidth]{figures/gd_imf_observation_model_comparison/observations_shared_scale.png}
+\caption{Current-setting observations under the additive and masked pure-noise
+models. The four panels share one \(y\)-axis scale, so the effect of replacing
+mask-selected observations by pure noise is directly comparable.}
+\end{figure}
+
+At the current review setting \((\sigma,p,\text{scale})=(0.4,0.2,0.6)\), the
+robust contaminated comparison changes because the masked pure-noise model
+removes \(X_i\) at contaminated points. The trend and boxplot panels below use
+shared \(y\)-axis limits across the two models, so differences in height reflect
+metric differences rather than independent rescaling.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\linewidth]{figures/gd_imf_observation_model_comparison/robust_rmse_trends_shared_scale.png}
+\caption{Robust contaminated RMSE trends for the additive and masked pure-noise
+observation models. Each metric panel uses a shared \(y\)-axis scale across both
+models.}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\linewidth]{figures/gd_imf_observation_model_comparison/robust_sup_error_trends_shared_scale.png}
+\caption{Robust contaminated sup-error trends for the additive and masked
+pure-noise observation models. Each metric panel uses a shared \(y\)-axis scale
+across both models.}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\linewidth]{figures/gd_imf_observation_model_comparison/robust_error_boxplots_shared_scale.png}
+\caption{Robust contaminated signed-error distributions under the two
+observation models. Raw and scaled panels use symmetric limits around zero,
+computed jointly across both models.}
+\end{figure}
+
+The limit-sweep comparison repeats the same coarse grid for both observation
+models. Error-surface maps use shared logarithmic color scales, baseline-relative
+maps use shared centered color scales, and current-setting slices use shared
+\(y\)-axis limits across both observation models.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\linewidth,height=0.82\textheight,keepaspectratio]{figures/gd_imf_observation_model_comparison/error_surfaces_mean_scaled_rmse_shared_scale.png}
+\caption{Mean scaled RMSE surfaces for the additive and masked pure-noise
+observation models. The color scale is shared across both models, both methods,
+and all \(\sigma\) panels.}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\linewidth,height=0.82\textheight,keepaspectratio]{figures/gd_imf_observation_model_comparison/error_surfaces_max_scaled_sup_error_shared_scale.png}
+\caption{Max scaled sup-error surfaces for the additive and masked pure-noise
+observation models. The color scale is shared across both models, both methods,
+and all \(\sigma\) panels.}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\linewidth,height=0.82\textheight,keepaspectratio]{figures/gd_imf_observation_model_comparison/baseline_degradation_mean_scaled_rmse_shared_scale.png}
+\caption{Baseline-relative degradation for mean scaled RMSE under both
+observation models. The centered color scale is shared across all panels.}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\linewidth,height=0.82\textheight,keepaspectratio]{figures/gd_imf_observation_model_comparison/baseline_degradation_max_scaled_sup_error_shared_scale.png}
+\caption{Baseline-relative degradation for max scaled sup error under both
+observation models. The centered color scale is shared across all panels.}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\linewidth]{figures/gd_imf_observation_model_comparison/current_setting_slices_shared_scale.png}
+\caption{Current-setting sweep slices for both observation models. Within each
+metric row, the \(y\)-axis scale is shared across the probability and scale
+slices and across both observation models.}
+\end{figure}
+
 \end{document}
