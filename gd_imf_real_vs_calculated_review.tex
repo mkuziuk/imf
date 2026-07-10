@@ -357,13 +357,14 @@ clean-reference comparison over a coarse grid of observation settings. The sweep
 uses
 \[
 \sigma\in\{0.1,0.2,0.4,0.6,0.8\},\qquad
-p\in\{0,0.05,0.1,0.2,0.35,0.5,0.65,0.8\},
+p\in\{0,0.1,0.2,0.3,0.4,0.5,0.6\},
 \]
-and contamination scale
+and contamination scale relative to each value of \(\sigma\),
 \[
-\{0.2,0.4,0.6,1,1.5,2,3,4\}.
+\frac{\text{scale}}{\sigma}\in\{2,3,4,5,6,7,8\}.
 \]
-Each grid point is evaluated with three deterministic coupled repeats, so the
+This gives 245 grid points and 735 trials. Each grid point is evaluated with
+three deterministic coupled repeats, so the
 same base Gaussian and contamination draws are reused as the probability and
 scale parameters vary. The robust decomposition uses \(H=2\sigma\). This sweep is
 descriptive: it shows how the diagnostics degrade across the grid rather than
@@ -386,7 +387,8 @@ The baseline-relative degradation maps divide each metric by the same method's
 \includegraphics[width=\linewidth]{figures/gd_imf_real_vs_calculated_limits/error_surfaces_mean_scaled_rmse.png}
 \caption{Limit-sweep error surfaces for the median mean scaled RMSE. The color
 scale is shared across both methods and all \(\sigma\) panels, so colors can be
-compared directly between linear and robust rows.}
+compared directly between linear and robust rows. The horizontal axis is the
+normalized contamination scale \(\text{scale}/\sigma\).}
 \end{figure}
 
 \begin{figure}[H]
@@ -419,18 +421,21 @@ crosses those levels.}
 \begin{figure}[H]
 \centering
 \includegraphics[width=\linewidth]{figures/gd_imf_real_vs_calculated_limits/current_setting_slices.png}
-\caption{Slices through the current review setting. The left column varies
-contamination probability at \(\sigma=0.4\) and contamination scale \(0.6\); the
-right column varies contamination scale at \(\sigma=0.4\) and \(p=0.2\). Within
+\caption{Slices through the sweep-reference setting. The left column varies
+contamination probability at the sweep reference \(\sigma=0.4\) and contamination
+scale \(0.8=2\sigma\); the right column varies \(\text{scale}/\sigma\) at
+\(\sigma=0.4\) and \(p=0.2\). Within
 each metric row, the two panels use the same \(y\)-axis scale and show median
 with interquartile bands across the three repeats.}
 \end{figure}
 
 Across the sweep, the surface plots provide the broad phase diagram, while the
 baseline-relative maps show how quickly each method departs from its own
-noise-only behavior. The current-setting slices locate the review example
-\((\sigma,p,\text{scale})=(0.4,0.2,0.6)\) inside that grid and make the local
-dependence on \(p\) and contamination scale easier to read.
+noise-only behavior. The sweep-reference slices locate
+\((\sigma,p,\text{scale})=(0.4,0.2,0.8)\), with
+\(\text{scale}/\sigma=2\), inside that grid and make the local dependence on
+\(p\) and normalized contamination scale easier to read. This sweep reference is
+distinct from the scale-\(0.6\) single-run review setting used above.
 
 \section{Observation Model Comparison}
 
@@ -495,8 +500,9 @@ computed jointly across both models.}
 
 The limit-sweep comparison repeats the same coarse grid for both observation
 models. Error-surface maps use shared logarithmic color scales, baseline-relative
-maps use shared centered color scales, and current-setting slices use shared
-\(y\)-axis limits across both observation models.
+maps use shared centered color scales, and sweep-reference slices use shared
+\(y\)-axis limits across both observation models. All sweep maps use
+\(\text{scale}/\sigma\in\{2,3,4,5,6,7,8\}\) on the horizontal axis.
 
 \begin{figure}[H]
 \centering
@@ -531,7 +537,8 @@ observation models. The centered color scale is shared across all panels.}
 \begin{figure}[H]
 \centering
 \includegraphics[width=\linewidth]{figures/gd_imf_observation_model_comparison/current_setting_slices_shared_scale.png}
-\caption{Current-setting sweep slices for both observation models. Within each
+\caption{Sweep-reference slices at \((\sigma,p,\text{scale})=(0.4,0.2,0.8)\)
+for both observation models. Within each
 metric row, the \(y\)-axis scale is shared across the probability and scale
 slices and across both observation models.}
 \end{figure}
