@@ -31,7 +31,7 @@ so scaled recursive pointwise SD/expected RMSE has the same order across stages.
 - The notebook's \(a^{k/2}\) divisor versus the natural \(a^{(k-1)/2}\) stage origin differs by one common factor only, so indexing cannot create the first-stage jump.
 - `IMF.pdf` contains an incorrect intermediate equality between component error \(W_kA_{k-1}\varepsilon\) and residual noise \(A_k\varepsilon\). Lemma 2.5 returns to the correct composite component operator but is unproved and order-level.
 
-The executed companion experiment is [`first-imf-recursive-error-diagnostics.ipynb`](../../output/jupyter-notebook/first-imf-recursive-error-diagnostics.ipynb). Full numerical outputs are in [`diagnostics/`](diagnostics/), with separate [`code-path`](agents/code-path.md), [`numerical`](agents/numerical-diagnosis.md), and [`theory`](agents/theory.md) memos.
+The executed companion experiment is [`first-imf-recursive-error-diagnostics.ipynb`](first-imf-recursive-error-diagnostics.ipynb). Full numerical outputs are in [`diagnostics/`](diagnostics/), with separate [`code-path`](agents/code-path.md), [`numerical`](agents/numerical-diagnosis.md), and [`theory`](agents/theory.md) memos.
 
 ## Confidence
 

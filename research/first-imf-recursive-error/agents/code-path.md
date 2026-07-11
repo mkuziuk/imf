@@ -11,7 +11,7 @@ Thus stage 1 is a low-pass/scaling component, whereas stages 2 onward are band-p
 
 The notebook's own numbers support this diagnosis. For the linear run, stage-1 RMSE is `0.024080`, essentially equal to the exact white-noise prediction `0.024000` for the implemented weights. After division by \(a^{k/2}\), stage 1 is `0.020249`, while the median over stages 2--9 is `0.006663` (3.04 times smaller). For the robust run those values are `0.029067` and `0.007397` (3.93 times smaller). In contrast, the *linear single-pass* scaled RMSE is nearly flat over all stages (coefficient of variation 4.68%). This is the error family for which the usual \((nh)^{-1/2}\) heuristic is relevant.
 
-No existing project file was changed in this audit. All numerical checks were run from the current working-tree version of `gd_imf_real_vs_calculated.ipynb`.
+No existing project file was changed in this audit. All numerical checks were run from the current working-tree version of [`gd_imf_real_vs_calculated.ipynb`](../../../experiments/real-vs-calculated/gd_imf_real_vs_calculated.ipynb).
 
 ## Key Evidence
 
@@ -134,7 +134,7 @@ and stops on a chunk-wide maximum update. Chunking can change the final answer a
 
 ## Sources
 
-- Current working-tree `gd_imf_real_vs_calculated.ipynb`:
+- Current working-tree [`gd_imf_real_vs_calculated.ipynb`](../../../experiments/real-vs-calculated/gd_imf_real_vs_calculated.ipynb):
   - cell `25b95378`: `make_window_schedule`, `generate_observation`, parameters, and realized schedule;
   - cell `644a1849`: `epanechnikov_weights`, score/loss lookup, and interpolation validation;
   - cell `91eeb55c`: `robust_gd_fit_windows`, `local_robust_gd_filter`, and `robust_gd_imf_with_history`;
@@ -144,7 +144,7 @@ and stops on a chunk-wide maximum update. Chunking can change the final answer a
   - cell `0503c494`: grid scaling and trend plotting helpers.
 - `README.md`, especially "Robust Gradient-Descent IMF" and "Linear Operator Note", for the repository's stated recursion and wrap-commutativity interpretation.
 - `ROBUST_GRADIENT_DESCENT.md`, sections 1, 3, 13, and 14, for the intended recursion, kernel formula, sequential robust stages, and the stated limit of linear commutativity.
-- `gd_imf_real_vs_calculated_review.tex`, "Error Definitions" and "Setup and Metrics", for the documented distinction between recursive and single-pass errors.
+- [`gd_imf_real_vs_calculated_review.tex`](../../../overleaf/gd_imf_real_vs_calculated_review.tex), "Error Definitions" and "Setup and Metrics", for the documented distinction between recursive and single-pass errors.
 - Read-only numerical audit executed with the repository `.venv` by loading the named notebook cells directly. It checked exact component identities, impulse responses, DFT gains, theoretical iid Gaussian variances, convergence traces, boundary subsets, and cross-combinations of method/noise regime.
 
 ## Contradictions or Uncertainty

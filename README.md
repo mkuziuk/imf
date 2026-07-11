@@ -3,13 +3,20 @@
 This project explores intrinsic multiscale filtering (IMF) and robust IMF variants for
 one-dimensional signals with Gaussian noise and one-sided exponential contamination.
 
-## Files
+## Repository layout
 
-- `IMF.pdf`: reference note for intrinsic robust multiscale filtering.
-- `imf_irmf_comparison.ipynb`: baseline IMF comparison using local mean, median, and
-  weighted median filters.
-- `robust_gradient_descent_imf.ipynb`: standalone robust IMF notebook using smooth
-  robust local fitting, gradient descent, and parallel execution.
+- [`experiments/imf-irmf-comparison/`](experiments/imf-irmf-comparison/): baseline
+  IMF comparison using local mean, median, and weighted median filters.
+- [`experiments/robust-gradient-descent/`](experiments/robust-gradient-descent/):
+  standalone robust local fitting, gradient descent, and parallel execution.
+- [`experiments/gd-irmf/`](experiments/gd-irmf/): lookup-grid gradient-descent IRMF
+  experiment.
+- [`experiments/real-vs-calculated/`](experiments/real-vs-calculated/): clean-reference
+  comparisons, observation-model variants, limit sweeps, and error-scaling studies.
+- [`overleaf/`](overleaf/): publication-ready TeX sources and their figures.
+- [`research/first-imf-recursive-error/`](research/first-imf-recursive-error/): audit
+  of the first recursive IMF error, including its companion notebook and diagnostics.
+- [`IMF.pdf`](IMF.pdf): reference note for intrinsic robust multiscale filtering.
 - `requirements.txt`: Python dependencies needed to run the notebooks.
 
 ## Setup
@@ -24,8 +31,15 @@ jupyter lab
 To execute a notebook from the command line:
 
 ```bash
-.venv/bin/jupyter nbconvert --to notebook --execute robust_gradient_descent_imf.ipynb --output-dir=/tmp --output=robust_gradient_descent_imf.executed
+.venv/bin/jupyter nbconvert --to notebook --execute experiments/robust-gradient-descent/robust_gradient_descent_imf.ipynb --output-dir=/tmp --output=robust_gradient_descent_imf.executed
 ```
+
+## Overleaf
+
+Upload the contents of [`overleaf/`](overleaf/) to the root of an Overleaf project.
+The three `.tex` files stay at project root, and the nested paths below the single
+`figures/` directory must be preserved. The TeX sources link to the notebooks in this
+GitHub repository and use figure paths relative to the Overleaf project root.
 
 ## Robust Gradient-Descent IMF
 

@@ -140,7 +140,7 @@ The exact quantity reported in `linear_operator_exact.csv` is $\sqrt{\mathbb E\o
 
 ## Sources
 
-1. `/Users/mikhail/Projects/imf/gd_imf_real_vs_calculated.ipynb`, current working-tree version: observation generator, weights, linear/robust filters, recursion, normalization, and stored output values.
+1. [`gd_imf_real_vs_calculated.ipynb`](../../../experiments/real-vs-calculated/gd_imf_real_vs_calculated.ipynb), current working-tree version: observation generator, weights, linear/robust filters, recursion, normalization, and stored output values.
 2. `/Users/mikhail/Projects/imf/research/first-imf-recursive-error/diagnostics/run_numerical_diagnosis.py`: complete reproducible calculation.
 3. Generated tables in the same diagnostics directory:
    - `linear_operator_exact.csv`;

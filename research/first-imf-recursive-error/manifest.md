@@ -1,6 +1,6 @@
 # First-IMF Recursive-Error Investigation
 
-- Objective: explain the unusually large stage-1 recursive error in `gd_imf_real_vs_calculated.ipynb` for the linear and robust decompositions, and determine exactly what theory does and does not imply about scaled-error constancy.
+- Objective: explain the unusually large stage-1 recursive error in [`gd_imf_real_vs_calculated.ipynb`](../../experiments/real-vs-calculated/gd_imf_real_vs_calculated.ipynb) for the linear and robust decompositions, and determine exactly what theory does and does not imply about scaled-error constancy.
 - Mode: research / diagnostic investigation.
 - Artifact root: `research/first-imf-recursive-error/`.
 - Constraints: do not modify existing project code or notebooks; generated diagnostics stay under this artifact root or the notebook-output directory.

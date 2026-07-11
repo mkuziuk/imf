@@ -27,4 +27,4 @@ Why is the first recursive IMF error much larger than stages 2--8 in both the li
 - `agents/theory.md`
 - `review.md`
 - `executive-summary.md`
-- optional diagnostic tables/figures and a companion notebook under `output/jupyter-notebook/`
+- optional diagnostic tables/figures and a companion notebook in this research directory

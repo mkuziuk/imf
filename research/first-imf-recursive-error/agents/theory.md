@@ -224,9 +224,9 @@ Equal marginal variances alone do not imply \(\sigma^2I\). The exact discrete ca
 
 ## Sources
 
-1. Vladimir Spokoiny, *Intrinsic robust multiscale filtering*, July 3, 2026, [local PDF](/Users/mikhail/Projects/imf/IMF.pdf), pages 3--11. Public project copy: [GitHub](https://github.com/mkuziuk/imf/blob/main/IMF.pdf).
-2. [`gd_imf_real_vs_calculated.ipynb`](/Users/mikhail/Projects/imf/gd_imf_real_vs_calculated.ipynb), current working-tree version, especially cells `a7f99780`, `25b95378`, `91eeb55c`, `267ea198`, `b66696e1`, and `e1ea4c6c`.
-3. [`gd_imf_real_vs_calculated_review.tex`](/Users/mikhail/Projects/imf/gd_imf_real_vs_calculated_review.tex), Sections 1--2. This is secondary project documentation, not an independent theorem source.
+1. Vladimir Spokoiny, *Intrinsic robust multiscale filtering*, July 3, 2026, [local PDF](../../../IMF.pdf), pages 3--11. Public project copy: [GitHub](https://github.com/mkuziuk/imf/blob/main/IMF.pdf).
+2. [`gd_imf_real_vs_calculated.ipynb`](../../../experiments/real-vs-calculated/gd_imf_real_vs_calculated.ipynb), current working-tree version, especially cells `a7f99780`, `25b95378`, `91eeb55c`, `267ea198`, `b66696e1`, and `e1ea4c6c`.
+3. [`gd_imf_real_vs_calculated_review.tex`](../../../overleaf/gd_imf_real_vs_calculated_review.tex), Sections 1--2. This is secondary project documentation, not an independent theorem source.
 4. Vladimir Spokoiny, *Sharp bounds in perturbed smooth optimization*, arXiv:2505.02002: [primary arXiv record](https://arxiv.org/abs/2505.02002), [DOI](https://doi.org/10.48550/arXiv.2505.02002). This supports the generic optimization appendix, not Lemma 2.5.
 5. Vladimir Spokoiny, *Estimation and inference in error-in-operator model*, arXiv:2504.11834: [primary arXiv record](https://arxiv.org/abs/2504.11834). This is the identifier incorrectly printed for *Sharp bounds...* in `IMF.pdf`.
 6. [Vladimir Spokoiny's WIAS publication list](https://wias-berlin.de/people/spokoiny/publications.jsp), checked July 9, 2026.
