@@ -90,8 +90,11 @@ The variance order $1/(nh)$ is standard in kernel and local-polynomial
 regression; see, for example, Fan and Gijbels~\cite{fan-gijbels1996} and
 Tsybakov~\cite{tsybakov2009}. The underlying kernel estimator was introduced
 independently by Nadaraya~\cite{nadaraya1964} and Watson~\cite{watson1964}.
-For a regular design, a normalized kernel average with bandwidth $h$ has the
-asymptotic variance
+In Nadaraya's note, Theorem~1 (starting on p.~141 and continuing at the top of
+p.~142) gives the random-design $\sqrt{nh}$ limit and displays the corresponding
+kernel-energy factor $\int K^2$.  The present experiment instead has a regular
+fixed design.  For that design, a normalized kernel average with bandwidth $h$
+has the asymptotic variance
 \[
 \Var\{\widetilde S_h(t)-S_h(t)\}
 \approx
@@ -427,14 +430,17 @@ right, labeled ``stage-specific RMS calibration.''
 E.~A. Nadaraya.
 On estimating regression.
 \emph{Theory of Probability and Its Applications}, 9(1):141--142, 1964.
-\href{https://doi.org/10.1137/1109020}{doi:10.1137/1109020}.
+\href{https://doi.org/10.1137/1109020}{doi:10.1137/1109020};
+local copy: \path{nadaraya1964.pdf}.
 
 \bibitem{watson1964}
 G.~S. Watson.
 Smooth regression analysis.
 \emph{Sankhy\={a}: The Indian Journal of Statistics, Series A},
 26(4):359--372, 1964.
-\href{https://www.jstor.org/stable/25049340}{JSTOR 25049340}.
+\href{https://www.jstor.org/stable/25049340}{JSTOR 25049340};
+\href{https://dtic.minsky.ai/index/AD0467119}{DTIC technical-report record
+AD0467119}.
 
 \bibitem{fan-gijbels1996}
 J. Fan and I. Gijbels.
