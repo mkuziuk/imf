@@ -356,14 +356,14 @@ The companion notebook
 clean-reference comparison over a coarse grid of observation settings. The sweep
 uses
 \[
-\sigma\in\{0.1,0.2,0.4,0.6,0.8\},\qquad
-p\in\{0,0.1,0.2,0.3,0.4,0.5,0.6\},
+\sigma\in\{0.05,0.10,0.15,0.20,0.25,0.30\},\qquad
+p\in\{0,0.05,0.10,0.15,0.20,0.25,0.30,0.35,0.40\},
 \]
 and contamination scale relative to each value of \(\sigma\),
 \[
-\frac{\text{scale}}{\sigma}\in\{2,3,4,5,6,7,8\}.
+\frac{\text{scale}}{\sigma}\in\{2,4,6,8,10,12\}.
 \]
-This gives 245 grid points and 735 trials. Each grid point is evaluated with
+This gives 324 grid points and 972 trials. Each grid point is evaluated with
 three deterministic coupled repeats, so the
 same base Gaussian and contamination draws are reused as the probability and
 scale parameters vary. The robust decomposition uses \(H=2\sigma\). This sweep is
@@ -422,9 +422,9 @@ crosses those levels.}
 \centering
 \includegraphics[width=\linewidth]{figures/real-vs-calculated-limits/current_setting_slices.png}
 \caption{Slices through the sweep-reference setting. The left column varies
-contamination probability at the sweep reference \(\sigma=0.4\) and contamination
-scale \(0.8=2\sigma\); the right column varies \(\text{scale}/\sigma\) at
-\(\sigma=0.4\) and \(p=0.2\). Within
+contamination probability at the sweep reference \(\sigma=0.2\) and contamination
+scale \(0.4=2\sigma\); the right column varies \(\text{scale}/\sigma\) at
+\(\sigma=0.2\) and \(p=0.2\). Within
 each metric row, the two panels use the same \(y\)-axis scale and show median
 with interquartile bands across the three repeats.}
 \end{figure}
@@ -432,10 +432,11 @@ with interquartile bands across the three repeats.}
 Across the sweep, the surface plots provide the broad phase diagram, while the
 baseline-relative maps show how quickly each method departs from its own
 noise-only behavior. The sweep-reference slices locate
-\((\sigma,p,\text{scale})=(0.4,0.2,0.8)\), with
+\((\sigma,p,\text{scale})=(0.2,0.2,0.4)\), with
 \(\text{scale}/\sigma=2\), inside that grid and make the local dependence on
 \(p\) and normalized contamination scale easier to read. This sweep reference is
-distinct from the scale-\(0.6\) single-run review setting used above.
+distinct from the single-run review setting
+\((\sigma,p,\text{scale})=(0.4,0.2,0.6)\) used above.
 
 \section{Observation Model Comparison}
 
@@ -502,7 +503,7 @@ The limit-sweep comparison repeats the same coarse grid for both observation
 models. Error-surface maps use shared logarithmic color scales, baseline-relative
 maps use shared centered color scales, and sweep-reference slices use shared
 \(y\)-axis limits across both observation models. All sweep maps use
-\(\text{scale}/\sigma\in\{2,3,4,5,6,7,8\}\) on the horizontal axis.
+\(\text{scale}/\sigma\in\{2,4,6,8,10,12\}\) on the horizontal axis.
 
 \begin{figure}[H]
 \centering
@@ -537,7 +538,7 @@ observation models. The centered color scale is shared across all panels.}
 \begin{figure}[H]
 \centering
 \includegraphics[width=\linewidth]{figures/observation-model-comparison/current_setting_slices_shared_scale.png}
-\caption{Sweep-reference slices at \((\sigma,p,\text{scale})=(0.4,0.2,0.8)\)
+\caption{Sweep-reference slices at \((\sigma,p,\text{scale})=(0.2,0.2,0.4)\)
 for both observation models. Within each
 metric row, the \(y\)-axis scale is shared across the probability and scale
 slices and across both observation models.}
