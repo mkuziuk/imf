@@ -1,0 +1,14 @@
+parameter,value
+seed,20260811
+n,512
+n_repetitions,400
+batch_size,16
+sigma,0.1
+contamination_probability,0.2
+contamination_scale,0.30000000000000004
+robust_H,0.2
+bandwidth_factor,1.4142135623730951
+minimum_window_size,31
+boundary,wrap
+robust_max_iter,60
+robust_tolerance,1e-06

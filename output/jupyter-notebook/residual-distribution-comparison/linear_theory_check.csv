@@ -1,0 +1,2 @@
+input_noise_variance,operator_row_squared_norm,theoretical_pointwise_variance,empirical_mean_pointwise_variance,empirical_pooled_second_moment,empirical_to_theory_variance_ratio
+0.04600000000000001,0.8158489813026323,0.037529053139921095,0.037894879125535574,0.03799842002340929,1.012506760608594
