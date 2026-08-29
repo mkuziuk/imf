@@ -51,6 +51,52 @@
             <option value="complex">Complex — chirp, transients, texture</option>
           </select>
         </div>
+        <div id="simple-params">
+          <div class="field">
+            <label for="slow_amp">Slow wave amplitude <span class="val"><span id="slow_amp-val">0.60</span></span></label>
+            <input type="range" id="slow_amp" min="0" max="1.5" step="0.05" value="0.6">
+          </div>
+          <div class="field">
+            <label for="fast_amp">Fast wave amplitude <span class="val"><span id="fast_amp-val">0.25</span></span></label>
+            <input type="range" id="fast_amp" min="0" max="1" step="0.05" value="0.25">
+          </div>
+          <div class="field">
+            <label for="fast_cycles">Fast wave frequency <span class="val"><span id="fast_cycles-val">6</span> cycles</span></label>
+            <input type="range" id="fast_cycles" min="1" max="24" step="1" value="6">
+          </div>
+          <div class="field">
+            <label for="bump_amp">Bump height <span class="val"><span id="bump_amp-val">0.80</span></span></label>
+            <input type="range" id="bump_amp" min="0" max="2" step="0.1" value="0.8">
+          </div>
+          <div class="field">
+            <label for="bump_pos">Bump position <span class="val">t = <span id="bump_pos-val">0.55</span></span></label>
+            <input type="range" id="bump_pos" min="0.05" max="0.95" step="0.01" value="0.55">
+          </div>
+          <div class="field">
+            <label for="bump_width">Bump width <span class="val"><span id="bump_width-val">0.015</span></span></label>
+            <input type="range" id="bump_width" min="0.005" max="0.06" step="0.005" value="0.015">
+          </div>
+          <div class="field">
+            <label for="trend_slope">Trend slope <span class="val"><span id="trend_slope-val">0.50</span></span></label>
+            <input type="range" id="trend_slope" min="-1.5" max="1.5" step="0.1" value="0.5">
+          </div>
+        </div>
+        <div id="complex-params" hidden>
+          <div class="field">
+            <label for="signal_variant">Signal variant <span class="val">seed</span></label>
+            <select id="signal_variant">
+              <option value="2026" selected>Variant 1 — seed 2026 (notebooks)</option>
+              <option value="11">Variant 2 — seed 11</option>
+              <option value="42">Variant 3 — seed 42</option>
+              <option value="77">Variant 4 — seed 77</option>
+              <option value="123">Variant 5 — seed 123</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="signal_scale">Signal amplitude <span class="val">× <span id="signal_scale-val">1.00</span></span></label>
+            <input type="range" id="signal_scale" min="0.25" max="2.5" step="0.25" value="1">
+          </div>
+        </div>
         <div class="field">
           <label for="n">Sample size <span class="val">n</span></label>
           <select id="n">
