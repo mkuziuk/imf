@@ -1,0 +1,440 @@
+\documentclass[11pt]{article}
+
+\usepackage[a4paper,margin=30mm]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\Pp}{\mathbb{P}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\eqdef}{\mathrel{\vcentcolon=}}
+\newcommand{\arginf}{\mathop{\mathrm{arg\,inf}}}
+
+% Local notation from IMF.tex.
+\newcommand{\rhohu}{\rho}
+\newcommand{\rhohum}{\phi}
+\newcommand{\Kern}{K}
+\newcommand{\Signal}{X}
+\newcommand{\Data}{Y}
+\newcommand{\IMFs}{S}
+\newcommand{\IMFt}{\widetilde S}
+\newcommand{\IF}{F}
+\newcommand{\IFP}{F_{\circ}}
+\newcommand{\DFN}{D}
+\newcommand{\fs}{f}
+\newcommand{\fp}{f_{\circ}}
+\newcommand{\xs}{x^{*}}
+\newcommand{\xp}{x_{\circ}}
+\newcommand{\xx}{x}
+
+\newtheorem{proposition}{Proposition}[section]
+\newtheorem{lemma}[proposition]{Lemma}
+\newtheorem*{remark}{Remark}
+
+\title{Proof of Lemma 4.2 and completion of Proposition 4.1}
+\author{}
+\date{}
+
+\begin{document}
+\maketitle
+
+\setcounter{section}{3}
+\section{Theoretical guarantees}
+
+Let \(\mathcal T_n\subset[0,1]\) be the finite set of points at which the filter is
+evaluated and put \(m=|\mathcal T_n|\).  For \(t\in\mathcal T_n\), write
+\begin{equation}
+  w_{u,t}\eqdef \Kern_h(t-u),\qquad
+  W_t\eqdef\sum_u w_{u,t},\qquad
+  Q_t^2\eqdef\sum_u w_{u,t}^2,\qquad
+  k_t\eqdef\max_u w_{u,t}.
+  \label{eq:weights}
+\end{equation}
+We assume \(w_{u,t}\geq0\), as for the Epanechnikov kernel used in
+\texttt{IMF.tex}.  Suppose that \(\Data_u=\Signal_u+\varepsilon_u\), where the
+\(\varepsilon_u\) are independent, and let
+\begin{equation}
+  \rhohum(z)\eqdef\E\rhohu(z+\varepsilon).
+  \label{eq:phi}
+\end{equation}
+The argument below also allows independent, non-identically distributed errors if
+\(\rhohum(\Signal_u-x)\) in each summand is replaced by
+\(\E\rhohu(\Data_u-x)\).
+
+Assume that \(\rhohu\in C^3(\R)\) is convex and, for finite constants
+\(L_1,L_2,L_3\),
+\begin{equation}
+  |\rhohu'(z)|\leq L_1,\qquad
+  0\leq\rhohu''(z)\leq L_2,\qquad
+  |\rhohu'''(z)|\leq L_3,
+  \qquad z\in\R.
+  \label{eq:derivative-bounds}
+\end{equation}
+For the Gaussian-smoothed absolute-value contrast \(\rhohu_H\) in
+\texttt{IMF.tex}, one may take
+\begin{equation}
+  L_1=1,\qquad
+  L_2=\frac{2}{H\sqrt{2\pi}},\qquad
+  L_3=\frac{2}{H^2\sqrt{2\pi}}.
+  \label{eq:rhoH-constants}
+\end{equation}
+
+Define, with the notation of \texttt{IMF.tex},
+\begin{align}
+  \IMFt_t
+  &\eqdef \arginf_{z\in\R}\sum_u\rhohu(\Data_u-z)w_{u,t},
+  &
+  \IMFs_t
+  &\eqdef \arginf_{z\in\R}\sum_u\E\rhohu(\Data_u-z)w_{u,t},
+  \label{eq:estimators}\\
+  \IF_t
+  &\eqdef\sum_u\rhohum''(\Signal_u-\IMFs_t)w_{u,t},
+  &
+  \DFN_t
+  &\eqdef\IF_t^{1/2},
+  \label{eq:curvature}\\
+  \nabla_t
+  &\eqdef\sum_u\left\{
+       \rhohu'(\Data_u-\IMFs_t)
+       -\E\rhohu'(\Data_u-\IMFs_t)
+     \right\}w_{u,t}.
+  \label{eq:nabla}
+\end{align}
+We require \(\IF_t>0\) for every \(t\in\mathcal T_n\).  This holds for
+\(\rhohu_H\) whenever at least one \(w_{u,t}\) is positive.
+
+For \(\xx\geq0\) and \(z_{\xx}\eqdef\xx+\log(4m)\), set
+\begin{align}
+  C_1
+  &\eqdef
+    \max_{t\in\mathcal T_n}
+    \frac{L_1}{\DFN_t}
+    \left\{Q_t\sqrt{2z_{\xx}}+\frac{2k_tz_{\xx}}{3}\right\},
+  \label{eq:C1}\\
+  C_2
+  &\eqdef
+    \max_{t\in\mathcal T_n}
+    \frac{L_2}{\DFN_t}
+    \left\{Q_t\sqrt{2z_{\xx}}+\frac{k_tz_{\xx}}{3}\right\},
+  \label{eq:C2}\\
+  C_3
+  &\eqdef
+    \max_{t\in\mathcal T_n}\frac{L_3W_t}{\DFN_t^2},
+  &
+  \DFN_{\min}
+  &\eqdef\min_{t\in\mathcal T_n}\DFN_t,
+  &
+  \delta
+  &\eqdef\frac{C_2}{\DFN_{\min}}.
+  \label{eq:C3-delta}
+\end{align}
+
+The following statement supplies the missing right-hand side in Proposition~4.1.
+
+\begin{proposition}\label{prop:main}
+Suppose that the conditions above hold, that each empirical objective in
+\eqref{eq:estimators} is strongly convex in the sense required by
+Theorem~A.9 of \texttt{IRMF.tex}, and that
+\begin{equation}
+  \delta<1,
+  \qquad
+  \frac{C_1C_3}{\DFN_{\min}(1-\delta)^2}<\frac49.
+  \label{eq:smallness}
+\end{equation}
+Then there is a random set \(\Omega(\xx)\) with
+\(\Pp\{\Omega(\xx)\}\geq1-e^{-\xx}\) such that
+\begin{equation}
+  \sup_{t\in\mathcal T_n}
+  \left|
+    \DFN_t\bigl(
+      \IMFt_t-\IMFs_t-\IF_t^{-1}\nabla_t
+    \bigr)
+  \right|
+  \leq
+  \frac{1}{\DFN_{\min}}
+  \left\{
+    \frac{3C_1^2C_3}{4(1-\delta)^3}
+    +\frac{C_1C_2}{1-\delta}
+  \right\}.
+  \label{eq:proposition-bound}
+\end{equation}
+Consequently, the oracle-corrected estimator
+\begin{equation}
+  \IMFt_t^{\mathrm{corr}}
+  \eqdef \IMFt_t-\IF_t^{-1}\nabla_t
+  \label{eq:corrected-estimator}
+\end{equation}
+satisfies the same upper bound with
+\(\IMFt_t-\IMFs_t-\IF_t^{-1}\nabla_t
+=\IMFt_t^{\mathrm{corr}}-\IMFs_t\).
+\end{proposition}
+
+\begin{remark}[Sign of the correction]
+With \(\nabla_t\) defined by \eqref{eq:nabla}, the minus sign in
+\eqref{eq:proposition-bound} is forced by differentiation:
+\(f_\circ'(\IMFs_t)=-\nabla_t\).  Thus
+\(\IMFt_t-\IMFs_t\) has first-order term \(\IF_t^{-1}\nabla_t\), and one
+subtracts that term to correct \(\IMFt_t\).  The plus sign in the unfinished
+display in \texttt{IMF.tex} would be correct only if \(\nabla_t\) were defined
+with the opposite sign.
+\end{remark}
+
+\subsection{Perturbation theory in action}
+
+Fix \(t\in\mathcal T_n\).  All quantities in this subsection may depend on
+\(t\).  Define
+\begin{equation}
+  \fs(z)\eqdef\sum_u\rhohum(\Signal_u-z)w_{u,t},
+  \qquad
+  \fp(z)\eqdef\sum_u\rhohu(\Data_u-z)w_{u,t},
+  \label{eq:objectives}
+\end{equation}
+and
+\begin{equation}
+  \xs\eqdef\arginf_z\fs(z)=\IMFs_t,
+  \qquad
+  \xp\eqdef\arginf_z\fp(z)=\IMFt_t.
+  \label{eq:minimizers}
+\end{equation}
+Further, put
+\begin{equation}
+  \IFP\eqdef\fp''(\xs),
+  \qquad
+  \IF\eqdef\fs''(\xs)=\DFN^2.
+  \label{eq:F-Fcirc}
+\end{equation}
+For \(r>0\), let
+\(U_t(r)\eqdef\{z\in\R:|\DFN(z-\xs)|\leq r\}\).
+
+\begin{lemma}\label{lem:local}
+On \(\Omega(\xx)\), simultaneously for every \(t\in\mathcal T_n\),
+\begin{enumerate}
+\item
+\begin{align}
+  \frac{1}{\DFN}
+  |\fs'(\xs)-\fp'(\xs)|
+  &=\frac{1}{\DFN}
+    \left|\sum_u
+      \left\{\rhohu'(\Data_u-\xs)
+      -\E\rhohu'(\Data_u-\xs)\right\}w_{u,t}
+    \right|
+  \leq C_1,
+  \label{eq:lemma-score}\\
+  \frac{1}{\DFN}
+  |\fs''(\xs)-\fp''(\xs)|
+  &=\frac{1}{\DFN}
+    \left|\sum_u
+      \left\{\rhohu''(\Data_u-\xs)
+      -\E\rhohu''(\Data_u-\xs)\right\}w_{u,t}
+    \right|
+  \leq C_2.
+  \label{eq:lemma-hessian}
+\end{align}
+
+\item
+\begin{equation}
+  \sup_{z\in\R}
+  \frac{1}{\DFN^2}
+  \left|\sum_u\rhohu'''(\Data_u-z)w_{u,t}\right|
+  \leq C_3.
+  \label{eq:lemma-third}
+\end{equation}
+
+\item For every \(r>0\),
+\begin{equation}
+  \sup_{z\in U_t(r)}
+  \frac{1}{\DFN^2}
+  \left|\sum_u
+    \left\{
+      \rhohum''(\Signal_u-z)
+      -\rhohum''(\Signal_u-\xs)
+    \right\}w_{u,t}
+  \right|
+  \leq \frac{C_3r}{\DFN}.
+  \label{eq:lemma-population-hessian}
+\end{equation}
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+Differentiating \eqref{eq:objectives} gives
+\begin{align*}
+  \fs'(z)&=-\sum_u\rhohum'(\Signal_u-z)w_{u,t},
+  &
+  \fp'(z)&=-\sum_u\rhohu'(\Data_u-z)w_{u,t},\\
+  \fs''(z)&=\sum_u\rhohum''(\Signal_u-z)w_{u,t},
+  &
+  \fp''(z)&=\sum_u\rhohu''(\Data_u-z)w_{u,t}.
+\end{align*}
+Since differentiation under the expectation is justified by
+\eqref{eq:derivative-bounds},
+\(\rhohum^{(j)}(a)=\E\rhohu^{(j)}(a+\varepsilon)\) for
+\(j=1,2,3\).  The identities in part~(i) follow.
+
+For the first identity, set
+\[
+  Z_{u,t}\eqdef w_{u,t}
+  \left\{\rhohu'(\Data_u-\xs)
+  -\E\rhohu'(\Data_u-\xs)\right\}.
+\]
+These variables are independent and centered.  Moreover,
+\[
+  |Z_{u,t}|\leq2L_1k_t,
+  \qquad
+  \sum_u\E Z_{u,t}^2\leq L_1^2Q_t^2.
+\]
+Bernstein's inequality therefore yields, for every \(z>0\),
+\begin{equation}
+  \Pp\left(
+    \left|\sum_uZ_{u,t}\right|>
+    L_1\left\{Q_t\sqrt{2z}+\frac{2k_tz}{3}\right\}
+  \right)
+  \leq2e^{-z}.
+  \label{eq:bernstein-score}
+\end{equation}
+For the second identity, use
+\[
+  \widetilde Z_{u,t}\eqdef w_{u,t}
+  \left\{\rhohu''(\Data_u-\xs)
+  -\E\rhohu''(\Data_u-\xs)\right\}.
+\]
+Convexity and \eqref{eq:derivative-bounds} give
+\[
+  |\widetilde Z_{u,t}|\leq L_2k_t,
+  \qquad
+  \sum_u\E\widetilde Z_{u,t}^2\leq L_2^2Q_t^2.
+\]
+Hence
+\begin{equation}
+  \Pp\left(
+    \left|\sum_u\widetilde Z_{u,t}\right|>
+    L_2\left\{Q_t\sqrt{2z}+\frac{k_tz}{3}\right\}
+  \right)
+  \leq2e^{-z}.
+  \label{eq:bernstein-hessian}
+\end{equation}
+Take \(z=z_{\xx}=\xx+\log(4m)\) in
+\eqref{eq:bernstein-score} and \eqref{eq:bernstein-hessian}, and take the
+union over the two inequalities and over \(t\in\mathcal T_n\).  The exceptional
+probability is at most
+\(4m e^{-z_{\xx}}=e^{-\xx}\).  Equations \eqref{eq:C1} and
+\eqref{eq:C2} now prove part~(i).
+
+Part~(ii) is deterministic.  By \eqref{eq:derivative-bounds} and
+\eqref{eq:C3-delta},
+\[
+  \sup_{z\in\R}\frac{1}{\DFN^2}
+  \left|\sum_u\rhohu'''(\Data_u-z)w_{u,t}\right|
+  \leq\frac{L_3W_t}{\DFN^2}\leq C_3.
+\]
+Finally, \(|\rhohum'''|\leq L_3\).  The mean value theorem and
+\(|z-\xs|\leq r/\DFN\) for \(z\in U_t(r)\) give
+\begin{align*}
+  &\frac{1}{\DFN^2}
+  \left|\sum_u
+    \left\{\rhohum''(\Signal_u-z)
+    -\rhohum''(\Signal_u-\xs)\right\}w_{u,t}\right|\\
+  &\hspace{35mm}\leq
+    \frac{L_3W_t}{\DFN^2}|z-\xs|
+    \leq\frac{C_3r}{\DFN},
+\end{align*}
+which proves part~(iii).
+\end{proof}
+
+\begin{proof}[Proof of Proposition~\ref{prop:main}]
+Fix \(t\in\mathcal T_n\).  Since \(\fs'(\xs)=0\),
+\begin{equation}
+  \fp'(\xs)
+  =-\sum_u\left\{
+      \rhohu'(\Data_u-\xs)-\E\rhohu'(\Data_u-\xs)
+    \right\}w_{u,t}
+  =-\nabla_t.
+  \label{eq:score-sign}
+\end{equation}
+Lemma~\ref{lem:local}(i) also gives
+\begin{equation}
+  \frac{|\IFP-\IF|}{\IF}
+  \leq\frac{C_2}{\DFN}
+  \leq\delta.
+  \label{eq:F-comparison}
+\end{equation}
+In particular, \(\IFP\geq(1-\delta)\IF>0\).  With
+\begin{equation}
+  b_{\circ}\eqdef
+  \frac{\DFN}{\IFP}|\fp'(\xs)|,
+  \label{eq:bcirc}
+\end{equation}
+the score bound and \eqref{eq:F-comparison} imply
+\begin{equation}
+  b_{\circ}\leq\frac{C_1}{1-\delta}.
+  \label{eq:bcirc-bound}
+\end{equation}
+
+Lemma~\ref{lem:local}(ii) gives the third-derivative parameter
+\(\tau_3=C_3/\DFN\) in the local metric \(\DFN\).  Also,
+\eqref{eq:F-comparison} permits
+\(\kappa^2=(1-\delta)^{-1}\) in the comparison
+\(\DFN^2\leq\kappa^2\IFP\).  Thus the second condition in
+\eqref{eq:smallness} implies
+\begin{equation}
+  \kappa^2\tau_3 b_{\circ}
+  \leq\frac{C_1C_3}{\DFN(1-\delta)^2}<\frac49.
+\end{equation}
+The generic perturbation bound, Theorem~A.9 in \texttt{IRMF.tex}, now gives
+\begin{equation}
+  \left|\DFN^{-1}\IFP
+    \left(\xp-\xs+\IFP^{-1}\fp'(\xs)\right)\right|
+  \leq\frac{3C_3}{4\DFN}b_{\circ}^2.
+  \label{eq:generic-bound}
+\end{equation}
+The third-derivative bound is global, so its neighborhood condition may be
+satisfied with any radius at least \(3b_{\circ}/2\).  Combining
+\eqref{eq:F-comparison}, \eqref{eq:bcirc-bound}, and
+\eqref{eq:generic-bound} yields
+\begin{equation}
+  \left|\xp-\xs+\IFP^{-1}\fp'(\xs)\right|
+  \leq
+  \frac{3C_1^2C_3}{4\DFN^2(1-\delta)^3}.
+  \label{eq:Fcirc-remainder}
+\end{equation}
+
+It remains to replace \(\IFP\) by the population curvature \(\IF\).  By
+\eqref{eq:F-comparison}, \eqref{eq:lemma-score}, and
+\(\fs'(\xs)=0\),
+\begin{align}
+  \left|\IFP^{-1}\fp'(\xs)-\IF^{-1}\fp'(\xs)\right|
+  &=\frac{|\IFP-\IF|}{\IFP\IF}|\fp'(\xs)|
+  \notag\\
+  &\leq\frac{C_1C_2}{\DFN^2(1-\delta)}.
+  \label{eq:F-replacement}
+\end{align}
+The triangle inequality applied to \eqref{eq:Fcirc-remainder} and
+\eqref{eq:F-replacement}, followed by \eqref{eq:score-sign}, proves
+\begin{equation}
+  \DFN\left|
+    \xp-\xs-\IF^{-1}\nabla_t
+  \right|
+  \leq
+  \frac{1}{\DFN}
+  \left\{
+    \frac{3C_1^2C_3}{4(1-\delta)^3}
+    +\frac{C_1C_2}{1-\delta}
+  \right\}.
+  \label{eq:pointwise-final}
+\end{equation}
+Taking the supremum over \(t\in\mathcal T_n\) and using
+\(\DFN_t\geq\DFN_{\min}\) gives \eqref{eq:proposition-bound}.
+\end{proof}
+
+\begin{remark}[What the source files do not establish]
+The union bound above proves the result on the finite IMF evaluation grid.  A
+literal supremum over every \(t\in[0,1]\) needs a covering-number argument and
+regularity bounds in \(t\) for \(\IMFs_t\), \(\IF_t\), and the kernel-weighted
+process.  Those assumptions are not present in \texttt{IMF.tex} or
+\texttt{IRMF.tex}.  They also do not state the uniform positive-curvature and
+smallness assumptions in \eqref{eq:smallness}, which Theorem~A.9 needs.  Finally,
+the source files define \(N_t=N_t(\Signal_t)\), whereas
+\(\IF_t=N_t(\IMFs_t)\).  Hence the sentence ``\(\IF=N_t\)'' is valid only if
+\(N_t\) is redefined at \(\IMFs_t\), or if \(\Signal_t=\IMFs_t\).
+\end{remark}
+
+\end{document}
