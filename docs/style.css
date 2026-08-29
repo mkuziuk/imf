@@ -134,6 +134,24 @@ body {
   background: var(--paper);
 }
 
+details.more { margin-bottom: 0.75rem; }
+details.more summary {
+  cursor: pointer; list-style: none; user-select: none;
+  display: flex; align-items: center; gap: 0.45rem;
+  font-size: 12px; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase;
+  color: var(--accent-deep); padding: 0.35rem 0;
+}
+details.more summary::-webkit-details-marker { display: none; }
+details.more summary::before {
+  content: ""; width: 0; height: 0; flex: none;
+  border-left: 5px solid currentColor; border-top: 4px solid transparent; border-bottom: 4px solid transparent;
+  transition: transform 0.15s ease;
+}
+details.more[open] summary::before { transform: rotate(90deg); }
+details.more[open] {
+  border-bottom: 1px solid var(--grid); padding-bottom: 0.35rem;
+}
+
 .gd-facts { font-size: 12.5px; color: var(--secondary); display: grid; grid-template-columns: auto 1fr; gap: 0.25rem 0.9rem; }
 .gd-facts dt { color: var(--muted); }
 .gd-facts dd { font-family: var(--mono); font-size: 12px; text-align: right; }
