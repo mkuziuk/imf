@@ -82,15 +82,38 @@ function makeSchedule(n, factor, minWindow) {
 /* ---------- controls & state ---------- */
 
 const $ = (id) => document.getElementById(id);
-const controls = ["signal", "n", "sigma", "p", "cscale", "model", "contrast", "h_ratio", "kernel", "factor", "min_window"];
+const controls = [
+  "signal", "n", "sigma", "p", "cscale", "model", "contrast", "h_ratio", "kernel", "factor", "min_window",
+  "slow_amp", "fast_amp", "fast_cycles", "bump_amp", "bump_pos", "bump_width", "trend_slope",
+  "signal_variant", "signal_scale",
+];
 let seed = 777;
 let stageMode = "components";
 let errorMode = "raw";
 let lastPayload = null;
 
+function signalParams() {
+  if ($("signal").value === "simple") {
+    return {
+      slow_amp: Number($("slow_amp").value),
+      fast_amp: Number($("fast_amp").value),
+      fast_cycles: Number($("fast_cycles").value),
+      bump_amp: Number($("bump_amp").value),
+      bump_pos: Number($("bump_pos").value),
+      bump_width: Number($("bump_width").value),
+      trend_slope: Number($("trend_slope").value),
+    };
+  }
+  return {
+    signal_seed: Number($("signal_variant").value),
+    signal_scale: Number($("signal_scale").value),
+  };
+}
+
 function currentParams() {
   return {
     signal: $("signal").value,
+    signal_params: signalParams(),
     n: Number($("n").value),
     sigma: Number($("sigma").value),
     p: Number($("p").value),
@@ -106,6 +129,17 @@ function currentParams() {
 }
 
 function refreshControlChrome() {
+  const simple = $("signal").value === "simple";
+  $("simple-params").hidden = !simple;
+  $("complex-params").hidden = simple;
+  $("slow_amp-val").textContent = Number($("slow_amp").value).toFixed(2);
+  $("fast_amp-val").textContent = Number($("fast_amp").value).toFixed(2);
+  $("fast_cycles-val").textContent = $("fast_cycles").value;
+  $("bump_amp-val").textContent = Number($("bump_amp").value).toFixed(2);
+  $("bump_pos-val").textContent = Number($("bump_pos").value).toFixed(2);
+  $("bump_width-val").textContent = Number($("bump_width").value).toFixed(3);
+  $("trend_slope-val").textContent = Number($("trend_slope").value).toFixed(2);
+  $("signal_scale-val").textContent = Number($("signal_scale").value).toFixed(2);
   $("sigma-val").textContent = Number($("sigma").value).toFixed(2);
   $("p-val").textContent = Number($("p").value).toFixed(2);
   $("cscale-val").textContent = Number($("cscale").value).toFixed(2);
@@ -310,18 +344,28 @@ function renderStages(p) {
     ],
   });
 
+  const rowSeries = (r, col) =>
+    r === K
+      ? [col.est.residual, cleanRefResidual(col.ref.components)]
+      : stageMode === "components"
+        ? [col.est.components[r], col.ref.components[r]]
+        : [sumRows(col.est.components, r).map((s, i) => p.observed[i] - s), col.est.components[r]];
+
+  // one shared y-scale across all component rows; the residual row keeps its own
+  const rangeOf = (rowIndices) => {
+    let lo = Infinity, hi = -Infinity;
+    for (const r of rowIndices)
+      for (const col of columns)
+        for (const arr of rowSeries(r, col))
+          for (const v of arr) { if (v < lo) lo = v; if (v > hi) hi = v; }
+    return [lo, hi];
+  };
+  const stageRange = rangeOf(Array.from({ length: K }, (_, i) => i));
+  const residualRange = rangeOf([K]);
+
   for (let r = 0; r < rows; r++) {
     const isResidualRow = r === K;
-    // shared y-range across the two columns of this row
-    let lo = Infinity, hi = -Infinity;
-    for (const col of columns) {
-      const series = isResidualRow
-        ? [col.est.residual, cleanRefResidual(col.ref.components)]
-        : stageMode === "components"
-          ? [col.est.components[r], col.ref.components[r]]
-          : [sumRows(col.est.components, r).map((s, i) => p.observed[i] - s), col.est.components[r]];
-      for (const arr of series) for (const v of arr) { if (v < lo) lo = v; if (v > hi) hi = v; }
-    }
+    const [lo, hi] = isResidualRow ? residualRange : stageRange;
     const pad = (hi - lo) * 0.08 || 0.1;
 
     for (let c = 0; c < 2; c++) {

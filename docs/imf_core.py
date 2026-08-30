@@ -101,12 +101,21 @@ def kernel_weights(window_size, kind="squared_triangular"):
 # Test signals
 # ---------------------------------------------------------------------------
 
-def gen_signal_simple(t):
-    slow = 0.6 * np.sin(2 * np.pi * t)
-    medium = 0.25 * np.sin(12 * np.pi * t)
-    bump = 0.8 * np.exp(-((t - 0.55) ** 2) / (2 * 0.015**2))
-    trend = 0.5 * (t - 0.5)
-    return slow + medium + bump + trend
+def gen_signal_simple(
+    t,
+    slow_amp=0.6,
+    fast_amp=0.25,
+    fast_cycles=6.0,
+    bump_amp=0.8,
+    bump_pos=0.55,
+    bump_width=0.015,
+    trend_slope=0.5,
+):
+    slow = slow_amp * np.sin(2 * np.pi * t)
+    fast = fast_amp * np.sin(2 * np.pi * fast_cycles * t)
+    bump = bump_amp * np.exp(-((t - bump_pos) ** 2) / (2 * bump_width**2))
+    trend = trend_slope * (t - 0.5)
+    return slow + fast + bump + trend
 
 
 def gen_signal_complex(t, seed=2026, target_std=TARGET_SIGNAL_STD):
@@ -360,7 +369,24 @@ def run_demo(params_json):
     scale = max(float(params["h_ratio"]) * sigma, 1e-3)
 
     t = np.linspace(0.0, 1.0, n)
-    x = gen_signal_simple(t) if params["signal"] == "simple" else gen_signal_complex(t)
+    sp = params.get("signal_params", {})
+    if params["signal"] == "simple":
+        x = gen_signal_simple(
+            t,
+            slow_amp=float(sp.get("slow_amp", 0.6)),
+            fast_amp=float(sp.get("fast_amp", 0.25)),
+            fast_cycles=float(sp.get("fast_cycles", 6.0)),
+            bump_amp=float(sp.get("bump_amp", 0.8)),
+            bump_pos=float(sp.get("bump_pos", 0.55)),
+            bump_width=float(sp.get("bump_width", 0.015)),
+            trend_slope=float(sp.get("trend_slope", 0.5)),
+        )
+    else:
+        x = gen_signal_complex(
+            t,
+            seed=int(sp.get("signal_seed", 2026)),
+            target_std=TARGET_SIGNAL_STD * float(sp.get("signal_scale", 1.0)),
+        )
     rng = np.random.default_rng(int(params["seed"]))
     y, info = generate_observation(
         x,
