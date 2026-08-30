@@ -13,9 +13,14 @@ one-dimensional signals with Gaussian noise and one-sided exponential contaminat
   experiment.
 - [`experiments/real-vs-calculated/`](experiments/real-vs-calculated/): clean-reference
   comparisons, observation-model variants, limit sweeps, and error-scaling studies.
+- [`experiments/residual-distribution/`](experiments/residual-distribution/): paired
+  Monte Carlo comparisons of linear and robust IMF final residuals.
+- [`experiments/proposition-4-1/`](experiments/proposition-4-1/): numerical test of
+  the oracle correction for the first robust IMF component.
 - [`overleaf/`](overleaf/): publication-ready TeX sources and their figures.
 - [`research/first-imf-recursive-error/`](research/first-imf-recursive-error/): audit
   of the first recursive IMF error, including its companion notebook and diagnostics.
+- [`output/`](output/): generated tables and figures. Source notebooks do not live here.
 - [`IMF.pdf`](IMF.pdf): reference note for intrinsic robust multiscale filtering.
 - `requirements.txt`: Python dependencies needed to run the notebooks.
 
