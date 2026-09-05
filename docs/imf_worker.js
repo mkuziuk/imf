@@ -3,13 +3,13 @@
 importScripts("https://cdn.jsdelivr.net/pyodide/v0.26.4/full/pyodide.js");
 
 const ready = (async () => {
-  postMessage({ type: "boot", stage: "Loading Python runtime (~15 MB on first visit)…" });
+  postMessage({ type: "boot", stage: "Loading filters…" });
   const py = await loadPyodide({
     indexURL: "https://cdn.jsdelivr.net/pyodide/v0.26.4/full/",
   });
-  postMessage({ type: "boot", stage: "Loading NumPy…" });
+  postMessage({ type: "boot", stage: "Loading filters…" });
   await py.loadPackage("numpy");
-  postMessage({ type: "boot", stage: "Loading imf_core.py…" });
+  postMessage({ type: "boot", stage: "Preparing filters…" });
   const resp = await fetch("imf_core.py");
   if (!resp.ok) throw new Error(`could not fetch imf_core.py (${resp.status})`);
   py.runPython(await resp.text());

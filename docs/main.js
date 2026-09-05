@@ -1,6 +1,6 @@
 "use strict";
 
-/* ---------- palette (validated, see dataviz notes in the PR) ---------- */
+/* ---------- palette ---------- */
 
 const C = {
   ink: "#16181c",
@@ -12,8 +12,6 @@ const C = {
   linear: "#2a78d6",
   gd: "#eb6834",
   contam: "#e34948",
-  // blue ordinal ramp, light -> dark, for stage-indexed series
-  ramp: ["#86b6ef", "#6da7ec", "#5598e7", "#3987e5", "#2a78d6", "#256abf", "#1c5cab", "#184f95", "#104281"],
 };
 
 const FONT = { family: 'system-ui, -apple-system, "Segoe UI", sans-serif', size: 12, color: C.secondary };
@@ -144,16 +142,11 @@ function refreshControlChrome() {
   $("p-val").textContent = Number($("p").value).toFixed(2);
   $("cscale-val").textContent = Number($("cscale").value).toFixed(2);
   $("h_ratio-val").textContent = Number($("h_ratio").value).toFixed(2);
-  $("field-h").classList.toggle("disabled", $("contrast").value === "quadratic");
+  $("field-h").hidden = $("contrast").value === "quadratic";
+  $("h_ratio").disabled = $("contrast").value === "quadratic";
   const p = currentParams();
   const schedule = makeSchedule(p.n, p.factor, p.min_window);
   $("schedule-badges").innerHTML = schedule.map((w) => `<span>${w}</span>`).join("");
-  if (p.contrast === "quadratic") {
-    $("gd-step").textContent = "η = 0.95";
-  } else {
-    const h = Math.max(p.h_ratio * p.sigma, 1e-3);
-    $("gd-step").textContent = `η = 0.95·H·√(π∕2) = ${(0.95 * h * Math.sqrt(Math.PI / 2)).toFixed(3)}`;
-  }
 }
 
 /* ---------- worker ---------- */
@@ -163,7 +156,6 @@ let workerReady = false;
 let inFlight = false;
 let queuedRun = false;
 let runCounter = 0;
-let runStarted = 0;
 
 function setStatus(state, text) {
   $("status-dot").className = `status-dot ${state}`;
@@ -182,8 +174,7 @@ function launchRun() {
   }
   inFlight = true;
   runCounter += 1;
-  runStarted = performance.now();
-  setStatus("busy", "Computing decomposition…");
+  setStatus("busy", "Updating plots…");
   setStale(true);
   worker.postMessage({ type: "run", runId: runCounter, params: currentParams() });
 }
@@ -193,10 +184,10 @@ worker.onmessage = (event) => {
   if (msg.type === "boot") {
     setStatus("busy", msg.stage);
   } else if (msg.type === "boot-error") {
-    setStatus("error", `Failed to start Python runtime: ${msg.message}`);
+    setStatus("error", `Could not load filters: ${msg.message}`);
   } else if (msg.type === "ready") {
     workerReady = true;
-    setStatus("busy", "Runtime ready — first run…");
+    setStatus("busy", "Preparing plots…");
     launchRun();
   } else if (msg.type === "result") {
     inFlight = false;
@@ -206,8 +197,7 @@ worker.onmessage = (event) => {
       return; // skip rendering the outdated result
     }
     lastPayload = msg.payload;
-    const total = ((performance.now() - runStarted) / 1000).toFixed(2);
-    setStatus("ready", `Ready — NumPy time ${msg.payload.elapsed_seconds.toFixed(2)} s (round trip ${total} s)`);
+    setStatus("ready", "Ready");
     setStale(false);
     renderAll(msg.payload);
   } else if (msg.type === "error") {
@@ -237,49 +227,42 @@ $("redraw").addEventListener("click", () => {
 document.querySelectorAll("#stage-mode button").forEach((btn) =>
   btn.addEventListener("click", () => {
     stageMode = btn.dataset.mode;
-    document.querySelectorAll("#stage-mode button").forEach((b) => b.classList.toggle("active", b === btn));
+    document.querySelectorAll("#stage-mode button").forEach((b) => {
+      b.classList.toggle("active", b === btn);
+      b.setAttribute("aria-pressed", String(b === btn));
+    });
     if (lastPayload) renderStages(lastPayload);
   })
 );
 document.querySelectorAll("#error-mode button").forEach((btn) =>
   btn.addEventListener("click", () => {
     errorMode = btn.dataset.mode;
-    document.querySelectorAll("#error-mode button").forEach((b) => b.classList.toggle("active", b === btn));
+    document.querySelectorAll("#error-mode button").forEach((b) => {
+      b.classList.toggle("active", b === btn);
+      b.setAttribute("aria-pressed", String(b === btn));
+    });
     if (lastPayload) renderError(lastPayload);
   })
 );
 
 /* ---------- rendering ---------- */
 
-function fmtSci(v) {
-  if (v === 0) return "0";
-  const exp = Math.floor(Math.log10(Math.abs(v)));
-  if (exp >= -3 && exp < 4) return v.toPrecision(3);
-  return `${(v / 10 ** exp).toFixed(1)}·10${superscript(exp)}`;
-}
-
-function superscript(num) {
-  const map = { "-": "⁻", 0: "⁰", 1: "¹", 2: "²", 3: "³", 4: "⁴", 5: "⁵", 6: "⁶", 7: "⁷", 8: "⁸", 9: "⁹" };
-  return String(num).split("").map((ch) => map[ch] ?? ch).join("");
-}
-
 function sub(k) {
   const map = { 0: "₀", 1: "₁", 2: "₂", 3: "₃", 4: "₄", 5: "₅", 6: "₆", 7: "₇", 8: "₈", 9: "₉" };
   return String(k).split("").map((ch) => map[ch] ?? ch).join("");
 }
 
-function gdLabel(payload) {
-  return payload.params_contrast === "quadratic" ? "GD · quadratic" : "GD · robust";
+function filterLabel(payload) {
+  return payload.params_contrast === "quadratic" ? "Quadratic" : "Robust";
 }
 
 function renderAll(payload) {
   payload.params_contrast = $("contrast").value;
   $("obs-meta").textContent =
-    `realized p̂ = ${(payload.metrics.contam_fraction * 100).toFixed(1)}% · seed ${seed}`;
+    `${(payload.metrics.contam_fraction * 100).toFixed(1)}% outliers`;
   renderObservation(payload);
   renderStages(payload);
   renderRecon(payload);
-  renderGd(payload);
   renderError(payload);
 }
 
@@ -288,15 +271,15 @@ function renderObservation(p) {
   const maskY = p.mask_idx.map((i) => p.observed[i]);
   const traces = [
     {
-      x: p.t, y: p.observed, name: "observed Y", mode: "lines",
+      x: p.t, y: p.observed, name: "Observed", mode: "lines",
       line: { color: C.muted, width: 1 }, hovertemplate: "Y = %{y:.3f}<extra>observed</extra>",
     },
     {
-      x: p.t, y: p.clean, name: "clean signal X", mode: "lines",
+      x: p.t, y: p.clean, name: "Clean signal", mode: "lines",
       line: { color: C.ink, width: 1.7 }, hovertemplate: "X = %{y:.3f}<extra>clean</extra>",
     },
     {
-      x: maskT, y: maskY, name: "contaminated points", mode: "markers",
+      x: maskT, y: maskY, name: "Outliers", mode: "markers",
       marker: { color: C.contam, size: 5.5, opacity: 0.85 },
       hovertemplate: "Y = %{y:.3f}<extra>contaminated</extra>",
     },
@@ -315,6 +298,9 @@ function renderObservation(p) {
 }
 
 function renderStages(p) {
+  $("stage-note").textContent = stageMode === "components"
+    ? "Dotted lines show each filter applied to the clean signal."
+    : "Each row shows the residual before filtering and the component removed.";
   const K = p.windows.length;
   const rows = K + 1; // final row: residual after the last stage
   const sumRows = (mat, upto) => p.t.map((_, i) => {
@@ -327,8 +313,8 @@ function renderStages(p) {
     p.t.map((_, i) => p.clean[i] - refComponents.reduce((acc, comp) => acc + comp[i], 0));
 
   const columns = [
-    { key: "linear", ref: p.linear_ref, est: p.linear, color: C.linear, label: "linear" },
-    { key: "gd", ref: p.gd_ref, est: p.gd, color: C.gd, label: gdLabel(p) },
+    { key: "linear", ref: p.linear_ref, est: p.linear, color: C.linear, label: "Linear" },
+    { key: "gd", ref: p.gd_ref, est: p.gd, color: C.gd, label: filterLabel(p) },
   ];
 
   const traces = [];
@@ -339,8 +325,8 @@ function renderStages(p) {
     margin: { l: 64, r: 16, t: 80, b: 34 },
     legend: { orientation: "h", x: 0, y: 1 + 56 / plotHeight, yanchor: "bottom", font: { size: 11.5 } },
     annotations: [
-      { text: "Linear (closed form)", x: 0.22, y: 1.0, xref: "paper", yref: "paper", yshift: 22, showarrow: false, font: { size: 12, color: C.ink } },
-      { text: gdLabel(p) === "GD · quadratic" ? "Gradient descent (quadratic ρ)" : "Gradient descent (robust ρ_H)", x: 0.78, y: 1.0, xref: "paper", yref: "paper", yshift: 22, showarrow: false, font: { size: 12, color: C.ink } },
+      { text: "Linear", x: 0.22, y: 1.0, xref: "paper", yref: "paper", yshift: 22, showarrow: false, font: { size: 12, color: C.ink } },
+      { text: filterLabel(p), x: 0.78, y: 1.0, xref: "paper", yref: "paper", yshift: 22, showarrow: false, font: { size: 12, color: C.ink } },
     ],
   });
 
@@ -391,7 +377,7 @@ function renderStages(p) {
         traces.push({
           x: p.t, y: cleanRefResidual(col.ref.components), xaxis: xa, yaxis: ya,
           mode: "lines", line: { color: C.muted, width: 1, dash: "dot" },
-          name: "reference (clean signal)", legendgroup: "ref", showlegend: r === 0 && c === 0,
+          name: "Clean reference", legendgroup: "ref", showlegend: r === 0 && c === 0,
           hovertemplate: "%{y:.3f}<extra>reference residual</extra>",
         });
         traces.push({
@@ -404,7 +390,7 @@ function renderStages(p) {
         traces.push({
           x: p.t, y: col.ref.components[r], xaxis: xa, yaxis: ya,
           mode: "lines", line: { color: C.muted, width: 1, dash: "dot" },
-          name: "reference (clean signal)", legendgroup: "ref", showlegend: r === 0 && c === 0,
+          name: "Clean reference", legendgroup: "ref", showlegend: r === 0 && c === 0,
           hovertemplate: "%{y:.3f}<extra>reference S" + (r + 1) + "</extra>",
         });
         traces.push({
@@ -418,7 +404,7 @@ function renderStages(p) {
         traces.push({
           x: p.t, y: before, xaxis: xa, yaxis: ya,
           mode: "lines", line: { color: C.faint, width: 1 },
-          name: "residual before stage", legendgroup: "before", showlegend: r === 0 && c === 0,
+          name: "Residual before stage", legendgroup: "before", showlegend: r === 0 && c === 0,
           hovertemplate: "%{y:.3f}<extra>before S" + (r + 1) + "</extra>",
         });
         traces.push({
@@ -436,39 +422,24 @@ function renderStages(p) {
 
 function renderRecon(p) {
   const m = p.metrics;
-  const improvement = (name, value) =>
-    m.rmse_observed > 0 && value > 0 ? `${(m.rmse_observed / value).toFixed(1)}× closer than Y` : "";
   $("recon-tiles").innerHTML = `
     <div class="tile">
-      <div class="tile-label">RMSE, observed</div>
+      <div class="tile-label">Observed RMSE</div>
       <div class="tile-value">${m.rmse_observed.toFixed(3)}</div>
-      <div class="tile-sub">‖Y − X‖ₙ</div>
     </div>
     <div class="tile linear">
-      <div class="tile-label">RMSE, linear</div>
+      <div class="tile-label">Linear RMSE</div>
       <div class="tile-value">${m.rmse_linear.toFixed(3)}</div>
-      <div class="tile-sub">${improvement("linear", m.rmse_linear)}</div>
     </div>
     <div class="tile gd">
-      <div class="tile-label">RMSE, ${gdLabel(p)}</div>
+      <div class="tile-label">${filterLabel(p)} RMSE</div>
       <div class="tile-value">${m.rmse_gd.toFixed(3)}</div>
-      <div class="tile-sub">${improvement("gd", m.rmse_gd)}</div>
-    </div>
-    <div class="tile">
-      <div class="tile-label">Reconstruction, linear</div>
-      <div class="tile-value">${fmtSci(m.recon_linear)}</div>
-      <div class="tile-sub">max |Y − ΣS − R|</div>
-    </div>
-    <div class="tile">
-      <div class="tile-label">Reconstruction, GD</div>
-      <div class="tile-value">${fmtSci(m.recon_gd)}</div>
-      <div class="tile-sub">max |Y − ΣS − R|</div>
     </div>`;
 
   const traces = [
-    { x: p.t, y: p.clean, name: "clean signal X", mode: "lines", line: { color: C.ink, width: 1.7 } },
-    { x: p.t, y: p.linear.denoised, name: "linear ΣS", mode: "lines", line: { color: C.linear, width: 1.3 } },
-    { x: p.t, y: p.gd.denoised, name: `${gdLabel(p)} ΣS`, mode: "lines", line: { color: C.gd, width: 1.3 } },
+    { x: p.t, y: p.clean, name: "Clean signal", mode: "lines", line: { color: C.ink, width: 1.7 } },
+    { x: p.t, y: p.linear.denoised, name: "Linear", mode: "lines", line: { color: C.linear, width: 1.3 } },
+    { x: p.t, y: p.gd.denoised, name: filterLabel(p), mode: "lines", line: { color: C.gd, width: 1.3 } },
   ];
   Plotly.react(
     "plot-recon",
@@ -483,33 +454,6 @@ function renderRecon(p) {
   );
 }
 
-function renderGd(p) {
-  const K = p.windows.length;
-  $("gd-meta").textContent = `iterations per stage: ${p.gd.iters.join(", ")}`;
-  const traces = p.gd.traces.map((trace, k) => {
-    const rampIdx = K === 1 ? C.ramp.length - 1 : Math.round((k * (C.ramp.length - 1)) / (K - 1));
-    return {
-      x: trace.map((_, i) => i + 1),
-      y: trace,
-      name: `stage ${k + 1} · w = ${p.windows[k]}`,
-      mode: "lines+markers",
-      line: { color: C.ramp[rampIdx], width: 1.6 },
-      marker: { size: 4.5, color: C.ramp[rampIdx] },
-      hovertemplate: "iter %{x}: %{y:.2e}<extra>stage " + (k + 1) + "</extra>",
-    };
-  });
-  Plotly.react(
-    "plot-gd",
-    traces,
-    baseLayout({
-      height: 340,
-      xaxis: axisDefaults({ title: { text: "iteration m", font: { size: 11 } }, dtick: 1 }),
-      yaxis: axisDefaults({ type: "log", title: { text: "max |Δx|", font: { size: 11 } }, exponentformat: "power" }),
-    }),
-    PLOT_CONFIG
-  );
-}
-
 function renderError(p) {
   const m = p.metrics;
   const K = p.windows.length;
@@ -518,14 +462,14 @@ function renderError(p) {
   const gd = errorMode === "raw" ? m.stage_rmse_gd : m.stage_rmse_gd_scaled;
   const traces = [
     {
-      x: stages, y: lin, name: "linear", mode: "lines+markers",
+      x: stages, y: lin, name: "Linear", mode: "lines+markers",
       line: { color: C.linear, width: 1.8 }, marker: { size: 7 },
       hovertemplate: "stage %{x}: %{y:.4f}<extra>linear</extra>",
     },
     {
-      x: stages, y: gd, name: gdLabel(p), mode: "lines+markers",
+      x: stages, y: gd, name: filterLabel(p), mode: "lines+markers",
       line: { color: C.gd, width: 1.8 }, marker: { size: 7, symbol: "square" },
-      hovertemplate: "stage %{x}: %{y:.4f}<extra>" + gdLabel(p) + "</extra>",
+      hovertemplate: "stage %{x}: %{y:.4f}<extra>" + filterLabel(p) + "</extra>",
     },
   ];
   Plotly.react(
@@ -547,16 +491,15 @@ function renderError(p) {
   );
 
   $("stage-table").innerHTML = `
-    <tr><th>stage</th><th>window</th><th>RMSE linear</th><th>RMSE GD</th>
-        <th>scaled linear</th><th>scaled GD</th><th>GD iters</th></tr>
+    <tr><th>stage</th><th>window</th><th>RMSE linear</th><th>RMSE ${filterLabel(p).toLowerCase()}</th>
+        <th>scaled linear</th><th>scaled ${filterLabel(p).toLowerCase()}</th></tr>
     ${stages
       .map(
         (k) => `<tr><td>S${sub(k)}</td><td>${p.windows[k - 1]}</td>
           <td>${m.stage_rmse_linear[k - 1].toFixed(4)}</td>
           <td>${m.stage_rmse_gd[k - 1].toFixed(4)}</td>
           <td>${m.stage_rmse_linear_scaled[k - 1].toFixed(4)}</td>
-          <td>${m.stage_rmse_gd_scaled[k - 1].toFixed(4)}</td>
-          <td>${p.gd.iters[k - 1]}</td></tr>`
+          <td>${m.stage_rmse_gd_scaled[k - 1].toFixed(4)}</td></tr>`
       )
       .join("")}`;
 }
