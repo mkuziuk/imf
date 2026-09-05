@@ -14,3 +14,9 @@ convergence diagnostics stay out of the interface.
 
 No build step is needed. Run `python3 -m http.server` from this directory to preview.
 GitHub Pages serves the `/docs` folder on `main` using "Deploy from a branch".
+
+The script and stylesheet URLs in `index.html` include the first 12 characters of
+each file's SHA-256 hash. After editing either file, run
+`sha256sum docs/main.js docs/style.css` from the repository root and update its
+`?v=` value. This prevents an updated page from loading a cached script that still
+expects removed controls.
