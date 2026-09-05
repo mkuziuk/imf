@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Intrinsic Multiscale Filtering</title>
-  <meta name="description" content="Interactive demonstration of intrinsic multiscale filtering: linear and robust signal decomposition by gradient descent, computed live in the browser with NumPy.">
+  <title>Intrinsic multiscale filtering</title>
+  <meta name="description" content="Compare linear and robust multiscale filters on a noisy signal. Adjust the noise and see how the estimates change.">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
   <link rel="stylesheet" href="style.css">
@@ -13,46 +13,28 @@
 <div class="page">
 
   <header class="topbar">
-    <div class="brand"><span class="brand-mark">S̃</span> Intrinsic Multiscale Filtering</div>
-    <div class="paper-tag">live demonstration · NumPy in the browser</div>
+    <h1>Intrinsic multiscale filtering</h1>
+    <p>Adjust the noise and compare the linear and robust filters.</p>
   </header>
 
-  <section class="hero">
-    <div class="hero-text">
-      <p class="eyebrow">Multiscale signal decomposition</p>
-      <h1>Filter coarse to fine.<br><em>Robust at every scale.</em></h1>
-      <p class="lede">
-        A contaminated signal is decomposed into multiscale components by recursively fitting a
-        local model at shrinking bandwidths. The quadratic contrast yields the linear filter in
-        closed form; the smoothed absolute contrast, minimized by gradient descent with a bounded
-        score, yields its robust counterpart. Every curve below is recomputed live by the
-        project's NumPy implementation running in your browser.
-      </p>
-    </div>
-    <div class="formula-capsule">
-      \( Y^{(k+1)} = Y^{(k)} - \widetilde{S}^{(k)} \)
-      <span class="sub">\( \widetilde{S}^{(k)}_t = \arg\min_x \textstyle\sum_u K_{h_k}(t-u)\, \rho\big(Y^{(k)}_u - x\big) \)</span>
-    </div>
-  </section>
-
   <main class="workspace">
-    <aside class="controls">
-      <div class="status-line" id="status-line">
+    <aside class="controls" aria-label="Filter settings">
+      <div class="status-line" id="status-line" role="status" aria-live="polite">
         <span class="status-dot" id="status-dot"></span>
-        <span id="status-text">Loading Python runtime (~15&nbsp;MB on first visit)…</span>
+        <span id="status-text">Loading filters…</span>
       </div>
 
       <div class="control-group">
-        <div class="group-title"><span class="group-num">01</span><h3>Signal &amp; observation</h3></div>
+        <div class="group-title"><h2>Signal and noise</h2></div>
         <div class="field">
           <label for="signal">Test signal</label>
           <select id="signal">
-            <option value="simple" selected>Composite — sines + bump + trend</option>
-            <option value="complex">Complex — chirp, transients, texture</option>
+            <option value="simple" selected>Waves, bump and trend</option>
+            <option value="complex">Chirp and transients</option>
           </select>
         </div>
         <details class="more">
-        <summary>Signal shape settings</summary>
+        <summary>Signal shape</summary>
         <div id="simple-params">
           <div class="field">
             <label for="slow_amp">Slow wave amplitude <span class="val"><span id="slow_amp-val">0.60</span></span></label>
@@ -85,13 +67,13 @@
         </div>
         <div id="complex-params" hidden>
           <div class="field">
-            <label for="signal_variant">Signal variant <span class="val">seed</span></label>
+            <label for="signal_variant">Signal variant</label>
             <select id="signal_variant">
-              <option value="2026" selected>Variant 1 — seed 2026 (notebooks)</option>
-              <option value="11">Variant 2 — seed 11</option>
-              <option value="42">Variant 3 — seed 42</option>
-              <option value="77">Variant 4 — seed 77</option>
-              <option value="123">Variant 5 — seed 123</option>
+              <option value="2026" selected>Variant 1</option>
+              <option value="11">Variant 2</option>
+              <option value="42">Variant 3</option>
+              <option value="77">Variant 4</option>
+              <option value="123">Variant 5</option>
             </select>
           </div>
           <div class="field">
@@ -113,29 +95,29 @@
           <input type="range" id="sigma" min="0" max="1.5" step="0.05" value="0.4">
         </div>
         <div class="field">
-          <label for="p">Contamination probability <span class="val">p = <span id="p-val">0.20</span></span></label>
+          <label for="p">Outlier probability <span class="val">p = <span id="p-val">0.20</span></span></label>
           <input type="range" id="p" min="0" max="0.9" step="0.05" value="0.2">
         </div>
         <div class="field">
-          <label for="cscale">Contamination scale <span class="val">b = <span id="cscale-val">0.60</span></span></label>
+          <label for="cscale">Outlier scale <span class="val">b = <span id="cscale-val">0.60</span></span></label>
           <input type="range" id="cscale" min="0" max="4" step="0.1" value="0.6">
         </div>
         <div class="field">
           <label for="model">Observation model</label>
           <select id="model">
-            <option value="additive" selected>Additive — Yᵢ = Xᵢ + εᵢ + MᵢCᵢ</option>
-            <option value="masked">Masked — Yᵢ = εᵢ + Cᵢ where Mᵢ = 1</option>
+            <option value="additive" selected>Add outliers to the signal</option>
+            <option value="masked">Replace signal at outliers</option>
           </select>
         </div>
       </div>
 
       <div class="control-group">
-        <div class="group-title"><span class="group-num">02</span><h3>Contrast &amp; kernel</h3></div>
+        <div class="group-title"><h2>Filter</h2></div>
         <div class="field">
           <label for="contrast">Contrast function <span class="val">ρ</span></label>
           <select id="contrast">
-            <option value="smooth_abs" selected>Smoothed absolute ρ_H — robust</option>
-            <option value="quadratic">Quadratic r²∕2 — reproduces linear</option>
+            <option value="smooth_abs" selected>Smoothed absolute</option>
+            <option value="quadratic">Quadratic</option>
           </select>
         </div>
         <div class="field" id="field-h">
@@ -143,20 +125,20 @@
           <input type="range" id="h_ratio" min="0.25" max="4" step="0.25" value="2">
         </div>
         <div class="field">
-          <label for="kernel">Localizing kernel <span class="val">K</span></label>
+          <label for="kernel">Kernel <span class="val">K</span></label>
           <select id="kernel">
-            <option value="squared_triangular" selected>Squared triangular (1−|u|)² — current</option>
-            <option value="epanechnikov">Epanechnikov 1−u²</option>
-            <option value="triangular">Triangular 1−|u|</option>
-            <option value="uniform">Uniform — moving average</option>
-            <option value="tricube">Tricube (1−|u|³)³</option>
+            <option value="squared_triangular" selected>Squared triangular</option>
+            <option value="epanechnikov">Epanechnikov</option>
+            <option value="triangular">Triangular</option>
+            <option value="uniform">Uniform</option>
+            <option value="tricube">Tricube</option>
             <option value="gaussian">Gaussian, truncated</option>
           </select>
         </div>
       </div>
 
       <div class="control-group">
-        <div class="group-title"><span class="group-num">03</span><h3>Multiscale schedule</h3></div>
+        <div class="group-title"><h2>Scales</h2></div>
         <div class="field">
           <label for="factor">Bandwidth factor <span class="val">a</span></label>
           <select id="factor">
@@ -176,21 +158,14 @@
             <option value="63">63</option>
           </select>
         </div>
-        <div class="schedule-badges" id="schedule-badges"></div>
-      </div>
-
-      <div class="control-group">
-        <div class="group-title"><span class="group-num">04</span><h3>Gradient descent</h3></div>
-        <dl class="gd-facts">
-          <dt>Initialization</dt><dd>window median</dd>
-          <dt>Step size η</dt><dd id="gd-step">0.95·H·√(π∕2)</dd>
-          <dt>Max iterations</dt><dd>60</dd>
-          <dt>Tolerance</dt><dd>1e−6 · (1 + max|x|)</dd>
-        </dl>
+        <details class="more">
+          <summary>Window sizes</summary>
+          <div class="schedule-badges" id="schedule-badges"></div>
+        </details>
       </div>
 
       <div class="actions">
-        <button class="ghost" id="redraw">↻ Redraw noise</button>
+        <button class="ghost" id="redraw">New noise sample</button>
       </div>
     </aside>
 
@@ -199,101 +174,62 @@
       <section class="card" id="card-observation">
         <div class="card-head">
           <div>
-            <p class="eyebrow">01 · Observation</p>
-            <h2>Signal under contamination</h2>
+            <h2>Observed signal</h2>
           </div>
           <span class="card-meta" id="obs-meta"></span>
         </div>
         <div class="plot-wrap"><div class="plot" id="plot-observation"></div></div>
-        <p class="card-note">
-          Gaussian noise \( \varepsilon_i \sim \mathcal N(0, \sigma^2) \) plus signed exponential
-          contamination \( C_i \sim \pm\,\mathrm{Exp}(b) \) applied where the Bernoulli mask
-          \( M_i \sim \mathrm{Bern}(p) \) fires. Marked points are the contaminated indices.
-        </p>
-      </section>
-
-      <section class="card" id="card-stages">
-        <div class="card-head">
-          <div>
-            <p class="eyebrow">02 · Decomposition</p>
-            <h2>Stage-by-stage components</h2>
-          </div>
-          <div class="seg" id="stage-mode">
-            <button data-mode="components" class="active">Component vs reference</button>
-            <button data-mode="cascade">Residual cascade</button>
-          </div>
-        </div>
-        <div class="plot-wrap"><div class="plot" id="plot-stages"></div></div>
-        <p class="card-note">
-          Left: the closed-form linear filter. Right: gradient descent with the selected contrast.
-          The dashed reference in each panel is the same filter applied to the clean signal
-          \( X \) — the component the method would extract with no noise at all. Both columns share
-          the y-scale per stage.
-        </p>
+        <p class="card-note">Outliers are marked in red.</p>
       </section>
 
       <section class="card" id="card-recon">
         <div class="card-head">
           <div>
-            <p class="eyebrow">03 · Reconstruction</p>
-            <h2>Exact reconstruction, denoised estimate</h2>
+            <h2>Filtered signal</h2>
           </div>
         </div>
         <div class="tiles" id="recon-tiles"></div>
         <div class="plot-wrap"><div class="plot" id="plot-recon"></div></div>
-        <p class="card-note">
-          The decomposition is exact by construction: \( Y = \sum_k \widetilde S_k + R_{K+1} \)
-          holds to machine precision for both methods. The denoised estimate
-          \( \widehat X = \sum_k \widetilde S_k \) discards only the final residual.
-        </p>
+        <p class="card-note">Each estimate leaves out the final residual. RMSE measures its error against the clean signal. Lower is better.</p>
       </section>
 
-      <section class="card" id="card-gd">
+      <section class="card" id="card-stages">
         <div class="card-head">
           <div>
-            <p class="eyebrow">04 · Gradient descent</p>
-            <h2>Convergence at every scale</h2>
+            <h2>Components</h2>
           </div>
-          <span class="card-meta" id="gd-meta"></span>
+          <div class="seg" id="stage-mode" role="group" aria-label="Component view">
+            <button data-mode="components" class="active" aria-pressed="true">Components</button>
+            <button data-mode="cascade" aria-pressed="false">Residuals</button>
+          </div>
         </div>
-        <div class="plot-wrap"><div class="plot" id="plot-gd"></div></div>
-        <p class="card-note">
-          Per-stage trace of \( \max_t |x^{(m+1)}_t - x^{(m)}_t| \) for the vectorized update
-          \( x^{(m+1)} = x^{(m)} + \eta \sum_u w_{t,u}\, \psi\big(r_u - x^{(m)}\big) \) with
-          \( \psi_H(r) = \mathrm{erf}\big(\tfrac{r}{\sqrt2 H}\big) \) bounded in \([-1, 1]\) —
-          the boundedness of the score is exactly what buys robustness to the contamination.
-        </p>
+        <div class="plot-wrap"><div class="plot" id="plot-stages"></div></div>
+        <p class="card-note" id="stage-note">Dotted lines show each filter applied to the clean signal.</p>
       </section>
 
       <section class="card" id="card-error">
         <div class="card-head">
           <div>
-            <p class="eyebrow">05 · Stage errors</p>
-            <h2>Real vs calculated components</h2>
+            <h2>Error by stage</h2>
           </div>
-          <div class="seg" id="error-mode">
-            <button data-mode="raw" class="active">Raw RMSE</button>
-            <button data-mode="scaled">Scaled by a^(k∕2)</button>
+          <div class="seg" id="error-mode" role="group" aria-label="Error scale">
+            <button data-mode="raw" class="active" aria-pressed="true">Raw RMSE</button>
+            <button data-mode="scaled" aria-pressed="false">Scaled RMSE</button>
           </div>
         </div>
         <div class="plot-wrap"><div class="plot" id="plot-error"></div></div>
-        <table class="stage-table" id="stage-table"></table>
-        <p class="card-note">
-          \( \mathrm{RMSE}_k = \lVert \widetilde S_k(Y) - \widetilde S_k(X) \rVert_n \): the distance
-          between the component computed from the observation and the same component computed from
-          the clean signal. The \( a^{k/2} \) normalization asks whether the error grows exactly
-          with the bandwidth schedule — flat lines mean it does.
-        </p>
+        <details class="more error-details">
+          <summary>Error values</summary>
+          <p class="card-note">Scaled RMSE divides the error at stage \( k \) by \( a^{k/2} \), where \( a \) is the bandwidth factor.</p>
+          <div class="table-wrap"><table class="stage-table" id="stage-table" aria-label="Error values by stage"></table></div>
+        </details>
+        <p class="card-note">RMSE compares each noisy component with its clean-signal reference. Lower is better.</p>
       </section>
 
     </div>
   </main>
 
-  <footer>
-    Intrinsic multiscale filtering — live demonstration. All computations run in this page:
-    the project's NumPy implementation executed via Pyodide. Every parameter change recomputes
-    the full decomposition; nothing is precomputed.
-  </footer>
+  <footer>Change any setting to update the plots.</footer>
 
 </div>
 

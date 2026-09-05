@@ -1,17 +1,16 @@
-# Demo website
+# IMF demo
 
-Interactive companion page for the IMF project: live linear and robust (gradient-descent)
-intrinsic multiscale filtering, computed in the visitor's browser.
+Compare linear and robust intrinsic multiscale filtering in the browser.
 
-- `imf_core.py` — the canonical NumPy implementation (window schedule, kernels, contrasts,
-  gradient descent, decompositions). It runs unmodified in the browser via Pyodide and can
-  equally be imported from the notebooks; the definitions mirror the notebook versions
-  verbatim and reproduce the numbers in
-  `research/first-imf-recursive-error/diagnostics/summary.json`.
-- `imf_worker.js` — Web Worker that boots Pyodide + NumPy and calls `imf_core.run_demo`.
-- `index.html`, `main.js`, `style.css` — the page. No build step; charts via Plotly.js,
-  math via KaTeX (both from CDN).
+The page starts with signal and noise controls beside the observed signal. The
+filtered signal comes next, followed by components and stage errors. Signal shape,
+window sizes, and the error table expand when needed. Solver settings and
+convergence diagnostics stay out of the interface.
 
-Run locally with any static server, e.g. `python3 -m http.server` from this directory.
-To publish: enable GitHub Pages for the repository with source "Deploy from a branch",
-branch `main`, folder `/docs`.
+- `imf_core.py` contains the NumPy implementation, including the robust solver.
+- `imf_worker.js` loads Python and NumPy through Pyodide and calls `run_demo`.
+- `index.html`, `main.js`, and `style.css` define the page. Plotly draws the charts;
+  KaTeX renders the formulas. Both load from a CDN.
+
+No build step is needed. Run `python3 -m http.server` from this directory to preview.
+GitHub Pages serves the `/docs` folder on `main` using "Deploy from a branch".
