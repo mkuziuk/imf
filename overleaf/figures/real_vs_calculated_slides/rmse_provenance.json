@@ -1,0 +1,95 @@
+{
+  "source_sha256": {
+    "gd_imf_real_vs_calculated.ipynb": "fdfe01e12d1cc29e0ae5cca5b24a84423148a3c1ed70286573c608c3224cbecf",
+    "gd_imf_real_vs_calculated_noise_only.ipynb": "7bfcb01dd062edd4ddd49cf35bf268d6ea83a526097ad74a7d2fb7c11dca42c0",
+    "gd_imf_real_vs_calculated_limits.ipynb": "87f3949598f1a19f9b55812c8d342da4a65ed7842819675203f2ff5ab6b0f144",
+    "gd_imf_real_vs_calculated_limits_noise_only.ipynb": "1b179050230ea9056bab352011542e2fc8dae38f3af2435fb93279146ecc3f66"
+  },
+  "single_run_cells": [
+    2,
+    4,
+    6,
+    8,
+    9
+  ],
+  "sweep_definition_cells": [
+    3,
+    5,
+    7,
+    9,
+    10,
+    14,
+    16
+  ],
+  "metric": "sqrt(mean((calculated_imf - same_method_clean_imf)**2)) over time",
+  "aggregate": "arithmetic mean of nine stage RMSE values, per repeat",
+  "presentation_setting": {
+    "sigma": 0.6,
+    "p": 0.2,
+    "contamination_scale": 2.0,
+    "seed": 777
+  },
+  "sweep_setting": {
+    "sigma": 0.2,
+    "p": 0.2,
+    "scale_ratios": [
+      2,
+      4,
+      6,
+      8,
+      10,
+      12
+    ],
+    "repeats": 3,
+    "seeds": [
+      777000,
+      777001,
+      777002
+    ],
+    "trials_per_model": 18
+  },
+  "heatmap_setting": {
+    "models": [
+      "additive",
+      "masked"
+    ],
+    "sigmas": [
+      0.4,
+      0.6,
+      0.8
+    ],
+    "probabilities": [
+      0.1,
+      0.15,
+      0.2,
+      0.25,
+      0.3
+    ],
+    "contamination_scales": [
+      1.0,
+      1.5,
+      2.0,
+      2.5,
+      3.0
+    ],
+    "repeats": 3,
+    "seeds": [
+      777000,
+      777001,
+      777002
+    ],
+    "trials_per_model": 225,
+    "color": "one logarithmic scale of unscaled mean RMSE shared by both models"
+  },
+  "component_definition": {
+    "source": "IMF.pdf",
+    "section": "2.2",
+    "page": 3,
+    "equivalent_equation": "3.2, page 9",
+    "sha256": "bfec11fb67f0348edf4e57b4174f27e0f21e92190c27d6c3ec06af4a9deafc6e"
+  },
+  "robust_H": "2 * sigma",
+  "kernel": "normalized (1 - abs(u))_+^2; periodic wrap boundaries",
+  "validation": "Decomposition reconstructions agree with inputs to atol 1e-10.",
+  "waveform_reference": "clean_linear_1"
+}

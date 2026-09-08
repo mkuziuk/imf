@@ -1,0 +1,3 @@
+model,method,stage,reference,rmse
+masked,linear,1,clean_linear_1,0.123395882787
+masked,robust,1,clean_linear_1,0.0897666508687
