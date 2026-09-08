@@ -1,0 +1,262 @@
+% Build from the repository root:
+% latexmk -pdf -cd overleaf/gd_imf_real_vs_calculated_slides.tex
+% Redraw the figures with overleaf/scripts/build_real_vs_calculated_slides.py.
+\documentclass[aspectratio=169,14pt]{beamer}
+\geometry{paperwidth=254mm,paperheight=142.875mm}
+% Use Beamer's standard Computer Modern fonts for a portable pdfLaTeX build.
+\usepackage{fix-cm}
+\DeclareFontShape{OT1}{cmss}{m}{it}{<->ssub*cmss/m/sl}{}
+\usepackage{amsmath,amssymb,booktabs,array,graphicx}
+
+\definecolor{ink}{HTML}{172B3A}
+\definecolor{blue}{HTML}{2563A6}
+\definecolor{orange}{HTML}{C65B32}
+\definecolor{teal}{HTML}{087F8C}
+\definecolor{muted}{HTML}{576B79}
+\setbeamercolor{normal text}{fg=ink,bg=white}
+\setbeamercolor{frametitle}{fg=ink}
+\setbeamercolor{title}{fg=ink}
+\setbeamercolor{structure}{fg=blue}
+\setbeamercolor{alerted text}{fg=orange}
+\setbeamerfont{frametitle}{size=\fontsize{25}{29}\selectfont,series=\bfseries}
+\setbeamerfont{title}{size=\fontsize{35}{40}\selectfont,series=\bfseries}
+\setbeamersize{text margin left=15mm,text margin right=15mm}
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{itemize items}[circle]
+\setbeamertemplate{frametitle}{\vspace{6mm}\insertframetitle\par\vspace{3mm}}
+\setbeamertemplate{footline}{%
+    \hfill{\color{muted}\fontsize{9}{11}\selectfont\insertframenumber}\hspace{15mm}\vspace{4mm}
+}
+\hypersetup{colorlinks=true,urlcolor=blue,linkcolor=blue,
+    pdftitle={Robust IMF under contamination},
+    pdfsubject={Paired linear and robust IMF comparisons using recursive RMSE}}
+\pdfstringdefDisableCommands{\def\translate#1{#1}}
+\graphicspath{{figures/real_vs_calculated_slides/}}
+\newcommand{\RMSE}{\operatorname{RMSE}}
+\newcommand{\source}[1]{\par\vspace{2mm}{\fontsize{9}{11}\selectfont\color{muted}#1\par}}
+\newcommand{\takeaway}[1]{\par\vspace{2mm}{\color{teal}#1\par}}
+\newcommand{\plotwide}[2][74mm]{\par\centering\includegraphics[width=\textwidth,height=#1,keepaspectratio]{#2}\par}
+\newcommand{\review}{\href{https://github.com/mkuziuk/imf/blob/main/overleaf/gd_imf_real_vs_calculated_review.tex}{Source review}}
+\newcommand{\notebooklink}[2]{\href{https://github.com/mkuziuk/imf/blob/main/experiments/real-vs-calculated/#1}{#2}}
+
+\title{Robust IMF under contamination}
+\author{}
+\date{}
+
+\begin{document}
+
+\begin{frame}[plain]
+    \vfill
+    {\usebeamerfont{title}Robust IMF under contamination\par}
+    \vfill
+\end{frame}
+
+\begin{frame}{Robust IMF changes the local fitting problem}
+    Set \(Y^{(1)}=Y\). At each stage \(k\), extract the IMF component
+    \[
+        \widetilde S^{(k)}_t=\operatorname*{arginf}_{x}\;
+        \sum_u \rho\!\left(Y^{(k)}_u-x\right)K_{h_k}(t-u).
+    \]
+    \(K_h(v)=K(v/h)\) weights the local window. The contrast \(\rho\) penalizes
+    \(r=Y^{(k)}_u-x\); its derivative \(\psi=\rho'\) determines each point's contribution to the fit.
+    \vspace{4mm}
+    \begin{columns}[T,onlytextwidth]
+        \begin{column}{0.46\textwidth}
+            {\color{blue}\large Linear IMF}\par
+            \[
+                \rho_{\rm lin}(r)=\frac{r^2}{2},\qquad \psi_{\rm lin}(r)=r.
+            \]
+            A weighted mean; large mismatches have large influence.
+        \end{column}
+        \begin{column}{0.49\textwidth}
+            {\color{orange}\large Robust IMF}\par
+            \[
+                \rho_H(r)=\mathbb E_{\xi}\,|r+H\xi|,\qquad \xi\sim\mathcal N(0,1),
+            \]
+            \[
+                \psi_H(r)=\operatorname{erf}\!\left(\frac{r}{\sqrt{2}H}\right),\qquad |\psi_H(r)|\leq1.
+            \]
+            A smooth absolute-value contrast, fitted by gradient descent; \(H=2\sigma\).
+        \end{column}
+    \end{columns}
+    \vspace{4mm}
+    Subtract the component and shrink the bandwidth:
+    \[
+        Y^{(k+1)}_t=Y^{(k)}_t-\widetilde S^{(k)}_t,
+        \qquad h_{k+1}=h_k/a,\qquad a=\sqrt{2}.
+    \]
+\end{frame}
+
+\begin{frame}{Compare both methods on the same observations}
+    \begin{columns}[T,onlytextwidth]
+        \begin{column}{0.46\textwidth}
+            {\color{blue}\large Additive contamination}
+            \[
+                Y_i=X_i+G_i+M_iC_i.
+            \]
+            Contaminated points retain the signal.
+        \end{column}
+        \begin{column}{0.49\textwidth}
+            {\color{blue}\large Masked pure-noise contamination}
+            \[
+                Y_i=\begin{cases}
+                    X_i+G_i,&M_i=0,\\
+                    G_i+C_i,&M_i=1.
+                \end{cases}
+            \]
+            Contaminated points lose the signal.
+        \end{column}
+    \end{columns}
+    \vspace{4mm}
+    \(G_i\sim\mathcal N(0,\sigma^2)\), \(M_i\sim\operatorname{Bernoulli}(p)\),
+    and \(C_i\) is exponential noise with an independent random sign.\par
+    \vspace{4mm}
+    The RMSE curves and heatmaps compare each method \(m\) with its matching clean reference:
+    \[
+        e_{k,m}(t_i)=\widetilde S^{(k)}_m(Y)(t_i)-\widetilde S^{(k)}_m(X)(t_i),
+        \qquad \RMSE_{k,m}=\sqrt{\frac{1}{n}\sum_{i=1}^{n} e_{k,m}(t_i)^2}.
+    \]
+    \takeaway{Both methods receive the same observation. Stage-comparison plots cover all nine stages.}
+\end{frame}
+
+\begin{frame}{The contaminated observations}
+    \plotwide[71mm]{paired_observations.pdf}
+    \raggedright
+    \(n=1000\), \(\sigma=0.6\), \(p=0.2\), contamination scale \(2.0\), robust \(H=1.2\).\par
+    Nine windows shrink from 501 to 31 points. The 175 contaminated points are marked in orange.
+\end{frame}
+
+\begin{frame}{Additive contamination at the default setting}
+    \plotwide{additive_method_rmse.pdf}
+    \raggedright
+    Mean RMSE across the nine stages falls from \(0.0611\) to \(0.0394\), a \textcolor{teal}{35.5\% reduction}.\par
+    Robust IMF has lower RMSE at all nine stages in this realization.
+\end{frame}
+
+\begin{frame}{Masked contamination at the default setting}
+    \plotwide{masked_method_rmse.pdf}
+    \raggedright
+    Mean RMSE falls from \(0.0654\) to \(0.0437\), a \textcolor{teal}{33.2\% reduction}.\par
+    The robust advantage appears at every stage in this paired realization.
+\end{frame}
+
+\begin{frame}{Robust IMF improves the first masked component}
+    \plotwide{masked_first_stage_methods.pdf}
+    \raggedright
+    Both curves use the same clean linear IMF component as their reference.\par
+    Stage-1 RMSE is \(0.1234\) for linear IMF and \(0.0898\) for robust IMF,
+    a \textcolor{teal}{27.3\% reduction}.
+\end{frame}
+
+\begin{frame}{The advantage grows with contamination magnitude}
+    \plotwide{contamination_magnitude_rmse.pdf}
+    \raggedright
+    Fixed \(\sigma=0.2\), \(p=0.2\), \(H=0.4\); curves and bands show medians and interquartile ranges across three repeats.\par
+    At scale \(12\sigma\), robust mean RMSE is \textcolor{teal}{74.6\% lower} in the additive model
+    and \textcolor{teal}{77.1\% lower} in the masked model.
+\end{frame}
+
+\begin{frame}{The contamination grid compares both methods}
+    \plotwide[80mm]{sweep_heatmaps.pdf}
+    \raggedright
+    Additive contamination; three repeats per cell. Stars mark the default setting.\par
+    Both heatmaps use one logarithmic color scale for the median mean RMSE over nine stages.
+\end{frame}
+
+\begin{frame}{The masked grid compares both methods}
+    \plotwide[80mm]{masked_sweep_heatmaps.pdf}
+    \raggedright
+    Masked contamination; three repeats per cell. Stars mark the default setting.\par
+    Both heatmaps use one logarithmic color scale for the median mean RMSE over nine stages.
+\end{frame}
+
+\begin{frame}{Robust gains across all nine stages at \(12\sigma\)}
+    \plotwide{strong_contamination_stage_rmse.pdf}
+    \raggedright
+    At \(\sigma=0.2\), \(p=0.2\) and contamination scale \(12\sigma=2.4\), median RMSE over three repeats is lower\par
+    at all nine stages in both models. Stage-wise reductions range from \textcolor{teal}{73\% to 80\%}.
+\end{frame}
+
+\begin{frame}{Larger masked replacements can reduce robust RMSE}
+    \plotwide{masked_magnitude_rmse.pdf}
+    \raggedright
+    Robust mean RMSE falls \textcolor{teal}{13\%} from \(2\sigma\) to \(8\sigma\), then rises; linear RMSE increases.\par
+    Robust stage-1 RMSE falls \textcolor{teal}{56\%} from \(2\sigma\) to \(12\sigma\), while linear RMSE rises \textcolor{blue}{70\%}.\par
+    Fixed \(\sigma=0.2\), \(p=0.2\), \(H=0.4\); medians and interquartile ranges across three repeats.
+\end{frame}
+
+\begin{frame}{Why larger replacements may be less harmful}
+    At a masked point, \(Y_i=G_i+C_i\). The clean signal is absent at every contamination magnitude.
+    \vspace{6mm}
+    \begin{columns}[T,onlytextwidth]
+        \begin{column}{0.46\textwidth}
+            {\color{blue}\large Small replacement values}\par\vspace{3mm}
+            Replacements concentrate near zero. They can pull a local fit toward zero where the clean signal is nonzero.
+        \end{column}
+        \begin{column}{0.49\textwidth}
+            {\color{orange}\large Large, symmetric replacements}\par\vspace{3mm}
+            The bounded robust score limits the influence of large residuals. Positive and negative score contributions can cancel.
+        \end{column}
+    \end{columns}
+    \vspace{5mm}
+    \[
+        |\psi_H(r)|\leq1,
+        \qquad \frac{\psi_H(r)}{r}\longrightarrow0\quad\text{as }|r|\to\infty.
+    \]
+    \takeaway{The observed RMSE curve is consistent with this explanation. The experiment does not isolate the mechanism.}
+\end{frame}
+
+\begin{frame}{The numerical case for robust IMF}
+    \begin{itemize}
+        \setlength{\itemsep}{7mm}
+        \item Lower RMSE at all nine stages in both single-run examples.\par
+            Mean RMSE is 35.5\% lower for additive contamination and 33.2\% lower for masked contamination.
+        \item Much larger gains when contamination values are large.\par
+            At scale \(12\sigma\), mean RMSE falls by about 75\% and 77\% in the two models.
+        \item The advantage under large contamination spans the full decomposition.\par
+            Median RMSE improves at every stage, with reductions of 73\% to 80\%.
+    \end{itemize}
+    \vspace{5mm}
+    \takeaway{A bounded local score preserves the IMF procedure while reducing sensitivity to large contamination values.}
+\end{frame}
+
+\appendix
+
+\begin{frame}{Appendix: implementation details}
+    \begin{itemize}
+        \setlength{\itemsep}{5mm}
+        \item Window sizes are \(501,355,251,177,125,89,63,45,31\).\par
+            Both methods use periodic wrap boundaries and the same weights.
+        \item The implemented weights are \(w(u)\propto(1-|u|)_+^2\).\par
+            The review calls the kernel Epanechnikov; that label differs from the code.
+        \item Robust fits use \(H=2\sigma\), the notebook's lookup grid,\par
+            at most 60 gradient-descent iterations and tolerance \(10^{-6}\).
+        \item RMSE curves and heatmaps use each method's clean reference.\par
+            The waveform slide uses one shared clean linear IMF reference.
+    \end{itemize}
+    \source{Main example: \(\sigma=0.6\), \(p=0.2\), contamination scale \(2.0\); signal seed 2026, observation seed 777.
+    Sweep: \(\sigma=0.2\), \(p=0.2\), scales \(2\sigma,4\sigma,\ldots,12\sigma\), seeds 777000--777002.}
+\end{frame}
+
+\begin{frame}{Appendix: sources and reproducibility}
+    \begin{itemize}
+        \setlength{\itemsep}{5mm}
+        \item \texttt{IMF.pdf}, \S2.2 and equation (3.2)\par
+            Component definition and recursive update; robust contrast in \S3.
+        \item \review\par
+            Source experiment, contamination models and robust contrast.
+        \item \notebooklink{gd_imf_real_vs_calculated.ipynb}{Additive comparison} and
+            \notebooklink{gd_imf_real_vs_calculated_noise_only.ipynb}{masked comparison}\par
+            Both methods are recomputed on the same contaminated observation.
+        \item \notebooklink{gd_imf_real_vs_calculated_limits.ipynb}{Additive sweep} and
+            \notebooklink{gd_imf_real_vs_calculated_limits_noise_only.ipynb}{masked sweep}\par
+            Magnitude slices: 18 trials per model. Heatmaps: 225 trials per model across three noise levels,
+            five probabilities and five magnitudes, with three repeats per setting.
+    \end{itemize}
+    \vspace{5mm}
+    The companion script exports stage RMSE, mean RMSE and vector figures.\par
+    CSV data and source hashes are stored beside the figures.
+    \source{Build instructions: \texttt{gd\_imf\_real\_vs\_calculated\_slides.md}, next to the LaTeX source.}
+\end{frame}
+
+\end{document}
