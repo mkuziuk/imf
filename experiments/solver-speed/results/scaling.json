@@ -1,0 +1,4565 @@
+{
+  "metadata": {
+    "created_utc": "2026-09-17T11:25:47.828225+00:00",
+    "cpu": "Apple M4 Max",
+    "logical_cpus": 16,
+    "platform": "macOS-26.6.2-arm64-arm-64bit-Mach-O",
+    "memory_bytes": 137438953472,
+    "python": "3.14.6 (main, Jun 10 2026, 10:03:53) [Clang 21.0.0 (clang-2100.0.123.102)]",
+    "numpy": "2.4.6",
+    "gil_enabled": true,
+    "library_thread_limits": {
+      "OMP_NUM_THREADS": "1",
+      "OPENBLAS_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "VECLIB_MAXIMUM_THREADS": "1",
+      "BLIS_NUM_THREADS": "1",
+      "NUMEXPR_NUM_THREADS": "1"
+    },
+    "numpy_blas": {
+      "name": "accelerate",
+      "found": true,
+      "version": "unknown",
+      "detection method": "system",
+      "include directory": "unknown",
+      "lib directory": "unknown",
+      "openblas configuration": "unknown",
+      "pc file directory": "unknown"
+    },
+    "sources": [
+      {
+        "path": "/Users/mikhail/Projects/imf/experiments/gd-irmf/gd_irmf.ipynb",
+        "sha256": "9ee6afedf8ab43b4321bc2742390529931332adf3dd68294163f21932f78e686"
+      },
+      {
+        "path": "/Users/mikhail/Projects/IRMF-Intrinsic-Robust-Multiscale-Filtering/Simulations/imd_python_fixedvf.py",
+        "sha256": "49d79636e95ee9ae259b4c890980a100522866fe84b516f3587c23e1e5983776"
+      },
+      {
+        "path": "/Users/mikhail/Projects/imf/experiments/solver-speed/benchmark_support.py",
+        "sha256": "b89b9d3ac4f852156f1db067d53fffda578cf25564796a43ab3325ace9246f44"
+      },
+      {
+        "path": "/Users/mikhail/Projects/imf/experiments/solver-speed/scaling_benchmark.py",
+        "sha256": "cd137a7e154a8f47b6655d0609062c30f770b04705d977766ba870fedf8298f5"
+      }
+    ],
+    "commits": {
+      "/Users/mikhail/Projects/imf": "d7d8a22372eec660060f744f813e5f91a37245e5",
+      "/Users/mikhail/Projects/IRMF-Intrinsic-Robust-Multiscale-Filtering": "58d6762cccbdce3abe5e183ceaf9564bf46768ca"
+    },
+    "timing_scope": "One complete single-signal decomposition. Includes weights, padding, iteration, residual updates and GD per-stage thread-pool creation. Excludes imports, lookup-table creation, input generation, validation, population fitting, diagnostics and plots.",
+    "threading": "GD uses ThreadPoolExecutor over disjoint contiguous target chunks, minimum 64 targets/chunk. Stages remain sequential. QuantLet uses one worker only.",
+    "tolerances": {
+      "gd_relative_update": 1e-06,
+      "gd_max_iterations": 60,
+      "golden_absolute_bracket": 1e-06,
+      "golden_max_iterations": 200,
+      "acceptable_component_difference": 0.0001
+    },
+    "warmup": "Initial process warmed up all four configurations at 1000 points. Continuation warms up only configurations with pending measurements; QuantLet has none.",
+    "repetitions": "One measured run per size and configuration; no concurrent configurations.",
+    "experiment": "Full decomposition versus signal length using GD notebook defaults for both solvers.",
+    "size_rule": "Ten evenly spaced sizes from 1000 to 20000, rounded to integers.",
+    "window_rule": "Original make_window_schedule(n): first window about n/2, divide by sqrt(2), stop at 31 points. Stage count grows with n.",
+    "input_rule": "Same signal function, Gaussian sigma=0.2, signed exponential contamination scale=0.2 and probability=0.2, seed=777, H=2*sigma=0.4 and squared-triangular kernel at every size. Identical observations across all four configurations within each size.",
+    "order": "Sizes ascend; configuration order is deterministically shuffled separately for each size with seed 17092026.",
+    "latest_utc": "2026-09-17T12:46:33.216137+00:00",
+    "continuation": {
+      "updated_utc": "2026-09-17T11:33:09.801399+00:00",
+      "reason": "User requested stopping further QuantLet calculations and continuing GD only. Completed timings are retained unchanged.",
+      "runner_sha256": "7a79bfcdba4d9dbcb5b6601bd46f7a0461dbaa398c2397b5e11c7c366815dd93",
+      "retained_measurements": 15,
+      "interrupted_run": {
+        "n": 7333,
+        "method": "quantlet",
+        "workers": 1,
+        "started_utc": "2026-09-17T11:30:33.819071+00:00"
+      },
+      "warmup": "Only GD configurations are warmed up on this continuation; no further QuantLet computations."
+    },
+    "quantlet_max_n": 13667,
+    "complete": true,
+    "all_output_checks_passed": true,
+    "quantlet_stop_policy": {
+      "time_limit_minutes": 40,
+      "reason": "The projected full QuantLet sweep exceeded the user-requested limit. Keep the three completed sizes and finish all GD sizes.",
+      "last_completed_n": 5222,
+      "interrupted_n": 7333,
+      "interrupted_timing_included": false
+    },
+    "elapsed_wall_seconds_including_interruption": 2080.821544,
+    "quantlet_extensions": [
+      {
+        "started_utc": "2026-09-17T12:16:33.478089+00:00",
+        "requested_max_n": 13667,
+        "pending_sizes": [
+          7333,
+          9444,
+          11556,
+          13667
+        ],
+        "budget_seconds": 2400.0,
+        "retained_measurements": 33,
+        "warmup": "One untimed full QuantLet decomposition at 1000 points before this extension.",
+        "order": "Only QuantLet is timed, one thread, sizes ascending; all GD measurements are reused.",
+        "runner_sha256": "fdc1e6ba8e4d0b22c2075647f33794a3d8f924abbdf4f78472f778857279d3b7",
+        "case_helper_sha256": "7a79bfcdba4d9dbcb5b6601bd46f7a0461dbaa398c2397b5e11c7c366815dd93",
+        "status": "completed",
+        "finished_utc": "2026-09-17T12:46:33.216104+00:00",
+        "elapsed_wall_seconds": 1799.7288606250659,
+        "completed_sizes": [
+          7333,
+          9444,
+          11556,
+          13667
+        ]
+      }
+    ]
+  },
+  "sizes": [
+    1000,
+    3111,
+    5222,
+    7333,
+    9444,
+    11556,
+    13667,
+    15778,
+    17889,
+    20000
+  ],
+  "configurations": [
+    [
+      "quantlet",
+      1
+    ],
+    [
+      "gd",
+      1
+    ],
+    [
+      "gd",
+      4
+    ],
+    [
+      "gd",
+      12
+    ]
+  ],
+  "repeats": 1,
+  "cases": [
+    {
+      "profile": "your_gd",
+      "label": "My GD settings",
+      "n": 1000,
+      "H": 0.4,
+      "sigma": 0.2,
+      "kernel": "squared_triangular",
+      "noise": "Gaussian + signed exponential",
+      "contamination_probability": 0.2,
+      "contamination_scale": 0.2,
+      "seed": 777,
+      "bandwidths": [
+        0.25,
+        0.177,
+        0.125,
+        0.088,
+        0.062,
+        0.044,
+        0.031,
+        0.022,
+        0.015
+      ],
+      "stages": 9,
+      "grid": "arange(n)/n, endpoint excluded for both methods",
+      "input_sha256": "86e45d902a4498435039af2a000e303b95341f6b5db747ee29925401f4a26774",
+      "H_rule": "H = 2 * sigma",
+      "key": "my_defaults_1000",
+      "window_sizes": [
+        501,
+        355,
+        251,
+        177,
+        125,
+        89,
+        63,
+        45,
+        31
+      ]
+    },
+    {
+      "profile": "your_gd",
+      "label": "My GD settings",
+      "n": 3111,
+      "H": 0.4,
+      "sigma": 0.2,
+      "kernel": "squared_triangular",
+      "noise": "Gaussian + signed exponential",
+      "contamination_probability": 0.2,
+      "contamination_scale": 0.2,
+      "seed": 777,
+      "bandwidths": [
+        0.2500803600128576,
+        0.17679202828672452,
+        0.1250401800064288,
+        0.08839601414336226,
+        0.0623593699774992,
+        0.04403728704596593,
+        0.0311796849887496,
+        0.02185792349726776,
+        0.015429122468659595,
+        0.01092896174863388,
+        0.007714561234329798,
+        0.00546448087431694,
+        0.0048216007714561235
+      ],
+      "stages": 13,
+      "grid": "arange(n)/n, endpoint excluded for both methods",
+      "input_sha256": "5e0f77866d52d1195cf9dfe371a90bb78a8f87cc422fcf0310bbdd21428d5544",
+      "H_rule": "H = 2 * sigma",
+      "key": "my_defaults_3111",
+      "window_sizes": [
+        1557,
+        1101,
+        779,
+        551,
+        389,
+        275,
+        195,
+        137,
+        97,
+        69,
+        49,
+        35,
+        31
+      ]
+    },
+    {
+      "profile": "your_gd",
+      "label": "My GD settings",
+      "n": 5222,
+      "H": 0.4,
+      "sigma": 0.2,
+      "kernel": "squared_triangular",
+      "noise": "Gaussian + signed exponential",
+      "contamination_probability": 0.2,
+      "contamination_scale": 0.2,
+      "seed": 777,
+      "bandwidths": [
+        0.2499042512447338,
+        0.1767522022213711,
+        0.1250478743776331,
+        0.08847184986595175,
+        0.06261968594408272,
+        0.04423592493297587,
+        0.031214094216775182,
+        0.022022213711221754,
+        0.015511298353121409,
+        0.010915358100344696,
+        0.0076599004212945234,
+        0.005361930294906166,
+        0.0038299502106472617,
+        0.002872462657985446
+      ],
+      "stages": 14,
+      "grid": "arange(n)/n, endpoint excluded for both methods",
+      "input_sha256": "0d61c44b9341c63d1791aa603588d101d958bf5195957d3366f5752c6b551091",
+      "H_rule": "H = 2 * sigma",
+      "key": "my_defaults_5222",
+      "window_sizes": [
+        2611,
+        1847,
+        1307,
+        925,
+        655,
+        463,
+        327,
+        231,
+        163,
+        115,
+        81,
+        57,
+        41,
+        31
+      ]
+    },
+    {
+      "profile": "your_gd",
+      "label": "My GD settings",
+      "n": 7333,
+      "H": 0.4,
+      "sigma": 0.2,
+      "kernel": "squared_triangular",
+      "noise": "Gaussian + signed exponential",
+      "contamination_probability": 0.2,
+      "contamination_scale": 0.2,
+      "seed": 777,
+      "bandwidths": [
+        0.24996590754125186,
+        0.17673530615027955,
+        0.12491476885312969,
+        0.08836765307513977,
+        0.062457384426564844,
+        0.04418382653756989,
+        0.031228692213282422,
+        0.022091913268784943,
+        0.015546161189144961,
+        0.010909586799399972,
+        0.007636710759579981,
+        0.005318423564707487,
+        0.003681985544797491,
+        0.0025910268648574935,
+        0.002045547524887495
+      ],
+      "stages": 15,
+      "grid": "arange(n)/n, endpoint excluded for both methods",
+      "input_sha256": "b512f8d512a9c797064efab3f764da1ea9c53db63b36b36f5a2b228672aeaf6d",
+      "H_rule": "H = 2 * sigma",
+      "key": "my_defaults_7333",
+      "window_sizes": [
+        3667,
+        2593,
+        1833,
+        1297,
+        917,
+        649,
+        459,
+        325,
+        229,
+        161,
+        113,
+        79,
+        55,
+        39,
+        31
+      ]
+    },
+    {
+      "profile": "your_gd",
+      "label": "My GD settings",
+      "n": 9444,
+      "H": 0.4,
+      "sigma": 0.2,
+      "kernel": "squared_triangular",
+      "noise": "Gaussian + signed exponential",
+      "contamination_probability": 0.2,
+      "contamination_scale": 0.2,
+      "seed": 777,
+      "bandwidths": [
+        0.25,
+        0.17672596357475645,
+        0.12494705633206268,
+        0.08831003811944091,
+        0.06247352816603134,
+        0.044155019059720454,
+        0.03123676408301567,
+        0.022024565861922914,
+        0.015565438373570521,
+        0.011012282930961457,
+        0.007729775518847946,
+        0.0054002541296060995,
+        0.0038119440914866584,
+        0.0026471833968657347,
+        0.0019059720457433292,
+        0.0015883100381194409
+      ],
+      "stages": 16,
+      "grid": "arange(n)/n, endpoint excluded for both methods",
+      "input_sha256": "398fb436c9f058176e0a7c951c93defcc35fef6a3c9284cdaeb89f74d4e9c647",
+      "H_rule": "H = 2 * sigma",
+      "key": "my_defaults_9444",
+      "window_sizes": [
+        4723,
+        3339,
+        2361,
+        1669,
+        1181,
+        835,
+        591,
+        417,
+        295,
+        209,
+        147,
+        103,
+        73,
+        51,
+        37,
+        31
+      ]
+    },
+    {
+      "profile": "your_gd",
+      "label": "My GD settings",
+      "n": 11556,
+      "H": 0.4,
+      "sigma": 0.2,
+      "kernel": "squared_triangular",
+      "noise": "Gaussian + signed exponential",
+      "contamination_probability": 0.2,
+      "contamination_scale": 0.2,
+      "seed": 777,
+      "bandwidths": [
+        0.25,
+        0.17679127725856697,
+        0.12495673243336795,
+        0.08835237106265144,
+        0.06247836621668398,
+        0.044132917964693666,
+        0.03115264797507788,
+        0.021979923849082726,
+        0.015489788854274836,
+        0.010903426791277258,
+        0.007701626860505365,
+        0.005451713395638629,
+        0.00380754586362063,
+        0.002682589131187262,
+        0.001903772931810315,
+        0.0012980269989615785
+      ],
+      "stages": 16,
+      "grid": "arange(n)/n, endpoint excluded for both methods",
+      "input_sha256": "4c2695f41c9834144071b32c053a7178c705c4aacbfac99a3d8b4b3d0e9ac203",
+      "H_rule": "H = 2 * sigma",
+      "key": "my_defaults_11556",
+      "window_sizes": [
+        5779,
+        4087,
+        2889,
+        2043,
+        1445,
+        1021,
+        721,
+        509,
+        359,
+        253,
+        179,
+        127,
+        89,
+        63,
+        45,
+        31
+      ]
+    },
+    {
+      "profile": "your_gd",
+      "label": "My GD settings",
+      "n": 13667,
+      "H": 0.4,
+      "sigma": 0.2,
+      "kernel": "squared_triangular",
+      "noise": "Gaussian + signed exponential",
+      "contamination_probability": 0.2,
+      "contamination_scale": 0.2,
+      "seed": 777,
+      "bandwidths": [
+        0.2500182922367747,
+        0.1767761761908246,
+        0.12497256164483793,
+        0.0883880880954123,
+        0.062486280822418964,
+        0.04419404404770615,
+        0.031243140411209482,
+        0.022097022023853077,
+        0.015584985732055317,
+        0.010975342064827687,
+        0.007755908392478232,
+        0.005487671032413844,
+        0.003877954196239116,
+        0.002707251042657496,
+        0.0019023926245701325,
+        0.0013170410477793225,
+        0.0010975342064827687
+      ],
+      "stages": 17,
+      "grid": "arange(n)/n, endpoint excluded for both methods",
+      "input_sha256": "e6e3c87085376803749287ec19ef6f8a99a86a1bd0014f15956e0931e13147c5",
+      "H_rule": "H = 2 * sigma",
+      "key": "my_defaults_13667",
+      "window_sizes": [
+        6835,
+        4833,
+        3417,
+        2417,
+        1709,
+        1209,
+        855,
+        605,
+        427,
+        301,
+        213,
+        151,
+        107,
+        75,
+        53,
+        37,
+        31
+      ]
+    },
+    {
+      "profile": "your_gd",
+      "label": "My GD settings",
+      "n": 15778,
+      "H": 0.4,
+      "sigma": 0.2,
+      "kernel": "squared_triangular",
+      "noise": "Gaussian + signed exponential",
+      "contamination_probability": 0.2,
+      "contamination_scale": 0.2,
+      "seed": 777,
+      "bandwidths": [
+        0.24996831030548866,
+        0.1767651159842819,
+        0.12498415515274433,
+        0.08835086829762961,
+        0.062492077576372165,
+        0.04417543414881481,
+        0.031246038788186083,
+        0.022056027379896058,
+        0.015591329699581696,
+        0.011028013689948029,
+        0.007795664849790848,
+        0.0055140068449740145,
+        0.003866142730384079,
+        0.0027253137279756624,
+        0.0019013816706806947,
+        0.0013309671694764862,
+        0.0009506908353403474
+      ],
+      "stages": 17,
+      "grid": "arange(n)/n, endpoint excluded for both methods",
+      "input_sha256": "b806347ae784f162cfc229f1f2f4940673c454a256e33da6715c74315dfc5bbd",
+      "H_rule": "H = 2 * sigma",
+      "key": "my_defaults_15778",
+      "window_sizes": [
+        7889,
+        5579,
+        3945,
+        2789,
+        1973,
+        1395,
+        987,
+        697,
+        493,
+        349,
+        247,
+        175,
+        123,
+        87,
+        61,
+        43,
+        31
+      ]
+    },
+    {
+      "profile": "your_gd",
+      "label": "My GD settings",
+      "n": 17889,
+      "H": 0.4,
+      "sigma": 0.2,
+      "kernel": "squared_triangular",
+      "noise": "Gaussian + signed exponential",
+      "contamination_probability": 0.2,
+      "contamination_scale": 0.2,
+      "seed": 777,
+      "bandwidths": [
+        0.24998602493152217,
+        0.17675666610766394,
+        0.12499301246576108,
+        0.08837833305383197,
+        0.06249650623288054,
+        0.04416121638996031,
+        0.031192352842528928,
+        0.022024707921068813,
+        0.015540276147353121,
+        0.010956453686623064,
+        0.007714237799765219,
+        0.00542232656940019,
+        0.0038012186259712673,
+        0.002683213147744424,
+        0.0019006093129856337,
+        0.001341606573872212,
+        0.0009503046564928168,
+        0.0008385041086701325
+      ],
+      "stages": 18,
+      "grid": "arange(n)/n, endpoint excluded for both methods",
+      "input_sha256": "ff0ea09c7c0d53f7b109c1718a6357ad0bc16362b43f2ed554cb21434b141629",
+      "H_rule": "H = 2 * sigma",
+      "key": "my_defaults_17889",
+      "window_sizes": [
+        8945,
+        6325,
+        4473,
+        3163,
+        2237,
+        1581,
+        1117,
+        789,
+        557,
+        393,
+        277,
+        195,
+        137,
+        97,
+        69,
+        49,
+        35,
+        31
+      ]
+    },
+    {
+      "profile": "your_gd",
+      "label": "My GD settings",
+      "n": 20000,
+      "H": 0.4,
+      "sigma": 0.2,
+      "kernel": "squared_triangular",
+      "noise": "Gaussian + signed exponential",
+      "contamination_probability": 0.2,
+      "contamination_scale": 0.2,
+      "seed": 777,
+      "bandwidths": [
+        0.25,
+        0.17675,
+        0.12495,
+        0.08835,
+        0.06245,
+        0.04415,
+        0.0312,
+        0.02205,
+        0.0156,
+        0.011,
+        0.00775,
+        0.00545,
+        0.00385,
+        0.0027,
+        0.0019,
+        0.00135,
+        0.00095,
+        0.00075
+      ],
+      "stages": 18,
+      "grid": "arange(n)/n, endpoint excluded for both methods",
+      "input_sha256": "0fdf127cfff7399eca1f220fbba57f98ad7782967fec339e57333bbcdbf1b012",
+      "H_rule": "H = 2 * sigma",
+      "key": "my_defaults_20000",
+      "window_sizes": [
+        10001,
+        7071,
+        4999,
+        3535,
+        2499,
+        1767,
+        1249,
+        883,
+        625,
+        441,
+        311,
+        219,
+        155,
+        109,
+        77,
+        55,
+        39,
+        31
+      ]
+    }
+  ],
+  "runs": [
+    {
+      "n": 1000,
+      "method": "gd",
+      "workers": 1,
+      "seconds": 0.8548723339335993,
+      "stage_count": 9,
+      "load_average_start": [
+        2.62451171875,
+        2.39404296875,
+        2.1279296875
+      ],
+      "stages": [
+        {
+          "seconds": 0.29602358397096395,
+          "iterations": 14,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.19416062498930842,
+          "iterations": 13,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.13717741705477238,
+          "iterations": 13,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.0825127080315724,
+          "iterations": 11,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.04717783292289823,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.03798562497831881,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.027003750088624656,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.019395665964111686,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.013418583082966506,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        }
+      ],
+      "unconverged_chunks": 0,
+      "reconstruction_max_error": 4.440892098500626e-16,
+      "max_component_difference_from_scalar": 9.103396476257963e-07,
+      "max_component_difference_from_single_thread": 0.0
+    },
+    {
+      "n": 1000,
+      "method": "quantlet",
+      "workers": 1,
+      "seconds": 6.206670874962583,
+      "stage_count": 9,
+      "load_average_start": [
+        2.62451171875,
+        2.39404296875,
+        2.1279296875
+      ],
+      "stages": [
+        {
+          "seconds": 1.2839264170033857,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.9988961670314893,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.8173504590522498,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.6845208749873564,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.5771337090991437,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.5212782499147579,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.4714343330124393,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.4369893749244511,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.41511858301237226,
+          "chunks": 1
+        }
+      ],
+      "unconverged_chunks": 0,
+      "reconstruction_max_error": 3.3306690738754696e-16,
+      "max_component_difference_from_scalar": 0.0,
+      "max_component_difference_from_single_thread": 0.0
+    },
+    {
+      "n": 1000,
+      "method": "gd",
+      "workers": 4,
+      "seconds": 0.23531483300030231,
+      "stage_count": 9,
+      "load_average_start": [
+        2.57421875,
+        2.38720703125,
+        2.126953125
+      ],
+      "stages": [
+        {
+          "seconds": 0.08038225001655519,
+          "iterations": 14,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.05209283297881484,
+          "iterations": 13,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.03707541699986905,
+          "iterations": 13,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.02323616691865027,
+          "iterations": 11,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.013916041003540158,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.01065595808904618,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.007853624993003905,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.005932832951657474,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.004155750037170947,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        }
+      ],
+      "unconverged_chunks": 0,
+      "reconstruction_max_error": 3.3306690738754696e-16,
+      "max_component_difference_from_scalar": 9.103396476257963e-07,
+      "max_component_difference_from_single_thread": 5.565493269577004e-07
+    },
+    {
+      "n": 1000,
+      "method": "gd",
+      "workers": 12,
+      "seconds": 0.09711408300790936,
+      "stage_count": 9,
+      "load_average_start": [
+        2.57421875,
+        2.38720703125,
+        2.126953125
+      ],
+      "stages": [
+        {
+          "seconds": 0.028867750079371035,
+          "iterations": 14,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.019341417006216943,
+          "iterations": 13,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.01372291601728648,
+          "iterations": 13,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.008953833021223545,
+          "iterations": 11,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.006220541894435883,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.005534250056371093,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.005290708038955927,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.004685833002440631,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.004483749973587692,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        }
+      ],
+      "unconverged_chunks": 0,
+      "reconstruction_max_error": 3.3306690738754696e-16,
+      "max_component_difference_from_scalar": 9.103396476257963e-07,
+      "max_component_difference_from_single_thread": 5.225452699986199e-07
+    },
+    {
+      "n": 3111,
+      "method": "gd",
+      "workers": 1,
+      "seconds": 8.973392333951779,
+      "stage_count": 13,
+      "load_average_start": [
+        2.57421875,
+        2.38720703125,
+        2.126953125
+      ],
+      "stages": [
+        {
+          "seconds": 2.9881194160552695,
+          "iterations": 14,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 1.9487066669389606,
+          "iterations": 13,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 1.4787808749824762,
+          "iterations": 14,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.8992409580387175,
+          "iterations": 12,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.5290345000103116,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.33214504190254956,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.23982208396773785,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.169046749942936,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.1191329580033198,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.09470120794139802,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.07450787501875311,
+          "iterations": 11,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.05312337493523955,
+          "iterations": 11,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.04700154101010412,
+          "iterations": 11,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        }
+      ],
+      "unconverged_chunks": 0,
+      "reconstruction_max_error": 4.440892098500626e-16,
+      "max_component_difference_from_scalar": 6.947214250645206e-07,
+      "max_component_difference_from_single_thread": 0.0
+    },
+    {
+      "n": 3111,
+      "method": "gd",
+      "workers": 4,
+      "seconds": 2.3937209169380367,
+      "stage_count": 13,
+      "load_average_start": [
+        2.63916015625,
+        2.40673828125,
+        2.13671875
+      ],
+      "stages": [
+        {
+          "seconds": 0.7812328330473974,
+          "iterations": 14,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.5380953749408945,
+          "iterations": 13,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.39233579102437943,
+          "iterations": 14,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.23674733296502382,
+          "iterations": 12,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.1391749590402469,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.08997416705824435,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.06510199990589172,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.044848417048342526,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.032032040995545685,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.02532808401156217,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.020830916007980704,
+          "iterations": 11,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.014904209063388407,
+          "iterations": 11,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.013089167070575058,
+          "iterations": 11,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        }
+      ],
+      "unconverged_chunks": 0,
+      "reconstruction_max_error": 4.440892098500626e-16,
+      "max_component_difference_from_scalar": 6.947214250645206e-07,
+      "max_component_difference_from_single_thread": 4.743033381743311e-07
+    },
+    {
+      "n": 3111,
+      "method": "quantlet",
+      "workers": 1,
+      "seconds": 46.20222133398056,
+      "stage_count": 13,
+      "load_average_start": [
+        2.63916015625,
+        2.40673828125,
+        2.13671875
+      ],
+      "stages": [
+        {
+          "seconds": 10.014412791002542,
+          "chunks": 1
+        },
+        {
+          "seconds": 7.450656082946807,
+          "chunks": 1
+        },
+        {
+          "seconds": 5.660707875038497,
+          "chunks": 1
+        },
+        {
+          "seconds": 4.338995292084292,
+          "chunks": 1
+        },
+        {
+          "seconds": 3.445369959110394,
+          "chunks": 1
+        },
+        {
+          "seconds": 2.872524708043784,
+          "chunks": 1
+        },
+        {
+          "seconds": 2.3764273340348154,
+          "chunks": 1
+        },
+        {
+          "seconds": 2.0441982080228627,
+          "chunks": 1
+        },
+        {
+          "seconds": 1.780984792043455,
+          "chunks": 1
+        },
+        {
+          "seconds": 1.6522485829191282,
+          "chunks": 1
+        },
+        {
+          "seconds": 1.5716117499396205,
+          "chunks": 1
+        },
+        {
+          "seconds": 1.5191905830288306,
+          "chunks": 1
+        },
+        {
+          "seconds": 1.47485424997285,
+          "chunks": 1
+        }
+      ],
+      "unconverged_chunks": 0,
+      "reconstruction_max_error": 5.551115123125783e-16,
+      "max_component_difference_from_scalar": 0.0,
+      "max_component_difference_from_single_thread": 0.0
+    },
+    {
+      "n": 3111,
+      "method": "gd",
+      "workers": 12,
+      "seconds": 0.8124149170471355,
+      "stage_count": 13,
+      "load_average_start": [
+        2.9052734375,
+        2.5244140625,
+        2.19482421875
+      ],
+      "stages": [
+        {
+          "seconds": 0.2668644160730764,
+          "iterations": 14,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.17287491692695767,
+          "iterations": 13,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.1302879999857396,
+          "iterations": 14,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.07892733300104737,
+          "iterations": 12,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.047798417042940855,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.031264833989553154,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.022348041064105928,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.016740042017772794,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.012877707951702178,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.010332957957871258,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.008552832994610071,
+          "iterations": 11,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.007042209035716951,
+          "iterations": 11,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.0064755420899018645,
+          "iterations": 11,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        }
+      ],
+      "unconverged_chunks": 0,
+      "reconstruction_max_error": 4.440892098500626e-16,
+      "max_component_difference_from_scalar": 7.358770737764253e-07,
+      "max_component_difference_from_single_thread": 5.065942652593414e-07
+    },
+    {
+      "n": 5222,
+      "method": "quantlet",
+      "workers": 1,
+      "seconds": 116.858174999943,
+      "stage_count": 14,
+      "load_average_start": [
+        2.9052734375,
+        2.5244140625,
+        2.19482421875
+      ],
+      "stages": [
+        {
+          "seconds": 26.896903207991272,
+          "chunks": 1
+        },
+        {
+          "seconds": 19.713360624969937,
+          "chunks": 1
+        },
+        {
+          "seconds": 14.617738000000827,
+          "chunks": 1
+        },
+        {
+          "seconds": 11.078042667009868,
+          "chunks": 1
+        },
+        {
+          "seconds": 8.554116416024044,
+          "chunks": 1
+        },
+        {
+          "seconds": 6.715955667081289,
+          "chunks": 1
+        },
+        {
+          "seconds": 5.435072834021412,
+          "chunks": 1
+        },
+        {
+          "seconds": 4.653916500043124,
+          "chunks": 1
+        },
+        {
+          "seconds": 4.02665612497367,
+          "chunks": 1
+        },
+        {
+          "seconds": 3.465418625040911,
+          "chunks": 1
+        },
+        {
+          "seconds": 3.1797863750252873,
+          "chunks": 1
+        },
+        {
+          "seconds": 2.9535526669351384,
+          "chunks": 1
+        },
+        {
+          "seconds": 2.8347650830401108,
+          "chunks": 1
+        },
+        {
+          "seconds": 2.732838416006416,
+          "chunks": 1
+        }
+      ],
+      "unconverged_chunks": 0,
+      "reconstruction_max_error": 4.440892098500626e-16,
+      "max_component_difference_from_scalar": 0.0,
+      "max_component_difference_from_single_thread": 0.0
+    },
+    {
+      "n": 5222,
+      "method": "gd",
+      "workers": 1,
+      "seconds": 23.474014917039312,
+      "stage_count": 14,
+      "load_average_start": [
+        2.9384765625,
+        2.67919921875,
+        2.29541015625
+      ],
+      "stages": [
+        {
+          "seconds": 8.163422625046223,
+          "iterations": 14,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 5.311246500001289,
+          "iterations": 13,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 3.7746434590080753,
+          "iterations": 13,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 2.233240833040327,
+          "iterations": 11,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 1.2629451249958947,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.7930596250807866,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.5611926249694079,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.39536291593685746,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.27843054197728634,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.22585958300624043,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.17968424991704524,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.12736770801711828,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.09226258401758969,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.07526229100767523,
+          "iterations": 11,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        }
+      ],
+      "unconverged_chunks": 0,
+      "reconstruction_max_error": 4.440892098500626e-16,
+      "max_component_difference_from_scalar": 1.1400487000025328e-06,
+      "max_component_difference_from_single_thread": 0.0
+    },
+    {
+      "n": 5222,
+      "method": "gd",
+      "workers": 4,
+      "seconds": 6.435671875020489,
+      "stage_count": 14,
+      "load_average_start": [
+        2.7548828125,
+        2.6552734375,
+        2.29736328125
+      ],
+      "stages": [
+        {
+          "seconds": 2.210878917016089,
+          "iterations": 14,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 1.4355534589849412,
+          "iterations": 13,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 1.0320630409987643,
+          "iterations": 13,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.6098108330043033,
+          "iterations": 11,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.35677262500394136,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.2303007919108495,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.1638474160572514,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.11704408307559788,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.08304670895449817,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.06254808395169675,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.04935704206582159,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.036425875034183264,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.026652832981199026,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.021338082966394722,
+          "iterations": 11,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        }
+      ],
+      "unconverged_chunks": 0,
+      "reconstruction_max_error": 4.440892098500626e-16,
+      "max_component_difference_from_scalar": 1.1400487000025328e-06,
+      "max_component_difference_from_single_thread": 3.5967631802080735e-07
+    },
+    {
+      "n": 5222,
+      "method": "gd",
+      "workers": 12,
+      "seconds": 2.255764291039668,
+      "stage_count": 14,
+      "load_average_start": [
+        2.8544921875,
+        2.67724609375,
+        2.30712890625
+      ],
+      "stages": [
+        {
+          "seconds": 0.8009527079993859,
+          "iterations": 15,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.4929454169468954,
+          "iterations": 13,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.3493170839501545,
+          "iterations": 13,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.21151720802299678,
+          "iterations": 11,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.12219120794907212,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.08141154097393155,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.05559020803775638,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.03945433394983411,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.028940250049345195,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.022286042105406523,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.017562750028446317,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.014051125035621226,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.010733875096775591,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.008781541953794658,
+          "iterations": 11,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        }
+      ],
+      "unconverged_chunks": 0,
+      "reconstruction_max_error": 6.661338147750939e-16,
+      "max_component_difference_from_scalar": 7.165375338069602e-07,
+      "max_component_difference_from_single_thread": 5.268264807985548e-07
+    },
+    {
+      "n": 7333,
+      "method": "gd",
+      "workers": 4,
+      "seconds": 12.603869374957867,
+      "stage_count": 15,
+      "load_average_start": [
+        3.10595703125,
+        2.73193359375,
+        2.32861328125
+      ],
+      "stages": [
+        {
+          "seconds": 4.311263583949767,
+          "iterations": 14,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 2.825209959060885,
+          "iterations": 13,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 1.9830865419935435,
+          "iterations": 13,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 1.1993425419786945,
+          "iterations": 11,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.7039682499598712,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.49166912504006177,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.3145653329556808,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.22309174994006753,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.16106391604989767,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.11418062495067716,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.08688445796724409,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.07009487506002188,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.05158058297820389,
+          "iterations": 11,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.037185249966569245,
+          "iterations": 11,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.030645583989098668,
+          "iterations": 11,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        }
+      ],
+      "unconverged_chunks": 0,
+      "reconstruction_max_error": 6.661338147750939e-16,
+      "max_component_difference_from_scalar": 1.0066137252039142e-06,
+      "max_component_difference_from_single_thread": 6.928295878810831e-07
+    },
+    {
+      "n": 7333,
+      "method": "gd",
+      "workers": 1,
+      "seconds": 46.70302570902277,
+      "stage_count": 15,
+      "load_average_start": [
+        3.7041015625,
+        2.8720703125,
+        2.3828125
+      ],
+      "stages": [
+        {
+          "seconds": 16.057241625036113,
+          "iterations": 14,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 10.498528791009448,
+          "iterations": 13,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 7.424844875000417,
+          "iterations": 13,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 4.434702125028707,
+          "iterations": 11,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 2.570412041968666,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 1.8157397910254076,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 1.13584970892407,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.8080296670086682,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.5670564169995487,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.4008031249977648,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.31497520906850696,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.24560983292758465,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.1882778750732541,
+          "iterations": 11,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.13356533297337592,
+          "iterations": 11,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.10730920906644315,
+          "iterations": 11,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        }
+      ],
+      "unconverged_chunks": 0,
+      "reconstruction_max_error": 6.661338147750939e-16,
+      "max_component_difference_from_scalar": 1.0066137252039142e-06,
+      "max_component_difference_from_single_thread": 0.0
+    },
+    {
+      "n": 7333,
+      "method": "gd",
+      "workers": 12,
+      "seconds": 4.294839874957688,
+      "stage_count": 15,
+      "load_average_start": [
+        3.5146484375,
+        2.9462890625,
+        2.43505859375
+      ],
+      "stages": [
+        {
+          "seconds": 1.4723145420430228,
+          "iterations": 14,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.9552593340631574,
+          "iterations": 13,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.6754746250808239,
+          "iterations": 13,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.403969542006962,
+          "iterations": 11,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.23706341604702175,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.17216437496244907,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.10741275001782924,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.07650345901492983,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.054496957920491695,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.0400145830353722,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.030268749920651317,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.025141958030872047,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.018767999950796366,
+          "iterations": 11,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.014284707955084741,
+          "iterations": 11,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.011665791971608996,
+          "iterations": 11,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        }
+      ],
+      "unconverged_chunks": 0,
+      "reconstruction_max_error": 4.440892098500626e-16,
+      "max_component_difference_from_scalar": 1.1049462317613834e-06,
+      "max_component_difference_from_single_thread": 7.714851224804864e-07
+    },
+    {
+      "n": 9444,
+      "method": "gd",
+      "workers": 12,
+      "seconds": 7.129295291961171,
+      "stage_count": 16,
+      "load_average_start": [
+        2.81396484375,
+        3.00341796875,
+        2.5576171875
+      ],
+      "stages": [
+        {
+          "seconds": 2.464133583009243,
+          "iterations": 14,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 1.5849890419049188,
+          "iterations": 13,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 1.1182056249817833,
+          "iterations": 13,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.6767883750144392,
+          "iterations": 11,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.39334312500432134,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.26232862507458776,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.18262641597539186,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.126253959024325,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.08972008305136114,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.06546316703315824,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.04623395798262209,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.036736458889208734,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.02736862504389137,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.02160583296790719,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.01767591608222574,
+          "iterations": 11,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.015775208012200892,
+          "iterations": 11,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        }
+      ],
+      "unconverged_chunks": 0,
+      "reconstruction_max_error": 6.661338147750939e-16,
+      "max_component_difference_from_scalar": 9.98723326206541e-07,
+      "max_component_difference_from_single_thread": 7.194131197846287e-07
+    },
+    {
+      "n": 9444,
+      "method": "gd",
+      "workers": 1,
+      "seconds": 77.01196254207753,
+      "stage_count": 16,
+      "load_average_start": [
+        3.62939453125,
+        3.1689453125,
+        2.61865234375
+      ],
+      "stages": [
+        {
+          "seconds": 26.58038558391854,
+          "iterations": 14,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 17.365262000006624,
+          "iterations": 13,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 12.334407959016971,
+          "iterations": 13,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 7.342273832997307,
+          "iterations": 11,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 4.262565250042826,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 2.692770375055261,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 1.8902841249946505,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 1.338415874983184,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.9352646250044927,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.6620117499260232,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.46971274993848056,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.3680990000721067,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.26297858299221843,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.20516058302018791,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.16460091609042138,
+          "iterations": 11,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.13768466701731086,
+          "iterations": 11,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        }
+      ],
+      "unconverged_chunks": 0,
+      "reconstruction_max_error": 4.440892098500626e-16,
+      "max_component_difference_from_scalar": 8.805090013341149e-07,
+      "max_component_difference_from_single_thread": 0.0
+    },
+    {
+      "n": 9444,
+      "method": "gd",
+      "workers": 4,
+      "seconds": 20.791738374973647,
+      "stage_count": 16,
+      "load_average_start": [
+        3.8505859375,
+        3.3681640625,
+        2.7431640625
+      ],
+      "stages": [
+        {
+          "seconds": 7.177473208052106,
+          "iterations": 14,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 4.692404916975647,
+          "iterations": 13,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 3.2798605000134557,
+          "iterations": 13,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 1.9562391670187935,
+          "iterations": 11,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 1.1584215839393437,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.7406093750614673,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.5236518339952454,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.3678624159656465,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.2609414169564843,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.18513262504711747,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.13101770891807973,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.10273479099851102,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.07353312498889863,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.05724291689693928,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.04591883404646069,
+          "iterations": 11,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.03864729090128094,
+          "iterations": 11,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        }
+      ],
+      "unconverged_chunks": 0,
+      "reconstruction_max_error": 6.661338147750939e-16,
+      "max_component_difference_from_scalar": 8.805090013341149e-07,
+      "max_component_difference_from_single_thread": 6.132043337964133e-07
+    },
+    {
+      "n": 11556,
+      "method": "gd",
+      "workers": 12,
+      "seconds": 10.677280458039604,
+      "stage_count": 16,
+      "load_average_start": [
+        4.15234375,
+        3.47216796875,
+        2.79443359375
+      ],
+      "stages": [
+        {
+          "seconds": 3.6664667499717325,
+          "iterations": 14,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 2.3605453750351444,
+          "iterations": 13,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 1.6646305830217898,
+          "iterations": 13,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 1.0089329170295969,
+          "iterations": 11,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.6485502499854192,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.4220805000513792,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.2661910409806296,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.1906300000846386,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.13073345797602087,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.0938468329841271,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.06680645898450166,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.05254429206252098,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.0382129589561373,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.027840791968628764,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.022237084107473493,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.01698720792774111,
+          "iterations": 11,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        }
+      ],
+      "unconverged_chunks": 0,
+      "reconstruction_max_error": 6.661338147750939e-16,
+      "max_component_difference_from_scalar": 1.0623146523003335e-06,
+      "max_component_difference_from_single_thread": 7.696362851056238e-07
+    },
+    {
+      "n": 11556,
+      "method": "gd",
+      "workers": 1,
+      "seconds": 116.34364279091824,
+      "stage_count": 16,
+      "load_average_start": [
+        4.54833984375,
+        3.57275390625,
+        2.83740234375
+      ],
+      "stages": [
+        {
+          "seconds": 39.690487124957144,
+          "iterations": 14,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 26.028736250009388,
+          "iterations": 13,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 18.448885833960958,
+          "iterations": 13,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 11.067219625110738,
+          "iterations": 11,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 7.087922666920349,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 4.460829332936555,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 2.841770041966811,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 1.9972374580102041,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 1.4071236660238355,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.9856988330138847,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.7038965420797467,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.5573966659139842,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.39566237502731383,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.27905641694087535,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.2213914580643177,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.17019650002475828,
+          "iterations": 11,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        }
+      ],
+      "unconverged_chunks": 0,
+      "reconstruction_max_error": 4.440892098500626e-16,
+      "max_component_difference_from_scalar": 9.449052607406194e-07,
+      "max_component_difference_from_single_thread": 0.0
+    },
+    {
+      "n": 11556,
+      "method": "gd",
+      "workers": 4,
+      "seconds": 31.013353541027755,
+      "stage_count": 16,
+      "load_average_start": [
+        3.3955078125,
+        3.42919921875,
+        2.8662109375
+      ],
+      "stages": [
+        {
+          "seconds": 10.233801916008815,
+          "iterations": 14,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 6.986687583965249,
+          "iterations": 13,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 4.9339461660711095,
+          "iterations": 13,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 3.009181500063278,
+          "iterations": 11,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 1.9268230829620734,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 1.2525060420157388,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.7905400829622522,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.560852334019728,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.38627891696523875,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.27879408397711813,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.19990445801522583,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.15363487496506423,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.11291187501046807,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.07830625004135072,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.06130858289543539,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.04782583296764642,
+          "iterations": 11,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        }
+      ],
+      "unconverged_chunks": 0,
+      "reconstruction_max_error": 5.551115123125783e-16,
+      "max_component_difference_from_scalar": 9.449052607406194e-07,
+      "max_component_difference_from_single_thread": 7.144426777405677e-07
+    },
+    {
+      "n": 13667,
+      "method": "gd",
+      "workers": 12,
+      "seconds": 14.761382499942556,
+      "stage_count": 17,
+      "load_average_start": [
+        3.923828125,
+        3.560546875,
+        2.93310546875
+      ],
+      "stages": [
+        {
+          "seconds": 5.023674541967921,
+          "iterations": 14,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 3.3021117909811437,
+          "iterations": 13,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 2.337789500015788,
+          "iterations": 13,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 1.4072549999691546,
+          "iterations": 11,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.8226056249113753,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.5297964579658583,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.37304712494369596,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.2882448750315234,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.1882237499812618,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.14458487497176975,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.10251579200848937,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.07349337497726083,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.05283145804423839,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.038505000062286854,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.030584540916606784,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.024317124974913895,
+          "iterations": 11,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.021712916903197765,
+          "iterations": 11,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        }
+      ],
+      "unconverged_chunks": 0,
+      "reconstruction_max_error": 7.771561172376096e-16,
+      "max_component_difference_from_scalar": 1.0251798489152586e-06,
+      "max_component_difference_from_single_thread": 6.93067176774087e-07
+    },
+    {
+      "n": 13667,
+      "method": "gd",
+      "workers": 1,
+      "seconds": 161.06106625008397,
+      "stage_count": 17,
+      "load_average_start": [
+        5.28076171875,
+        3.888671875,
+        3.0615234375
+      ],
+      "stages": [
+        {
+          "seconds": 54.904343875008635,
+          "iterations": 14,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 36.176811125013046,
+          "iterations": 13,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 25.751926749944687,
+          "iterations": 13,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 15.452179500018246,
+          "iterations": 11,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 8.927145667024888,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 5.63027054106351,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 3.992636999930255,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 3.1292534169042483,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 1.9728244999423623,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 1.5477052089991048,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 1.101556250010617,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.7821122920140624,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.5563669999828562,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.3933164580957964,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.3101199580123648,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.23769670899491757,
+          "iterations": 11,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.19468454201705754,
+          "iterations": 11,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        }
+      ],
+      "unconverged_chunks": 0,
+      "reconstruction_max_error": 6.661338147750939e-16,
+      "max_component_difference_from_scalar": 9.09985984280659e-07,
+      "max_component_difference_from_single_thread": 0.0
+    },
+    {
+      "n": 13667,
+      "method": "gd",
+      "workers": 4,
+      "seconds": 43.79690558288712,
+      "stage_count": 17,
+      "load_average_start": [
+        2.8798828125,
+        3.345703125,
+        2.9765625
+      ],
+      "stages": [
+        {
+          "seconds": 14.938393832999282,
+          "iterations": 14,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 9.768012000015005,
+          "iterations": 13,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 6.923892915947363,
+          "iterations": 13,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 4.18018845806364,
+          "iterations": 11,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 2.4611602909862995,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 1.5755993329221383,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 1.1023206660756841,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.8702821250772104,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.5545469160424545,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.4260800420306623,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.3014857079833746,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.21379854204133153,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.1575360840652138,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.11259220808278769,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.08984833303838968,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.06590708298608661,
+          "iterations": 11,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.055202624993398786,
+          "iterations": 11,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        }
+      ],
+      "unconverged_chunks": 0,
+      "reconstruction_max_error": 4.996003610813204e-16,
+      "max_component_difference_from_scalar": 9.238804964256664e-07,
+      "max_component_difference_from_single_thread": 6.396863931196206e-07
+    },
+    {
+      "n": 15778,
+      "method": "gd",
+      "workers": 12,
+      "seconds": 19.89148925000336,
+      "stage_count": 17,
+      "load_average_start": [
+        3.73876953125,
+        3.5048828125,
+        3.05029296875
+      ],
+      "stages": [
+        {
+          "seconds": 6.856233458966017,
+          "iterations": 14,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 4.466680874931626,
+          "iterations": 13,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 3.1420942079275846,
+          "iterations": 13,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 1.8743876660009846,
+          "iterations": 11,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 1.1071436249185354,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.7153210000833496,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.5137122080195695,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.34772270801477134,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.24862229195423424,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.19485816697124392,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.12484066700562835,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.09096170798875391,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.06942237494513392,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.05024595803115517,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.036604541004635394,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.029048999887891114,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.02352570800576359,
+          "iterations": 11,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        }
+      ],
+      "unconverged_chunks": 0,
+      "reconstruction_max_error": 6.661338147750939e-16,
+      "max_component_difference_from_scalar": null,
+      "max_component_difference_from_single_thread": 7.278018625961336e-07
+    },
+    {
+      "n": 15778,
+      "method": "gd",
+      "workers": 1,
+      "seconds": 208.94282083399594,
+      "stage_count": 17,
+      "load_average_start": [
+        5.30419921875,
+        3.8759765625,
+        3.193359375
+      ],
+      "stages": [
+        {
+          "seconds": 73.21448520896956,
+          "iterations": 14,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 46.571071167010814,
+          "iterations": 13,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 33.08888937497977,
+          "iterations": 13,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 19.81022116704844,
+          "iterations": 11,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 11.522420417051762,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 7.237667041947134,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 5.111053584027104,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 3.591629375005141,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 2.547527749906294,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 2.0064212499419227,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 1.2641368750482798,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.8987304579932243,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.7159827500581741,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.5049329169560224,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.35533229098655283,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.27962845796719193,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.22251758305355906,
+          "iterations": 11,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        }
+      ],
+      "unconverged_chunks": 0,
+      "reconstruction_max_error": 6.661338147750939e-16,
+      "max_component_difference_from_scalar": null,
+      "max_component_difference_from_single_thread": 0.0
+    },
+    {
+      "n": 15778,
+      "method": "gd",
+      "workers": 4,
+      "seconds": 57.41369629104156,
+      "stage_count": 17,
+      "load_average_start": [
+        1.60888671875,
+        2.8193359375,
+        2.8935546875
+      ],
+      "stages": [
+        {
+          "seconds": 19.731823083013296,
+          "iterations": 14,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 12.791868082946166,
+          "iterations": 13,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 9.083749959012493,
+          "iterations": 13,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 5.460384542006068,
+          "iterations": 11,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 3.2613477089907974,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 2.0936970420880243,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 1.4720103329746053,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 1.0170263330219314,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.7166342500131577,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.5673540419666097,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.36365704191848636,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.2581281659658998,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.20112058299127966,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.14732016704510897,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.10244441707618535,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.08067308401223272,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.06438958400394768,
+          "iterations": 11,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        }
+      ],
+      "unconverged_chunks": 0,
+      "reconstruction_max_error": 4.440892098500626e-16,
+      "max_component_difference_from_scalar": null,
+      "max_component_difference_from_single_thread": 3.6296281741461656e-07
+    },
+    {
+      "n": 17889,
+      "method": "gd",
+      "workers": 1,
+      "seconds": 286.31474487495143,
+      "stage_count": 18,
+      "load_average_start": [
+        3.3701171875,
+        3.095703125,
+        2.990234375
+      ],
+      "stages": [
+        {
+          "seconds": 93.37713750009425,
+          "iterations": 14,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 65.41088458301965,
+          "iterations": 14,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 46.60588541603647,
+          "iterations": 14,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 28.192583499941975,
+          "iterations": 12,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 16.958886125008576,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 10.58951729198452,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 7.476852540974505,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 5.33528920810204,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 3.702388957957737,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 2.6041147090727463,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 1.8285088749835268,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 1.2819206670392305,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.9043193749384955,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.6428348750341684,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.5048231669934466,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.36193329095840454,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.28475287510082126,
+          "iterations": 11,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.2520239579025656,
+          "iterations": 11,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        }
+      ],
+      "unconverged_chunks": 0,
+      "reconstruction_max_error": 8.881784197001252e-16,
+      "max_component_difference_from_scalar": null,
+      "max_component_difference_from_single_thread": 0.0
+    },
+    {
+      "n": 17889,
+      "method": "gd",
+      "workers": 4,
+      "seconds": 77.81038612499833,
+      "stage_count": 18,
+      "load_average_start": [
+        2.24169921875,
+        2.5458984375,
+        2.755859375
+      ],
+      "stages": [
+        {
+          "seconds": 25.505298417061567,
+          "iterations": 14,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 17.741618959000334,
+          "iterations": 14,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 12.519601791980676,
+          "iterations": 14,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 7.4789070000406355,
+          "iterations": 12,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 4.575575832976028,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 2.964645624975674,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 2.090213165967725,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 1.4539901670068502,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 1.034791041049175,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.7193386669969186,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.5129401250742376,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.365165084018372,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.25765079096890986,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.18948258296586573,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.1437889999942854,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.1042145409155637,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.08102554199285805,
+          "iterations": 11,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.07205812493339181,
+          "iterations": 11,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        }
+      ],
+      "unconverged_chunks": 0,
+      "reconstruction_max_error": 6.661338147750939e-16,
+      "max_component_difference_from_scalar": null,
+      "max_component_difference_from_single_thread": 4.0683104581343277e-07
+    },
+    {
+      "n": 17889,
+      "method": "gd",
+      "workers": 12,
+      "seconds": 26.485463583958335,
+      "stage_count": 18,
+      "load_average_start": [
+        4.1884765625,
+        3.07177734375,
+        2.935546875
+      ],
+      "stages": [
+        {
+          "seconds": 8.618964750086889,
+          "iterations": 14,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 5.995540666976012,
+          "iterations": 14,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 4.283361125038937,
+          "iterations": 14,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 2.6107078340137377,
+          "iterations": 12,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 1.5522702080197632,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 1.0041214590892196,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.7195029589347541,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.49198304198216647,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.3569819580297917,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.24405295797623694,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.17753133294172585,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.12278137495741248,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.08765787503216416,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.06312137504573911,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.05534020799677819,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.04480870789848268,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.029891708050854504,
+          "iterations": 11,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.026774332975037396,
+          "iterations": 11,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        }
+      ],
+      "unconverged_chunks": 0,
+      "reconstruction_max_error": 4.440892098500626e-16,
+      "max_component_difference_from_scalar": null,
+      "max_component_difference_from_single_thread": 7.631839999133749e-07
+    },
+    {
+      "n": 20000,
+      "method": "gd",
+      "workers": 12,
+      "seconds": 32.63467583293095,
+      "stage_count": 18,
+      "load_average_start": [
+        6.41650390625,
+        3.6767578125,
+        3.15673828125
+      ],
+      "stages": [
+        {
+          "seconds": 10.866057832958177,
+          "iterations": 14,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 7.512893582927063,
+          "iterations": 14,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 5.352746749995276,
+          "iterations": 14,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 3.2314773340476677,
+          "iterations": 12,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 1.7899225829169154,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 1.1369736670749262,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.8076355829834938,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.5552389579825103,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.3952493329998106,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.2844223330030218,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.19970324996393174,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.14355583302676678,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.10022975003812462,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.0788572080200538,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.06138408405240625,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.048280042014084756,
+          "iterations": 11,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.03866475005634129,
+          "iterations": 12,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.03129912493750453,
+          "iterations": 12,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        }
+      ],
+      "unconverged_chunks": 0,
+      "reconstruction_max_error": 6.661338147750939e-16,
+      "max_component_difference_from_scalar": null,
+      "max_component_difference_from_single_thread": 7.412317072630348e-07
+    },
+    {
+      "n": 20000,
+      "method": "gd",
+      "workers": 1,
+      "seconds": 348.8132649589097,
+      "stage_count": 18,
+      "load_average_start": [
+        8.7490234375,
+        4.56201171875,
+        3.5
+      ],
+      "stages": [
+        {
+          "seconds": 115.85364270803984,
+          "iterations": 14,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 82.60525987495203,
+          "iterations": 14,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 57.32057470805012,
+          "iterations": 14,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 34.681684707989916,
+          "iterations": 12,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 18.62616191606503,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 11.641589042032138,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 8.219670832972042,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 5.79079895792529,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 4.095908917021006,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 2.8912765830755234,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 2.030439708963968,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 1.4276739999186248,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 1.0090480420039967,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.8029667920200154,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.6289238330209628,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.49446058296598494,
+          "iterations": 11,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.3857446250040084,
+          "iterations": 12,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.30720625002868474,
+          "iterations": 12,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        }
+      ],
+      "unconverged_chunks": 0,
+      "reconstruction_max_error": 6.661338147750939e-16,
+      "max_component_difference_from_scalar": null,
+      "max_component_difference_from_single_thread": 0.0
+    },
+    {
+      "n": 20000,
+      "method": "gd",
+      "workers": 4,
+      "seconds": 95.48539933306165,
+      "stage_count": 18,
+      "load_average_start": [
+        1.8271484375,
+        2.91064453125,
+        3.080078125
+      ],
+      "stages": [
+        {
+          "seconds": 31.697186333010904,
+          "iterations": 14,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 22.051581291947514,
+          "iterations": 14,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 15.655835499987006,
+          "iterations": 14,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 9.487730082939379,
+          "iterations": 12,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 5.241758792079054,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 3.3341116670053452,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 2.3580093330238014,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 1.6408568329643458,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 1.1589334160089493,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.8260511249536648,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.58899187494535,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.41019295901060104,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.2895415419479832,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.22951062500942498,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.17814191698562354,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.14051645889412612,
+          "iterations": 11,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.10856137494556606,
+          "iterations": 12,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.08780454099178314,
+          "iterations": 12,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        }
+      ],
+      "unconverged_chunks": 0,
+      "reconstruction_max_error": 6.661338147750939e-16,
+      "max_component_difference_from_scalar": null,
+      "max_component_difference_from_single_thread": 7.375875897275286e-07
+    },
+    {
+      "n": 7333,
+      "method": "quantlet",
+      "workers": 1,
+      "seconds": 216.71196062501986,
+      "started_utc": "2026-09-17T12:16:39.857041+00:00",
+      "finished_utc": "2026-09-17T12:20:16.572216+00:00",
+      "stage_count": 15,
+      "load_average_start": [
+        1.66796875,
+        1.36181640625,
+        1.84130859375
+      ],
+      "stages": [
+        {
+          "seconds": 51.268400333006866,
+          "chunks": 1
+        },
+        {
+          "seconds": 37.22842116700485,
+          "chunks": 1
+        },
+        {
+          "seconds": 27.55646066693589,
+          "chunks": 1
+        },
+        {
+          "seconds": 20.535000458010472,
+          "chunks": 1
+        },
+        {
+          "seconds": 15.515613541938365,
+          "chunks": 1
+        },
+        {
+          "seconds": 12.062659667106345,
+          "chunks": 1
+        },
+        {
+          "seconds": 9.536108332918957,
+          "chunks": 1
+        },
+        {
+          "seconds": 7.890018500038423,
+          "chunks": 1
+        },
+        {
+          "seconds": 6.697569958982058,
+          "chunks": 1
+        },
+        {
+          "seconds": 5.858404125086963,
+          "chunks": 1
+        },
+        {
+          "seconds": 5.0894340419908985,
+          "chunks": 1
+        },
+        {
+          "seconds": 4.70193579106126,
+          "chunks": 1
+        },
+        {
+          "seconds": 4.421185333980247,
+          "chunks": 1
+        },
+        {
+          "seconds": 4.210595500073396,
+          "chunks": 1
+        },
+        {
+          "seconds": 4.140091374982148,
+          "chunks": 1
+        }
+      ],
+      "unconverged_chunks": 0,
+      "reconstruction_max_error": 4.440892098500626e-16,
+      "max_component_difference_from_scalar": 0.0,
+      "max_component_difference_from_single_thread": 0.0
+    },
+    {
+      "n": 9444,
+      "method": "quantlet",
+      "workers": 1,
+      "seconds": 350.210133458022,
+      "started_utc": "2026-09-17T12:20:16.604399+00:00",
+      "finished_utc": "2026-09-17T12:26:06.817334+00:00",
+      "stage_count": 16,
+      "load_average_start": [
+        1.724609375,
+        1.76708984375,
+        1.9169921875
+      ],
+      "stages": [
+        {
+          "seconds": 84.52067679096945,
+          "chunks": 1
+        },
+        {
+          "seconds": 60.32533625001088,
+          "chunks": 1
+        },
+        {
+          "seconds": 44.15925004193559,
+          "chunks": 1
+        },
+        {
+          "seconds": 32.71557187498547,
+          "chunks": 1
+        },
+        {
+          "seconds": 24.66341154195834,
+          "chunks": 1
+        },
+        {
+          "seconds": 19.007529874914326,
+          "chunks": 1
+        },
+        {
+          "seconds": 15.051754457992502,
+          "chunks": 1
+        },
+        {
+          "seconds": 12.056105499970727,
+          "chunks": 1
+        },
+        {
+          "seconds": 10.162031583022326,
+          "chunks": 1
+        },
+        {
+          "seconds": 8.778949707979336,
+          "chunks": 1
+        },
+        {
+          "seconds": 7.792385709006339,
+          "chunks": 1
+        },
+        {
+          "seconds": 6.887261749943718,
+          "chunks": 1
+        },
+        {
+          "seconds": 6.414876207942143,
+          "chunks": 1
+        },
+        {
+          "seconds": 6.0486097920220345,
+          "chunks": 1
+        },
+        {
+          "seconds": 5.822357875062153,
+          "chunks": 1
+        },
+        {
+          "seconds": 5.803958082920872,
+          "chunks": 1
+        }
+      ],
+      "unconverged_chunks": 0,
+      "reconstruction_max_error": 5.551115123125783e-16,
+      "max_component_difference_from_scalar": 0.0,
+      "max_component_difference_from_single_thread": 0.0
+    },
+    {
+      "n": 11556,
+      "method": "quantlet",
+      "workers": 1,
+      "seconds": 511.2201792499982,
+      "started_utc": "2026-09-17T12:26:06.859584+00:00",
+      "finished_utc": "2026-09-17T12:34:38.083518+00:00",
+      "stage_count": 16,
+      "load_average_start": [
+        1.50732421875,
+        1.60888671875,
+        1.78369140625
+      ],
+      "stages": [
+        {
+          "seconds": 126.26038174994756,
+          "chunks": 1
+        },
+        {
+          "seconds": 89.61337349994574,
+          "chunks": 1
+        },
+        {
+          "seconds": 65.39814333303366,
+          "chunks": 1
+        },
+        {
+          "seconds": 48.2298755410593,
+          "chunks": 1
+        },
+        {
+          "seconds": 36.1555955830263,
+          "chunks": 1
+        },
+        {
+          "seconds": 27.618388417060487,
+          "chunks": 1
+        },
+        {
+          "seconds": 21.642954707960598,
+          "chunks": 1
+        },
+        {
+          "seconds": 17.386104041943327,
+          "chunks": 1
+        },
+        {
+          "seconds": 14.281381582957692,
+          "chunks": 1
+        },
+        {
+          "seconds": 12.1310630410444,
+          "chunks": 1
+        },
+        {
+          "seconds": 10.655909916968085,
+          "chunks": 1
+        },
+        {
+          "seconds": 9.431420917040668,
+          "chunks": 1
+        },
+        {
+          "seconds": 8.682376957964152,
+          "chunks": 1
+        },
+        {
+          "seconds": 8.21275649999734,
+          "chunks": 1
+        },
+        {
+          "seconds": 7.889055375009775,
+          "chunks": 1
+        },
+        {
+          "seconds": 7.63133070897311,
+          "chunks": 1
+        }
+      ],
+      "unconverged_chunks": 0,
+      "reconstruction_max_error": 6.661338147750939e-16,
+      "max_component_difference_from_scalar": 0.0,
+      "max_component_difference_from_single_thread": 0.0
+    },
+    {
+      "n": 13667,
+      "method": "quantlet",
+      "workers": 1,
+      "seconds": 714.9435248749796,
+      "started_utc": "2026-09-17T12:34:38.134257+00:00",
+      "finished_utc": "2026-09-17T12:46:33.079933+00:00",
+      "stage_count": 17,
+      "load_average_start": [
+        1.328125,
+        1.501953125,
+        1.65087890625
+      ],
+      "stages": [
+        {
+          "seconds": 176.77428429201245,
+          "chunks": 1
+        },
+        {
+          "seconds": 126.36532612494193,
+          "chunks": 1
+        },
+        {
+          "seconds": 91.07527658296749,
+          "chunks": 1
+        },
+        {
+          "seconds": 66.56921054108534,
+          "chunks": 1
+        },
+        {
+          "seconds": 49.49330804205965,
+          "chunks": 1
+        },
+        {
+          "seconds": 37.69596066698432,
+          "chunks": 1
+        },
+        {
+          "seconds": 29.534264583024196,
+          "chunks": 1
+        },
+        {
+          "seconds": 23.484172208001837,
+          "chunks": 1
+        },
+        {
+          "seconds": 19.076184292091057,
+          "chunks": 1
+        },
+        {
+          "seconds": 16.18491049995646,
+          "chunks": 1
+        },
+        {
+          "seconds": 14.147969041951,
+          "chunks": 1
+        },
+        {
+          "seconds": 12.726286209071986,
+          "chunks": 1
+        },
+        {
+          "seconds": 11.370657084044069,
+          "chunks": 1
+        },
+        {
+          "seconds": 10.671767625026405,
+          "chunks": 1
+        },
+        {
+          "seconds": 10.197508082957938,
+          "chunks": 1
+        },
+        {
+          "seconds": 9.85662608302664,
+          "chunks": 1
+        },
+        {
+          "seconds": 9.719709792057984,
+          "chunks": 1
+        }
+      ],
+      "unconverged_chunks": 0,
+      "reconstruction_max_error": 6.661338147750939e-16,
+      "max_component_difference_from_scalar": 0.0,
+      "max_component_difference_from_single_thread": 0.0
+    }
+  ],
+  "validation": [
+    {
+      "n": 1000,
+      "passed": true,
+      "max_component_difference": 9.103396476257963e-07
+    },
+    {
+      "n": 3111,
+      "passed": true,
+      "max_component_difference": 7.358770737764253e-07
+    },
+    {
+      "n": 5222,
+      "passed": true,
+      "max_component_difference": 1.1400487000025328e-06
+    },
+    {
+      "n": 7333,
+      "passed": true,
+      "scalar_reference_available": true,
+      "max_component_difference": 1.1049462317613834e-06,
+      "max_thread_difference": 7.714851224804864e-07
+    },
+    {
+      "n": 9444,
+      "passed": true,
+      "scalar_reference_available": true,
+      "max_component_difference": 9.98723326206541e-07,
+      "max_thread_difference": 7.194131197846287e-07
+    },
+    {
+      "n": 11556,
+      "passed": true,
+      "scalar_reference_available": true,
+      "max_component_difference": 1.0623146523003335e-06,
+      "max_thread_difference": 7.696362851056238e-07
+    },
+    {
+      "n": 13667,
+      "passed": true,
+      "scalar_reference_available": true,
+      "max_component_difference": 1.0251798489152586e-06,
+      "max_thread_difference": 6.93067176774087e-07
+    },
+    {
+      "n": 15778,
+      "passed": true,
+      "scalar_reference_available": false,
+      "max_component_difference": null,
+      "max_thread_difference": 7.278018625961336e-07
+    },
+    {
+      "n": 17889,
+      "passed": true,
+      "scalar_reference_available": false,
+      "max_component_difference": null,
+      "max_thread_difference": 7.631839999133749e-07
+    },
+    {
+      "n": 20000,
+      "passed": true,
+      "scalar_reference_available": false,
+      "max_component_difference": null,
+      "max_thread_difference": 7.412317072630348e-07
+    }
+  ]
+}

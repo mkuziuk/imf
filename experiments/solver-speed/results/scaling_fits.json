@@ -1,0 +1,92 @@
+{
+  "model": "T_seconds = seconds_at_1000 * (n / 1000) ** power",
+  "fit_method": "Unweighted ordinary least squares of log(time) on log(n / 1000), one point per measured size.",
+  "scope": "Descriptive fit over each measured range, with a second fit restricted to the shared range. No extrapolation, asymptotic claim or timing uncertainty estimate.",
+  "timings_sha256": "5cec7d8fbe961536e99602d4105ece0fcdcc697440b6b2d605787ca427494a6d",
+  "fits": [
+    {
+      "power": 1.810070263723008,
+      "seconds_at_1000": 6.037553786061173,
+      "doubling_factor": 3.5065936630924894,
+      "r_squared_log": 0.9997303450352795,
+      "point_count": 7,
+      "n_min": 1000,
+      "n_max": 13667,
+      "method": "quantlet",
+      "workers": 1,
+      "label": "QuantLet \u00b7 1 thread",
+      "shared_range_fit": {
+        "power": 1.810070263723008,
+        "seconds_at_1000": 6.037553786061173,
+        "doubling_factor": 3.5065936630924894,
+        "r_squared_log": 0.9997303450352795,
+        "point_count": 7,
+        "n_min": 1000,
+        "n_max": 13667
+      }
+    },
+    {
+      "power": 1.9969096197533047,
+      "seconds_at_1000": 0.8767417422367207,
+      "doubling_factor": 3.991440817116419,
+      "r_squared_log": 0.9997880267018671,
+      "point_count": 10,
+      "n_min": 1000,
+      "n_max": 20000,
+      "method": "gd",
+      "workers": 1,
+      "label": "My GD \u00b7 1 thread",
+      "shared_range_fit": {
+        "power": 1.9964159834064994,
+        "seconds_at_1000": 0.8777471637137301,
+        "doubling_factor": 3.990075328803874,
+        "r_squared_log": 0.9997737122303756,
+        "point_count": 7,
+        "n_min": 1000,
+        "n_max": 13667
+      }
+    },
+    {
+      "power": 1.9961442091451869,
+      "seconds_at_1000": 0.23838308008472883,
+      "doubling_factor": 3.989323750950363,
+      "r_squared_log": 0.9998682619959086,
+      "point_count": 10,
+      "n_min": 1000,
+      "n_max": 20000,
+      "method": "gd",
+      "workers": 4,
+      "label": "My GD \u00b7 4 threads",
+      "shared_range_fit": {
+        "power": 1.9903213242345816,
+        "seconds_at_1000": 0.24005716703509694,
+        "doubling_factor": 3.973254826336506,
+        "r_squared_log": 0.9998867486201176,
+        "point_count": 7,
+        "n_min": 1000,
+        "n_max": 13667
+      }
+    },
+    {
+      "power": 1.9457995036818434,
+      "seconds_at_1000": 0.09235318748828386,
+      "doubling_factor": 3.85251214194291,
+      "r_squared_log": 0.9996611594209849,
+      "point_count": 10,
+      "n_min": 1000,
+      "n_max": 20000,
+      "method": "gd",
+      "workers": 12,
+      "label": "My GD \u00b7 12 threads",
+      "shared_range_fit": {
+        "power": 1.9242067235340055,
+        "seconds_at_1000": 0.09463968860344896,
+        "doubling_factor": 3.7952810467953952,
+        "r_squared_log": 0.9998450498336862,
+        "point_count": 7,
+        "n_min": 1000,
+        "n_max": 13667
+      }
+    }
+  ]
+}

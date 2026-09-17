@@ -11,6 +11,8 @@ one-dimensional signals with Gaussian noise and one-sided exponential contaminat
   standalone robust local fitting, gradient descent, and parallel execution.
 - [`experiments/gd-irmf/`](experiments/gd-irmf/): lookup-grid gradient-descent IRMF
   experiment.
+- [`experiments/solver-speed/`](experiments/solver-speed/): matched QuantLet and GD
+  timing benchmarks, scaling-law fits, and an interactive HTML report.
 - [`experiments/real-vs-calculated/`](experiments/real-vs-calculated/): clean-reference
   comparisons, observation-model variants, limit sweeps, and error-scaling studies.
 - [`experiments/residual-distribution/`](experiments/residual-distribution/): paired
