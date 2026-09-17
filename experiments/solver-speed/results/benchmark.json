@@ -1,0 +1,2930 @@
+{
+  "metadata": {
+    "created_utc": "2026-09-17T10:11:26.848163+00:00",
+    "cpu": "Apple M4 Max",
+    "logical_cpus": 16,
+    "platform": "macOS-26.6.2-arm64-arm-64bit-Mach-O",
+    "memory_bytes": 137438953472,
+    "python": "3.14.6 (main, Jun 10 2026, 10:03:53) [Clang 21.0.0 (clang-2100.0.123.102)]",
+    "numpy": "2.4.6",
+    "gil_enabled": true,
+    "library_thread_limits": {
+      "OMP_NUM_THREADS": "1",
+      "OPENBLAS_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "VECLIB_MAXIMUM_THREADS": "1",
+      "BLIS_NUM_THREADS": "1",
+      "NUMEXPR_NUM_THREADS": "1"
+    },
+    "numpy_blas": {
+      "name": "accelerate",
+      "found": true,
+      "version": "unknown",
+      "detection method": "system",
+      "include directory": "unknown",
+      "lib directory": "unknown",
+      "openblas configuration": "unknown",
+      "pc file directory": "unknown"
+    },
+    "sources": [
+      {
+        "path": "/Users/mikhail/Projects/imf/experiments/gd-irmf/gd_irmf.ipynb",
+        "sha256": "9ee6afedf8ab43b4321bc2742390529931332adf3dd68294163f21932f78e686"
+      },
+      {
+        "path": "/Users/mikhail/Projects/IRMF-Intrinsic-Robust-Multiscale-Filtering/Simulations/imd_python_fixedvf.py",
+        "sha256": "49d79636e95ee9ae259b4c890980a100522866fe84b516f3587c23e1e5983776"
+      },
+      {
+        "path": "/Users/mikhail/Projects/imf/experiments/solver-speed/benchmark_support.py",
+        "sha256": "3a2505af47c659063f6e091e785c14d934b0d2d248b841eca6087f8a5aa57485"
+      }
+    ],
+    "commits": {
+      "/Users/mikhail/Projects/imf": "d7d8a22372eec660060f744f813e5f91a37245e5",
+      "/Users/mikhail/Projects/IRMF-Intrinsic-Robust-Multiscale-Filtering": "58d6762cccbdce3abe5e183ceaf9564bf46768ca"
+    },
+    "timing_scope": "One complete single-signal decomposition. Includes weights, padding, iteration, residual updates and GD per-stage thread-pool creation. Excludes imports, lookup-table creation, input generation, validation, population fitting, diagnostics and plots.",
+    "threading": "GD uses ThreadPoolExecutor over disjoint contiguous target chunks, minimum 64 targets/chunk. Stages remain sequential. QuantLet uses one worker only.",
+    "tolerances": {
+      "gd_relative_update": 1e-06,
+      "gd_max_iterations": 60,
+      "golden_absolute_bracket": 1e-06,
+      "golden_max_iterations": 200,
+      "acceptable_component_difference": 0.0001
+    },
+    "warmup": "One untimed complete decomposition per method per case at one worker.",
+    "repetitions": "Same input per case; deterministic shuffled execution order within each timing repetition; configurations never run concurrently.",
+    "latest_utc": "2026-09-17T10:24:19.961256+00:00",
+    "complete": true,
+    "scope_revision": {
+      "updated_utc": "2026-09-17T10:39:03.921850+00:00",
+      "description": "Retained original GD measurements and QuantLet one-worker measurements only. Timing values and measurement-time source hashes are unchanged. The current adapter removes QuantLet threading; its hash is recorded separately below.",
+      "retained_run_count": 42,
+      "removed_run_count": 30,
+      "current_adapter_sha256": "b89b9d3ac4f852156f1db067d53fffda578cf25564796a43ab3325ace9246f44"
+    }
+  },
+  "repeats": 3,
+  "cases": [
+    {
+      "profile": "your_gd",
+      "label": "My GD settings",
+      "n": 1000,
+      "H": 0.4,
+      "sigma": 0.2,
+      "kernel": "squared_triangular",
+      "noise": "Gaussian + signed exponential",
+      "contamination_probability": 0.2,
+      "contamination_scale": 0.2,
+      "seed": 777,
+      "bandwidths": [
+        0.25,
+        0.177,
+        0.125,
+        0.088,
+        0.062,
+        0.044,
+        0.031,
+        0.022,
+        0.015
+      ],
+      "stages": 9,
+      "grid": "arange(n)/n, endpoint excluded for both methods",
+      "input_sha256": "86e45d902a4498435039af2a000e303b95341f6b5db747ee29925401f4a26774",
+      "key": "your_gd_1000"
+    },
+    {
+      "profile": "quantlet_zero",
+      "label": "QuantLet default settings",
+      "n": 2000,
+      "H": 1.0,
+      "sigma": 0.0,
+      "kernel": "epanechnikov",
+      "noise": "20% replaced by zero",
+      "contamination_probability": 0.2,
+      "seed": 2026,
+      "bandwidths": [
+        0.2,
+        0.1414213562373095,
+        0.09999999999999998,
+        0.07071067811865474,
+        0.04999999999999999,
+        0.03535533905932736,
+        0.02499999999999999,
+        0.01767766952966368
+      ],
+      "stages": 8,
+      "grid": "arange(n)/n, endpoint excluded for both methods",
+      "input_sha256": "e5271353ea4d8520e750fabc793036affb60c563565cdf7902c87b2c46b03e91",
+      "key": "quantlet_zero_2000"
+    }
+  ],
+  "runs": [
+    {
+      "case": "your_gd_1000",
+      "method": "gd",
+      "workers": 2,
+      "repeat": 1,
+      "seconds": 0.43432804208714515,
+      "max_component_difference_from_scalar": 9.103396476257963e-07,
+      "max_component_difference_from_single_thread": 5.565493269577004e-07,
+      "unconverged_chunks": 0,
+      "load_average_start": [
+        3.61962890625,
+        2.92626953125,
+        2.30810546875
+      ],
+      "stages": [
+        {
+          "seconds": 0.15056924999225885,
+          "iterations": 14,
+          "unconverged_chunks": 0,
+          "chunks": 2
+        },
+        {
+          "seconds": 0.09794866607990116,
+          "iterations": 13,
+          "unconverged_chunks": 0,
+          "chunks": 2
+        },
+        {
+          "seconds": 0.06972537492401898,
+          "iterations": 13,
+          "unconverged_chunks": 0,
+          "chunks": 2
+        },
+        {
+          "seconds": 0.042298082960769534,
+          "iterations": 11,
+          "unconverged_chunks": 0,
+          "chunks": 2
+        },
+        {
+          "seconds": 0.024352416046895087,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 2
+        },
+        {
+          "seconds": 0.018830165965482593,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 2
+        },
+        {
+          "seconds": 0.014025834039784968,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 2
+        },
+        {
+          "seconds": 0.009731124970130622,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 2
+        },
+        {
+          "seconds": 0.006829582969658077,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 2
+        }
+      ]
+    },
+    {
+      "case": "your_gd_1000",
+      "method": "quantlet",
+      "workers": 1,
+      "repeat": 1,
+      "seconds": 6.315149458008818,
+      "max_component_difference_from_scalar": 0.0,
+      "max_component_difference_from_single_thread": 0.0,
+      "unconverged_chunks": 0,
+      "load_average_start": [
+        3.61962890625,
+        2.92626953125,
+        2.30810546875
+      ],
+      "stages": [
+        {
+          "seconds": 1.2951425419887528,
+          "chunks": 1
+        },
+        {
+          "seconds": 1.024589458014816,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.8295851669972762,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.6893214160809293,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.583739958005026,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.5273388749919832,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.4862196249887347,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.45237237494438887,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.42682045802939683,
+          "chunks": 1
+        }
+      ]
+    },
+    {
+      "case": "quantlet_zero_2000",
+      "method": "gd",
+      "workers": 4,
+      "repeat": 1,
+      "seconds": 0.2116098329424858,
+      "max_component_difference_from_scalar": 9.329775512711969e-07,
+      "max_component_difference_from_single_thread": 1.3196140942126067e-07,
+      "unconverged_chunks": 0,
+      "load_average_start": [
+        3.2158203125,
+        2.880859375,
+        2.30615234375
+      ],
+      "stages": [
+        {
+          "seconds": 0.0828488749684766,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.038546000025235116,
+          "iterations": 7,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.027416708995588124,
+          "iterations": 7,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.019647749955765903,
+          "iterations": 7,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.015859917039051652,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.01202133297920227,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.008641417021863163,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.006610250100493431,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        }
+      ]
+    },
+    {
+      "case": "quantlet_zero_2000",
+      "method": "gd",
+      "workers": 16,
+      "repeat": 1,
+      "seconds": 0.0900661670602858,
+      "max_component_difference_from_scalar": 5.878529800162902e-07,
+      "max_component_difference_from_single_thread": 5.000133428134657e-07,
+      "unconverged_chunks": 0,
+      "load_average_start": [
+        3.2158203125,
+        2.880859375,
+        2.30615234375
+      ],
+      "stages": [
+        {
+          "seconds": 0.027466416941024363,
+          "iterations": 11,
+          "unconverged_chunks": 0,
+          "chunks": 16
+        },
+        {
+          "seconds": 0.014243041048757732,
+          "iterations": 7,
+          "unconverged_chunks": 0,
+          "chunks": 16
+        },
+        {
+          "seconds": 0.011217375053092837,
+          "iterations": 7,
+          "unconverged_chunks": 0,
+          "chunks": 16
+        },
+        {
+          "seconds": 0.009220291976816952,
+          "iterations": 7,
+          "unconverged_chunks": 0,
+          "chunks": 16
+        },
+        {
+          "seconds": 0.008026499999687076,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 16
+        },
+        {
+          "seconds": 0.007145542069338262,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 16
+        },
+        {
+          "seconds": 0.006810542079620063,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 16
+        },
+        {
+          "seconds": 0.005918917013332248,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 16
+        }
+      ]
+    },
+    {
+      "case": "quantlet_zero_2000",
+      "method": "gd",
+      "workers": 2,
+      "repeat": 1,
+      "seconds": 0.37743800005409867,
+      "max_component_difference_from_scalar": 9.329775512711969e-07,
+      "max_component_difference_from_single_thread": 1.2212229692602772e-07,
+      "unconverged_chunks": 0,
+      "load_average_start": [
+        3.24560546875,
+        3.04736328125,
+        2.42236328125
+      ],
+      "stages": [
+        {
+          "seconds": 0.14636812498793006,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 2
+        },
+        {
+          "seconds": 0.07056550006382167,
+          "iterations": 7,
+          "unconverged_chunks": 0,
+          "chunks": 2
+        },
+        {
+          "seconds": 0.05074562493246049,
+          "iterations": 7,
+          "unconverged_chunks": 0,
+          "chunks": 2
+        },
+        {
+          "seconds": 0.03569837496615946,
+          "iterations": 7,
+          "unconverged_chunks": 0,
+          "chunks": 2
+        },
+        {
+          "seconds": 0.028305500047281384,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 2
+        },
+        {
+          "seconds": 0.019846208044327796,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 2
+        },
+        {
+          "seconds": 0.014949665986932814,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 2
+        },
+        {
+          "seconds": 0.010937417042441666,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 2
+        }
+      ]
+    },
+    {
+      "case": "quantlet_zero_2000",
+      "method": "gd",
+      "workers": 12,
+      "repeat": 1,
+      "seconds": 0.08930250001139939,
+      "max_component_difference_from_scalar": 5.98467194579122e-07,
+      "max_component_difference_from_single_thread": 5.000133428134657e-07,
+      "unconverged_chunks": 0,
+      "load_average_start": [
+        3.24560546875,
+        3.04736328125,
+        2.42236328125
+      ],
+      "stages": [
+        {
+          "seconds": 0.03215554205235094,
+          "iterations": 11,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.014739334001205862,
+          "iterations": 7,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.010892333928495646,
+          "iterations": 7,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.008259166032075882,
+          "iterations": 7,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.007013499969616532,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.006013958947733045,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.005166999995708466,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.005045625031925738,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        }
+      ]
+    },
+    {
+      "case": "quantlet_zero_2000",
+      "method": "gd",
+      "workers": 1,
+      "repeat": 1,
+      "seconds": 0.7124554580077529,
+      "max_component_difference_from_scalar": 9.329775512711969e-07,
+      "max_component_difference_from_single_thread": 0.0,
+      "unconverged_chunks": 0,
+      "load_average_start": [
+        3.24560546875,
+        3.04736328125,
+        2.42236328125
+      ],
+      "stages": [
+        {
+          "seconds": 0.2823196250246838,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.13123662502039224,
+          "iterations": 7,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.09298349998425692,
+          "iterations": 7,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.06617766700219363,
+          "iterations": 7,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.052730832947418094,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.03861754201352596,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.027489042025990784,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.020878249895758927,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        }
+      ]
+    },
+    {
+      "case": "your_gd_1000",
+      "method": "gd",
+      "workers": 16,
+      "repeat": 1,
+      "seconds": 0.09749549999833107,
+      "max_component_difference_from_scalar": 9.103396476257963e-07,
+      "max_component_difference_from_single_thread": 5.225452699986199e-07,
+      "unconverged_chunks": 0,
+      "load_average_start": [
+        3.24560546875,
+        3.04736328125,
+        2.42236328125
+      ],
+      "stages": [
+        {
+          "seconds": 0.024422292015515268,
+          "iterations": 14,
+          "unconverged_chunks": 0,
+          "chunks": 16
+        },
+        {
+          "seconds": 0.01691545802168548,
+          "iterations": 13,
+          "unconverged_chunks": 0,
+          "chunks": 16
+        },
+        {
+          "seconds": 0.013454708037897944,
+          "iterations": 13,
+          "unconverged_chunks": 0,
+          "chunks": 16
+        },
+        {
+          "seconds": 0.010160167003050447,
+          "iterations": 11,
+          "unconverged_chunks": 0,
+          "chunks": 16
+        },
+        {
+          "seconds": 0.007530209026299417,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 16
+        },
+        {
+          "seconds": 0.00685604102909565,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 16
+        },
+        {
+          "seconds": 0.006514374981634319,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 16
+        },
+        {
+          "seconds": 0.006156375049613416,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 16
+        },
+        {
+          "seconds": 0.0054659160086885095,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 16
+        }
+      ]
+    },
+    {
+      "case": "your_gd_1000",
+      "method": "gd",
+      "workers": 4,
+      "repeat": 1,
+      "seconds": 0.23662858305033296,
+      "max_component_difference_from_scalar": 9.103396476257963e-07,
+      "max_component_difference_from_single_thread": 5.565493269577004e-07,
+      "unconverged_chunks": 0,
+      "load_average_start": [
+        3.20068359375,
+        3.044921875,
+        2.42822265625
+      ],
+      "stages": [
+        {
+          "seconds": 0.08052175003103912,
+          "iterations": 14,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.05249212495982647,
+          "iterations": 13,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.038136042072437704,
+          "iterations": 13,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.022760082967579365,
+          "iterations": 11,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.013668208033777773,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.010704333079047501,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.008020458044484258,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.006013624952174723,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.004294375074096024,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        }
+      ]
+    },
+    {
+      "case": "your_gd_1000",
+      "method": "gd",
+      "workers": 12,
+      "repeat": 1,
+      "seconds": 0.0973598751006648,
+      "max_component_difference_from_scalar": 9.103396476257963e-07,
+      "max_component_difference_from_single_thread": 5.225452699986199e-07,
+      "unconverged_chunks": 0,
+      "load_average_start": [
+        3.1552734375,
+        3.0419921875,
+        2.43701171875
+      ],
+      "stages": [
+        {
+          "seconds": 0.02922404103446752,
+          "iterations": 14,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.019233416998758912,
+          "iterations": 13,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.014128834009170532,
+          "iterations": 13,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.00900424993596971,
+          "iterations": 11,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.00620958290528506,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.0052995000733062625,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.005251166992820799,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.004759334027767181,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.004235167056322098,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        }
+      ]
+    },
+    {
+      "case": "quantlet_zero_2000",
+      "method": "gd",
+      "workers": 8,
+      "repeat": 1,
+      "seconds": 0.11133387498557568,
+      "max_component_difference_from_scalar": 7.769370383992058e-07,
+      "max_component_difference_from_single_thread": 5.000133428134657e-07,
+      "unconverged_chunks": 0,
+      "load_average_start": [
+        3.1552734375,
+        3.0419921875,
+        2.43701171875
+      ],
+      "stages": [
+        {
+          "seconds": 0.04288579197600484,
+          "iterations": 11,
+          "unconverged_chunks": 0,
+          "chunks": 8
+        },
+        {
+          "seconds": 0.019610292045399547,
+          "iterations": 7,
+          "unconverged_chunks": 0,
+          "chunks": 8
+        },
+        {
+          "seconds": 0.013560750056058168,
+          "iterations": 7,
+          "unconverged_chunks": 0,
+          "chunks": 8
+        },
+        {
+          "seconds": 0.0103560839779675,
+          "iterations": 7,
+          "unconverged_chunks": 0,
+          "chunks": 8
+        },
+        {
+          "seconds": 0.008736749994568527,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 8
+        },
+        {
+          "seconds": 0.00650924991350621,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 8
+        },
+        {
+          "seconds": 0.005254374933429062,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 8
+        },
+        {
+          "seconds": 0.0044039590284228325,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 8
+        }
+      ]
+    },
+    {
+      "case": "your_gd_1000",
+      "method": "gd",
+      "workers": 8,
+      "repeat": 1,
+      "seconds": 0.12309083400759846,
+      "max_component_difference_from_scalar": 9.103396476257963e-07,
+      "max_component_difference_from_single_thread": 5.565493269577004e-07,
+      "unconverged_chunks": 0,
+      "load_average_start": [
+        3.1552734375,
+        3.0419921875,
+        2.43701171875
+      ],
+      "stages": [
+        {
+          "seconds": 0.040092915995046496,
+          "iterations": 14,
+          "unconverged_chunks": 0,
+          "chunks": 8
+        },
+        {
+          "seconds": 0.026623249985277653,
+          "iterations": 13,
+          "unconverged_chunks": 0,
+          "chunks": 8
+        },
+        {
+          "seconds": 0.019159415969625115,
+          "iterations": 13,
+          "unconverged_chunks": 0,
+          "chunks": 8
+        },
+        {
+          "seconds": 0.012421874911524355,
+          "iterations": 11,
+          "unconverged_chunks": 0,
+          "chunks": 8
+        },
+        {
+          "seconds": 0.007501457934267819,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 8
+        },
+        {
+          "seconds": 0.00621245801448822,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 8
+        },
+        {
+          "seconds": 0.004541375092230737,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 8
+        },
+        {
+          "seconds": 0.003737000050023198,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 8
+        },
+        {
+          "seconds": 0.002785750082693994,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 8
+        }
+      ]
+    },
+    {
+      "case": "your_gd_1000",
+      "method": "gd",
+      "workers": 1,
+      "repeat": 1,
+      "seconds": 0.8538651670096442,
+      "max_component_difference_from_scalar": 9.103396476257963e-07,
+      "max_component_difference_from_single_thread": 0.0,
+      "unconverged_chunks": 0,
+      "load_average_start": [
+        3.1552734375,
+        3.0419921875,
+        2.43701171875
+      ],
+      "stages": [
+        {
+          "seconds": 0.2949651669478044,
+          "iterations": 14,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.19317520805634558,
+          "iterations": 13,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.13743370794691145,
+          "iterations": 13,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.08268904103897512,
+          "iterations": 11,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.047860875027254224,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.03791916696354747,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.026509958086535335,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.019562041969038546,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.013730832957662642,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        }
+      ]
+    },
+    {
+      "case": "quantlet_zero_2000",
+      "method": "quantlet",
+      "workers": 1,
+      "repeat": 1,
+      "seconds": 15.51294708403293,
+      "max_component_difference_from_scalar": 0.0,
+      "max_component_difference_from_single_thread": 0.0,
+      "unconverged_chunks": 0,
+      "load_average_start": [
+        2.736328125,
+        2.92724609375,
+        2.43994140625
+      ],
+      "stages": [
+        {
+          "seconds": 3.6905598340090364,
+          "chunks": 1
+        },
+        {
+          "seconds": 2.846848167013377,
+          "chunks": 1
+        },
+        {
+          "seconds": 2.221791708958335,
+          "chunks": 1
+        },
+        {
+          "seconds": 1.7944894169922918,
+          "chunks": 1
+        },
+        {
+          "seconds": 1.503694541985169,
+          "chunks": 1
+        },
+        {
+          "seconds": 1.304016707930714,
+          "chunks": 1
+        },
+        {
+          "seconds": 1.1223898750031367,
+          "chunks": 1
+        },
+        {
+          "seconds": 1.0291333330096677,
+          "chunks": 1
+        }
+      ]
+    },
+    {
+      "case": "your_gd_1000",
+      "method": "gd",
+      "workers": 1,
+      "repeat": 2,
+      "seconds": 0.822897500009276,
+      "max_component_difference_from_scalar": 9.103396476257963e-07,
+      "max_component_difference_from_single_thread": 0.0,
+      "unconverged_chunks": 0,
+      "load_average_start": [
+        2.7958984375,
+        2.9228515625,
+        2.47216796875
+      ],
+      "stages": [
+        {
+          "seconds": 0.2851690410170704,
+          "iterations": 14,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.18612295796629041,
+          "iterations": 13,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.13175866601523012,
+          "iterations": 13,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.07921904197428375,
+          "iterations": 11,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.04617354099173099,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.03655137505847961,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.02600545808672905,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.018547915969975293,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.013331416994333267,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        }
+      ]
+    },
+    {
+      "case": "your_gd_1000",
+      "method": "gd",
+      "workers": 2,
+      "repeat": 2,
+      "seconds": 0.4316315830219537,
+      "max_component_difference_from_scalar": 9.103396476257963e-07,
+      "max_component_difference_from_single_thread": 5.565493269577004e-07,
+      "unconverged_chunks": 0,
+      "load_average_start": [
+        2.7958984375,
+        2.9228515625,
+        2.47216796875
+      ],
+      "stages": [
+        {
+          "seconds": 0.14732300001196563,
+          "iterations": 14,
+          "unconverged_chunks": 0,
+          "chunks": 2
+        },
+        {
+          "seconds": 0.09698662499431521,
+          "iterations": 13,
+          "unconverged_chunks": 0,
+          "chunks": 2
+        },
+        {
+          "seconds": 0.06743316701613367,
+          "iterations": 13,
+          "unconverged_chunks": 0,
+          "chunks": 2
+        },
+        {
+          "seconds": 0.04355241695884615,
+          "iterations": 11,
+          "unconverged_chunks": 0,
+          "chunks": 2
+        },
+        {
+          "seconds": 0.026795916026458144,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 2
+        },
+        {
+          "seconds": 0.019144582911394536,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 2
+        },
+        {
+          "seconds": 0.01357449998613447,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 2
+        },
+        {
+          "seconds": 0.009833541000261903,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 2
+        },
+        {
+          "seconds": 0.006967458059079945,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 2
+        }
+      ]
+    },
+    {
+      "case": "quantlet_zero_2000",
+      "method": "gd",
+      "workers": 16,
+      "repeat": 2,
+      "seconds": 0.0893469590228051,
+      "max_component_difference_from_scalar": 5.878529800162902e-07,
+      "max_component_difference_from_single_thread": 5.000133428134657e-07,
+      "unconverged_chunks": 0,
+      "load_average_start": [
+        3.138671875,
+        2.99462890625,
+        2.52001953125
+      ],
+      "stages": [
+        {
+          "seconds": 0.027472333051264286,
+          "iterations": 11,
+          "unconverged_chunks": 0,
+          "chunks": 16
+        },
+        {
+          "seconds": 0.01423641701694578,
+          "iterations": 7,
+          "unconverged_chunks": 0,
+          "chunks": 16
+        },
+        {
+          "seconds": 0.011020040954463184,
+          "iterations": 7,
+          "unconverged_chunks": 0,
+          "chunks": 16
+        },
+        {
+          "seconds": 0.009180124965496361,
+          "iterations": 7,
+          "unconverged_chunks": 0,
+          "chunks": 16
+        },
+        {
+          "seconds": 0.008063916000537574,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 16
+        },
+        {
+          "seconds": 0.006932249991223216,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 16
+        },
+        {
+          "seconds": 0.006457916926592588,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 16
+        },
+        {
+          "seconds": 0.005967749981209636,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 16
+        }
+      ]
+    },
+    {
+      "case": "your_gd_1000",
+      "method": "gd",
+      "workers": 4,
+      "repeat": 2,
+      "seconds": 0.2319943750044331,
+      "max_component_difference_from_scalar": 9.103396476257963e-07,
+      "max_component_difference_from_single_thread": 5.565493269577004e-07,
+      "unconverged_chunks": 0,
+      "load_average_start": [
+        3.138671875,
+        2.99462890625,
+        2.52001953125
+      ],
+      "stages": [
+        {
+          "seconds": 0.0791057919850573,
+          "iterations": 14,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.05150783306453377,
+          "iterations": 13,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.03671391704119742,
+          "iterations": 13,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.022856209077872336,
+          "iterations": 11,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.01359479094389826,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.010598875000141561,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.0076764170080423355,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.005796291981823742,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.00412829197011888,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        }
+      ]
+    },
+    {
+      "case": "quantlet_zero_2000",
+      "method": "gd",
+      "workers": 1,
+      "repeat": 2,
+      "seconds": 0.6780435419641435,
+      "max_component_difference_from_scalar": 9.329775512711969e-07,
+      "max_component_difference_from_single_thread": 0.0,
+      "unconverged_chunks": 0,
+      "load_average_start": [
+        3.138671875,
+        2.99462890625,
+        2.52001953125
+      ],
+      "stages": [
+        {
+          "seconds": 0.2726119589060545,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.12421158305369318,
+          "iterations": 7,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.08717499999329448,
+          "iterations": 7,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.06237699999473989,
+          "iterations": 7,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.04980133299250156,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.03619979100767523,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.026104249991476536,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.01954554207623005,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        }
+      ]
+    },
+    {
+      "case": "quantlet_zero_2000",
+      "method": "gd",
+      "workers": 4,
+      "repeat": 2,
+      "seconds": 0.21149879100266844,
+      "max_component_difference_from_scalar": 9.329775512711969e-07,
+      "max_component_difference_from_single_thread": 1.3196140942126067e-07,
+      "unconverged_chunks": 0,
+      "load_average_start": [
+        2.89599609375,
+        2.9599609375,
+        2.525390625
+      ],
+      "stages": [
+        {
+          "seconds": 0.08252345898654312,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.03821795806288719,
+          "iterations": 7,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.027311584097333252,
+          "iterations": 7,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.019899833016097546,
+          "iterations": 7,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.015998332994058728,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.011793874902650714,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.009001457947306335,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.006724250037223101,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        }
+      ]
+    },
+    {
+      "case": "quantlet_zero_2000",
+      "method": "quantlet",
+      "workers": 1,
+      "repeat": 2,
+      "seconds": 15.514355625025928,
+      "max_component_difference_from_scalar": 0.0,
+      "max_component_difference_from_single_thread": 0.0,
+      "unconverged_chunks": 0,
+      "load_average_start": [
+        3.08984375,
+        2.9951171875,
+        2.556640625
+      ],
+      "stages": [
+        {
+          "seconds": 3.6904779170872644,
+          "chunks": 1
+        },
+        {
+          "seconds": 2.82050079095643,
+          "chunks": 1
+        },
+        {
+          "seconds": 2.199819582980126,
+          "chunks": 1
+        },
+        {
+          "seconds": 1.788571915938519,
+          "chunks": 1
+        },
+        {
+          "seconds": 1.5121332079870626,
+          "chunks": 1
+        },
+        {
+          "seconds": 1.3137741669779643,
+          "chunks": 1
+        },
+        {
+          "seconds": 1.1429838750045747,
+          "chunks": 1
+        },
+        {
+          "seconds": 1.0460698750102893,
+          "chunks": 1
+        }
+      ]
+    },
+    {
+      "case": "your_gd_1000",
+      "method": "quantlet",
+      "workers": 1,
+      "repeat": 2,
+      "seconds": 6.152754624956287,
+      "max_component_difference_from_scalar": 0.0,
+      "max_component_difference_from_single_thread": 0.0,
+      "unconverged_chunks": 0,
+      "load_average_start": [
+        2.9208984375,
+        2.96240234375,
+        2.55224609375
+      ],
+      "stages": [
+        {
+          "seconds": 1.2775545408949256,
+          "chunks": 1
+        },
+        {
+          "seconds": 1.0022607090650126,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.8102828339906409,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.6751789579866454,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.5688348329858854,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.5073453749064356,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.4609119170345366,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.4345619169762358,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.4157985000638291,
+          "chunks": 1
+        }
+      ]
+    },
+    {
+      "case": "quantlet_zero_2000",
+      "method": "gd",
+      "workers": 8,
+      "repeat": 2,
+      "seconds": 0.11493895796593279,
+      "max_component_difference_from_scalar": 7.769370383992058e-07,
+      "max_component_difference_from_single_thread": 5.000133428134657e-07,
+      "unconverged_chunks": 0,
+      "load_average_start": [
+        2.71484375,
+        2.91455078125,
+        2.54443359375
+      ],
+      "stages": [
+        {
+          "seconds": 0.044629333075135946,
+          "iterations": 11,
+          "unconverged_chunks": 0,
+          "chunks": 8
+        },
+        {
+          "seconds": 0.020119957975111902,
+          "iterations": 7,
+          "unconverged_chunks": 0,
+          "chunks": 8
+        },
+        {
+          "seconds": 0.014321333961561322,
+          "iterations": 7,
+          "unconverged_chunks": 0,
+          "chunks": 8
+        },
+        {
+          "seconds": 0.0109204170294106,
+          "iterations": 7,
+          "unconverged_chunks": 0,
+          "chunks": 8
+        },
+        {
+          "seconds": 0.008801999967545271,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 8
+        },
+        {
+          "seconds": 0.006673750001937151,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 8
+        },
+        {
+          "seconds": 0.005067958030849695,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 8
+        },
+        {
+          "seconds": 0.004387833061628044,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 8
+        }
+      ]
+    },
+    {
+      "case": "quantlet_zero_2000",
+      "method": "gd",
+      "workers": 2,
+      "repeat": 2,
+      "seconds": 0.36301037506200373,
+      "max_component_difference_from_scalar": 9.329775512711969e-07,
+      "max_component_difference_from_single_thread": 1.2212229692602772e-07,
+      "unconverged_chunks": 0,
+      "load_average_start": [
+        2.75146484375,
+        2.91650390625,
+        2.54931640625
+      ],
+      "stages": [
+        {
+          "seconds": 0.1437925830250606,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 2
+        },
+        {
+          "seconds": 0.0665355829987675,
+          "iterations": 7,
+          "unconverged_chunks": 0,
+          "chunks": 2
+        },
+        {
+          "seconds": 0.0470066670095548,
+          "iterations": 7,
+          "unconverged_chunks": 0,
+          "chunks": 2
+        },
+        {
+          "seconds": 0.03367204195819795,
+          "iterations": 7,
+          "unconverged_chunks": 0,
+          "chunks": 2
+        },
+        {
+          "seconds": 0.02694391703698784,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 2
+        },
+        {
+          "seconds": 0.01989645801950246,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 2
+        },
+        {
+          "seconds": 0.014305082964710891,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 2
+        },
+        {
+          "seconds": 0.010836374945938587,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 2
+        }
+      ]
+    },
+    {
+      "case": "your_gd_1000",
+      "method": "gd",
+      "workers": 8,
+      "repeat": 2,
+      "seconds": 0.12501487496774644,
+      "max_component_difference_from_scalar": 9.103396476257963e-07,
+      "max_component_difference_from_single_thread": 5.565493269577004e-07,
+      "unconverged_chunks": 0,
+      "load_average_start": [
+        3.2705078125,
+        3.0576171875,
+        2.61865234375
+      ],
+      "stages": [
+        {
+          "seconds": 0.04159895901102573,
+          "iterations": 14,
+          "unconverged_chunks": 0,
+          "chunks": 8
+        },
+        {
+          "seconds": 0.026984207914210856,
+          "iterations": 13,
+          "unconverged_chunks": 0,
+          "chunks": 8
+        },
+        {
+          "seconds": 0.01916224998421967,
+          "iterations": 13,
+          "unconverged_chunks": 0,
+          "chunks": 8
+        },
+        {
+          "seconds": 0.012309832964092493,
+          "iterations": 11,
+          "unconverged_chunks": 0,
+          "chunks": 8
+        },
+        {
+          "seconds": 0.007691125036217272,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 8
+        },
+        {
+          "seconds": 0.006046792026609182,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 8
+        },
+        {
+          "seconds": 0.00443408393766731,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 8
+        },
+        {
+          "seconds": 0.003914791974239051,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 8
+        },
+        {
+          "seconds": 0.002858833991922438,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 8
+        }
+      ]
+    },
+    {
+      "case": "your_gd_1000",
+      "method": "gd",
+      "workers": 12,
+      "repeat": 2,
+      "seconds": 0.09589025005698204,
+      "max_component_difference_from_scalar": 9.103396476257963e-07,
+      "max_component_difference_from_single_thread": 5.225452699986199e-07,
+      "unconverged_chunks": 0,
+      "load_average_start": [
+        3.2705078125,
+        3.0576171875,
+        2.61865234375
+      ],
+      "stages": [
+        {
+          "seconds": 0.0292907920666039,
+          "iterations": 14,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.01892079203389585,
+          "iterations": 13,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.013735208078287542,
+          "iterations": 13,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.008794834022410214,
+          "iterations": 11,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.006074458011426032,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.005368040991015732,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.004968291963450611,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.004529958940111101,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.004195124958641827,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        }
+      ]
+    },
+    {
+      "case": "your_gd_1000",
+      "method": "gd",
+      "workers": 16,
+      "repeat": 2,
+      "seconds": 0.0914250829955563,
+      "max_component_difference_from_scalar": 9.103396476257963e-07,
+      "max_component_difference_from_single_thread": 5.225452699986199e-07,
+      "unconverged_chunks": 0,
+      "load_average_start": [
+        3.2705078125,
+        3.0576171875,
+        2.61865234375
+      ],
+      "stages": [
+        {
+          "seconds": 0.022958916029892862,
+          "iterations": 14,
+          "unconverged_chunks": 0,
+          "chunks": 16
+        },
+        {
+          "seconds": 0.015735834022052586,
+          "iterations": 13,
+          "unconverged_chunks": 0,
+          "chunks": 16
+        },
+        {
+          "seconds": 0.013043166953139007,
+          "iterations": 13,
+          "unconverged_chunks": 0,
+          "chunks": 16
+        },
+        {
+          "seconds": 0.00958941609133035,
+          "iterations": 11,
+          "unconverged_chunks": 0,
+          "chunks": 16
+        },
+        {
+          "seconds": 0.00719137501437217,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 16
+        },
+        {
+          "seconds": 0.0063371669966727495,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 16
+        },
+        {
+          "seconds": 0.00583762489259243,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 16
+        },
+        {
+          "seconds": 0.0055303750559687614,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 16
+        },
+        {
+          "seconds": 0.00518624996766448,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 16
+        }
+      ]
+    },
+    {
+      "case": "quantlet_zero_2000",
+      "method": "gd",
+      "workers": 12,
+      "repeat": 2,
+      "seconds": 0.089291249983944,
+      "max_component_difference_from_scalar": 5.98467194579122e-07,
+      "max_component_difference_from_single_thread": 5.000133428134657e-07,
+      "unconverged_chunks": 0,
+      "load_average_start": [
+        2.55810546875,
+        2.90673828125,
+        2.57763671875
+      ],
+      "stages": [
+        {
+          "seconds": 0.03215870796702802,
+          "iterations": 11,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.014580666087567806,
+          "iterations": 7,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.010997292003594339,
+          "iterations": 7,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.00798537500668317,
+          "iterations": 7,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.007024209015071392,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.005840749945491552,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.005647209007292986,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.005041415919549763,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        }
+      ]
+    },
+    {
+      "case": "quantlet_zero_2000",
+      "method": "gd",
+      "workers": 16,
+      "repeat": 3,
+      "seconds": 0.08542566699907184,
+      "max_component_difference_from_scalar": 5.878529800162902e-07,
+      "max_component_difference_from_single_thread": 5.000133428134657e-07,
+      "unconverged_chunks": 0,
+      "load_average_start": [
+        2.55810546875,
+        2.90673828125,
+        2.57763671875
+      ],
+      "stages": [
+        {
+          "seconds": 0.02658583305310458,
+          "iterations": 11,
+          "unconverged_chunks": 0,
+          "chunks": 16
+        },
+        {
+          "seconds": 0.0129214160842821,
+          "iterations": 7,
+          "unconverged_chunks": 0,
+          "chunks": 16
+        },
+        {
+          "seconds": 0.010390583076514304,
+          "iterations": 7,
+          "unconverged_chunks": 0,
+          "chunks": 16
+        },
+        {
+          "seconds": 0.008816417073830962,
+          "iterations": 7,
+          "unconverged_chunks": 0,
+          "chunks": 16
+        },
+        {
+          "seconds": 0.0076225000666454434,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 16
+        },
+        {
+          "seconds": 0.006773791974410415,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 16
+        },
+        {
+          "seconds": 0.006424749968573451,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 16
+        },
+        {
+          "seconds": 0.005875375005416572,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 16
+        }
+      ]
+    },
+    {
+      "case": "your_gd_1000",
+      "method": "gd",
+      "workers": 1,
+      "repeat": 3,
+      "seconds": 0.8235373339848593,
+      "max_component_difference_from_scalar": 9.103396476257963e-07,
+      "max_component_difference_from_single_thread": 0.0,
+      "unconverged_chunks": 0,
+      "load_average_start": [
+        2.55810546875,
+        2.90673828125,
+        2.57763671875
+      ],
+      "stages": [
+        {
+          "seconds": 0.2857081249821931,
+          "iterations": 14,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.1866573749575764,
+          "iterations": 13,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.13214045809581876,
+          "iterations": 13,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.07927512493915856,
+          "iterations": 11,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.045946290949359536,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.03646104095969349,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.02588241605553776,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.018560208030976355,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.012891125050373375,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        }
+      ]
+    },
+    {
+      "case": "quantlet_zero_2000",
+      "method": "gd",
+      "workers": 2,
+      "repeat": 3,
+      "seconds": 0.37720383307896554,
+      "max_component_difference_from_scalar": 9.329775512711969e-07,
+      "max_component_difference_from_single_thread": 1.2212229692602772e-07,
+      "unconverged_chunks": 0,
+      "load_average_start": [
+        2.43310546875,
+        2.875,
+        2.568359375
+      ],
+      "stages": [
+        {
+          "seconds": 0.1464700000360608,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 2
+        },
+        {
+          "seconds": 0.07386070804204792,
+          "iterations": 7,
+          "unconverged_chunks": 0,
+          "chunks": 2
+        },
+        {
+          "seconds": 0.04803804203402251,
+          "iterations": 7,
+          "unconverged_chunks": 0,
+          "chunks": 2
+        },
+        {
+          "seconds": 0.03444816707633436,
+          "iterations": 7,
+          "unconverged_chunks": 0,
+          "chunks": 2
+        },
+        {
+          "seconds": 0.027813374996185303,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 2
+        },
+        {
+          "seconds": 0.020586082944646478,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 2
+        },
+        {
+          "seconds": 0.014856124995276332,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 2
+        },
+        {
+          "seconds": 0.011109707993455231,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 2
+        }
+      ]
+    },
+    {
+      "case": "quantlet_zero_2000",
+      "method": "gd",
+      "workers": 12,
+      "repeat": 3,
+      "seconds": 0.08873479091562331,
+      "max_component_difference_from_scalar": 5.98467194579122e-07,
+      "max_component_difference_from_single_thread": 5.000133428134657e-07,
+      "unconverged_chunks": 0,
+      "load_average_start": [
+        2.70849609375,
+        2.91455078125,
+        2.5947265625
+      ],
+      "stages": [
+        {
+          "seconds": 0.03171345801092684,
+          "iterations": 11,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.014707499998621643,
+          "iterations": 7,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.010820874944329262,
+          "iterations": 7,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.008496041991747916,
+          "iterations": 7,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.0070060830330476165,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.005805665976367891,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.0052147910464555025,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.004955000011250377,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        }
+      ]
+    },
+    {
+      "case": "your_gd_1000",
+      "method": "gd",
+      "workers": 2,
+      "repeat": 3,
+      "seconds": 0.42034004197921604,
+      "max_component_difference_from_scalar": 9.103396476257963e-07,
+      "max_component_difference_from_single_thread": 5.565493269577004e-07,
+      "unconverged_chunks": 0,
+      "load_average_start": [
+        2.3623046875,
+        2.8095703125,
+        2.568359375
+      ],
+      "stages": [
+        {
+          "seconds": 0.14454433298669755,
+          "iterations": 14,
+          "unconverged_chunks": 0,
+          "chunks": 2
+        },
+        {
+          "seconds": 0.09501024999190122,
+          "iterations": 13,
+          "unconverged_chunks": 0,
+          "chunks": 2
+        },
+        {
+          "seconds": 0.06727050000336021,
+          "iterations": 13,
+          "unconverged_chunks": 0,
+          "chunks": 2
+        },
+        {
+          "seconds": 0.0404721669619903,
+          "iterations": 11,
+          "unconverged_chunks": 0,
+          "chunks": 2
+        },
+        {
+          "seconds": 0.023803374962881207,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 2
+        },
+        {
+          "seconds": 0.019060499966144562,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 2
+        },
+        {
+          "seconds": 0.013601459097117186,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 2
+        },
+        {
+          "seconds": 0.009745124960318208,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 2
+        },
+        {
+          "seconds": 0.006813166895881295,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 2
+        }
+      ]
+    },
+    {
+      "case": "your_gd_1000",
+      "method": "gd",
+      "workers": 8,
+      "repeat": 3,
+      "seconds": 0.12123533291742206,
+      "max_component_difference_from_scalar": 9.103396476257963e-07,
+      "max_component_difference_from_single_thread": 5.565493269577004e-07,
+      "unconverged_chunks": 0,
+      "load_average_start": [
+        2.1953125,
+        2.75244140625,
+        2.55224609375
+      ],
+      "stages": [
+        {
+          "seconds": 0.04100829199887812,
+          "iterations": 14,
+          "unconverged_chunks": 0,
+          "chunks": 8
+        },
+        {
+          "seconds": 0.025309041957370937,
+          "iterations": 13,
+          "unconverged_chunks": 0,
+          "chunks": 8
+        },
+        {
+          "seconds": 0.018139999941922724,
+          "iterations": 13,
+          "unconverged_chunks": 0,
+          "chunks": 8
+        },
+        {
+          "seconds": 0.012211417080834508,
+          "iterations": 11,
+          "unconverged_chunks": 0,
+          "chunks": 8
+        },
+        {
+          "seconds": 0.007320249918848276,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 8
+        },
+        {
+          "seconds": 0.005956957931630313,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 8
+        },
+        {
+          "seconds": 0.004546083975583315,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 8
+        },
+        {
+          "seconds": 0.0037599160568788648,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 8
+        },
+        {
+          "seconds": 0.0029700840823352337,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 8
+        }
+      ]
+    },
+    {
+      "case": "your_gd_1000",
+      "method": "gd",
+      "workers": 16,
+      "repeat": 3,
+      "seconds": 0.09332700003869832,
+      "max_component_difference_from_scalar": 9.103396476257963e-07,
+      "max_component_difference_from_single_thread": 5.225452699986199e-07,
+      "unconverged_chunks": 0,
+      "load_average_start": [
+        2.453125,
+        2.76904296875,
+        2.56201171875
+      ],
+      "stages": [
+        {
+          "seconds": 0.024195707985199988,
+          "iterations": 14,
+          "unconverged_chunks": 0,
+          "chunks": 16
+        },
+        {
+          "seconds": 0.0164823749801144,
+          "iterations": 13,
+          "unconverged_chunks": 0,
+          "chunks": 16
+        },
+        {
+          "seconds": 0.013327375054359436,
+          "iterations": 13,
+          "unconverged_chunks": 0,
+          "chunks": 16
+        },
+        {
+          "seconds": 0.00906283303629607,
+          "iterations": 11,
+          "unconverged_chunks": 0,
+          "chunks": 16
+        },
+        {
+          "seconds": 0.007418167078867555,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 16
+        },
+        {
+          "seconds": 0.006166541948914528,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 16
+        },
+        {
+          "seconds": 0.005818292032927275,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 16
+        },
+        {
+          "seconds": 0.005572917056269944,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 16
+        },
+        {
+          "seconds": 0.005268041975796223,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 16
+        }
+      ]
+    },
+    {
+      "case": "quantlet_zero_2000",
+      "method": "gd",
+      "workers": 1,
+      "repeat": 3,
+      "seconds": 0.6809669999638572,
+      "max_component_difference_from_scalar": 9.329775512711969e-07,
+      "max_component_difference_from_single_thread": 0.0,
+      "unconverged_chunks": 0,
+      "load_average_start": [
+        2.453125,
+        2.76904296875,
+        2.56201171875
+      ],
+      "stages": [
+        {
+          "seconds": 0.27337674994487315,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.1245305830379948,
+          "iterations": 7,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.08753208303824067,
+          "iterations": 7,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.06277941598091274,
+          "iterations": 7,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.05029062496032566,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.036441167001612484,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.026328458916395903,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.019670709036290646,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        }
+      ]
+    },
+    {
+      "case": "quantlet_zero_2000",
+      "method": "gd",
+      "workers": 8,
+      "repeat": 3,
+      "seconds": 0.11324445810168982,
+      "max_component_difference_from_scalar": 7.769370383992058e-07,
+      "max_component_difference_from_single_thread": 5.000133428134657e-07,
+      "unconverged_chunks": 0,
+      "load_average_start": [
+        2.453125,
+        2.76904296875,
+        2.56201171875
+      ],
+      "stages": [
+        {
+          "seconds": 0.04383633297402412,
+          "iterations": 11,
+          "unconverged_chunks": 0,
+          "chunks": 8
+        },
+        {
+          "seconds": 0.020007707993499935,
+          "iterations": 7,
+          "unconverged_chunks": 0,
+          "chunks": 8
+        },
+        {
+          "seconds": 0.013717291061766446,
+          "iterations": 7,
+          "unconverged_chunks": 0,
+          "chunks": 8
+        },
+        {
+          "seconds": 0.010707249981351197,
+          "iterations": 7,
+          "unconverged_chunks": 0,
+          "chunks": 8
+        },
+        {
+          "seconds": 0.008685541921295226,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 8
+        },
+        {
+          "seconds": 0.006609959062188864,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 8
+        },
+        {
+          "seconds": 0.0052863339660689235,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 8
+        },
+        {
+          "seconds": 0.004379708087071776,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 8
+        }
+      ]
+    },
+    {
+      "case": "your_gd_1000",
+      "method": "gd",
+      "workers": 12,
+      "repeat": 3,
+      "seconds": 0.09500729199498892,
+      "max_component_difference_from_scalar": 9.103396476257963e-07,
+      "max_component_difference_from_single_thread": 5.225452699986199e-07,
+      "unconverged_chunks": 0,
+      "load_average_start": [
+        2.453125,
+        2.76904296875,
+        2.56201171875
+      ],
+      "stages": [
+        {
+          "seconds": 0.028907082974910736,
+          "iterations": 14,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.01903404202312231,
+          "iterations": 13,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.013750707963481545,
+          "iterations": 13,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.008880791952833533,
+          "iterations": 11,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.005936582922004163,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.004885083995759487,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.004577917046844959,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.004672834067605436,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        },
+        {
+          "seconds": 0.004349834052845836,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 12
+        }
+      ]
+    },
+    {
+      "case": "quantlet_zero_2000",
+      "method": "quantlet",
+      "workers": 1,
+      "repeat": 3,
+      "seconds": 15.528389667044394,
+      "max_component_difference_from_scalar": 0.0,
+      "max_component_difference_from_single_thread": 0.0,
+      "unconverged_chunks": 0,
+      "load_average_start": [
+        3.447265625,
+        3.03369140625,
+        2.669921875
+      ],
+      "stages": [
+        {
+          "seconds": 3.694568792008795,
+          "chunks": 1
+        },
+        {
+          "seconds": 2.81981816701591,
+          "chunks": 1
+        },
+        {
+          "seconds": 2.228362875059247,
+          "chunks": 1
+        },
+        {
+          "seconds": 1.7882105000317097,
+          "chunks": 1
+        },
+        {
+          "seconds": 1.5086735830409452,
+          "chunks": 1
+        },
+        {
+          "seconds": 1.307315165991895,
+          "chunks": 1
+        },
+        {
+          "seconds": 1.1439441660186276,
+          "chunks": 1
+        },
+        {
+          "seconds": 1.0374728749739006,
+          "chunks": 1
+        }
+      ]
+    },
+    {
+      "case": "quantlet_zero_2000",
+      "method": "gd",
+      "workers": 4,
+      "repeat": 3,
+      "seconds": 0.2079342909855768,
+      "max_component_difference_from_scalar": 9.329775512711969e-07,
+      "max_component_difference_from_single_thread": 1.3196140942126067e-07,
+      "unconverged_chunks": 0,
+      "load_average_start": [
+        2.904296875,
+        2.93359375,
+        2.64013671875
+      ],
+      "stages": [
+        {
+          "seconds": 0.08146366698201746,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.03773008391726762,
+          "iterations": 7,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.02755916607566178,
+          "iterations": 7,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.019372457987628877,
+          "iterations": 7,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.015503666014410555,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.011453000013716519,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.008404499967582524,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.006431124988012016,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        }
+      ]
+    },
+    {
+      "case": "your_gd_1000",
+      "method": "quantlet",
+      "workers": 1,
+      "repeat": 3,
+      "seconds": 6.224273334024474,
+      "max_component_difference_from_scalar": 0.0,
+      "max_component_difference_from_single_thread": 0.0,
+      "unconverged_chunks": 0,
+      "load_average_start": [
+        2.904296875,
+        2.93359375,
+        2.64013671875
+      ],
+      "stages": [
+        {
+          "seconds": 1.2800957500003278,
+          "chunks": 1
+        },
+        {
+          "seconds": 1.0154541250085458,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.8215445829555392,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.6874538329429924,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.5793167910305783,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.5139081249944866,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.47125750000122935,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.43608962500002235,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.4191297909710556,
+          "chunks": 1
+        }
+      ]
+    },
+    {
+      "case": "your_gd_1000",
+      "method": "gd",
+      "workers": 4,
+      "repeat": 3,
+      "seconds": 0.2326580840162933,
+      "max_component_difference_from_scalar": 9.103396476257963e-07,
+      "max_component_difference_from_single_thread": 5.565493269577004e-07,
+      "unconverged_chunks": 0,
+      "load_average_start": [
+        3.740234375,
+        3.4833984375,
+        2.89892578125
+      ],
+      "stages": [
+        {
+          "seconds": 0.07945229101460427,
+          "iterations": 14,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.051834459067322314,
+          "iterations": 13,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.03660462494008243,
+          "iterations": 13,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.022935499902814627,
+          "iterations": 11,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.013547167065553367,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.010774875059723854,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.007681624963879585,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.005711624980904162,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.004100374993868172,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        }
+      ]
+    }
+  ],
+  "validation": [
+    {
+      "case": "your_gd_1000",
+      "method": "gd",
+      "reconstruction_max_error": 4.440892098500626e-16,
+      "unconverged_chunks": 0
+    },
+    {
+      "case": "your_gd_1000",
+      "method": "quantlet",
+      "reconstruction_max_error": 3.3306690738754696e-16,
+      "unconverged_chunks": 0
+    },
+    {
+      "case": "your_gd_1000",
+      "cross_solver_max_component_difference": 9.103396476257963e-07
+    },
+    {
+      "case": "your_gd_1000",
+      "native_gd_adapter_max_difference": 2.959871930885427e-17
+    },
+    {
+      "case": "quantlet_zero_2000",
+      "method": "gd",
+      "reconstruction_max_error": 4.440892098500626e-16,
+      "unconverged_chunks": 0
+    },
+    {
+      "case": "quantlet_zero_2000",
+      "method": "quantlet",
+      "reconstruction_max_error": 4.440892098500626e-16,
+      "unconverged_chunks": 0
+    },
+    {
+      "case": "quantlet_zero_2000",
+      "cross_solver_max_component_difference": 9.329775512711969e-07
+    }
+  ],
+  "workers_by_method": {
+    "gd": [
+      1,
+      2,
+      4,
+      8,
+      12,
+      16
+    ],
+    "quantlet": [
+      1
+    ]
+  }
+}

@@ -1,0 +1,546 @@
+{
+  "metadata": {
+    "created_utc": "2026-09-17T10:08:49.870726+00:00",
+    "cpu": "Apple M4 Max",
+    "logical_cpus": 16,
+    "platform": "macOS-26.6.2-arm64-arm-64bit-Mach-O",
+    "memory_bytes": 137438953472,
+    "python": "3.14.6 (main, Jun 10 2026, 10:03:53) [Clang 21.0.0 (clang-2100.0.123.102)]",
+    "numpy": "2.4.6",
+    "gil_enabled": true,
+    "library_thread_limits": {
+      "OMP_NUM_THREADS": "1",
+      "OPENBLAS_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "VECLIB_MAXIMUM_THREADS": "1",
+      "BLIS_NUM_THREADS": "1",
+      "NUMEXPR_NUM_THREADS": "1"
+    },
+    "numpy_blas": {
+      "name": "accelerate",
+      "found": true,
+      "version": "unknown",
+      "detection method": "system",
+      "include directory": "unknown",
+      "lib directory": "unknown",
+      "openblas configuration": "unknown",
+      "pc file directory": "unknown"
+    },
+    "sources": [
+      {
+        "path": "/Users/mikhail/Projects/imf/experiments/gd-irmf/gd_irmf.ipynb",
+        "sha256": "9ee6afedf8ab43b4321bc2742390529931332adf3dd68294163f21932f78e686"
+      },
+      {
+        "path": "/Users/mikhail/Projects/IRMF-Intrinsic-Robust-Multiscale-Filtering/Simulations/imd_python_fixedvf.py",
+        "sha256": "49d79636e95ee9ae259b4c890980a100522866fe84b516f3587c23e1e5983776"
+      },
+      {
+        "path": "/Users/mikhail/Projects/imf/experiments/solver-speed/benchmark_support.py",
+        "sha256": "9bc9ce59c41b12138d4b11f4fc899629ff502f4e8b7fe3f32669fcd47e2536b7"
+      }
+    ],
+    "commits": {
+      "/Users/mikhail/Projects/imf": "d7d8a22372eec660060f744f813e5f91a37245e5",
+      "/Users/mikhail/Projects/IRMF-Intrinsic-Robust-Multiscale-Filtering": "58d6762cccbdce3abe5e183ceaf9564bf46768ca"
+    },
+    "timing_scope": "One complete single-signal decomposition. Includes weights, padding, iteration, residual updates and GD per-stage thread-pool creation. Excludes imports, lookup-table creation, input generation, validation, population fitting, diagnostics and plots.",
+    "threading": "GD uses ThreadPoolExecutor over disjoint contiguous target chunks, minimum 64 targets/chunk. Stages remain sequential. QuantLet uses one worker only.",
+    "tolerances": {
+      "gd_relative_update": 1e-06,
+      "gd_max_iterations": 60,
+      "golden_absolute_bracket": 1e-06,
+      "golden_max_iterations": 200,
+      "acceptable_component_difference": 0.0001
+    },
+    "warmup": "One untimed complete decomposition per method per case at one worker.",
+    "repetitions": "Same input per case; deterministic shuffled execution order within each timing repetition; configurations never run concurrently.",
+    "latest_utc": "2026-09-17T10:10:24.143184+00:00",
+    "complete": true,
+    "scope_revision": {
+      "updated_utc": "2026-09-17T10:39:03.926886+00:00",
+      "description": "Retained original GD measurements and QuantLet one-worker measurements only. Timing values and measurement-time source hashes are unchanged. The current adapter removes QuantLet threading; its hash is recorded separately below.",
+      "retained_run_count": 6,
+      "removed_run_count": 2,
+      "current_adapter_sha256": "b89b9d3ac4f852156f1db067d53fffda578cf25564796a43ab3325ace9246f44"
+    }
+  },
+  "repeats": 1,
+  "cases": [
+    {
+      "profile": "your_gd",
+      "label": "My GD settings",
+      "n": 1000,
+      "H": 0.4,
+      "sigma": 0.2,
+      "kernel": "squared_triangular",
+      "noise": "Gaussian + signed exponential",
+      "contamination_probability": 0.2,
+      "contamination_scale": 0.2,
+      "seed": 777,
+      "bandwidths": [
+        0.25,
+        0.177,
+        0.125,
+        0.088,
+        0.062,
+        0.044,
+        0.031,
+        0.022,
+        0.015
+      ],
+      "stages": 9,
+      "grid": "arange(n)/n, endpoint excluded for both methods",
+      "input_sha256": "86e45d902a4498435039af2a000e303b95341f6b5db747ee29925401f4a26774",
+      "key": "your_gd_1000"
+    },
+    {
+      "profile": "quantlet_zero",
+      "label": "QuantLet default settings",
+      "n": 2000,
+      "H": 1.0,
+      "sigma": 0.0,
+      "kernel": "epanechnikov",
+      "noise": "20% replaced by zero",
+      "contamination_probability": 0.2,
+      "seed": 2026,
+      "bandwidths": [
+        0.2,
+        0.1414213562373095,
+        0.09999999999999998,
+        0.07071067811865474,
+        0.04999999999999999,
+        0.03535533905932736,
+        0.02499999999999999,
+        0.01767766952966368
+      ],
+      "stages": 8,
+      "grid": "arange(n)/n, endpoint excluded for both methods",
+      "input_sha256": "e5271353ea4d8520e750fabc793036affb60c563565cdf7902c87b2c46b03e91",
+      "key": "quantlet_zero_2000"
+    }
+  ],
+  "runs": [
+    {
+      "case": "your_gd_1000",
+      "method": "gd",
+      "workers": 4,
+      "repeat": 1,
+      "seconds": 0.236592874978669,
+      "max_component_difference_from_scalar": 9.103396476257963e-07,
+      "max_component_difference_from_single_thread": 5.565493269577004e-07,
+      "unconverged_chunks": 0,
+      "load_average_start": [
+        2.8759765625,
+        2.3173828125,
+        2.0107421875
+      ],
+      "stages": [
+        {
+          "seconds": 0.08131187502294779,
+          "iterations": 14,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.05201037507504225,
+          "iterations": 13,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.037552958936430514,
+          "iterations": 13,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.02292641601525247,
+          "iterations": 11,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.014050917001441121,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.010899708024226129,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.007683625095523894,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.005906958947889507,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.00423462491016835,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        }
+      ]
+    },
+    {
+      "case": "quantlet_zero_2000",
+      "method": "quantlet",
+      "workers": 1,
+      "repeat": 1,
+      "seconds": 15.636067582992837,
+      "max_component_difference_from_scalar": 0.0,
+      "max_component_difference_from_single_thread": 0.0,
+      "unconverged_chunks": 0,
+      "load_average_start": [
+        2.8759765625,
+        2.3173828125,
+        2.0107421875
+      ],
+      "stages": [
+        {
+          "seconds": 3.707755499985069,
+          "chunks": 1
+        },
+        {
+          "seconds": 2.8191187909105793,
+          "chunks": 1
+        },
+        {
+          "seconds": 2.2146419580094516,
+          "chunks": 1
+        },
+        {
+          "seconds": 1.8177114590071142,
+          "chunks": 1
+        },
+        {
+          "seconds": 1.535509332898073,
+          "chunks": 1
+        },
+        {
+          "seconds": 1.3328478330513462,
+          "chunks": 1
+        },
+        {
+          "seconds": 1.1560618750518188,
+          "chunks": 1
+        },
+        {
+          "seconds": 1.0523964999010786,
+          "chunks": 1
+        }
+      ]
+    },
+    {
+      "case": "your_gd_1000",
+      "method": "gd",
+      "workers": 1,
+      "repeat": 1,
+      "seconds": 0.8480086659546942,
+      "max_component_difference_from_scalar": 9.103396476257963e-07,
+      "max_component_difference_from_single_thread": 0.0,
+      "unconverged_chunks": 0,
+      "load_average_start": [
+        2.8291015625,
+        2.333984375,
+        2.02099609375
+      ],
+      "stages": [
+        {
+          "seconds": 0.29012366698589176,
+          "iterations": 14,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.1927287910366431,
+          "iterations": 13,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.13773904193658382,
+          "iterations": 13,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.08228029194287956,
+          "iterations": 11,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.047545375069603324,
+          "iterations": 9,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.03786349995061755,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.026969707920216024,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.019301292020827532,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.013441083021461964,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        }
+      ]
+    },
+    {
+      "case": "quantlet_zero_2000",
+      "method": "gd",
+      "workers": 4,
+      "repeat": 1,
+      "seconds": 0.21064295899122953,
+      "max_component_difference_from_scalar": 9.329775512711969e-07,
+      "max_component_difference_from_single_thread": 1.3196140942126067e-07,
+      "unconverged_chunks": 0,
+      "load_average_start": [
+        2.8291015625,
+        2.333984375,
+        2.02099609375
+      ],
+      "stages": [
+        {
+          "seconds": 0.08138816710561514,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.03917879203800112,
+          "iterations": 7,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.02829387504607439,
+          "iterations": 7,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.01948345801793039,
+          "iterations": 7,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.01567816606257111,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.011637917021289468,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.008463041973300278,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        },
+        {
+          "seconds": 0.006498708040453494,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 4
+        }
+      ]
+    },
+    {
+      "case": "quantlet_zero_2000",
+      "method": "gd",
+      "workers": 1,
+      "repeat": 1,
+      "seconds": 0.6906953749712557,
+      "max_component_difference_from_scalar": 9.329775512711969e-07,
+      "max_component_difference_from_single_thread": 0.0,
+      "unconverged_chunks": 0,
+      "load_average_start": [
+        3.17431640625,
+        2.431640625,
+        2.060546875
+      ],
+      "stages": [
+        {
+          "seconds": 0.27778608398512006,
+          "iterations": 10,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.12416233401745558,
+          "iterations": 7,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.0891100000590086,
+          "iterations": 7,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.06398020801134408,
+          "iterations": 7,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.05128900008276105,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.0373477500397712,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.026985333068296313,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.020015957998111844,
+          "iterations": 8,
+          "unconverged_chunks": 0,
+          "chunks": 1
+        }
+      ]
+    },
+    {
+      "case": "your_gd_1000",
+      "method": "quantlet",
+      "workers": 1,
+      "repeat": 1,
+      "seconds": 6.2481985409976915,
+      "max_component_difference_from_scalar": 0.0,
+      "max_component_difference_from_single_thread": 0.0,
+      "unconverged_chunks": 0,
+      "load_average_start": [
+        3.17431640625,
+        2.431640625,
+        2.060546875
+      ],
+      "stages": [
+        {
+          "seconds": 1.2775237910682335,
+          "chunks": 1
+        },
+        {
+          "seconds": 1.0100999579299241,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.829063875018619,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.6952951250132173,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.5798286250792444,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.520342709030956,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.47420699999202043,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.4412261670222506,
+          "chunks": 1
+        },
+        {
+          "seconds": 0.42059270793106407,
+          "chunks": 1
+        }
+      ]
+    }
+  ],
+  "validation": [
+    {
+      "case": "your_gd_1000",
+      "method": "gd",
+      "reconstruction_max_error": 4.440892098500626e-16,
+      "unconverged_chunks": 0
+    },
+    {
+      "case": "your_gd_1000",
+      "method": "quantlet",
+      "reconstruction_max_error": 3.3306690738754696e-16,
+      "unconverged_chunks": 0
+    },
+    {
+      "case": "your_gd_1000",
+      "cross_solver_max_component_difference": 9.103396476257963e-07
+    },
+    {
+      "case": "your_gd_1000",
+      "native_gd_adapter_max_difference": 2.959871930885427e-17
+    },
+    {
+      "case": "quantlet_zero_2000",
+      "method": "gd",
+      "reconstruction_max_error": 4.440892098500626e-16,
+      "unconverged_chunks": 0
+    },
+    {
+      "case": "quantlet_zero_2000",
+      "method": "quantlet",
+      "reconstruction_max_error": 4.440892098500626e-16,
+      "unconverged_chunks": 0
+    },
+    {
+      "case": "quantlet_zero_2000",
+      "cross_solver_max_component_difference": 9.329775512711969e-07
+    }
+  ],
+  "workers_by_method": {
+    "gd": [
+      1,
+      4
+    ],
+    "quantlet": [
+      1
+    ]
+  }
+}
