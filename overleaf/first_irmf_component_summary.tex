@@ -133,10 +133,9 @@ The symbol \(\lesssim\) means ``at most a constant times''; the constants
 depend on \(H\), \(\sigma\), the weight profile, and the curvature lower
 bound.  These are upper bounds on the uncorrected and oracle-corrected errors.
 
-The population bias depends on the window radius through the population fit:
-\(b_t(h)=S_t(h)-X_t\), with \(H\) held fixed.  If the signal has bounded
-first and second derivatives and equal weights at equal distances on opposite
-sides of \(t\), Proposition 4.5 gives \(\max_t|b_t(h)|\lesssim h^2\).
+The population bias is \(S_t-X_t\).  If the signal has bounded first and
+second derivatives and equal weights at equal distances on opposite sides of
+\(t\), Proposition 4.5 gives \(\max_t|S_t-X_t|\lesssim h^2\).
 Thus \(h^2\) bounds the bias magnitude; it is not the bias itself.
 Under these conditions, the same probability guarantee gives
 \[
