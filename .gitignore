@@ -2,3 +2,24 @@
 .venv/
 __pycache__/
 tmp/
+
+# LaTeX build intermediates. PDF outputs remain versioned.
+*.aux
+*.bbl
+*.bcf
+*.blg
+*.dvi
+*.fdb_latexmk
+*.fls
+*.lof
+*.lot
+*.nav
+*.run.xml
+*.snm
+*.synctex
+*.synctex.gz
+*.toc
+*.vrb
+*.xdv
+/overleaf/**/*.log
+/overleaf/**/*.out
