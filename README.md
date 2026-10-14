@@ -13,6 +13,9 @@ one-dimensional signals with Gaussian noise and one-sided exponential contaminat
   experiment.
 - [`experiments/solver-speed/`](experiments/solver-speed/): matched QuantLet and GD
   timing benchmarks, scaling-law fits, and an interactive HTML report.
+- [`experiments/pimf-as222/`](experiments/pimf-as222/): pip-installed `pimf` versus
+  an AS222-style FFT smoother, with paired accuracy checks, fresh timings, and a
+  [three-page report](overleaf/pimf_as222_comparison.pdf).
 - [`experiments/real-vs-calculated/`](experiments/real-vs-calculated/): clean-reference
   comparisons, observation-model variants, limit sweeps, and error-scaling studies.
 - [`experiments/residual-distribution/`](experiments/residual-distribution/): paired
