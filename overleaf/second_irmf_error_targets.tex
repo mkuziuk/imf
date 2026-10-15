@@ -1,0 +1,672 @@
+\documentclass[11pt]{article}
+
+\usepackage[a4paper,margin=30mm]{geometry}
+\usepackage{amsmath,amsthm,amsfonts,amssymb,mathtools}
+
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\Pp}{\mathbf{P}}
+\newcommand{\R}{\mathbf{R}}
+\newcommand{\eqdef}{\mathrel{\vcentcolon=}}
+\newcommand{\arginf}{\mathop{\mathrm{arg\,inf}}}
+\newcommand{\norm}[1]{\lVert#1\rVert}
+
+\newcommand{\rhohu}{\rho}
+\newcommand{\Signal}{X}
+\newcommand{\Data}{Y}
+\newcommand{\IMFs}{S}
+\newcommand{\IMFt}{\widetilde S}
+\newcommand{\IMFb}{\bar S}
+\newcommand{\BiasedSignal}{X^{\mathrm b}}
+\newcommand{\IF}{F}
+\newcommand{\Mop}{M}
+
+\newtheorem{proposition}{Proposition}
+\newtheorem{lemma}[proposition]{Lemma}
+\newtheorem{corollary}[proposition]{Corollary}
+\theoremstyle{definition}
+\newtheorem*{remark}{Remark}
+\newtheorem*{gap}{Gap}
+
+\begin{document}
+\begin{center}
+  {\Large The second smooth-absolute IRMF component\par}
+  \vspace{5pt}
+  {\large Sampling error, target shift, and biased signal error after one
+   subtraction\par}
+  \vspace{5pt}
+  {\normalsize Draft}
+\end{center}
+
+\section{Purpose}
+
+The first-component note bounds, for the first IRMF component, the sampling
+error around the population target, the deterministic target shift, and
+their sum, the biased signal error.  Those bounds use two facts that the
+second component loses: the summands in the score are independent, and the
+noise is Gaussian.  The second component is fitted to the residual
+\(\Data_u-\IMFt^{(1)}_u\), whose noise part is the original noise minus the
+first-step sampling error.  That part is dependent across locations, is not
+Gaussian, and need not be centered.
+
+This draft shows that the same three bounds hold at the second step once two
+ingredients are replaced.  Bernstein's inequality is replaced by Gaussian
+concentration for Lipschitz functions, which needs no independence.  The
+Gaussian closed form of the averaged loss is replaced by a Taylor bound that
+only uses the first two moments of the residual noise.  The result is a
+sampling error of the same order \(\sqrt{z_x/(nh_2)}\) as at step one,
+inflated by an explicit amplification constant, plus a carried-over
+remainder of order \(z_x/(nh_1)\), plus a target shift that accumulates the
+step-one shift.  Nothing contracts; the one-step rate is preserved.
+
+Section~\ref{sec:recursion} sets up the second step and the surrogate data
+on which the analysis runs.  Section~\ref{sec:tools} states the two tools.
+Sections~\ref{sec:sampling}, \ref{sec:shift}, and~\ref{sec:biased} bound
+the three errors.  Section~\ref{sec:gaps} lists what is not proved here,
+including the step from two components to \(k\).  Proofs are in
+Appendix~\ref{sec:proofs}.  Statements of the first-component note are cited
+as \emph{Note 1}.
+
+\section{The second step}\label{sec:recursion}
+
+\paragraph{Step one, recalled.}
+Observations \(\Data_u=\Signal_u+\varepsilon_u\) at \(n\) deterministic
+locations, with \(\varepsilon_u\sim N(0,\sigma^2)\) independent, and the
+loss \(\rho=\rho_H\) with constants
+\(L_1=1\), \(L_2=c/H\), \(L_3=c/H^2\), \(c=\sqrt{2/\pi}\), as in Note~1.
+The second step needs the first component at every observation location, so
+the step-one evaluation set is the design itself and the step-one union
+bound uses \(z^{(1)}_x=x+\log(4n)\).  Step one uses normalized weights
+\(a^{(1)}_{v,u}\), the window centred at \(u\) and summing to one over
+\(v\), with effective sample size \(N_1\) and curvature lower bound
+\(\lambda_1\) as in Note~1.  Write
+\(\IMFt^{(1)}_u\), \(\IMFs^{(1)}_u\), \(\BiasedSignal{}^{(1)}_u\) for the
+observed component, the population target, and the biased signal at step
+one, and
+\[
+  e^{(1)}_u\eqdef\IMFt^{(1)}_u-\IMFs^{(1)}_u
+  =\IF_u^{-1}\nabla^{(1)}_u+R^{(1)}_u,
+  \qquad
+  \Delta^{(1)}_u\eqdef\IMFs^{(1)}_u-\BiasedSignal{}^{(1)}_u
+\]
+for the step-one sampling error, its expansion, and the step-one shift.
+Note~1 provides an event \(\Omega_1(x)\) of probability at least
+\(1-e^{-x}\) on which, for every \(u\),
+\begin{equation}
+  |e^{(1)}_u|\leq\mathcal E^{(1)}_x,\qquad
+  |R^{(1)}_u|\leq\mathcal R^{(1)}_x,
+  \qquad\text{and, deterministically,}\qquad
+  |\Delta^{(1)}_u|\leq\beta^{(1)}.
+  \label{eq:step1-recall}
+\end{equation}
+
+\paragraph{Step two.}
+The second component is fitted to the residual with a smaller bandwidth
+\(h_2<h_1\) and normalized weights \(a^{(2)}_{u,t}\), effective sample size
+\(N_2\), on an evaluation set \(\mathcal T\) with \(m=|\mathcal T|\) points.
+Three fits are defined exactly as in Note~1, with the data, the clean
+signal, and the averaged loss replaced by their step-two versions:
+\begin{align}
+  \Data^{(2)}_u
+    &\eqdef\Data_u-\IMFt^{(1)}_u,
+    &
+  \IMFt^{(2)}_t
+    &\eqdef\arginf_z\sum_u\rhohu(\Data^{(2)}_u-z)\,a^{(2)}_{u,t},
+  \label{eq:step2-observed}\\
+  \Signal^{(2)}_u
+    &\eqdef\Signal_u-\BiasedSignal{}^{(1)}_u,
+    &
+  \BiasedSignal{}^{(2)}_t
+    &\eqdef\arginf_z\sum_u\rhohu(\Signal^{(2)}_u-z)\,a^{(2)}_{u,t}.
+  \label{eq:step2-biased}
+\end{align}
+The biased signal \(\BiasedSignal{}^{(2)}\) is the second output of the
+algorithm run on the clean signal.  The population target is defined in the
+next paragraph, after the residual has been split into its parts.
+
+\paragraph{What the residual contains.}
+Subtracting and adding \(\IMFs^{(1)}_u\) and \(\BiasedSignal{}^{(1)}_u\),
+\begin{equation}
+  \Data^{(2)}_u
+  =\underbrace{\Signal^{(2)}_u-\Delta^{(1)}_u}_{\bar\Signal^{(2)}_u}
+   +\underbrace{\varepsilon_u-\IF_u^{-1}\nabla^{(1)}_u}_{\bar\varepsilon^{(2)}_u}
+   -R^{(1)}_u.
+  \label{eq:residual-split}
+\end{equation}
+The first part \(\bar\Signal^{(2)}_u\) is deterministic: the clean step-two
+signal, displaced by the step-one shift.  The second part
+\(\bar\varepsilon^{(2)}_u\) is random and centered, since \(\nabla^{(1)}_u\)
+is centered, and it is a smooth function of the Gaussian vector
+\(\varepsilon\) with an explicitly bounded gradient.  The third part is the
+step-one remainder, which is small on \(\Omega_1(x)\) but has no useful
+Lipschitz structure.  The analysis therefore runs on the \emph{surrogate
+residual}
+\begin{equation}
+  \bar\Data^{(2)}_u\eqdef\bar\Signal^{(2)}_u+\bar\varepsilon^{(2)}_u
+  =\Data^{(2)}_u+R^{(1)}_u,
+  \label{eq:surrogate}
+\end{equation}
+and the step-one remainder is handled afterwards as a data perturbation.
+Define the surrogate fit and the population target by
+\begin{equation}
+  \IMFb^{(2)}_t
+    \eqdef\arginf_z\sum_u\rhohu(\bar\Data^{(2)}_u-z)\,a^{(2)}_{u,t},
+  \qquad
+  \IMFs^{(2)}_t
+    \eqdef\arginf_z\sum_u\E\rhohu(\bar\Data^{(2)}_u-z)\,a^{(2)}_{u,t},
+  \label{eq:step2-targets}
+\end{equation}
+where the expectation is over the whole noise vector.  The averaged loss
+now depends on \(u\),
+\begin{equation}
+  \phi_u(r)\eqdef\E\rhohu(r+\bar\varepsilon^{(2)}_u),
+  \qquad
+  \E\rhohu(\bar\Data^{(2)}_u-z)=\phi_u(\bar\Signal^{(2)}_u-z),
+  \label{eq:phi-u}
+\end{equation}
+which Note~1 already allows.  The population curvature and the centered
+score at the target are
+\begin{equation}
+  \bar\IF^{(2)}_t\eqdef\sum_u\phi_u''(\bar\Signal^{(2)}_u-\IMFs^{(2)}_t)\,a^{(2)}_{u,t},
+  \qquad
+  \bar\nabla^{(2)}_t\eqdef\sum_u\left\{
+    \rhohu'(\bar\Data^{(2)}_u-\IMFs^{(2)}_t)
+    -\E\rhohu'(\bar\Data^{(2)}_u-\IMFs^{(2)}_t)\right\}a^{(2)}_{u,t}.
+  \label{eq:step2-curvature-score}
+\end{equation}
+
+\paragraph{Three errors.}
+With \(\Delta^{(2)}_t\eqdef\IMFs^{(2)}_t-\BiasedSignal{}^{(2)}_t\), the
+identity of Note~1 holds verbatim,
+\begin{equation}
+  \IMFt^{(2)}_t-\BiasedSignal{}^{(2)}_t
+  =\underbrace{\IMFt^{(2)}_t-\IMFs^{(2)}_t}_{\text{sampling error}}
+   +\underbrace{\Delta^{(2)}_t}_{\text{target shift}},
+  \label{eq:step2-identity}
+\end{equation}
+and the sampling error splits further into the surrogate error and the
+perturbation,
+\begin{equation}
+  \IMFt^{(2)}_t-\IMFs^{(2)}_t
+  =(\IMFb^{(2)}_t-\IMFs^{(2)}_t)+(\IMFt^{(2)}_t-\IMFb^{(2)}_t).
+  \label{eq:sampling-split}
+\end{equation}
+
+\section{Two tools}\label{sec:tools}
+
+\begin{lemma}[Sup-norm stability of the local fit]\label{lem:stability}
+Let \(a_u\geq0\) sum to one and let
+\(m(y)\eqdef\arginf_z\sum_u\rho_H(y_u-z)a_u\) for \(y\in\R^n\).  Then
+\(m\) is continuously differentiable,
+\[
+  \frac{\partial m}{\partial y_u}(y)
+  =\frac{\rho_H''(y_u-m(y))\,a_u}{\sum_v\rho_H''(y_v-m(y))\,a_v}\in[0,1],
+  \qquad
+  \sum_u\frac{\partial m}{\partial y_u}(y)=1,
+\]
+and for all \(y,y'\in\R^n\),
+\begin{equation}
+  |m(y')-m(y)|\leq\max_{u:\,a_u>0}|y'_u-y_u|.
+  \label{eq:stability}
+\end{equation}
+\end{lemma}
+
+The fit is a monotone, weighted-average-like functional of the data.  The
+lemma is used three times: to pass from the surrogate fit to the observed
+fit, to pass from the displaced clean signal to the clean signal, and to
+bound the gradient of the step-one component.
+
+\begin{lemma}[Gaussian concentration for Lipschitz functions]\label{lem:tis}
+Let \(\varepsilon\sim N(0,\sigma^2I_n)\) and let \(G:\R^n\to\R\) be
+differentiable with \(\sup_\varepsilon\norm{\nabla G(\varepsilon)}_2\leq L\).
+Then for every \(s>0\),
+\[
+  \Pp\bigl(|G(\varepsilon)-\E G(\varepsilon)|>s\bigr)
+  \leq2\exp\!\left(-\frac{s^2}{2\sigma^2L^2}\right).
+\]
+\end{lemma}
+
+This is the Tsirelson--Ibragimov--Sudakov inequality; see for instance
+Boucheron, Lugosi, and Massart, \emph{Concentration Inequalities},
+Theorem~5.6.  It replaces Bernstein's inequality.  Independence of the
+summands is never used; only the Gaussian law of the original noise and a
+gradient bound.
+
+\section{Sampling error at step two}\label{sec:sampling}
+
+\paragraph{The step-one component as a function of the noise.}
+Differentiating \(\nabla^{(1)}_u\) with respect to \(\varepsilon_v\) gives
+\[
+  \frac{\partial\bar\varepsilon^{(2)}_u}{\partial\varepsilon_v}
+  =\delta_{uv}-\Mop_{u,v},
+  \qquad
+  \Mop_{u,v}\eqdef
+  \frac{\rho_H''(\Data_v-\IMFs^{(1)}_u)\,a^{(1)}_{v,u}}{\bar\IF^{(1)}_u}
+  \in\left[0,\frac{L_2}{\lambda_1}a^{(1)}_{v,u}\right].
+\]
+The matrix \(\Mop\) is the robust equivalent kernel of step one: empirical
+second derivatives in the numerator, population curvature in the
+denominator.  It depends on the noise, but its entries are bounded
+deterministically.  Let
+\begin{equation}
+  \bar a_1\eqdef\max_v\sum_u a^{(1)}_{v,u},
+  \qquad
+  \gamma_1\eqdef\frac{L_2}{\lambda_1},
+  \qquad
+  \Gamma_1\eqdef1+\gamma_1\sqrt{\bar a_1}.
+  \label{eq:amplification}
+\end{equation}
+Here \(\bar a_1\) is the largest total weight that a single observation
+receives across all step-one windows; it equals one for a regular periodic
+design with constant window mass.  Row sums of \(\Mop\) are at most
+\(\gamma_1\), column sums at most \(\gamma_1\bar a_1\), so
+\(\norm{\Mop}_{\mathrm{op}}\leq\gamma_1\sqrt{\bar a_1}\) and
+\(\norm{I-\Mop}_{\mathrm{op}}\leq\Gamma_1\).  Since
+\(\lambda_1\leq c/B\leq c/H=L_2\), always \(\gamma_1\geq1\).
+
+\paragraph{Constants.}
+Fix a curvature lower bound \(0<\lambda_2\leq\min_t\bar\IF^{(2)}_t\);
+Lemma~\ref{lem:curvature} below gives an explicit choice in the small-noise
+regime.  For \(x\geq0\) and \(z_x\eqdef x+\log(4m)\), set
+\begin{equation}
+  s^{(2)}_1\eqdef\sigma L_2\Gamma_1\sqrt{\frac{2z_x}{N_2}},
+  \qquad
+  s^{(2)}_2\eqdef\sigma L_3\Gamma_1\sqrt{\frac{2z_x}{N_2}},
+  \qquad
+  d_2\eqdef\frac{s^{(2)}_2}{\lambda_2}.
+  \label{eq:step2-constants}
+\end{equation}
+Compared with the step-one constants of Note~1, the Bernstein linear term
+in \(\alpha z_x\) is gone, the variance factor \(\sigma L_2\) is the
+Lipschitz one, and the new factor \(\Gamma_1\) pays for the dependence
+introduced by the subtraction.
+
+\begin{lemma}[Step-two score and curvature bounds]\label{lem:step2-local}
+There is an event \(\Omega_2(x)\) of probability at least \(1-e^{-x}\) on
+which, simultaneously for every \(t\in\mathcal T\),
+\begin{equation}
+  |\bar\nabla^{(2)}_t|\leq s^{(2)}_1,
+  \qquad
+  \Bigl|\sum_u\rho_H''(\bar\Data^{(2)}_u-\IMFs^{(2)}_t)\,a^{(2)}_{u,t}
+        -\bar\IF^{(2)}_t\Bigr|\leq s^{(2)}_2.
+  \label{eq:step2-lemma}
+\end{equation}
+Deterministically, the third-derivative bounds of Note~1, Lemma~4.1(ii)
+and~(iii), hold with \(C_3=L_3/\lambda_2\).
+\end{lemma}
+
+\begin{proposition}[Step-two sampling error]\label{prop:step2-sampling}
+Suppose
+\begin{equation}
+  d_2<1,\qquad
+  \frac{s^{(2)}_1L_3}{\lambda_2^2(1-d_2)^2}<\frac49.
+  \label{eq:step2-smallness}
+\end{equation}
+Then on \(\Omega_2(x)\), simultaneously for all \(t\), the surrogate fit is
+unique and
+\begin{align}
+  |\IMFb^{(2)}_t-\IMFs^{(2)}_t|
+    &\leq\mathcal E^{(2)}_x\eqdef\frac{3s^{(2)}_1}{2\lambda_2(1-d_2)},
+  \notag\\
+  |\IMFb^{(2)}_t-\IMFs^{(2)}_t-(\bar\IF^{(2)}_t)^{-1}\bar\nabla^{(2)}_t|
+    &\leq\mathcal R^{(2)}_x
+    \eqdef\frac{9L_3(s^{(2)}_1)^2}{8\lambda_2^3(1-d_2)^3}
+          +\frac{s^{(2)}_1s^{(2)}_2}{\lambda_2^2(1-d_2)}.
+  \label{eq:step2-surrogate-bounds}
+\end{align}
+On \(\Omega_1(x)\cap\Omega_2(x)\), which has probability at least
+\(1-2e^{-x}\), also
+\begin{equation}
+  |\IMFt^{(2)}_t-\IMFs^{(2)}_t|
+    \leq\mathcal E^{(2)}_x+\mathcal R^{(1)}_x.
+  \label{eq:step2-sampling-bound}
+\end{equation}
+\end{proposition}
+
+The expansion and the remainder bound are exactly those of Note~1,
+Proposition~4.2, applied with
+\(C_1=s^{(2)}_1/\sqrt{\lambda_2}\), \(C_2=s^{(2)}_2/\sqrt{\lambda_2}\),
+\(C_3=L_3/\lambda_2\), \(D_{\min}\geq\sqrt{\lambda_2}\), and
+\(\delta\leq d_2\).  The only new probabilistic input is
+Lemma~\ref{lem:step2-local}.  The term \(\mathcal R^{(1)}_x\) is the price
+of the surrogate: the observed residual differs from the surrogate by the
+step-one remainder, and Lemma~\ref{lem:stability} passes that difference
+through the step-two fit without amplification.
+
+\section{Target shift at step two}\label{sec:shift}
+
+The step-two shift has two sources.  The population target averages the
+loss over the step-two noise \(\bar\varepsilon^{(2)}\), which moves the
+minimizer as at step one.  In addition, the deterministic part of the
+residual is \(\Signal^{(2)}-\Delta^{(1)}\) rather than \(\Signal^{(2)}\):
+the step-one shift has become part of the step-two signal.  Introduce the
+clean fit of the displaced signal,
+\begin{equation}
+  \IMFs^{(2,0)}_t\eqdef\arginf_z\sum_u\rho_H(\bar\Signal^{(2)}_u-z)\,a^{(2)}_{u,t},
+  \qquad
+  \Delta^{(2)}_t
+  =\bigl(\IMFs^{(2)}_t-\IMFs^{(2,0)}_t\bigr)
+   +\bigl(\IMFs^{(2,0)}_t-\BiasedSignal{}^{(2)}_t\bigr).
+  \label{eq:shift-split}
+\end{equation}
+The second difference is a clean fit applied to two signals that differ by
+at most \(\beta^{(1)}\), so Lemma~\ref{lem:stability} bounds it by
+\(\beta^{(1)}\).  The first difference is the noise-averaging shift, and it
+needs the first two moments of \(\bar\varepsilon^{(2)}\) and a curvature
+bound for the averaged loss.
+
+\paragraph{Moments of the step-two noise.}
+Since \(\E\varepsilon_u=0\) and \(\E\nabla^{(1)}_u=0\),
+\begin{equation}
+  \E\bar\varepsilon^{(2)}_u=0,
+  \qquad
+  \E(\bar\varepsilon^{(2)}_u)^2\leq\nu^2,
+  \qquad
+  \nu\eqdef\sigma\left(1+\frac{\gamma_1}{\sqrt{N_1}}\right).
+  \label{eq:step2-moments}
+\end{equation}
+The mean is exactly zero because the surrogate drops the step-one
+remainder; the observed residual noise \(\bar\varepsilon^{(2)}-R^{(1)}\)
+has mean of order \(\mathcal R^{(1)}_x\).  That bias is accounted for in
+\eqref{eq:step2-sampling-bound}, not here.
+
+\paragraph{Curvature of the averaged loss.}
+Let \(A^{(2)}_t\) be the width of the active range of \(\bar\Signal^{(2)}\)
+in the step-two window at \(t\), and let \(L_4\eqdef c/H^3\), which bounds
+\(|\rho_H''''|\).  For \(r>0\), put
+\begin{equation}
+  \kappa_t(r)\eqdef\frac cH\,e^{-(A^{(2)}_t+r)^2/(2H^2)}-\frac{L_4\nu^2}{2}.
+  \label{eq:kappa2}
+\end{equation}
+
+\begin{lemma}[Step-two curvature and noise-averaging shift]\label{lem:curvature}
+Fix \(t\) and \(r>0\) with \(\kappa_t(r)>0\) and
+\(L_3\nu^2<2r\kappa_t(r)\).  Then
+\begin{equation}
+  |\IMFs^{(2)}_t-\IMFs^{(2,0)}_t|\leq\frac{L_3\nu^2}{2\kappa_t(r)}<r,
+  \qquad
+  \bar\IF^{(2)}_t\geq\kappa_t(r).
+  \label{eq:curvature-shift}
+\end{equation}
+In particular \(\lambda_2=\min_t\kappa_t(r)\) is an admissible curvature
+lower bound in Section~\ref{sec:sampling}.
+\end{lemma}
+
+The condition is a small-noise condition: it asks that \(\nu\), which is of
+order \(\sigma\), be small compared with \(H\) after accounting for the
+signal range.  At step one the Gaussian closed form gave a curvature bound
+for every \(\sigma\); here the closed form is unavailable, and the Taylor
+bound only pays off when \(L_4\nu^2\) is below the clean curvature.
+
+\begin{proposition}[Step-two target shift]\label{prop:step2-shift}
+Under the conditions of Lemma~\ref{lem:curvature}, deterministically,
+\begin{equation}
+  |\Delta^{(2)}_t|\leq\beta^{(2)}_t
+  \eqdef\beta^{(1)}+\frac{L_3\nu^2}{2\kappa_t(r)}
+  \qquad\text{for every }t.
+  \label{eq:step2-shift-bound}
+\end{equation}
+\end{proposition}
+
+Both terms are of order \(\sigma^2\) for small \(\sigma\), and neither
+decreases with \(n\).  The first term is inherited: the step-one shift
+passes through the step-two filter with constant at most one.  The second is
+new and has the same form as the step-one shift bound of Note~1,
+Proposition~4.5, with \(\sigma^2\) replaced by \(\nu^2\) and the Gaussian
+curvature bound replaced by \(\kappa_t(r)\).
+
+\section{Biased signal error at step two}\label{sec:biased}
+
+\begin{corollary}[Combined step-two bounds]\label{cor:step2-biased}
+Under the conditions of Propositions~\ref{prop:step2-sampling}
+and~\ref{prop:step2-shift}, with probability at least \(1-2e^{-x}\),
+simultaneously for all \(t\),
+\begin{align}
+  |\IMFt^{(2)}_t-\IMFs^{(2)}_t|
+    &\leq\mathcal E^{(2)}_x+\mathcal R^{(1)}_x,
+    \label{eq:final-step2-population}\\
+  |\IMFt^{(2)}_t-\BiasedSignal{}^{(2)}_t|
+    &\leq\beta^{(2)}_t+\mathcal E^{(2)}_x+\mathcal R^{(1)}_x.
+    \label{eq:final-step2-biased}
+\end{align}
+\end{corollary}
+
+\paragraph{Rates.}
+Suppose the kernel-mass conditions of Note~1 hold at both bandwidths with
+the same constant \(C_K\), so \(N_j\geq nh_j/C_K\), and suppose
+\(d_2\leq1/2\).  Then
+\begin{equation}
+  \mathcal E^{(2)}_x
+    \leq\frac{3\sigma L_2\Gamma_1}{\lambda_2}\sqrt{\frac{2C_Kz_x}{nh_2}},
+  \qquad
+  \mathcal R^{(1)}_x
+    \leq\left\{\frac{9L_3A_1^2}{\lambda_1^3}
+          +\frac{2A_1A_2}{\lambda_1^2}\right\}\frac{C_Kz^{(1)}_x}{nh_1},
+  \label{eq:step2-rates}
+\end{equation}
+with \(A_1,A_2\) the step-one rate constants of Note~1.  The step-two
+sampling error therefore has the one-step order \(\sqrt{z_x/(nh_2)}\),
+multiplied by \(\Gamma_1\), plus a carried-over term of the smaller order
+\(z_x/(nh_1)\).  Since \(h_2=h_1/a\), the leading term is larger than the
+step-one sampling error by the factor \(\sqrt a\,\Gamma_1\lambda_1/\lambda_2\)
+up to the Bernstein linear term.  The target shift is of order \(\sigma^2\)
+and does not decrease.
+
+\paragraph{What this says about contraction.}
+Nothing contracts from step one to step two.  The sampling error keeps its
+rate in the local sample size and is amplified, not reduced, by the
+subtraction.  The target shift accumulates.  This matches the linear audit
+in the repository, where the step-\(k\) component error has standard
+deviation of order \((nh_k)^{-1/2}\) with a stage-dependent constant.  The
+constant \(\Gamma_1\) here is an operator-norm bound and is therefore
+conservative; the linear audit shows that the exact constant can
+\emph{decrease} after the first stage because later components are
+band-pass.  Recovering that cancellation would require tracking the Fourier
+structure of \(\Mop\), not just its norm.
+
+\section{Gaps}\label{sec:gaps}
+
+\begin{gap}[Curvature bound for large noise]
+Lemma~\ref{lem:curvature} needs \(L_4\nu^2\) below the clean curvature,
+roughly \(\sigma\lesssim H\).  Step one has no such restriction.  A
+truncation argument, bounding \(\E\rho_H''(r+\bar\varepsilon)\) below by
+\(\rho_H''\) at \(|r|+\tau\) times \(\Pp(|\bar\varepsilon|\leq\tau)\), gives
+a positive bound for every \(\sigma\) but needs a tail bound for
+\(\bar\varepsilon^{(2)}\) beyond the second moment, and a separate argument
+that \(\IMFs^{(2)}_t\) stays near the active range.  Both are available in
+principle from Lemma~\ref{lem:tis} applied to \(\bar\varepsilon^{(2)}_u\),
+which is itself Lipschitz in \(\varepsilon\) with constant \(\Gamma_1\),
+but are not written out.
+\end{gap}
+
+\begin{gap}[Sharpness of the amplification constant]
+\(\Gamma_1\) bounds \(\norm{I-\Mop}_{\mathrm{op}}\) through row and column
+sums.  It is at least \(2\) and ignores the cancellation between
+\(\varepsilon_u\) and its local average.  For the linear filter on a
+periodic grid the exact factor is the Fourier multiplier \(1-w_1(\omega)\),
+which is small at low frequencies where the step-two kernel concentrates
+its energy.  A sharper constant would need a spectral description of the
+robust equivalent kernel, which is data dependent.
+\end{gap}
+
+\begin{gap}[Choice of population target]
+The population target \(\IMFs^{(2)}_t\) is defined through the surrogate
+residual, which drops the step-one remainder.  The alternative, minimizing
+\(\sum_u\E\rho_H(\Data^{(2)}_u-z)a^{(2)}_{u,t}\) with the observed
+residual, differs from \(\IMFs^{(2)}_t\) by at most
+\(\E\max_u|R^{(1)}_u|\) after an \(L^1\) version of
+Lemma~\ref{lem:stability}, which is of order \(\mathcal R^{(1)}_x\) plus a
+tail contribution.  In simulations, the surrogate target is the one to
+compute: the clean step-two filter applied to
+\(\Signal-\IMFs^{(1)}\), with the loss averaged over the law of
+\(\bar\varepsilon^{(2)}\).
+\end{gap}
+
+\begin{gap}[From two steps to \(k\)]
+The argument iterates formally.  At step \(k\), the surrogate noise is
+\(\bar\varepsilon^{(k)}=(I-\Mop^{(k-1)})\cdots(I-\Mop^{(1)})\varepsilon\)
+in the differential sense, so the Lipschitz constant becomes
+\(\Gamma_{k-1}\leq\prod_{j<k}(1+\gamma_j\sqrt{\bar a_j})\), the carried
+remainder becomes \(\sum_{j<k}\mathcal R^{(j)}_x\), and the shift becomes
+\(\sum_{j\leq k}\) of noise-averaging terms.  Since \(\gamma_j\geq1\), the
+operator-norm product grows geometrically in \(k\), so this route gives no
+uniformity in \(k\).  The linear audit indicates the true constants are
+bounded, which again points to the spectral structure of the equivalent
+kernels.  Also, \(\nu_k\) grows with \(\Gamma_{k-1}\), which tightens the
+small-noise condition at each step.
+\end{gap}
+
+\begin{gap}[Inherited from Note 1]
+Uniformity over the continuum and adaptive choices of \(h\) or \(H\) remain
+open.  The oracle correction at step two uses the unknown step-two target,
+curvature, and noise law.
+\end{gap}
+
+\appendix
+\section{Proofs}\label{sec:proofs}
+
+\begin{proof}[Proof of Lemma~\ref{lem:stability}]
+Since \(\rho_H''>0\), the objective is strictly convex and \(m(y)\) is the
+unique root of \(g(z,y)\eqdef\sum_u\rho_H'(y_u-z)a_u\).  As
+\(\partial_zg=-\sum_u\rho_H''(y_u-z)a_u<0\), the implicit function theorem
+gives \(m\in C^1\) with
+\[
+  \frac{\partial m}{\partial y_u}
+  =-\frac{\partial_{y_u}g}{\partial_zg}
+  =\frac{\rho_H''(y_u-m)a_u}{\sum_v\rho_H''(y_v-m)a_v}.
+\]
+These are nonnegative and sum to one.  Along the segment
+\(y(s)=y+s(y'-y)\), \(s\in[0,1]\),
+\[
+  \frac{d}{ds}m(y(s))
+  =\sum_u\frac{\partial m}{\partial y_u}(y(s))\,(y'_u-y_u)
+  \in\Bigl[-\max_{u:a_u>0}|y'_u-y_u|,\ \max_{u:a_u>0}|y'_u-y_u|\Bigr],
+\]
+and integrating over \(s\) proves \eqref{eq:stability}.
+\end{proof}
+
+\begin{proof}[Proof of Lemma~\ref{lem:step2-local}]
+Fix \(t\).  The score functional
+\(G_t(\varepsilon)\eqdef\sum_u\rho_H'(\bar\Data^{(2)}_u-\IMFs^{(2)}_t)\,a^{(2)}_{u,t}\)
+is smooth in \(\varepsilon\), and \(\bar\nabla^{(2)}_t=G_t-\E G_t\).  By
+the chain rule and \eqref{eq:residual-split},
+\[
+  \frac{\partial G_t}{\partial\varepsilon_v}
+  =\sum_u a^{(2)}_{u,t}\,\rho_H''(\bar\Data^{(2)}_u-\IMFs^{(2)}_t)
+    \,(\delta_{uv}-\Mop_{u,v})
+  =\bigl[c^{\top}(I-\Mop)\bigr]_v,
+  \qquad
+  0\leq c_u\leq L_2a^{(2)}_{u,t}.
+\]
+Hence \(\norm{\nabla G_t}_2\leq\norm c_2\norm{I-\Mop}_{\mathrm{op}}\).
+Now \(\norm c_2\leq L_2\bigl(\sum_u(a^{(2)}_{u,t})^2\bigr)^{1/2}\leq L_2N_2^{-1/2}\),
+and, since \(0\leq\Mop_{u,v}\leq\gamma_1a^{(1)}_{v,u}\), the row sums of
+\(\Mop\) are at most \(\gamma_1\) and the column sums at most
+\(\gamma_1\bar a_1\).  By the Schur bound
+\(\norm{\Mop}_{\mathrm{op}}\leq\sqrt{\norm{\Mop}_1\norm{\Mop}_\infty}\leq\gamma_1\sqrt{\bar a_1}\),
+so \(\norm{I-\Mop}_{\mathrm{op}}\leq\Gamma_1\).  Lemma~\ref{lem:tis} with
+\(L=L_2\Gamma_1N_2^{-1/2}\) and \(s=\sigma L\sqrt{2z}\) gives
+\(\Pp(|\bar\nabla^{(2)}_t|>\sigma L_2\Gamma_1\sqrt{2z/N_2})\leq2e^{-z}\).
+
+The curvature functional
+\(H_t(\varepsilon)\eqdef\sum_u\rho_H''(\bar\Data^{(2)}_u-\IMFs^{(2)}_t)\,a^{(2)}_{u,t}\)
+has \(\E H_t=\bar\IF^{(2)}_t\) by \eqref{eq:phi-u}, and the same
+computation with \(\rho_H'''\) in place of \(\rho_H''\) gives
+\(\norm{\nabla H_t}_2\leq L_3\Gamma_1N_2^{-1/2}\), hence
+\(\Pp(|H_t-\bar\IF^{(2)}_t|>\sigma L_3\Gamma_1\sqrt{2z/N_2})\leq2e^{-z}\).
+Take \(z=z_x\) and the union over the two functionals and the \(m\)
+evaluation points; the exceptional probability is at most
+\(4me^{-z_x}=e^{-x}\).
+
+For the deterministic bounds, \(|\rho_H'''|\leq L_3\) and the step-two
+weights sum to one give the empirical third-derivative bound with
+\(C_3=L_3/\lambda_2\) in curvature units.  Differentiation under the
+expectation in \eqref{eq:phi-u} is justified by the bounded derivatives, so
+\(|\phi_u'''|\leq L_3\) and the population-curvature Lipschitz bound of
+Note~1, Lemma~4.1(iii), follows by the mean value theorem exactly as there.
+\end{proof}
+
+\begin{proof}[Proof of Proposition~\ref{prop:step2-sampling}]
+The population objective \(\sum_u\phi_u(\bar\Signal^{(2)}_u-z)a^{(2)}_{u,t}\)
+is finite and coercive by the Lipschitz bound \(|\rho_H'|\leq1\) and
+\(\E|\bar\Data^{(2)}_u|<\infty\), convex, and has curvature
+\(\bar\IF^{(2)}_t\geq\lambda_2>0\) at its minimizer, which is therefore
+unique.  The deterministic part of the proof of Note~1,
+Proposition~4.2, uses only the three bounds of Note~1, Lemma~4.1, on a
+specified event.  On \(\Omega_2(x)\) these hold with
+\(C_1=s^{(2)}_1/\sqrt{\lambda_2}\), \(C_2=s^{(2)}_2/\sqrt{\lambda_2}\),
+\(C_3=L_3/\lambda_2\), \(D_t\geq\sqrt{\lambda_2}\), and \(\delta\leq d_2\),
+by Lemma~\ref{lem:step2-local}.  Condition \eqref{eq:step2-smallness} is
+the corresponding smallness condition, and substitution into the
+localization and remainder bounds of Note~1 gives
+\eqref{eq:step2-surrogate-bounds}, exactly as in the proof of Note~1,
+Corollary~4.3.
+
+For \eqref{eq:step2-sampling-bound}, by \eqref{eq:surrogate} the observed
+and surrogate residuals differ by \(R^{(1)}_u\).  Lemma~\ref{lem:stability}
+applied to the step-two fit gives
+\(|\IMFt^{(2)}_t-\IMFb^{(2)}_t|\leq\max_u|R^{(1)}_u|\leq\mathcal R^{(1)}_x\)
+on \(\Omega_1(x)\).  Combine with \eqref{eq:sampling-split}.
+\end{proof}
+
+\begin{proof}[Proof of \eqref{eq:step2-moments}]
+Centering is immediate.  For the second moment, Minkowski's inequality
+gives
+\(\bigl(\E(\bar\varepsilon^{(2)}_u)^2\bigr)^{1/2}
+ \leq\sigma+(\bar\IF^{(1)}_u)^{-1}\bigl(\E(\bar\nabla^{(1)}_u)^2\bigr)^{1/2}\),
+where \(\bar\nabla^{(1)}_u\) is the normalized step-one score.  Its
+summands are independent and centered, with variances at most
+\(\sigma^2L_2^2(a^{(1)}_{v,u})^2\) by the Lipschitz variance bound in the
+proof of Note~1, Corollary~4.3.  Hence
+\(\E(\bar\nabla^{(1)}_u)^2\leq\sigma^2L_2^2/N_1\), and
+\(\bar\IF^{(1)}_u\geq\lambda_1\) gives the claim with
+\(\nu=\sigma(1+\gamma_1N_1^{-1/2})\).
+\end{proof}
+
+\begin{proof}[Proof of Lemma~\ref{lem:curvature}]
+Write \(\psi=\rho_H'\) and let
+\(\bar G(z)\eqdef\sum_u a^{(2)}_{u,t}\E\psi(\bar\Signal^{(2)}_u+\bar\varepsilon^{(2)}_u-z)\)
+be the averaged score, so that \(\bar G(\IMFs^{(2)}_t)=0\) and
+\(-\bar G'=\sum_ua^{(2)}_{u,t}\E\rho_H''(\cdot)\).  Taylor's theorem with
+\(|\psi''|\leq L_3\) and \(|\rho_H''''|\leq L_4\), followed by expectation
+with \(\E\bar\varepsilon^{(2)}_u=0\) and \(\E(\bar\varepsilon^{(2)}_u)^2\leq\nu^2\),
+gives for every \(r_0\in\R\)
+\[
+  |\E\psi(r_0+\bar\varepsilon^{(2)}_u)-\psi(r_0)|\leq\frac{L_3\nu^2}{2},
+  \qquad
+  \E\rho_H''(r_0+\bar\varepsilon^{(2)}_u)\geq\rho_H''(r_0)-\frac{L_4\nu^2}{2}.
+\]
+Let \(m\eqdef\IMFs^{(2,0)}_t\).  Since the clean score vanishes at \(m\)
+and the weights sum to one, the first bound gives
+\(|\bar G(m)|\leq L_3\nu^2/2\).  For \(|z-m|\leq r\) and active \(u\),
+\(|\bar\Signal^{(2)}_u-z|\leq A^{(2)}_t+r\), because \(m\) lies in the
+active range; the second bound then gives \(-\bar G'(z)\geq\kappa_t(r)\).
+Hence \(\bar G(m+r)\leq L_3\nu^2/2-r\kappa_t(r)<0\) and
+\(\bar G(m-r)\geq-L_3\nu^2/2+r\kappa_t(r)>0\).  The strictly decreasing
+function \(\bar G\) therefore has its unique zero \(\IMFs^{(2)}_t\) in
+\((m-r,m+r)\), and the mean value theorem on the interval between \(m\) and
+\(\IMFs^{(2)}_t\) gives
+\(|\IMFs^{(2)}_t-m|\leq|\bar G(m)|/\kappa_t(r)\leq L_3\nu^2/(2\kappa_t(r))\).
+Finally \(\bar\IF^{(2)}_t=-\bar G'(\IMFs^{(2)}_t)\geq\kappa_t(r)\).
+\end{proof}
+
+\begin{proof}[Proof of Proposition~\ref{prop:step2-shift}]
+Use the split \eqref{eq:shift-split}.  The first difference is bounded by
+Lemma~\ref{lem:curvature}.  For the second, \(\IMFs^{(2,0)}_t\) and
+\(\BiasedSignal{}^{(2)}_t\) are the same clean fit applied to
+\(\bar\Signal^{(2)}=\Signal^{(2)}-\Delta^{(1)}\) and to \(\Signal^{(2)}\),
+and Lemma~\ref{lem:stability} with \eqref{eq:step1-recall} bounds their
+difference by \(\max_u|\Delta^{(1)}_u|\leq\beta^{(1)}\).
+\end{proof}
+
+\begin{proof}[Proof of Corollary~\ref{cor:step2-biased} and the rates]
+Add the deterministic bound of Proposition~\ref{prop:step2-shift} to
+\eqref{eq:step2-sampling-bound} through the identity
+\eqref{eq:step2-identity}; the failure probability is unchanged.  For the
+rates, \(N_2\geq nh_2/C_K\) and \(d_2\leq1/2\) give
+\(\mathcal E^{(2)}_x\leq3s^{(2)}_1/\lambda_2\) with
+\(s^{(2)}_1\leq\sigma L_2\Gamma_1\sqrt{2C_Kz_x/(nh_2)}\).  The bound on
+\(\mathcal R^{(1)}_x\) is Note~1, Corollary~4.4, with the step-one
+evaluation set equal to the design.
+\end{proof}
+
+\end{document}
