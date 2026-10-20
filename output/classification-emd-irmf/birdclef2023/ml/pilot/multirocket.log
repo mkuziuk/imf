@@ -1,0 +1,11 @@
+raw comp multirocket split=0: BA=0.479, fit=14.86s, predict=1.08s
+raw comp+log_scale multirocket split=0: BA=0.476, fit=14.95s, predict=1.08s
+emd comp multirocket split=0: BA=0.479, fit=27.39s, predict=2.78s
+emd comp+log_scale multirocket split=0: BA=0.486, fit=27.40s, predict=2.79s
+imf_linear_a1.41 comp multirocket split=0: BA=0.506, fit=31.12s, predict=3.19s
+imf_linear_a1.41 comp+log_scale multirocket split=0: BA=0.511, fit=31.09s, predict=3.19s
+irmf_h2_a1.41 comp multirocket split=0: BA=0.525, fit=29.52s, predict=2.85s
+irmf_h2_a1.41 comp+log_scale multirocket split=0: BA=0.525, fit=29.70s, predict=2.85s
+irmf_h2_a1.41_conv comp multirocket split=0: BA=0.518, fit=28.20s, predict=2.85s
+irmf_h2_a1.41_conv comp+log_scale multirocket split=0: BA=0.523, fit=28.18s, predict=2.85s
+wrote /Users/mikhail/.t3/worktrees/imf/t3-44ed3594/output/classification-emd-irmf/birdclef2023/ml/pilot/multirocket, total 175.1s

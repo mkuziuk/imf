@@ -1,0 +1,570 @@
+{
+  "dataset": "birdclef2023",
+  "task": "species",
+  "runner": "trees_lightgbm_fold0",
+  "methods": [
+    "raw",
+    "emd",
+    "imf_linear_a1.41",
+    "irmf_h2_a1.41",
+    "irmf_h2_a1.41_conv"
+  ],
+  "n_frames": 12000,
+  "n_groups": 451,
+  "n_classes": 16,
+  "split_ids": [
+    0
+  ],
+  "workers": 2,
+  "created": "2026-10-20T19:38:10.219607+00:00",
+  "params": {
+    "dataset": "birdclef2023",
+    "task": "species",
+    "methods": [
+      "raw",
+      "emd",
+      "imf_linear_a1.41",
+      "irmf_h2_a1.41",
+      "irmf_h2_a1.41_conv"
+    ],
+    "quick": false,
+    "workers": 2,
+    "folds": "1",
+    "device": "auto",
+    "log_scale": "both",
+    "out": "/Users/mikhail/.t3/worktrees/imf/t3-44ed3594/output/classification-emd-irmf/birdclef2023/ml/trees_lightgbm_fold0",
+    "classifiers": [
+      "lightgbm"
+    ]
+  },
+  "inner_validation": "first class-complete StratifiedGroupKFold(3) split of outer train",
+  "versions": {
+    "python": "3.12.13",
+    "platform": "macOS-26.6.2-arm64-arm-64bit",
+    "numpy": "2.3.5",
+    "scipy": "1.17.1",
+    "pandas": "3.0.6",
+    "scikit-learn": "1.9.1",
+    "lightgbm": "4.7.0",
+    "xgboost": "3.4.1",
+    "torch": "2.14.1",
+    "aeon": "1.6.0"
+  },
+  "seconds": 89.90333220805041,
+  "predictions": "/Users/mikhail/Datasets/imf-classification/birdclef2023/results/trees_lightgbm_fold0_species_predictions.parquet",
+  "fold_timings": [
+    {
+      "dataset": "birdclef2023",
+      "task": "species",
+      "method": "raw",
+      "feature_set": "comp",
+      "classifier": "lightgbm",
+      "split_id": 0,
+      "seed": 0,
+      "fold": 0,
+      "n_train": 9594,
+      "n_test": 2406,
+      "fit_seconds": 1.811071417061612,
+      "predict_seconds": 0.030392708955332637
+    },
+    {
+      "dataset": "birdclef2023",
+      "task": "species",
+      "method": "raw",
+      "feature_set": "comp+log_scale",
+      "classifier": "lightgbm",
+      "split_id": 0,
+      "seed": 0,
+      "fold": 0,
+      "n_train": 9594,
+      "n_test": 2406,
+      "fit_seconds": 1.61682095809374,
+      "predict_seconds": 0.029379791929386556
+    },
+    {
+      "dataset": "birdclef2023",
+      "task": "species",
+      "method": "emd",
+      "feature_set": "comp",
+      "classifier": "lightgbm",
+      "split_id": 0,
+      "seed": 0,
+      "fold": 0,
+      "n_train": 9594,
+      "n_test": 2406,
+      "fit_seconds": 6.895131958066486,
+      "predict_seconds": 0.02850987494457513
+    },
+    {
+      "dataset": "birdclef2023",
+      "task": "species",
+      "method": "emd",
+      "feature_set": "comp+log_scale",
+      "classifier": "lightgbm",
+      "split_id": 0,
+      "seed": 0,
+      "fold": 0,
+      "n_train": 9594,
+      "n_test": 2406,
+      "fit_seconds": 7.19488058402203,
+      "predict_seconds": 0.03081374999601394
+    },
+    {
+      "dataset": "birdclef2023",
+      "task": "species",
+      "method": "imf_linear_a1.41",
+      "feature_set": "comp",
+      "classifier": "lightgbm",
+      "split_id": 0,
+      "seed": 0,
+      "fold": 0,
+      "n_train": 9594,
+      "n_test": 2406,
+      "fit_seconds": 10.899149333010428,
+      "predict_seconds": 0.03328991704620421
+    },
+    {
+      "dataset": "birdclef2023",
+      "task": "species",
+      "method": "imf_linear_a1.41",
+      "feature_set": "comp+log_scale",
+      "classifier": "lightgbm",
+      "split_id": 0,
+      "seed": 0,
+      "fold": 0,
+      "n_train": 9594,
+      "n_test": 2406,
+      "fit_seconds": 10.421767957974225,
+      "predict_seconds": 0.0324002499692142
+    },
+    {
+      "dataset": "birdclef2023",
+      "task": "species",
+      "method": "irmf_h2_a1.41",
+      "feature_set": "comp",
+      "classifier": "lightgbm",
+      "split_id": 0,
+      "seed": 0,
+      "fold": 0,
+      "n_train": 9594,
+      "n_test": 2406,
+      "fit_seconds": 12.69877291598823,
+      "predict_seconds": 0.03966375009622425
+    },
+    {
+      "dataset": "birdclef2023",
+      "task": "species",
+      "method": "irmf_h2_a1.41",
+      "feature_set": "comp+log_scale",
+      "classifier": "lightgbm",
+      "split_id": 0,
+      "seed": 0,
+      "fold": 0,
+      "n_train": 9594,
+      "n_test": 2406,
+      "fit_seconds": 12.974984832922928,
+      "predict_seconds": 0.03974566608667374
+    },
+    {
+      "dataset": "birdclef2023",
+      "task": "species",
+      "method": "irmf_h2_a1.41_conv",
+      "feature_set": "comp",
+      "classifier": "lightgbm",
+      "split_id": 0,
+      "seed": 0,
+      "fold": 0,
+      "n_train": 9594,
+      "n_test": 2406,
+      "fit_seconds": 12.365537250065245,
+      "predict_seconds": 0.04228512500412762
+    },
+    {
+      "dataset": "birdclef2023",
+      "task": "species",
+      "method": "irmf_h2_a1.41_conv",
+      "feature_set": "comp+log_scale",
+      "classifier": "lightgbm",
+      "split_id": 0,
+      "seed": 0,
+      "fold": 0,
+      "n_train": 9594,
+      "n_test": 2406,
+      "fit_seconds": 12.273754874942824,
+      "predict_seconds": 0.039342875010333955
+    }
+  ],
+  "fold_parameters": [
+    {
+      "dataset": "birdclef2023",
+      "task": "species",
+      "method": "raw",
+      "feature_set": "comp",
+      "classifier": "lightgbm",
+      "split_id": 0,
+      "seed": 0,
+      "fold": 0,
+      "n_train": 9594,
+      "n_test": 2406,
+      "best_params": "{\"n_estimators\": 57, \"min_leaf\": 10, \"inner_fit\": 6382, \"inner_valid\": 3212, \"seed\": 0}"
+    },
+    {
+      "dataset": "birdclef2023",
+      "task": "species",
+      "method": "raw",
+      "feature_set": "comp+log_scale",
+      "classifier": "lightgbm",
+      "split_id": 0,
+      "seed": 0,
+      "fold": 0,
+      "n_train": 9594,
+      "n_test": 2406,
+      "best_params": "{\"n_estimators\": 50, \"min_leaf\": 10, \"inner_fit\": 6382, \"inner_valid\": 3212, \"seed\": 0}"
+    },
+    {
+      "dataset": "birdclef2023",
+      "task": "species",
+      "method": "emd",
+      "feature_set": "comp",
+      "classifier": "lightgbm",
+      "split_id": 0,
+      "seed": 0,
+      "fold": 0,
+      "n_train": 9594,
+      "n_test": 2406,
+      "best_params": "{\"n_estimators\": 48, \"min_leaf\": 10, \"inner_fit\": 6382, \"inner_valid\": 3212, \"seed\": 0}"
+    },
+    {
+      "dataset": "birdclef2023",
+      "task": "species",
+      "method": "emd",
+      "feature_set": "comp+log_scale",
+      "classifier": "lightgbm",
+      "split_id": 0,
+      "seed": 0,
+      "fold": 0,
+      "n_train": 9594,
+      "n_test": 2406,
+      "best_params": "{\"n_estimators\": 48, \"min_leaf\": 10, \"inner_fit\": 6382, \"inner_valid\": 3212, \"seed\": 0}"
+    },
+    {
+      "dataset": "birdclef2023",
+      "task": "species",
+      "method": "imf_linear_a1.41",
+      "feature_set": "comp",
+      "classifier": "lightgbm",
+      "split_id": 0,
+      "seed": 0,
+      "fold": 0,
+      "n_train": 9594,
+      "n_test": 2406,
+      "best_params": "{\"n_estimators\": 51, \"min_leaf\": 10, \"inner_fit\": 6382, \"inner_valid\": 3212, \"seed\": 0}"
+    },
+    {
+      "dataset": "birdclef2023",
+      "task": "species",
+      "method": "imf_linear_a1.41",
+      "feature_set": "comp+log_scale",
+      "classifier": "lightgbm",
+      "split_id": 0,
+      "seed": 0,
+      "fold": 0,
+      "n_train": 9594,
+      "n_test": 2406,
+      "best_params": "{\"n_estimators\": 49, \"min_leaf\": 10, \"inner_fit\": 6382, \"inner_valid\": 3212, \"seed\": 0}"
+    },
+    {
+      "dataset": "birdclef2023",
+      "task": "species",
+      "method": "irmf_h2_a1.41",
+      "feature_set": "comp",
+      "classifier": "lightgbm",
+      "split_id": 0,
+      "seed": 0,
+      "fold": 0,
+      "n_train": 9594,
+      "n_test": 2406,
+      "best_params": "{\"n_estimators\": 62, \"min_leaf\": 10, \"inner_fit\": 6382, \"inner_valid\": 3212, \"seed\": 0}"
+    },
+    {
+      "dataset": "birdclef2023",
+      "task": "species",
+      "method": "irmf_h2_a1.41",
+      "feature_set": "comp+log_scale",
+      "classifier": "lightgbm",
+      "split_id": 0,
+      "seed": 0,
+      "fold": 0,
+      "n_train": 9594,
+      "n_test": 2406,
+      "best_params": "{\"n_estimators\": 62, \"min_leaf\": 10, \"inner_fit\": 6382, \"inner_valid\": 3212, \"seed\": 0}"
+    },
+    {
+      "dataset": "birdclef2023",
+      "task": "species",
+      "method": "irmf_h2_a1.41_conv",
+      "feature_set": "comp",
+      "classifier": "lightgbm",
+      "split_id": 0,
+      "seed": 0,
+      "fold": 0,
+      "n_train": 9594,
+      "n_test": 2406,
+      "best_params": "{\"n_estimators\": 60, \"min_leaf\": 10, \"inner_fit\": 6382, \"inner_valid\": 3212, \"seed\": 0}"
+    },
+    {
+      "dataset": "birdclef2023",
+      "task": "species",
+      "method": "irmf_h2_a1.41_conv",
+      "feature_set": "comp+log_scale",
+      "classifier": "lightgbm",
+      "split_id": 0,
+      "seed": 0,
+      "fold": 0,
+      "n_train": 9594,
+      "n_test": 2406,
+      "best_params": "{\"n_estimators\": 58, \"min_leaf\": 10, \"inner_fit\": 6382, \"inner_valid\": 3212, \"seed\": 0}"
+    }
+  ],
+  "notes": [
+    "LightGBM/XGBoost select boosting rounds by weighted inner-validation log loss, then refit on outer train.",
+    "ExtraTrees selects min_samples_leaf in {1, 3} by inner balanced accuracy. Median imputation and class weights are fitted inside each training partition.",
+    "Importance is normalized per fitted model and summed over features and input channels by storage slot; scale_rank=0 is finest. These model-specific importances are descriptive, not causal."
+  ],
+  "decomposition_costs": [
+    {
+      "method": "emd",
+      "seconds_per_frame": {
+        "wall_mean": 0.011680636879512651,
+        "wall_median": 0.010264125012326986,
+        "cpu_mean": 0.011645109083333337,
+        "cpu_median": 0.010246999999999673,
+        "cpu_total": 139.74130900000006
+      },
+      "n_failed": 0,
+      "irmf": null
+    },
+    {
+      "method": "imf_linear_a1.41",
+      "seconds_per_frame": {
+        "wall_mean": 0.0063700712469193,
+        "wall_median": 0.005822458537295461,
+        "cpu_mean": 0.006321592749999997,
+        "cpu_median": 0.005822000000000216,
+        "cpu_total": 75.85911299999997
+      },
+      "n_failed": 0,
+      "irmf": null
+    },
+    {
+      "method": "irmf_h2_a1.41",
+      "seconds_per_frame": {
+        "wall_mean": 1.3429560216438645,
+        "wall_median": 1.0270538750337437,
+        "cpu_mean": 1.320493968666666,
+        "cpu_median": 1.008695500000158,
+        "cpu_total": 15845.92762399999
+      },
+      "n_failed": 0,
+      "irmf": {
+        "channels_all_converged": 7888,
+        "unconverged_fraction_per_slot": [
+          0.0061,
+          0.0587,
+          0.0373,
+          0.0941,
+          0.1347,
+          0.1663,
+          0.1965,
+          0.205,
+          0.2159,
+          0.2128,
+          0.2084,
+          0.1882,
+          0.1667,
+          0.1466,
+          0.1288,
+          0.1152,
+          0.107
+        ],
+        "mean_iterations_per_slot": [
+          8.2,
+          13.31,
+          16.72,
+          22.83,
+          27.89,
+          31.42,
+          33.71,
+          34.41,
+          34.63,
+          33.52,
+          32.14,
+          30.53,
+          28.96,
+          27.41,
+          25.82,
+          24.27,
+          22.87
+        ],
+        "sigma_source_counts": {
+          "0": 12000
+        },
+        "H_quantiles": {
+          "0.0": 0.00564,
+          "0.05": 0.19781,
+          "0.5": 0.96296,
+          "0.95": 1.96246,
+          "1.0": 2.99411
+        }
+      }
+    },
+    {
+      "method": "irmf_h2_a1.41_conv",
+      "seconds_per_frame": {
+        "wall_mean": 0.057927622471266656,
+        "wall_median": 0.05566787504358217,
+        "cpu_mean": 0.05791799583333339,
+        "cpu_median": 0.05565949999999553,
+        "cpu_total": 695.0159500000007
+      },
+      "n_failed": 0,
+      "irmf": {
+        "channels_all_converged": 12000,
+        "unconverged_fraction_per_slot": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "mean_iterations_per_slot": [
+          3.21,
+          3.83,
+          4.17,
+          4.57,
+          4.82,
+          4.9,
+          4.94,
+          4.88,
+          4.8,
+          4.71,
+          4.66,
+          4.59,
+          4.56,
+          4.5,
+          4.4,
+          4.29,
+          4.25
+        ],
+        "sigma_source_counts": {
+          "0": 12000
+        },
+        "H_quantiles": {
+          "0.0": 0.00564,
+          "0.05": 0.19781,
+          "0.5": 0.96296,
+          "0.95": 1.96246,
+          "1.0": 2.99411
+        },
+        "max_iterations_per_slot": [
+          20,
+          29,
+          63,
+          26,
+          64,
+          29,
+          63,
+          31,
+          29,
+          30,
+          29,
+          29,
+          29,
+          31,
+          30,
+          32,
+          32
+        ],
+        "bisection_fallbacks_per_slot": [
+          17396,
+          38815,
+          39993,
+          45588,
+          57145,
+          55480,
+          45355,
+          36928,
+          30483,
+          27325,
+          29997,
+          36154,
+          49930,
+          68005,
+          82927,
+          113136,
+          139664
+        ],
+        "max_score_residual_per_slot": [
+          3.1030733538273125e-14,
+          1.193056070603049e-15,
+          3.740063814205996e-15,
+          5.111796402834656e-15,
+          3.020153571675621e-15,
+          1.2566851856007921e-15,
+          2.2490689866039304e-15,
+          9.165912928828235e-16,
+          6.58869660219441e-16,
+          4.44045587653279e-16,
+          5.181910402076578e-16,
+          5.081112422562132e-16,
+          8.509377691411427e-16,
+          6.405138675971123e-16,
+          7.740908638201739e-16,
+          1.2434118007206283e-15,
+          1.3555856789644903e-15
+        ]
+      }
+    }
+  ],
+  "device": "cpu",
+  "feature_sets": [
+    "comp",
+    "comp+log_scale"
+  ],
+  "classifier_params": {
+    "lightgbm": {
+      "learning_rate": 0.05,
+      "num_leaves": 15,
+      "min_child_samples": 10,
+      "reg_lambda": 1.0,
+      "early_stopping_rounds": 12
+    },
+    "xgboost": {
+      "learning_rate": 0.05,
+      "max_depth": 4,
+      "min_child_weight": 2,
+      "reg_lambda": 1.0,
+      "tree_method": "hist",
+      "early_stopping_rounds": 12
+    },
+    "extratrees": {
+      "max_features": "sqrt",
+      "leaf_grid": [
+        1,
+        3
+      ]
+    }
+  }
+}

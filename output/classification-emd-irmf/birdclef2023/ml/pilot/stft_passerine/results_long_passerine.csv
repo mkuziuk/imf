@@ -1,0 +1,15 @@
+dataset,task,method,feature_set,classifier,split_id,seed,fold,n_train,n_test,metric,value
+birdclef2023,passerine,raw,comp,compact_resnet,0,0,0,9587,2413,balanced_accuracy,0.8128450059587784
+birdclef2023,passerine,raw,comp+log_scale,compact_resnet,0,0,0,9587,2413,balanced_accuracy,0.8207610420185271
+birdclef2023,passerine,raw,comp,compact_resnet,0,0,0,9587,2413,macro_f1,0.8115493402350915
+birdclef2023,passerine,raw,comp+log_scale,compact_resnet,0,0,0,9587,2413,macro_f1,0.809977471956381
+birdclef2023,passerine,raw,comp,compact_resnet,0,0,0,9587,2413,accuracy,0.8222130128470784
+birdclef2023,passerine,raw,comp+log_scale,compact_resnet,0,0,0,9587,2413,accuracy,0.8164111065064236
+birdclef2023,passerine,raw,comp,compact_resnet,0,0,0,9587,2413,fit_seconds,39.34929183404893
+birdclef2023,passerine,raw,comp+log_scale,compact_resnet,0,0,0,9587,2413,fit_seconds,45.09761995903682
+birdclef2023,passerine,raw,comp,compact_resnet,0,0,0,9587,2413,predict_seconds,0.5302131249336526
+birdclef2023,passerine,raw,comp+log_scale,compact_resnet,0,0,0,9587,2413,predict_seconds,0.6984024590346962
+birdclef2023,passerine,raw,comp,compact_resnet,0,0,0,9587,2413,recall_non_passerine,0.850964737192282
+birdclef2023,passerine,raw,comp+log_scale,compact_resnet,0,0,0,9587,2413,recall_non_passerine,0.8030605455755156
+birdclef2023,passerine,raw,comp,compact_resnet,0,0,0,9587,2413,recall_passerine,0.7747252747252747
+birdclef2023,passerine,raw,comp+log_scale,compact_resnet,0,0,0,9587,2413,recall_passerine,0.8384615384615385

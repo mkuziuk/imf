@@ -1,0 +1,11 @@
+raw comp compact_resnet split=0: BA=0.824, fit=42.39s, predict=0.55s
+raw comp+log_scale compact_resnet split=0: BA=0.823, fit=65.86s, predict=0.58s
+emd comp compact_resnet split=0: BA=0.811, fit=30.06s, predict=0.39s
+emd comp+log_scale compact_resnet split=0: BA=0.809, fit=30.02s, predict=0.38s
+imf_linear_a1.41 comp compact_resnet split=0: BA=0.830, fit=33.47s, predict=0.43s
+imf_linear_a1.41 comp+log_scale compact_resnet split=0: BA=0.819, fit=28.26s, predict=0.31s
+irmf_h2_a1.41 comp compact_resnet split=0: BA=0.774, fit=19.87s, predict=0.36s
+irmf_h2_a1.41 comp+log_scale compact_resnet split=0: BA=0.814, fit=23.23s, predict=0.31s
+irmf_h2_a1.41_conv comp compact_resnet split=0: BA=0.838, fit=27.41s, predict=0.34s
+irmf_h2_a1.41_conv comp+log_scale compact_resnet split=0: BA=0.807, fit=23.35s, predict=0.31s
+wrote /Users/mikhail/.t3/worktrees/imf/t3-44ed3594/output/classification-emd-irmf/birdclef2023/ml/cnn_passerine_fold0, total 328.9s

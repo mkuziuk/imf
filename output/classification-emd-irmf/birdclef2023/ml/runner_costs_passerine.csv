@@ -1,0 +1,7 @@
+runner,wall_seconds,workers,n_fits,split_ids,device
+cnn_passerine_fold0,328.94903258397244,1,10,[0],mps
+cnn_passerine_remaining,1022.1329409159953,1,40,"[1, 2, 3, 4]",mps
+rocket_mini,3207.7334088339703,2,50,"[0, 1, 2, 3, 4]",cpu
+trees_extratrees,959.6485948340269,2,150,"[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]",cpu
+trees_lightgbm,431.96047620801255,2,150,"[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]",cpu
+trees_xgboost,596.7385581670096,2,150,"[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]",cpu
