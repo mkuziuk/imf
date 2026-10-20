@@ -1,17 +1,10 @@
 # 60 GHz radar: UAS and birds (Kang, Forstén, Semkin, Rangan)
 
-Status as of 2026-10-20:
-
-- **Full release (IEEE DataPort `Data.zip`, 15.21 GB): not downloaded.** The files
-  sit behind an IEEE login. The landing page exposes no public file URL. The
-  only S3 reference in its HTML is the uploader help link. No Kaggle, Hugging
-  Face, Zenodo, or other mirror turned up.
-- **Public subset: downloaded and verified.** The first author's GitHub repository
-  publishes a cropped copy of the same measurement campaign: 97 recordings,
-  each a complex64 cube of shape (1000, 20, 30). It lives under
-  `<DATA_ROOT>/uas_birds_60ghz/raw/github_sk8053_drone_bird_detection_with_radar/`.
-  All 160 downloaded files match their git blob SHA-1 at the pinned commit.
-  That is enough to write and test `prepare.py` now. See "Public subset" below.
+Status as of 2026-10-20: the authorized NumPy-only conversion and deterministic
+preparation have completed. The public subset supplies 49 moving recordings,
+784 I/Q frames and 45 target-plus-pose CV groups. The full DataPort release has
+not been downloaded. Numerical results and reproducibility commands are in
+[`REPORT.md`](../../../../output/classification-emd-irmf/uas_birds_60ghz/classical/REPORT.md).
 
 ## Sources
 
@@ -48,8 +41,8 @@ IEEE Dataport, March 15, 2024, doi:10.21227/c8r5-6h79.
 4. Check the size, then list the contents before extracting:
    `unzip -l Data.zip | head -50`. Extract into
    `raw/dataport/extracted/`. Never run anything from that directory.
-5. Tell the data agent. `prepare.py` should accept either the DataPort raw cubes
-   or the GitHub crops (below).
+5. Scan, convert and use the explicitly untested DataPort preparation path below.
+   Verify the inferred cube axes and crop equality before interpreting results.
 
 ## What is known about the format
 
@@ -96,12 +89,12 @@ stamps, angle bins, range bins)**. The evidence:
 **Slow-time sampling rate: not documented.** The authors' figures label the
 1000 time stamps as 0-1000 ms, which implies about 1 kHz. A Microwave Journal
 article on the VTT 8x8 radar ([Kiuru & Forstén](https://microwavejournal.com/articles/35244-design-of-a-mmwave-mimo-radar))
-quotes 200 frames/s imaging and uses a 1 ms chirp in its simulation example. Treat `fs` as unknown. Store
-`fs_assumed=1000` in `dataset.json` with a note, and keep every feature
-dimensionless (per-sample frequencies). At 60 GHz (wavelength 5 mm), a 1 kHz
-frame rate leaves an unambiguous Doppler of only +/- 0.25 m/s. Propeller-blade
-micro-Doppler is therefore heavily aliased in these series. That is fine for
-classification but rules out physical Doppler interpretation.
+quotes 200 frames/s imaging and uses a 1 ms chirp in its simulation example.
+`dataset.json` therefore stores `fs: null` and `fs_assumed: 1000`, with an explicit
+uncertainty note. All frequency features use cycles/sample. If the slow-time
+sampling rate were 1 kHz, Nyquist would be 500 Hz and the monostatic unambiguous
+velocity at 60 GHz would be approximately +/- 1.25 m/s. This is conditional, not
+a measured PRF or a claim that blade velocities are resolved.
 
 **GitHub crop.** `cut_drone_bird.py` computes `data[:, 60:80, :][:, :, 60:90]`,
 i.e. angle bins 60-79 and range bins 60-89 (about 2.3-3.05 m if the plot axis is
@@ -145,32 +138,72 @@ mostly below 0.025 and moving ones mostly above 0.035. The exceptions are
 0.022-0.027. Motion state is therefore close to trivial. The useful question
 is bird vs drone among *moving* recordings.
 
-Safe loading. `pickle.load` can execute code, so never call it on these
-files. Use a whitelist unpickler (Python docs, "Restricting Globals"):
+## Authorized loader and conversion
 
-```python
-import pickle
-import numpy as np
+The round-2 authorization permits a strict allow-list unpickler after a
+nonexecuting opcode scan. [`convert_pickles.py`](convert_pickles.py) subclasses
+`pickle.Unpickler` and overrides `find_class`. The only allowed pairs are:
 
-_ALLOWED = {("numpy.core.multiarray", "_reconstruct"), ("numpy._core.multiarray", "_reconstruct"),
-            ("numpy", "ndarray"), ("numpy", "dtype")}
+- `numpy.core.multiarray`, `_reconstruct`
+- `numpy._core.multiarray`, `_reconstruct`
+- `numpy`, `ndarray`
+- `numpy`, `dtype`
 
-class _NdarrayOnly(pickle.Unpickler):
-    def find_class(self, module, name):
-        if (module, name) not in _ALLOWED:
-            raise pickle.UnpicklingError(f"blocked global {module}.{name}")
-        if name == "_reconstruct":
-            return np._core.multiarray._reconstruct  # numpy >= 2
-        return getattr(np, name)
+Both reconstruct names map directly to `numpy._core.multiarray._reconstruct`
+for NumPy 2. Every other pair raises `pickle.UnpicklingError`. Persistent IDs,
+extension opcodes, legacy constructors and external buffers are rejected.
+After loading, the converter accepts only ndarrays, flat dict/list/tuple
+containers of ndarrays or plain scalar/string values. It rejects every array
+whose `dtype.hasobject` is true, including container members. No downloaded
+Python code is imported or executed.
 
-def load_ndarray(path):
-    with open(path, "rb") as f:
-        arr = _NdarrayOnly(f).load()
-    assert isinstance(arr, np.ndarray)
-    return arr
+The `pickletools.genops` scan executes no pickle instructions. It symbolically
+tracks stack strings and memo references to resolve `GLOBAL` and `STACK_GLOBAL`;
+all 98 local files reference exactly `numpy.core.multiarray._reconstruct`,
+`numpy.ndarray`, and `numpy.dtype`. The runtime allow-list is a second check.
+This restricts the accepted inputs to the audited NumPy construction path;
+`-I` alone would not make arbitrary pickle input safe. It is not a general
+sandbox or a guarantee against resource exhaustion in arbitrary future files.
+
+Run from the repository root, outside `raw/`, with the absolute worktree Python:
+
+```bash
+/Users/mikhail/.t3/worktrees/imf/t3-44ed3594/.venv/bin/python -I \
+  /Users/mikhail/.t3/worktrees/imf/t3-44ed3594/experiments/classification-emd-irmf/datasets/uas_birds_60ghz/convert_pickles.py --scan-only
+/Users/mikhail/.t3/worktrees/imf/t3-44ed3594/.venv/bin/python -I \
+  /Users/mikhail/.t3/worktrees/imf/t3-44ed3594/experiments/classification-emd-irmf/datasets/uas_birds_60ghz/convert_pickles.py
 ```
 
-Run it with `.venv/bin/python -I` from outside the data directory.
+Each source is converted once to `converted/<stem>.npy`, or numeric-only `.npz`
+for a container. `converted/manifest.json` records source-relative paths,
+source SHA-256, globals, output SHA-256, shape and dtype. A rerun verifies
+hashes and reuses completed exports without unpickling. Conversion included the
+empty placeholder, with shape `(38000, 0, 0)` and dtype complex128; preparation
+excludes it. The 97 real cubes are complex64 `(1000, 20, 30)`.
+
+Re-runnable opcode-scan code, including for an extracted full release:
+
+```python
+# Run with /absolute/worktree/.venv/bin/python -I from outside raw/.
+import importlib.util
+from pathlib import Path
+
+converter = Path('/Users/mikhail/.t3/worktrees/imf/t3-44ed3594/experiments/classification-emd-irmf/datasets/uas_birds_60ghz/convert_pickles.py')
+spec = importlib.util.spec_from_file_location('numeric_converter', converter)
+module = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(module)  # local audited converter, never raw code
+source = Path('/Users/mikhail/Datasets/imf-classification/uas_birds_60ghz/raw/dataport/extracted')
+for path in sorted(source.rglob('*.pkl')):
+    globals_used = module.scan_globals(path.read_bytes())
+    print(path.relative_to(source), globals_used)
+```
+
+The full symbolic implementation is `scan_globals` in the linked converter.
+The equivalent CLI is `convert_pickles.py --scan-only --source-root <extracted>`.
+An unexpected global or unsupported opcode stops before conversion.
+
+Everything downstream reads only numeric exports using `allow_pickle=False`.
+Preparation also checks the converted-file SHA-256 against the manifest.
 
 The repo's `utils/download_data.py` also points to two public Google Drive files,
 `bird_data_total.pkl` and `mavik_data_total.pkl`. These are the crops
@@ -179,7 +212,7 @@ concatenated, with recording boundaries lost: (38000, 20, 30) and
 repo also contains a committed server credential file. It was not opened or
 used.
 
-## Published protocols on this data (all leak across recordings)
+## Published protocols on this data
 
 - **Kang et al. 2024 (repo code).** Binary bird vs "mavik". The non-bird
   array also absorbs P3P and pole files through an `else` branch. A CNN runs on
@@ -204,38 +237,88 @@ used.
   paper, but this release holds processed cubes rather than ADC samples, so
   their source dataset is unconfirmed.
 
-No grouped (leave-recording-out) result exists, so ours would be the first.
+The protocols above do not establish performance on held-out recordings.
+This study uses target-plus-pose groups; no claim of literature priority is made.
 
-## Recommendations for `prepare.py`
+## Prepared data
 
-- **Group:** one recording (`.pkl` file). Turntable `0_100pct`/`0_50pct` and
-  tripod `az_0_tilt_0_{100pct,50pct}` share a pose. A stricter
-  `group_pose = target + pose` is also worth storing, so that CV can optionally
-  keep one physical setup on one side.
-- **Tasks:**
-  - `y_bird_drone`: bird vs drone on moving recordings only (20 vs 29). Make
-    this the primary task.
-  - `y_target3`: bird / mavic / p3p, moving only (20 / 20 / 9). P3P has 9
-    groups, enough for 5-fold grouped CV but thin.
-  - `y_motion`: still vs moving. Optional and near-trivial; useful as a
-    sanity check.
-  - Drop `pole`. Keep the absorber variants but flag them in `meta`.
-- **1-D signal:** the slow-time series at a range-angle cell. Use C = 2
-  channels, real and imaginary after removing the complex mean; amplitude and
-  unwrapped phase is an alternative. The authors found phase the more
-  informative channel. Pick cells within each recording, for example the top-k
-  cells by dynamic std. That uses only the recording itself and never crosses
-  recordings.
-- **Frame length:** each recording has only 1000 time stamps. Use either
-  L = 1000 per cell (one frame per cell) or windows of L = 512 with hop 128
-  (about 4 windows per cell). With k = 16 cells per recording, that is
-  roughly 16-64 frames per recording, or 0.8k-3k frames for the moving
-  subset. Frames from one recording are strongly correlated, so cap them and
-  report group counts. The full DataPort cube (128 x 168 cells) would allow
-  better cell selection but not more independent groups.
-- **Confounds:** the background level differs by session and target. Median
-  |x| is about 3.7-5.3e3 for bird, 5.5-9e3 for mavic, and 7.6-12.8e3 for p3p.
-  Per-frame robust normalisation and the separate `log_scale` feature from the
-  protocol are therefore essential. Also report a "noise-floor only" control
-  (features from a target-free cell) to show that class information is not
-  just session gain.
+[`prepare.py`](prepare.py) uses moving targets only and removes the complex
+mean independently at each cell. It ranks the 600 cropped cells by mean squared
+complex fluctuation within that recording and retains the top 16. Ties resolve
+by flattened cell index. Selection uses no class labels or other recordings.
+Each chosen cell supplies one complete 1000-sample frame, with I and Q as two
+float32 channels. Shared decomposition code then applies the protocol's median
+and MAD normalization and preserves `log_scale` separately. No padding,
+resampling or random windows are used. The recorded seed is 0; selection itself
+has no random step.
+
+| task/class | frames | recordings | CV groups |
+|---|---:|---:|---:|
+| bird_drone: bird | 320 | 20 | 18 |
+| bird_drone: uas | 464 | 29 | 27 |
+| target3: bird | 320 | 20 | 18 |
+| target3: mavic | 320 | 20 | 18 |
+| target3: p3p | 144 | 9 | 9 |
+| total | 784 | 49 | 45 |
+
+Primary task is `bird_drone`; `target3` is secondary. Static recordings and
+pole are excluded, so a classifier cannot solve the binary task by detecting
+motion alone. P3P has only nine groups. No oversampling or class balancing is
+applied during preparation.
+
+`group` is target plus pose, merging bird flapping settings at turntable 0 and
+tripod azimuth 0/tilt 0, and the three Mavic absorber configurations at that
+tripod pose. This leaves 45 groups and is stricter than recording-only CV.
+`group_recording`, `group_pose`, mount, state, variant, original/cropped cell
+indices and source SHA-256 remain in `meta.parquet`. Equal pose angles on
+different targets do not establish a shared flight. All measurements belong to
+one indoor campaign, so grouping the whole session would leave one group and
+make CV impossible. New-session generalization remains untested.
+
+The authors' `README.docx` was read as ZIP/XML, never as executable content.
+It confirms the 20 x 30 crop and 1000 samples. The 33 phase-angle text files
+contain 1000 values each; `example.txt` is a separate spectrogram table. They
+are extracted signal phase, not turntable encoder traces or flight/session
+identifiers. They supply neither a PRF nor additional independent recordings.
+
+Preparation writes only to `<DATA_ROOT>/uas_birds_60ghz/prepared/`. Validation
+passed with zero nonfinite frames, constant channels or zero-MAD channels:
+
+```bash
+/Users/mikhail/.t3/worktrees/imf/t3-44ed3594/.venv/bin/python -I \
+  /Users/mikhail/.t3/worktrees/imf/t3-44ed3594/experiments/classification-emd-irmf/datasets/uas_birds_60ghz/prepare.py
+cd /Users/mikhail/.t3/worktrees/imf/t3-44ed3594/experiments/classification-emd-irmf
+../../.venv/bin/python -m emdirmf.validate uas_birds_60ghz
+```
+
+The 16 spatial cells are strongly correlated views of one target. Reported
+sample size is 49 recordings in 45 groups, not 784 independent observations.
+Target identity, background gain and mounting may remain confounded even after
+normalization. A verified target-free background control was not constructed.
+This is a bionic bird and two mounted drone models, not an airborne wildlife
+benchmark. The unknown PRF prevents unconditional Hz or velocity conclusions.
+
+## Full DataPort release: untested path
+
+Expected archive is `raw/dataport/Data.zip`; list and manually extract it to
+`raw/dataport/extracted/` without executing its contents. After a successful
+opcode scan, run the isolated converter with that source root and
+`--destination <DATA_ROOT>/uas_birds_60ghz/converted_dataport`. The converter
+requires unique stems; if the release has nested repeated names, inspect its
+provenance and adapt the mapping rather than silently merging recordings.
+
+`prepare.py --source dataport` is a clearly separated, untested path. It expects
+one numeric complex `(T, 128, 168)` cube per original recording, `T >= 1000`,
+with filenames matching the public target/pose/state convention. It checks the
+shape, applies `[:, 60:80, 60:90]`, uses the same label-free cell selection and
+cuts longer records into nonoverlapping 1000-sample windows. Before use, verify
+the axis order and exact crop equality on a matching public recording. Different
+filenames or session metadata require a reviewed adapter, not guesses.
+
+This path replaces `prepared/`, so preserve the public result and caches in a
+separate external data root before using it. The full cubes would add spatial
+context and allow target/background controls and a test of crop selection.
+They may contain the same campaign and recordings rather than more independent
+samples. Only verified new sessions or recordings would improve statistical
+power. The release may also clarify PRF and acquisition provenance; neither is
+assumed here.
