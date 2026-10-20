@@ -1,0 +1,314 @@
+{
+  "sensitivity_animal": {
+    "fits": 90,
+    "combined_rows": 240,
+    "methods": [
+      "emd",
+      "imf_linear_a1.41",
+      "irmf_h1_a1.41_conv",
+      "irmf_h2_a1.41",
+      "irmf_h2_a1.41_conv",
+      "irmf_h2_a2_conv",
+      "irmf_h4_a1.41_conv",
+      "raw"
+    ],
+    "validation": [
+      {
+        "runner": "sensitivity",
+        "task": "animal",
+        "fits": 90,
+        "prediction_rows": 91800,
+        "probability_tied_argmax_labels": 0,
+        "split_ids": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14
+        ]
+      }
+    ]
+  },
+  "slots9_animal": {
+    "fits": 90,
+    "combined_rows": 150,
+    "methods": [
+      "emd",
+      "imf_linear_a1.41",
+      "irmf_h2_a1.41",
+      "irmf_h2_a1.41_conv",
+      "raw"
+    ],
+    "validation": [
+      {
+        "runner": "slots9",
+        "task": "animal",
+        "fits": 90,
+        "prediction_rows": 91800,
+        "probability_tied_argmax_labels": 0,
+        "split_ids": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14
+        ]
+      }
+    ]
+  },
+  "matched_animal": {
+    "fits": 60,
+    "combined_rows": 240,
+    "methods": [
+      "emd",
+      "imf_linear_a1.41",
+      "imf_linear_a2",
+      "irmf_h2_a1.41",
+      "irmf_h2_a1.41_conv",
+      "irmf_h2_a2",
+      "irmf_h2_a2_conv",
+      "raw"
+    ],
+    "validation": [
+      {
+        "runner": "matched",
+        "task": "animal",
+        "fits": 60,
+        "prediction_rows": 61200,
+        "probability_tied_argmax_labels": 0,
+        "split_ids": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14
+        ]
+      }
+    ]
+  },
+  "concat_animal": {
+    "fits": 60,
+    "combined_rows": 210,
+    "methods": [
+      "emd",
+      "emd__irmf_h2_a1.41",
+      "emd__irmf_h2_a1.41_conv",
+      "imf_linear_a1.41",
+      "irmf_h2_a1.41",
+      "irmf_h2_a1.41_conv",
+      "raw"
+    ],
+    "validation": [
+      {
+        "runner": "concat",
+        "task": "animal",
+        "fits": 60,
+        "prediction_rows": 61200,
+        "probability_tied_argmax_labels": 0,
+        "split_ids": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14
+        ]
+      }
+    ]
+  },
+  "sensitivity_bird": {
+    "fits": 90,
+    "combined_rows": 240,
+    "methods": [
+      "emd",
+      "imf_linear_a1.41",
+      "irmf_h1_a1.41_conv",
+      "irmf_h2_a1.41",
+      "irmf_h2_a1.41_conv",
+      "irmf_h2_a2_conv",
+      "irmf_h4_a1.41_conv",
+      "raw"
+    ],
+    "validation": [
+      {
+        "runner": "sensitivity",
+        "task": "bird",
+        "fits": 90,
+        "prediction_rows": 91800,
+        "probability_tied_argmax_labels": 0,
+        "split_ids": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14
+        ]
+      }
+    ]
+  },
+  "slots9_bird": {
+    "fits": 90,
+    "combined_rows": 150,
+    "methods": [
+      "emd",
+      "imf_linear_a1.41",
+      "irmf_h2_a1.41",
+      "irmf_h2_a1.41_conv",
+      "raw"
+    ],
+    "validation": [
+      {
+        "runner": "slots9",
+        "task": "bird",
+        "fits": 90,
+        "prediction_rows": 91800,
+        "probability_tied_argmax_labels": 0,
+        "split_ids": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14
+        ]
+      }
+    ]
+  },
+  "matched_bird": {
+    "fits": 60,
+    "combined_rows": 240,
+    "methods": [
+      "emd",
+      "imf_linear_a1.41",
+      "imf_linear_a2",
+      "irmf_h2_a1.41",
+      "irmf_h2_a1.41_conv",
+      "irmf_h2_a2",
+      "irmf_h2_a2_conv",
+      "raw"
+    ],
+    "validation": [
+      {
+        "runner": "matched",
+        "task": "bird",
+        "fits": 60,
+        "prediction_rows": 61200,
+        "probability_tied_argmax_labels": 0,
+        "split_ids": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14
+        ]
+      }
+    ]
+  },
+  "concat_bird": {
+    "fits": 60,
+    "combined_rows": 210,
+    "methods": [
+      "emd",
+      "emd__irmf_h2_a1.41",
+      "emd__irmf_h2_a1.41_conv",
+      "imf_linear_a1.41",
+      "irmf_h2_a1.41",
+      "irmf_h2_a1.41_conv",
+      "raw"
+    ],
+    "validation": [
+      {
+        "runner": "concat",
+        "task": "bird",
+        "fits": 60,
+        "prediction_rows": 61200,
+        "probability_tied_argmax_labels": 0,
+        "split_ids": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14
+        ]
+      }
+    ]
+  }
+}

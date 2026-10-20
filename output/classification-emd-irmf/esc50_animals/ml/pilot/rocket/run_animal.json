@@ -1,0 +1,326 @@
+{
+  "dataset": "esc50_animals",
+  "task": "animal",
+  "runner": "esc50_pilot_rocket",
+  "methods": [
+    "raw",
+    "irmf_h2_a1.41"
+  ],
+  "n_frames": 5100,
+  "n_groups": 157,
+  "n_classes": 10,
+  "split_ids": [
+    0
+  ],
+  "workers": 1,
+  "created": "2026-10-20T19:38:48.400888+00:00",
+  "params": {
+    "dataset": "esc50_animals",
+    "task": "animal",
+    "methods": [
+      "raw",
+      "irmf_h2_a1.41"
+    ],
+    "quick": false,
+    "workers": 1,
+    "folds": "1",
+    "device": "auto",
+    "log_scale": "both",
+    "out": "/Users/mikhail/.t3/worktrees/imf/t3-44ed3594/output/classification-emd-irmf/esc50_animals/ml/pilot/rocket",
+    "classifiers": [
+      "minirocket"
+    ],
+    "features": 1008,
+    "fit_samples": 128,
+    "batch_size": 32,
+    "head_batch_size": 128,
+    "head_epochs": 5,
+    "downsample": 1
+  },
+  "inner_validation": "first class-complete StratifiedGroupKFold(3) split of outer train",
+  "versions": {
+    "python": "3.12.13",
+    "platform": "macOS-26.6.2-arm64-arm-64bit",
+    "numpy": "2.3.5",
+    "scipy": "1.17.1",
+    "pandas": "3.0.6",
+    "scikit-learn": "1.9.1",
+    "lightgbm": "4.7.0",
+    "xgboost": "3.4.1",
+    "torch": "2.14.1",
+    "aeon": "1.6.0"
+  },
+  "seconds": 69.02415195805952,
+  "predictions": "/Users/mikhail/Datasets/imf-classification/esc50_animals/results/esc50_pilot_rocket_animal_predictions.parquet",
+  "fold_timings": [
+    {
+      "dataset": "esc50_animals",
+      "task": "animal",
+      "method": "raw",
+      "feature_set": "comp",
+      "classifier": "minirocket",
+      "split_id": 0,
+      "seed": 0,
+      "fold": 0,
+      "n_train": 4016,
+      "n_test": 1084,
+      "fit_seconds": 6.707756248884834,
+      "predict_seconds": 0.6416850830428302
+    },
+    {
+      "dataset": "esc50_animals",
+      "task": "animal",
+      "method": "raw",
+      "feature_set": "comp+log_scale",
+      "classifier": "minirocket",
+      "split_id": 0,
+      "seed": 0,
+      "fold": 0,
+      "n_train": 4016,
+      "n_test": 1084,
+      "fit_seconds": 6.680209083016962,
+      "predict_seconds": 0.641879333066754
+    },
+    {
+      "dataset": "esc50_animals",
+      "task": "animal",
+      "method": "irmf_h2_a1.41",
+      "feature_set": "comp",
+      "classifier": "minirocket",
+      "split_id": 0,
+      "seed": 0,
+      "fold": 0,
+      "n_train": 4016,
+      "n_test": 1084,
+      "fit_seconds": 50.96138491597958,
+      "predict_seconds": 6.682999333017506
+    },
+    {
+      "dataset": "esc50_animals",
+      "task": "animal",
+      "method": "irmf_h2_a1.41",
+      "feature_set": "comp+log_scale",
+      "classifier": "minirocket",
+      "split_id": 0,
+      "seed": 0,
+      "fold": 0,
+      "n_train": 4016,
+      "n_test": 1084,
+      "fit_seconds": 50.97083041595761,
+      "predict_seconds": 6.683019083109684
+    }
+  ],
+  "fold_parameters": [
+    {
+      "dataset": "esc50_animals",
+      "task": "animal",
+      "method": "raw",
+      "feature_set": "comp",
+      "classifier": "minirocket",
+      "split_id": 0,
+      "seed": 0,
+      "fold": 0,
+      "n_train": 4016,
+      "n_test": 1084,
+      "best_params": "{\"alpha\": 0.01, \"seed\": 0}",
+      "n_features": 1008
+    },
+    {
+      "dataset": "esc50_animals",
+      "task": "animal",
+      "method": "raw",
+      "feature_set": "comp+log_scale",
+      "classifier": "minirocket",
+      "split_id": 0,
+      "seed": 0,
+      "fold": 0,
+      "n_train": 4016,
+      "n_test": 1084,
+      "best_params": "{\"alpha\": 0.0001, \"seed\": 0}",
+      "n_features": 1008
+    },
+    {
+      "dataset": "esc50_animals",
+      "task": "animal",
+      "method": "irmf_h2_a1.41",
+      "feature_set": "comp",
+      "classifier": "minirocket",
+      "split_id": 0,
+      "seed": 0,
+      "fold": 0,
+      "n_train": 4016,
+      "n_test": 1084,
+      "best_params": "{\"alpha\": 0.0001, \"seed\": 0}",
+      "n_features": 1008
+    },
+    {
+      "dataset": "esc50_animals",
+      "task": "animal",
+      "method": "irmf_h2_a1.41",
+      "feature_set": "comp+log_scale",
+      "classifier": "minirocket",
+      "split_id": 0,
+      "seed": 0,
+      "fold": 0,
+      "n_train": 4016,
+      "n_test": 1084,
+      "best_params": "{\"alpha\": 0.0001, \"seed\": 0}",
+      "n_features": 1008
+    }
+  ],
+  "notes": [
+    "MiniRocket/MultiRocket biases are fitted on a fixed random subset of training frames only. Inner biases, StandardScaler and logistic-head alpha selection never use validation/test samples for fitting.",
+    "The logistic head uses SGD with averaged weights, balanced training weights and fixed shuffled epochs. Alpha is selected from {0.0001, 0.001, 0.01} on grouped inner validation; all stages refit on outer train.",
+    "Stacks, transforms, scaler moments and head updates are batched. Transformed float32 features live in temporary disk memmaps. Both feature sets share transform work; their individual timing rows include that shared work.",
+    "The same total target feature budget, fit sample count and downsampling apply to every method. aeon rounds kernel counts to multiples of 84; actual output dimensions are recorded per fold."
+  ],
+  "decomposition_costs": [
+    {
+      "method": "irmf_h2_a1.41",
+      "seconds_per_frame": {
+        "wall_mean": 1.78889009299615,
+        "wall_median": 1.616724103980232,
+        "cpu_mean": 1.758576347450982,
+        "cpu_median": 1.5987149999999701,
+        "cpu_total": 8968.739372000007
+      },
+      "n_failed": 0,
+      "irmf": {
+        "channels_all_converged": 2294,
+        "unconverged_fraction_per_slot": [
+          0.0071,
+          0.0635,
+          0.0408,
+          0.0884,
+          0.152,
+          0.2149,
+          0.2996,
+          0.3814,
+          0.3945,
+          0.3667,
+          0.348,
+          0.3039,
+          0.2637,
+          0.2276,
+          0.1992,
+          0.1655,
+          0.1494
+        ],
+        "mean_iterations_per_slot": [
+          8.63,
+          14.2,
+          16.42,
+          21.35,
+          28.26,
+          36.3,
+          42.56,
+          45.0,
+          44.68,
+          43.61,
+          42.41,
+          40.63,
+          38.54,
+          36.63,
+          34.84,
+          33.07,
+          31.68
+        ],
+        "sigma_source_counts": {
+          "0": 5100
+        },
+        "H_quantiles": {
+          "0.0": 0.00292,
+          "0.05": 0.17285,
+          "0.5": 0.50563,
+          "0.95": 1.05938,
+          "1.0": 2.16985
+        }
+      }
+    }
+  ],
+  "device": "cpu",
+  "stacks": {
+    "raw": {
+      "shape": [
+        5100,
+        1,
+        2048
+      ],
+      "storage_slots_in_scale_order": [
+        0
+      ],
+      "slot_labels_in_scale_order": [
+        "frame"
+      ],
+      "channel_order": "input channel, then fine-to-coarse component",
+      "downsample": 1,
+      "resampling": "scipy.signal.resample_poly"
+    },
+    "irmf_h2_a1.41": {
+      "shape": [
+        5100,
+        18,
+        2048
+      ],
+      "storage_slots_in_scale_order": [
+        17,
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16
+      ],
+      "slot_labels_in_scale_order": [
+        "residual_fine",
+        "w5",
+        "w7",
+        "w9",
+        "w13",
+        "w17",
+        "w25",
+        "w33",
+        "w47",
+        "w65",
+        "w93",
+        "w129",
+        "w183",
+        "w257",
+        "w365",
+        "w513",
+        "w727",
+        "w1025"
+      ],
+      "channel_order": "input channel, then fine-to-coarse component",
+      "downsample": 1,
+      "resampling": "scipy.signal.resample_poly"
+    }
+  },
+  "feature_sets": [
+    "comp",
+    "comp+log_scale"
+  ],
+  "timings_share_transforms": true,
+  "head": {
+    "type": "SGDClassifier",
+    "loss": "log_loss",
+    "average": true,
+    "alpha_grid": [
+      0.0001,
+      0.001,
+      0.01
+    ],
+    "class_weights": "balanced"
+  }
+}

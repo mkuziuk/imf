@@ -1,0 +1,304 @@
+{
+  "started": "2026-10-20T20:23:33.685453+00:00",
+  "features_created": [
+    {
+      "tag": "irmf_h2_a2",
+      "seconds": 6.416821375023574
+    }
+  ],
+  "stages": [
+    {
+      "name": "sensitivity",
+      "task": "animal",
+      "methods": [
+        "irmf_h1_a1.41_conv",
+        "irmf_h4_a1.41_conv",
+        "irmf_h2_a2_conv"
+      ],
+      "seconds": 691.2342354999855,
+      "command": [
+        "/Users/mikhail/.t3/worktrees/imf/t3-44ed3594/.venv/bin/python",
+        "-u",
+        "/Users/mikhail/.t3/worktrees/imf/t3-44ed3594/experiments/classification-emd-irmf/datasets/esc50_animals/run_phase3.py",
+        "trees",
+        "--dataset",
+        "esc50_animals",
+        "--task",
+        "animal",
+        "--methods",
+        "irmf_h1_a1.41_conv",
+        "irmf_h4_a1.41_conv",
+        "irmf_h2_a2_conv",
+        "--folds",
+        "15",
+        "--workers",
+        "1",
+        "--classifiers",
+        "lightgbm",
+        "--lightgbm-rounds",
+        "150",
+        "--out",
+        "/Users/mikhail/.t3/worktrees/imf/t3-44ed3594/output/classification-emd-irmf/esc50_animals/ml/sensitivity",
+        "--run-name",
+        "esc50_phase3_sensitivity"
+      ]
+    },
+    {
+      "name": "sensitivity",
+      "task": "bird",
+      "methods": [
+        "irmf_h1_a1.41_conv",
+        "irmf_h4_a1.41_conv",
+        "irmf_h2_a2_conv"
+      ],
+      "seconds": 128.93117312493268,
+      "command": [
+        "/Users/mikhail/.t3/worktrees/imf/t3-44ed3594/.venv/bin/python",
+        "-u",
+        "/Users/mikhail/.t3/worktrees/imf/t3-44ed3594/experiments/classification-emd-irmf/datasets/esc50_animals/run_phase3.py",
+        "trees",
+        "--dataset",
+        "esc50_animals",
+        "--task",
+        "bird",
+        "--methods",
+        "irmf_h1_a1.41_conv",
+        "irmf_h4_a1.41_conv",
+        "irmf_h2_a2_conv",
+        "--folds",
+        "15",
+        "--workers",
+        "1",
+        "--classifiers",
+        "lightgbm",
+        "--lightgbm-rounds",
+        "150",
+        "--out",
+        "/Users/mikhail/.t3/worktrees/imf/t3-44ed3594/output/classification-emd-irmf/esc50_animals/ml/sensitivity",
+        "--run-name",
+        "esc50_phase3_sensitivity"
+      ]
+    },
+    {
+      "name": "matched",
+      "task": "animal",
+      "methods": [
+        "imf_linear_a2",
+        "irmf_h2_a2"
+      ],
+      "seconds": 314.30208316701464,
+      "command": [
+        "/Users/mikhail/.t3/worktrees/imf/t3-44ed3594/.venv/bin/python",
+        "-u",
+        "/Users/mikhail/.t3/worktrees/imf/t3-44ed3594/experiments/classification-emd-irmf/datasets/esc50_animals/run_phase3.py",
+        "trees",
+        "--dataset",
+        "esc50_animals",
+        "--task",
+        "animal",
+        "--methods",
+        "imf_linear_a2",
+        "irmf_h2_a2",
+        "--folds",
+        "15",
+        "--workers",
+        "1",
+        "--classifiers",
+        "lightgbm",
+        "--lightgbm-rounds",
+        "150",
+        "--out",
+        "/Users/mikhail/.t3/worktrees/imf/t3-44ed3594/output/classification-emd-irmf/esc50_animals/ml/matched",
+        "--run-name",
+        "esc50_phase3_matched"
+      ]
+    },
+    {
+      "name": "matched",
+      "task": "bird",
+      "methods": [
+        "imf_linear_a2",
+        "irmf_h2_a2"
+      ],
+      "seconds": 55.53077316691633,
+      "command": [
+        "/Users/mikhail/.t3/worktrees/imf/t3-44ed3594/.venv/bin/python",
+        "-u",
+        "/Users/mikhail/.t3/worktrees/imf/t3-44ed3594/experiments/classification-emd-irmf/datasets/esc50_animals/run_phase3.py",
+        "trees",
+        "--dataset",
+        "esc50_animals",
+        "--task",
+        "bird",
+        "--methods",
+        "imf_linear_a2",
+        "irmf_h2_a2",
+        "--folds",
+        "15",
+        "--workers",
+        "1",
+        "--classifiers",
+        "lightgbm",
+        "--lightgbm-rounds",
+        "150",
+        "--out",
+        "/Users/mikhail/.t3/worktrees/imf/t3-44ed3594/output/classification-emd-irmf/esc50_animals/ml/matched",
+        "--run-name",
+        "esc50_phase3_matched"
+      ]
+    },
+    {
+      "name": "slots9",
+      "task": "animal",
+      "methods": [
+        "imf_linear_a1.41",
+        "irmf_h2_a1.41",
+        "irmf_h2_a1.41_conv"
+      ],
+      "seconds": 457.1221619589487,
+      "command": [
+        "/Users/mikhail/.t3/worktrees/imf/t3-44ed3594/.venv/bin/python",
+        "-u",
+        "/Users/mikhail/.t3/worktrees/imf/t3-44ed3594/experiments/classification-emd-irmf/datasets/esc50_animals/run_phase3.py",
+        "trees",
+        "--dataset",
+        "esc50_animals",
+        "--task",
+        "animal",
+        "--methods",
+        "imf_linear_a1.41",
+        "irmf_h2_a1.41",
+        "irmf_h2_a1.41_conv",
+        "--folds",
+        "15",
+        "--workers",
+        "1",
+        "--classifiers",
+        "lightgbm",
+        "--lightgbm-rounds",
+        "150",
+        "--out",
+        "/Users/mikhail/.t3/worktrees/imf/t3-44ed3594/output/classification-emd-irmf/esc50_animals/ml/slots9",
+        "--run-name",
+        "esc50_phase3_slots9",
+        "--slots",
+        "9"
+      ]
+    },
+    {
+      "name": "slots9",
+      "task": "bird",
+      "methods": [
+        "imf_linear_a1.41",
+        "irmf_h2_a1.41",
+        "irmf_h2_a1.41_conv"
+      ],
+      "seconds": 75.77507358405273,
+      "command": [
+        "/Users/mikhail/.t3/worktrees/imf/t3-44ed3594/.venv/bin/python",
+        "-u",
+        "/Users/mikhail/.t3/worktrees/imf/t3-44ed3594/experiments/classification-emd-irmf/datasets/esc50_animals/run_phase3.py",
+        "trees",
+        "--dataset",
+        "esc50_animals",
+        "--task",
+        "bird",
+        "--methods",
+        "imf_linear_a1.41",
+        "irmf_h2_a1.41",
+        "irmf_h2_a1.41_conv",
+        "--folds",
+        "15",
+        "--workers",
+        "1",
+        "--classifiers",
+        "lightgbm",
+        "--lightgbm-rounds",
+        "150",
+        "--out",
+        "/Users/mikhail/.t3/worktrees/imf/t3-44ed3594/output/classification-emd-irmf/esc50_animals/ml/slots9",
+        "--run-name",
+        "esc50_phase3_slots9",
+        "--slots",
+        "9"
+      ]
+    },
+    {
+      "name": "concat",
+      "task": "animal",
+      "methods": [
+        "irmf_h2_a1.41",
+        "irmf_h2_a1.41_conv"
+      ],
+      "seconds": 832.299154749955,
+      "command": [
+        "/Users/mikhail/.t3/worktrees/imf/t3-44ed3594/.venv/bin/python",
+        "-u",
+        "/Users/mikhail/.t3/worktrees/imf/t3-44ed3594/experiments/classification-emd-irmf/datasets/esc50_animals/run_concat.py",
+        "--dataset",
+        "esc50_animals",
+        "--task",
+        "animal",
+        "--methods",
+        "irmf_h2_a1.41",
+        "irmf_h2_a1.41_conv",
+        "--folds",
+        "15",
+        "--workers",
+        "1",
+        "--classifiers",
+        "lightgbm",
+        "--lightgbm-rounds",
+        "150",
+        "--out",
+        "/Users/mikhail/.t3/worktrees/imf/t3-44ed3594/output/classification-emd-irmf/esc50_animals/ml/concat",
+        "--run-name",
+        "esc50_phase3_concat"
+      ]
+    },
+    {
+      "name": "concat",
+      "task": "bird",
+      "methods": [
+        "irmf_h2_a1.41",
+        "irmf_h2_a1.41_conv"
+      ],
+      "seconds": 149.14875612501055,
+      "command": [
+        "/Users/mikhail/.t3/worktrees/imf/t3-44ed3594/.venv/bin/python",
+        "-u",
+        "/Users/mikhail/.t3/worktrees/imf/t3-44ed3594/experiments/classification-emd-irmf/datasets/esc50_animals/run_concat.py",
+        "--dataset",
+        "esc50_animals",
+        "--task",
+        "bird",
+        "--methods",
+        "irmf_h2_a1.41",
+        "irmf_h2_a1.41_conv",
+        "--folds",
+        "15",
+        "--workers",
+        "1",
+        "--classifiers",
+        "lightgbm",
+        "--lightgbm-rounds",
+        "150",
+        "--out",
+        "/Users/mikhail/.t3/worktrees/imf/t3-44ed3594/output/classification-emd-irmf/esc50_animals/ml/concat",
+        "--run-name",
+        "esc50_phase3_concat"
+      ]
+    }
+  ],
+  "h_checkpoint": {
+    "irmf_h1_a1.41_conv": true,
+    "irmf_h4_a1.41_conv": true,
+    "irmf_h2_a2_conv": true
+  },
+  "final_readiness": {
+    "irmf_h1_a1.41_conv": true,
+    "irmf_h4_a1.41_conv": true,
+    "irmf_h2_a2_conv": true
+  },
+  "finished": "2026-10-20T21:08:44.421324+00:00"
+}

@@ -1,0 +1,188 @@
+{
+  "checks": [
+    {
+      "runner": "trees",
+      "task": "animal",
+      "fits": 450,
+      "prediction_rows": 459000,
+      "probability_tied_argmax_labels": 0,
+      "split_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14
+      ]
+    },
+    {
+      "runner": "rocket",
+      "task": "animal",
+      "fits": 150,
+      "prediction_rows": 153000,
+      "probability_tied_argmax_labels": 11544,
+      "split_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14
+      ]
+    },
+    {
+      "runner": "cnn",
+      "task": "animal",
+      "fits": 50,
+      "prediction_rows": 51000,
+      "probability_tied_argmax_labels": 0,
+      "split_ids": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ]
+    },
+    {
+      "runner": "multirocket",
+      "task": "animal",
+      "fits": 50,
+      "prediction_rows": 51000,
+      "probability_tied_argmax_labels": 2054,
+      "split_ids": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ]
+    },
+    {
+      "runner": "spectrogram",
+      "task": "animal",
+      "fits": 10,
+      "prediction_rows": 10200,
+      "probability_tied_argmax_labels": 0,
+      "split_ids": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ]
+    },
+    {
+      "runner": "trees",
+      "task": "bird",
+      "fits": 450,
+      "prediction_rows": 459000,
+      "probability_tied_argmax_labels": 0,
+      "split_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14
+      ]
+    },
+    {
+      "runner": "rocket",
+      "task": "bird",
+      "fits": 150,
+      "prediction_rows": 153000,
+      "probability_tied_argmax_labels": 0,
+      "split_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14
+      ]
+    },
+    {
+      "runner": "cnn",
+      "task": "bird",
+      "fits": 50,
+      "prediction_rows": 51000,
+      "probability_tied_argmax_labels": 0,
+      "split_ids": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ]
+    },
+    {
+      "runner": "multirocket",
+      "task": "bird",
+      "fits": 50,
+      "prediction_rows": 51000,
+      "probability_tied_argmax_labels": 0,
+      "split_ids": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ]
+    },
+    {
+      "runner": "spectrogram",
+      "task": "bird",
+      "fits": 10,
+      "prediction_rows": 10200,
+      "probability_tied_argmax_labels": 0,
+      "split_ids": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ]
+    }
+  ],
+  "holm": "primary: all 10 pairs x 2 feature sets x 5 classifiers = 100 tests per task/metric; MultiRocket separately 20",
+  "clip": "mean native probabilities within a held-out clip; pool 400 clips per seed",
+  "shared_log_scales_identical": true,
+  "all_checks_passed": true
+}
