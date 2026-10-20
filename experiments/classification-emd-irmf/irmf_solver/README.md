@@ -1,8 +1,8 @@
 # IRMF convergence audit and solver prototype
 
-`newton.py` supplies `NewtonSmoothAbs`, an independent contrast using pimf's
-public `solve(windows, weights)` hook. It does not patch pimf or the shared study
-package. The prototype starts at the weighted mean and solves each window's
+`newton.py` re-exports `NewtonSmoothAbs` and `newton_components` from
+`emdirmf/irmf_newton.py`. The shared implementation uses pimf's public
+`solve(windows, weights)` hook without patching pimf. It starts at the weighted mean and solves each window's
 monotone score equation with safeguarded Newton steps and periodic bisection.
 Each row stops independently. A single-threaded Numba loop fuses score and
 derivative evaluation without allocating an L-by-window temporary per iteration.
@@ -14,6 +14,9 @@ and component order come from the unchanged study code and pimf driver. The
 prototype solves the score equation used by pimf; pimf's interpolated loss has a
 different exact derivative. The private lookup-table imports pin this prototype
 to pimf 0.4.0. A library implementation should expose a public score derivative.
+
+The original audit below predates integration. `INTEGRATION.md` records the
+converged shared tags, complete caches, diagnostics and GD60 differences.
 
 All commands below run from `/Users/mikhail/.t3/worktrees/imf/t3-44ed3594`.
 Use the absolute interpreter and script paths when invoking elsewhere.

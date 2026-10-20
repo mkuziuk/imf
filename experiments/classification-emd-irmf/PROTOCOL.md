@@ -86,7 +86,12 @@ decomposition advantage.
 - IRMF convergence: the primary run keeps the pimf defaults (`max_iter=60`),
   as colleagues would use them. Unconverged stages still reconstruct exactly. A
   `_it{N}` tag (e.g. `irmf_h2_a1.41_it300`) is the convergence sensitivity
-  check, reported next to the primary run.
+  check, reported next to the primary run. The `_conv` tags (e.g.
+  `irmf_h2_a1.41_conv`) solve every stage to convergence with the safeguarded
+  Newton solver in `emdirmf/irmf_newton.py`. Everything else is unchanged:
+  normalization, H rule, kernel, boundary, schedule and slot order. Settings:
+  root tolerance 1e-12, 100-iteration cap. They are reported next to GD60 with
+  and without `log_scale`, and the H and schedule ablations use them too.
 - Multichannel frames are decomposed channel by channel.
 
 ## Features (classical baseline)

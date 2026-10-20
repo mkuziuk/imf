@@ -200,11 +200,20 @@ def run_decompose(
 
     if todo and workers == 1:
         limit_threads()
+        if spec.converged:
+            from .irmf_newton import warm_up
+
+            warm_up()
         for index, start, stop in todo:
             store(index, start, stop, *decompose_chunk(frames_path, tag, start, stop))
     elif todo:
         single_thread_env()
-        with ProcessPoolExecutor(max_workers=workers, initializer=limit_threads) as pool:
+        initializer = limit_threads
+        if spec.converged:
+            from .irmf_newton import initialize_worker
+
+            initializer = initialize_worker
+        with ProcessPoolExecutor(max_workers=workers, initializer=initializer) as pool:
             futures = {
                 pool.submit(decompose_chunk, frames_path, tag, start, stop): (index, start, stop)
                 for index, start, stop in todo
@@ -288,6 +297,14 @@ def finalize(dataset, tag, manifest, verbose=True):
             "sigma_source_counts": _counts(ok["sigma_source"]),
             "H_quantiles": ok["H"].quantile([0, 0.05, 0.5, 0.95, 1]).round(5).to_dict(),
         }
+        if spec.converged and len(ok):
+            fallbacks = np.stack(ok["stage_bisection_fallbacks"].to_numpy())
+            scores = np.stack(ok["stage_max_score_residual"].to_numpy())
+            summary["irmf"].update(
+                max_iterations_per_slot=iterations.max(axis=0).tolist(),
+                bisection_fallbacks_per_slot=fallbacks.sum(axis=0).tolist(),
+                max_score_residual_per_slot=scores.max(axis=0).tolist(),
+            )
     with open(paths["json"], "w") as handle:
         json.dump(summary, handle, indent=2, default=_json_default)
     if verbose:

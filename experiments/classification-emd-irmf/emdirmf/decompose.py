@@ -64,6 +64,7 @@ class MethodSpec:
     a: float | None = None
     h_ratio: float | None = None
     max_iter: int | None = None
+    converged: bool = False
 
     @property
     def is_decomposition(self):
@@ -92,6 +93,11 @@ class MethodSpec:
                     max_iter=self.max_iter,
                     tol=IRMF_TOL,
                 )
+                if self.converged:
+                    from .irmf_newton import solver_params
+
+                    del params["max_iter"], params["tol"]
+                    params.update(solver_params())
             return params
         return {}
 
@@ -108,11 +114,12 @@ def _parse_a(token):
 
 
 def parse_method(tag):
-    """Parse a method tag: raw, emd, imf_linear_a{A}, irmf_h{R}_a{A}[_it{N}].
+    """Parse raw, emd, imf_linear_a{A}, irmf_h{R}_a{A}[_it{N}|_conv].
 
     A = 1.41 stands for sqrt(2). imf_linear and irmf alias the main settings.
     The optional _it{N} sets the IRMF max_iter (default 60, the pimf default and
     the PROTOCOL setting, which is then omitted from the canonical tag).
+    _conv uses converged safeguarded Newton roots and cannot be combined with _it.
     """
     tag = ALIASES.get(tag, tag)
     if tag in ("raw", "emd"):
@@ -121,15 +128,16 @@ def parse_method(tag):
     if match:
         a = _parse_a(match.group(1))
         return MethodSpec(f"imf_linear_a{_a_token(a)}", "imf_linear", a=a)
-    match = re.fullmatch(r"irmf_h([0-9.]+)_a([0-9.]+)(?:_it([0-9]+))?", tag)
+    match = re.fullmatch(r"irmf_h([0-9.]+)_a([0-9.]+)(?:_it([0-9]+)|_(conv))?", tag)
     if match:
         h_ratio, a = float(match.group(1)), _parse_a(match.group(2))
         max_iter = IRMF_MAX_ITER if match.group(3) is None else int(match.group(3))
         if not h_ratio > 0 or max_iter < 1:
             raise ValueError("h_ratio and max_iter must be positive")
-        suffix = "" if max_iter == IRMF_MAX_ITER else f"_it{max_iter}"
+        converged = match.group(4) is not None
+        suffix = "_conv" if converged else ("" if max_iter == IRMF_MAX_ITER else f"_it{max_iter}")
         return MethodSpec(f"irmf_h{h_ratio:g}_a{_a_token(a)}{suffix}", "irmf", a=a, h_ratio=h_ratio,
-                          max_iter=max_iter)
+                          max_iter=None if converged else max_iter, converged=converged)
     raise ValueError(f"unknown method tag {tag!r}")
 
 
@@ -295,11 +303,19 @@ def imf_linear_components(y, a=SQRT2):
     return _imf_stack(result), {"n_components": len(result.stages)}
 
 
-def irmf_components(y, h_ratio=2.0, a=SQRT2, max_iter=IRMF_MAX_ITER):
+def irmf_components(y, h_ratio=2.0, a=SQRT2, max_iter=IRMF_MAX_ITER, *, converged=False):
     """Robust IMF with SmoothAbs(H), H = h_ratio * sigma_hat, on the shared schedule.
 
     Stage diagnostics in info are listed in canonical slot order (fine to coarse).
     """
+    if converged:
+        from .irmf_newton import newton_components
+
+        components, info = newton_components(y, h_ratio=h_ratio, a=a)
+        # The prototype's nested diagnostics remain available through its API;
+        # shared metadata uses the parallel per-stage arrays below.
+        del info["stages"]
+        return components, info
     y = np.asarray(y, dtype=np.float64)
     sigma_hat, sigma_source = noise_sigma_hat(y)
     H = h_ratio * sigma_hat
@@ -326,7 +342,8 @@ def decompose_signal(y, method):
     if spec.family == "imf_linear":
         return imf_linear_components(y, a=spec.a)
     if spec.family == "irmf":
-        return irmf_components(y, h_ratio=spec.h_ratio, a=spec.a, max_iter=spec.max_iter)
+        return irmf_components(y, h_ratio=spec.h_ratio, a=spec.a, max_iter=spec.max_iter,
+                               converged=spec.converged)
     if spec.family == "raw":
         y = np.asarray(y, dtype=np.float64)
         return y[None, :].copy(), {"n_components": 1}

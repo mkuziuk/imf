@@ -34,10 +34,28 @@ Every worker process runs with one BLAS/OpenMP thread.
 | `irmf_h2_a1.41` (alias `irmf`) | `pimf.IMF(pimf.SmoothAbs(H))`, H = 2 sigma_hat, a = sqrt 2 |
 | `irmf_h1_a1.41`, `irmf_h4_a1.41` | h_ratio ablations |
 | `irmf_h2_a2`, `imf_linear_a2` | a = 2 ablations (about half the slots) |
+| `irmf_h2_a1.41_conv` | same IRMF settings, converged safeguarded Newton roots |
+| `irmf_h1_a1.41_conv`, `irmf_h4_a1.41_conv`, `irmf_h2_a2_conv` | converged ablations |
 
-`parse_method(tag)` accepts any `irmf_h{R}_a{A}[_it{N}]` and `imf_linear_a{A}`.
+`parse_method(tag)` accepts any `irmf_h{R}_a{A}[_it{N}|_conv]` and `imf_linear_a{A}`.
 `A = 1.41` means sqrt 2 exactly. `_it{N}` overrides the IRMF `max_iter` (default 60,
 omitted from the canonical tag) for sensitivity runs.
+
+`_conv` and `_it{N}` are mutually exclusive. `_conv` uses
+`emdirmf.irmf_newton.NewtonSmoothAbs` version 1.0.0 through pimf's public solve
+hook. It solves the actual pimf 0.4.0 lookup score with relative root tolerance
+1e-12 and at most 100 iterations per window. Newton steps outside the bracket
+use bisection, as does every eighth update. The normalization, H rule, kernel,
+wrap padding, schedule, and component order match the corresponding GD tag.
+Existing GD tags and their parameter dictionaries retain their original behavior.
+
+Convergence metadata records each stage's maximum and mean row iterations,
+total and maximum row bisection fallbacks, maximum absolute weighted score at the
+returned roots, and convergence flag. All stage arrays follow storage order.
+A capped stage raises; the shared batch runner records the failed channel as
+NaN with `ok=False` and error text. Parameters and `TAG.json` record the solver,
+version, tolerances, cap and lookup version. The Numba kernel is single-threaded,
+cached on disk, and warmed once per worker process before decomposing frames.
 
 ## Decomposition rules (`decompose.py`)
 
