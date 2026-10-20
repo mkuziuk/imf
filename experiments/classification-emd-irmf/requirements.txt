@@ -1,0 +1,13 @@
+# Shared emdirmf package, phase-2 baselines and tests (versions as installed in .venv).
+numpy==2.3.5
+scipy==1.17.1
+pandas==3.0.6
+pyarrow==26.0.0
+scikit-learn==1.9.1
+joblib==1.6.0
+threadpoolctl==3.7.0
+pimf==0.4.0
+EMD-signal==1.10.0
+tabulate==0.10.0
+statsmodels==0.15.0
+pytest==9.1.1
