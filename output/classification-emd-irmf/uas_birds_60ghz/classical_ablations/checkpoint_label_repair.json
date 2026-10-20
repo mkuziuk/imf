@@ -1,0 +1,30 @@
+[
+  {
+    "dataset": "uas_birds_60ghz",
+    "task": "bird_drone",
+    "checkpoints": 450,
+    "repaired_object_label_arrays": 450,
+    "all_stored_metrics_reproduced": true
+  },
+  {
+    "dataset": "uas_birds_60ghz",
+    "task": "target3",
+    "checkpoints": 450,
+    "repaired_object_label_arrays": 450,
+    "all_stored_metrics_reproduced": true
+  },
+  {
+    "dataset": "esc50_animals",
+    "task": "animal",
+    "checkpoints": 450,
+    "repaired_object_label_arrays": 450,
+    "all_stored_metrics_reproduced": true
+  },
+  {
+    "dataset": "birdclef2023",
+    "task": "species",
+    "checkpoints": 450,
+    "repaired_object_label_arrays": 450,
+    "all_stored_metrics_reproduced": true
+  }
+]
