@@ -1,0 +1,15 @@
+{
+  "completed_utc": "2026-10-20T22:20:04.622491+00:00",
+  "elapsed_minutes_since_pilot": 56.1895416,
+  "evaluation_fits": 3240,
+  "prediction_rows": 508032,
+  "cpu_model_workers": 1,
+  "all_15_folds_all_9_inputs": true,
+  "validation": "validation.json",
+  "report_words": 398,
+  "visual_console_errors": 0,
+  "visual_previews": [
+    "bird_drone/comp/balanced_accuracy/dark",
+    "target3/comp+log_scale/macro_f1/CNN/light"
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "dataset": "uas_birds_60ghz",
+  "started_utc": "2026-10-20T21:23:53.249995+00:00",
+  "tasks": [
+    "bird_drone",
+    "target3"
+  ],
+  "outer_split_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14
+  ],
+  "cpu_threads_per_runner": 1,
+  "max_simultaneous_model_runners": 3,
+  "cnn_device": "mps",
+  "main_methods": [
+    "raw",
+    "emd",
+    "imf_linear_a1.41",
+    "irmf_h2_a1.41",
+    "irmf_h2_a1.41_conv"
+  ],
+  "sensitivity_methods": [
+    "irmf_h2_a2_conv",
+    "imf_linear_a2",
+    "irmf_h1_a1.41_conv",
+    "irmf_h4_a1.41_conv"
+  ],
+  "primary_holm_family_size": 120,
+  "sensitivity_holm_family_size": 84,
+  "primary_test": "corrected resampled t, mean observed pose-group test/train ratio",
+  "secondary_test": "Wilcoxon signed rank",
+  "fixed_budgets": "run_phase3_queue.sh and RUN_NOTES.md",
+  "pilot_scores_used_for_selection": false
+}
