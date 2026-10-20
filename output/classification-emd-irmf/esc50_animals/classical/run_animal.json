@@ -1,0 +1,57 @@
+{
+  "dataset": "esc50_animals",
+  "task": "animal",
+  "methods": [
+    "raw",
+    "emd",
+    "imf_linear_a1.41",
+    "irmf_h2_a1.41"
+  ],
+  "n_frames": 5100,
+  "n_groups": 157,
+  "n_classes": 10,
+  "n_splits": 15,
+  "n_seeds": 3,
+  "workers": 3,
+  "seconds": 2116.0975673749344,
+  "breakdown": null,
+  "classifiers": [
+    "lda",
+    "qda",
+    "gnb",
+    "logreg",
+    "knn",
+    "linsvm"
+  ],
+  "feature_sets": [
+    "comp",
+    "comp+log_scale"
+  ],
+  "pairs": [
+    [
+      "irmf_h2_a1.41",
+      "emd"
+    ],
+    [
+      "irmf_h2_a1.41",
+      "imf_linear_a1.41"
+    ],
+    [
+      "imf_linear_a1.41",
+      "emd"
+    ],
+    [
+      "irmf_h2_a1.41",
+      "raw"
+    ],
+    [
+      "imf_linear_a1.41",
+      "raw"
+    ],
+    [
+      "emd",
+      "raw"
+    ]
+  ],
+  "quick": false
+}
