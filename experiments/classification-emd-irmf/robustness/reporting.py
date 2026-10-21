@@ -197,7 +197,8 @@ def render_report(out,scores,tests,stability,costs,diagnostics,fit_costs,reading
                 f'The interruption added {record["classification_segment_wall_seconds"]:.2f} '
                 f'wall s and {record["uncheckpointed_worker_cpu_seconds"]:.2f} uncheckpointed '
                 f'worker CPU s; both are included in the cost section. '
-                f'[Restart audit]({path}).')
+                f'The file-backed [batch log]({record["detached"]["log"]}) is under the '
+                f'dataset robustness directory. [Restart audit]({path}).')
     lines=['# Impulsive contamination and classification robustness','',
        '## Question and design','',
        'The experiment asks whether injected impulses improve the relative classification '

@@ -28,6 +28,12 @@ $PY -m robustness.run --dataset esc50_animals --workers 6
 $PY -m robustness.analyse
 ```
 
+For a batch independent of the invoking terminal, run `$PY -m robustness.run_real
+--detach`; it prints its PID and log path. After that batch completes,
+`$PY -m robustness.run_to_report` runs the required tests, validates a full
+report copy, then writes the final report. Both commands use file-backed logs
+under `dronerf/robustness/runs/` when launched as background processes.
+
 Completed outputs are reused without replacement. A failed/incompatible checkpoint
 requires inspection; no overwrite flag is provided. Full component stacks exist
 only for the 100 fixed pilot/figure frames per condition. Numeric NPZ files use
@@ -45,3 +51,23 @@ The 2026-10-21 amendment adds all 87 synthetic contrasts in one separate Holm
 family. Real-data family membership remains as pre-registered. Every summary
 figure includes all four datasets. `analyse --out <new-directory>` can render
 another report copy without replacing an existing artifact directory.
+
+## Run notes, 2026-10-21
+
+The first real-data batch used a pipe held by the agent session. A provider
+interruption made that pipe a risk for the long run. A detached watcher waited
+until all six in-flight linear-IMF fits had published checkpoints, then stopped
+the old process group (PIDs 21371 and 21374) and launched the remaining batch
+as PID 19215. The batch resumed with 66 completed classifier fits. Its log
+shows clean verification passing and all nine already-complete DroneRF feature
+conditions being skipped. The completed fit checkpoint hashes were unchanged.
+
+The [restart audit](/Users/mikhail/Datasets/imf-classification/dronerf/robustness/runs/restarts/20261021T072742_706258Z.json)
+records 3,226.42 s of interrupted classification wall time and 3,204.93 s of
+worker CPU outside completed-fit timers, including partial new fits at the
+handoff. The detached [batch log](/Users/mikhail/Datasets/imf-classification/dronerf/robustness/runs/detached/20261021T072744_137930Z.log)
+is under the dataset's robustness directory to respect the new-data location
+constraint. A separate detached completion process (PID 12822) waits for the
+three real datasets, then runs the required tests and publishes the report;
+its [log](/Users/mikhail/Datasets/imf-classification/dronerf/robustness/runs/report_supervisor.log)
+is in the same directory.
