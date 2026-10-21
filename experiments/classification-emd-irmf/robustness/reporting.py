@@ -182,6 +182,22 @@ def linked_primary_table(tests):
 
 def render_report(out,scores,tests,stability,costs,diagnostics,fit_costs,reading,wall):
     primary=tests[tests.family=='Primary']
+    verifications=[json.loads((root(d)/VERIFICATION).read_text()) for d in DATASETS]
+    exact_checks=sum(r['exact'] for v in verifications for r in v['rows'])
+    total_checks=sum(len(v['rows']) for v in verifications)
+    restart_notes=[]
+    for dataset in DATASETS:
+        for path in sorted((root(dataset)/'runs/restarts').glob('*.json')):
+            record=json.loads(path.read_text())
+            restart_notes.append(
+                f'- A provider interruption left the {LABELS[dataset]} batch attached to an old '
+                f'pipe. After {record["completed_fit_checkpoints"]} fit checkpoints, a detached '
+                'watcher stopped its process group and restarted the batch with file-backed '
+                f'output. The completed checkpoints retained their SHA-256 hashes. '
+                f'The interruption added {record["classification_segment_wall_seconds"]:.2f} '
+                f'wall s and {record["uncheckpointed_worker_cpu_seconds"]:.2f} uncheckpointed '
+                f'worker CPU s; both are included in the cost section. '
+                f'[Restart audit]({path}).')
     lines=['# Impulsive contamination and classification robustness','',
        '## Question and design','',
        'The experiment asks whether injected impulses improve the relative classification '
@@ -200,7 +216,9 @@ def render_report(out,scores,tests,stability,costs,diagnostics,fit_costs,reading
        'frames per dataset are excluded from both training and testing in every condition. '
        'Analysis populations before solver exclusions are synthetic 1,400, DroneRF 11,900, '
        'BirdCLEF 11,900 and ESC-50 5,000. Synthetic was run end to end first. Clean cache '
-       'verification reproduced all four methods exactly on 50 frames per dataset. [Verification audit](validation.json).','',
+       f'verification passed for all four methods on 50 frames per dataset '
+       f'({exact_checks}/{total_checks} exactly equal, all others within float32 rounding). '
+       '[Verification audit](validation.json).','',
        'Classical models reuse the exact shared runner pipelines: linear SVM on DroneRF/ESC-50, '
        'logistic regression on BirdCLEF/synthetic, with grouped inner selection over the shared '
        'C grids. LightGBM reuses the shared 500-round cap, early stopping and grouped training-only '
@@ -360,10 +378,12 @@ def render_report(out,scores,tests,stability,costs,diagnostics,fit_costs,reading
        'The failed audit and its manifest remain preserved externally. Active provenance '
        'uses manifest_v2.json and clean_verification_v2.json. Numeric feature chunks '
        'contain all four methods in one file per frame block, rather than separate files '
-       'per method. All active clean checks are exact, so cached clean features were '
-       'reused without recomputation.',
+       f'per method. {exact_checks}/{total_checks} active clean checks were exact; all '
+       'passed the pre-specified float32-rounding criterion, so cached clean features '
+       'were reused without recomputation.',
        '- An initial multiprocessing launch from stdin failed before computation. '
        'All successful runs use importable modules. No checkpoint or result was replaced.',
+       *restart_notes,
        '- The shared current classical grids are used as requested. In particular, '
        'DroneRF uses the full shared SVM C grid, whereas the historical 10class report '
        'used fixed C=.1. The new clean scores are therefore the baselines for every '
