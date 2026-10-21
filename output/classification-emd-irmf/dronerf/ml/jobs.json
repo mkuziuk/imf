@@ -1,0 +1,481 @@
+{
+  "budget_fixed_utc": "2026-10-20T21:45:00Z",
+  "jobs": [
+    {
+      "name": "trees_lgbm",
+      "runner": "trees",
+      "task": "10class",
+      "directory": "trees_lgbm",
+      "methods": [
+        "raw",
+        "emd",
+        "imf_linear_a1.41",
+        "irmf_h2_a1.41",
+        "irmf_h2_a1.41_conv",
+        "irmf_h2_a2_conv",
+        "imf_linear_a2"
+      ],
+      "folds": 15,
+      "classifiers": [
+        "lightgbm"
+      ],
+      "caps": {
+        "lightgbm": 60
+      }
+    },
+    {
+      "name": "trees_et",
+      "runner": "trees",
+      "task": "10class",
+      "directory": "trees_et",
+      "methods": [
+        "raw",
+        "emd",
+        "imf_linear_a1.41",
+        "irmf_h2_a1.41",
+        "irmf_h2_a1.41_conv",
+        "irmf_h2_a2_conv",
+        "imf_linear_a2"
+      ],
+      "folds": 15,
+      "classifiers": [
+        "extratrees"
+      ],
+      "caps": {
+        "extratrees": 64
+      }
+    },
+    {
+      "name": "trees_xgb",
+      "runner": "trees",
+      "task": "10class",
+      "directory": "trees_xgb",
+      "methods": [
+        "raw",
+        "emd",
+        "imf_linear_a1.41",
+        "irmf_h2_a1.41",
+        "irmf_h2_a1.41_conv",
+        "irmf_h2_a2_conv",
+        "imf_linear_a2"
+      ],
+      "folds": 15,
+      "classifiers": [
+        "xgboost"
+      ],
+      "caps": {
+        "xgboost": 60
+      }
+    },
+    {
+      "name": "rocket",
+      "runner": "rocket",
+      "task": "10class",
+      "directory": "rocket",
+      "methods": [
+        "raw",
+        "emd",
+        "imf_linear_a1.41",
+        "irmf_h2_a1.41",
+        "irmf_h2_a1.41_conv",
+        "irmf_h2_a2_conv",
+        "imf_linear_a2"
+      ],
+      "folds": 5,
+      "classifiers": [
+        "minirocket"
+      ],
+      "features": 1008
+    },
+    {
+      "name": "cnn",
+      "runner": "cnn",
+      "task": "10class",
+      "directory": "cnn",
+      "methods": [
+        "raw",
+        "emd",
+        "imf_linear_a1.41",
+        "irmf_h2_a1.41",
+        "irmf_h2_a1.41_conv",
+        "irmf_h2_a2_conv",
+        "imf_linear_a2"
+      ],
+      "folds": 5,
+      "classifiers": [
+        "compact_resnet"
+      ],
+      "epochs": 8
+    },
+    {
+      "name": "trees_lgbm",
+      "runner": "trees",
+      "task": "4class",
+      "directory": "trees_lgbm",
+      "methods": [
+        "raw",
+        "emd",
+        "imf_linear_a1.41",
+        "irmf_h2_a1.41",
+        "irmf_h2_a1.41_conv",
+        "irmf_h2_a2_conv",
+        "imf_linear_a2"
+      ],
+      "folds": 15,
+      "classifiers": [
+        "lightgbm"
+      ],
+      "caps": {
+        "lightgbm": 60
+      }
+    },
+    {
+      "name": "trees_et",
+      "runner": "trees",
+      "task": "4class",
+      "directory": "trees_et",
+      "methods": [
+        "raw",
+        "emd",
+        "imf_linear_a1.41",
+        "irmf_h2_a1.41",
+        "irmf_h2_a1.41_conv",
+        "irmf_h2_a2_conv",
+        "imf_linear_a2"
+      ],
+      "folds": 15,
+      "classifiers": [
+        "extratrees"
+      ],
+      "caps": {
+        "extratrees": 64
+      }
+    },
+    {
+      "name": "trees_xgb",
+      "runner": "trees",
+      "task": "4class",
+      "directory": "trees_xgb",
+      "methods": [
+        "raw",
+        "emd",
+        "imf_linear_a1.41",
+        "irmf_h2_a1.41",
+        "irmf_h2_a1.41_conv",
+        "irmf_h2_a2_conv",
+        "imf_linear_a2"
+      ],
+      "folds": 15,
+      "classifiers": [
+        "xgboost"
+      ],
+      "caps": {
+        "xgboost": 60
+      }
+    },
+    {
+      "name": "rocket",
+      "runner": "rocket",
+      "task": "4class",
+      "directory": "rocket",
+      "methods": [
+        "raw",
+        "emd",
+        "imf_linear_a1.41",
+        "irmf_h2_a1.41",
+        "irmf_h2_a1.41_conv",
+        "irmf_h2_a2_conv",
+        "imf_linear_a2"
+      ],
+      "folds": 5,
+      "classifiers": [
+        "minirocket"
+      ],
+      "features": 1008
+    },
+    {
+      "name": "cnn",
+      "runner": "cnn",
+      "task": "4class",
+      "directory": "cnn",
+      "methods": [
+        "raw",
+        "emd",
+        "imf_linear_a1.41",
+        "irmf_h2_a1.41",
+        "irmf_h2_a1.41_conv",
+        "irmf_h2_a2_conv",
+        "imf_linear_a2"
+      ],
+      "folds": 5,
+      "classifiers": [
+        "compact_resnet"
+      ],
+      "epochs": 8,
+      "cache_stacks": true
+    },
+    {
+      "name": "trees_lgbm",
+      "runner": "trees",
+      "task": "2class",
+      "directory": "trees_lgbm",
+      "methods": [
+        "raw",
+        "emd",
+        "imf_linear_a1.41",
+        "irmf_h2_a1.41",
+        "irmf_h2_a1.41_conv",
+        "irmf_h2_a2_conv",
+        "imf_linear_a2"
+      ],
+      "folds": 15,
+      "classifiers": [
+        "lightgbm"
+      ],
+      "caps": {
+        "lightgbm": 60
+      }
+    },
+    {
+      "name": "trees_et",
+      "runner": "trees",
+      "task": "2class",
+      "directory": "trees_et",
+      "methods": [
+        "raw",
+        "emd",
+        "imf_linear_a1.41",
+        "irmf_h2_a1.41",
+        "irmf_h2_a1.41_conv",
+        "irmf_h2_a2_conv",
+        "imf_linear_a2"
+      ],
+      "folds": 15,
+      "classifiers": [
+        "extratrees"
+      ],
+      "caps": {
+        "extratrees": 64
+      }
+    },
+    {
+      "name": "trees_xgb",
+      "runner": "trees",
+      "task": "2class",
+      "directory": "trees_xgb",
+      "methods": [
+        "raw",
+        "emd",
+        "imf_linear_a1.41",
+        "irmf_h2_a1.41",
+        "irmf_h2_a1.41_conv",
+        "irmf_h2_a2_conv",
+        "imf_linear_a2"
+      ],
+      "folds": 15,
+      "classifiers": [
+        "xgboost"
+      ],
+      "caps": {
+        "xgboost": 60
+      }
+    },
+    {
+      "name": "rocket",
+      "runner": "rocket",
+      "task": "2class",
+      "directory": "rocket",
+      "methods": [
+        "raw",
+        "emd",
+        "imf_linear_a1.41",
+        "irmf_h2_a1.41",
+        "irmf_h2_a1.41_conv",
+        "irmf_h2_a2_conv",
+        "imf_linear_a2"
+      ],
+      "folds": 5,
+      "classifiers": [
+        "minirocket"
+      ],
+      "features": 1008
+    },
+    {
+      "name": "cnn",
+      "runner": "cnn",
+      "task": "2class",
+      "directory": "cnn",
+      "methods": [
+        "raw",
+        "emd",
+        "imf_linear_a1.41",
+        "irmf_h2_a1.41",
+        "irmf_h2_a1.41_conv",
+        "irmf_h2_a2_conv",
+        "imf_linear_a2"
+      ],
+      "folds": 5,
+      "classifiers": [
+        "compact_resnet"
+      ],
+      "epochs": 8,
+      "cache_stacks": true
+    },
+    {
+      "name": "trees_lonly",
+      "runner": "trees",
+      "task": "10class",
+      "directory": "trees_lonly",
+      "methods": [
+        "raw",
+        "emd",
+        "imf_linear_a1.41",
+        "irmf_h2_a1.41",
+        "irmf_h2_a1.41_conv"
+      ],
+      "folds": 15,
+      "classifiers": [
+        "lightgbm"
+      ],
+      "caps": {
+        "lightgbm": 60
+      }
+    },
+    {
+      "name": "trees_h1",
+      "runner": "trees",
+      "task": "10class",
+      "directory": "trees_h1",
+      "methods": [
+        "irmf_h1_a1.41_conv"
+      ],
+      "folds": 15,
+      "classifiers": [
+        "lightgbm"
+      ],
+      "caps": {
+        "lightgbm": 60
+      }
+    },
+    {
+      "name": "trees_h4",
+      "runner": "trees",
+      "task": "10class",
+      "directory": "trees_h4",
+      "methods": [
+        "irmf_h4_a1.41_conv"
+      ],
+      "folds": 15,
+      "classifiers": [
+        "lightgbm"
+      ],
+      "caps": {
+        "lightgbm": 60
+      }
+    },
+    {
+      "name": "spectrogram",
+      "runner": "cnn",
+      "task": "10class",
+      "directory": "spectrogram",
+      "methods": [
+        "raw"
+      ],
+      "folds": 5,
+      "classifiers": [
+        "log_stft_cnn2d"
+      ],
+      "epochs": 8
+    },
+    {
+      "name": "cnn_extra",
+      "runner": "cnn",
+      "task": "10class",
+      "directory": "cnn_extra",
+      "methods": [
+        "raw",
+        "emd",
+        "imf_linear_a1.41",
+        "irmf_h2_a1.41",
+        "irmf_h2_a1.41_conv",
+        "irmf_h2_a2_conv",
+        "imf_linear_a2"
+      ],
+      "folds": 10,
+      "classifiers": [
+        "compact_resnet"
+      ],
+      "epochs": 8,
+      "analysis_runner": "cnn",
+      "split_ids": [
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14
+      ],
+      "cache_stacks": true
+    },
+    {
+      "name": "rocket_extra",
+      "runner": "rocket",
+      "task": "10class",
+      "directory": "rocket_extra",
+      "methods": [
+        "raw",
+        "emd",
+        "imf_linear_a1.41",
+        "irmf_h2_a1.41",
+        "irmf_h2_a1.41_conv",
+        "irmf_h2_a2_conv",
+        "imf_linear_a2"
+      ],
+      "folds": 5,
+      "classifiers": [
+        "minirocket"
+      ],
+      "features": 1008,
+      "analysis_runner": "rocket",
+      "split_ids": [
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "selection": "Full shared seed 1; timing-only choice in rocket_extension_forecast.json"
+    }
+  ],
+  "cnn_pilot_revision": "Eight rather than twelve epochs; extrapolating the measured 32 s/two-epoch wide-stack fit over seven methods, both scale variants and five folds exceeds three hours at twelve epochs. Revised before any main CNN evaluation completed.",
+  "extra_cpu_rule_check": {
+    "status": "corrected",
+    "reason": "Full ps found four active joblib workers in addition to the named runner; extras terminated immediately and will wait for a free CPU slot.",
+    "stopped": [
+      {
+        "pid": 2850,
+        "command": "/Users/mikhail/.t3/worktrees/imf/t3-44ed3594/.venv/bin/python -u /Users/mikhail/.t3/worktrees/imf/t3-44ed3594/experiments/classification-emd-irmf/datasets/dronerf/run_phase3.py trees --dataset dronerf --task 10class --methods irmf_h4_a1.41_conv --folds 15 --workers 1 --out /Users/mikhail/.t3/worktrees/imf/t3-44ed3594/output/classification-emd-irmf/dronerf/ml/trees_h4 --run-name dronerf_phase3_h4 --quick --classifiers lightgbm"
+      },
+      {
+        "pid": 2851,
+        "command": "/Users/mikhail/.t3/worktrees/imf/t3-44ed3594/.venv/bin/python -u /Users/mikhail/.t3/worktrees/imf/t3-44ed3594/experiments/classification-emd-irmf/datasets/dronerf/run_phase3.py trees --dataset dronerf --task 10class --methods irmf_h1_a1.41_conv --folds 15 --workers 1 --out /Users/mikhail/.t3/worktrees/imf/t3-44ed3594/output/classification-emd-irmf/dronerf/ml/trees_h1 --run-name dronerf_phase3_h1 --quick --classifiers lightgbm"
+      },
+      {
+        "pid": 3055,
+        "command": "/Users/mikhail/.t3/worktrees/imf/t3-44ed3594/.venv/bin/python -u /Users/mikhail/.t3/worktrees/imf/t3-44ed3594/experiments/classification-emd-irmf/datasets/dronerf/run_spectrogram.py --dataset dronerf --task 10class --methods raw --folds 1 --workers 2 --out /Users/mikhail/.t3/worktrees/imf/t3-44ed3594/output/classification-emd-irmf/dronerf/ml/pilot_spectrogram --run-name dronerf_pilot_spectrogram --epochs 2 --patience 2 --width 8 --device cpu"
+      }
+    ],
+    "utc": "2026-10-20T22:08:41.462342+00:00"
+  },
+  "spectrogram_budget_fixed_utc": "2026-10-20T22:59:00Z",
+  "cnn_cv_extension": {
+    "reason": "Bit-identical cached pilot measured 5.5x faster; add all remaining pre-existing seed-1/seed-2 splits for every method. Model settings unchanged.",
+    "projected_remaining_cnn_seconds": 3572.3,
+    "safety_factor": 1.2,
+    "decision_utc": "2026-10-20T23:12:00Z"
+  }
+}

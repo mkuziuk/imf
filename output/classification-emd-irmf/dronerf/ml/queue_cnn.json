@@ -1,0 +1,61 @@
+[
+  {
+    "name": "cnn",
+    "task": "10class",
+    "status": "complete",
+    "command": [
+      "/Users/mikhail/.t3/worktrees/imf/t3-44ed3594/.venv/bin/python",
+      "-u",
+      "/Users/mikhail/.t3/worktrees/imf/t3-44ed3594/experiments/classification-emd-irmf/datasets/dronerf/run_phase3.py",
+      "cnn",
+      "--dataset",
+      "dronerf",
+      "--task",
+      "10class",
+      "--methods",
+      "raw",
+      "emd",
+      "imf_linear_a1.41",
+      "irmf_h2_a1.41",
+      "irmf_h2_a1.41_conv",
+      "irmf_h2_a2_conv",
+      "imf_linear_a2",
+      "--folds",
+      "5",
+      "--workers",
+      "1",
+      "--out",
+      "/Users/mikhail/.t3/worktrees/imf/t3-44ed3594/output/classification-emd-irmf/dronerf/ml/cnn",
+      "--run-name",
+      "dronerf_phase3_cnn",
+      "--epochs",
+      "8",
+      "--patience",
+      "3",
+      "--width",
+      "8",
+      "--downsample",
+      "2",
+      "--device",
+      "mps"
+    ],
+    "start_utc": "2026-10-20T21:44:27.356425+00:00",
+    "returncode": 0,
+    "seconds": 4926.47598695755,
+    "end_utc": "2026-10-20T23:06:33.832415+00:00"
+  },
+  {
+    "name": "cnn",
+    "task": "4class",
+    "status": "skipped_wall_budget",
+    "remaining_seconds": 5006.166920900345,
+    "expected_seconds": 5911.77118434906
+  },
+  {
+    "name": "cnn",
+    "task": "2class",
+    "status": "skipped_wall_budget",
+    "remaining_seconds": 5006.166729927063,
+    "expected_seconds": 5911.77118434906
+  }
+]

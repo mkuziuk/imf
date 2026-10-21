@@ -1,0 +1,20 @@
+{
+  "checked_utc": "2026-10-20T23:01:47Z",
+  "inventory": "full ps including Python joblib workers",
+  "other_heavy_python_processes": 0,
+  "authorized_ceiling": "eight CPU processes plus MPS",
+  "allocation": "two bounded-batch cache builders; later four ROCKET threads and two XGBoost threads on secondary tasks",
+  "updates": [
+    {
+      "checked_utc": "2026-10-20T23:44:31.553193+00:00",
+      "other_heavy_python_processes": 0,
+      "allocation": "After secondary XGBoost completed, use six MiniRocket CPU threads for 2class, with one MPS CNN job and room for a serial audit. Same 1008-feature/five-pass model budget."
+    },
+    {
+      "checked_utc": "2026-10-21T00:10:51.657821+00:00",
+      "other_heavy_python_processes": 0,
+      "allocation": "All original model jobs complete; eight CPU threads for primary MiniRocket seed 1, validated by timing pilot and bit-identical outputs.",
+      "inventory": []
+    }
+  ]
+}

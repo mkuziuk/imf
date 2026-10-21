@@ -1,0 +1,216 @@
+{
+  "seconds": 15.131928459042683,
+  "workers": 2,
+  "caches": [
+    {
+      "method": "raw",
+      "shape": [
+        12000,
+        2,
+        1024
+      ],
+      "path": "/Users/mikhail/Datasets/imf-classification/dronerf/results/representations/stack_raw_d2_c9eb3dab950775b7.npy",
+      "created": true,
+      "setup_seconds": 1.1256612500874326,
+      "verified_frames": [
+        0,
+        1,
+        2,
+        3,
+        310,
+        624,
+        663,
+        1546,
+        1955,
+        2579,
+        3422,
+        4610,
+        7878,
+        9185,
+        9355,
+        9843
+      ],
+      "exact_input_equality": true
+    },
+    {
+      "method": "emd",
+      "shape": [
+        12000,
+        18,
+        1024
+      ],
+      "path": "/Users/mikhail/Datasets/imf-classification/dronerf/results/representations/stack_emd_d2_3d520db99a885b3f.npy",
+      "created": true,
+      "setup_seconds": 2.6987923750421032,
+      "verified_frames": [
+        0,
+        1,
+        2,
+        3,
+        310,
+        624,
+        663,
+        1546,
+        1955,
+        2579,
+        3422,
+        4610,
+        7878,
+        9185,
+        9355,
+        9843
+      ],
+      "exact_input_equality": true
+    },
+    {
+      "method": "imf_linear_a1.41",
+      "shape": [
+        12000,
+        36,
+        1024
+      ],
+      "path": "/Users/mikhail/Datasets/imf-classification/dronerf/results/representations/stack_imf_linear_a1.41_d2_d22e6bcda9738457.npy",
+      "created": true,
+      "setup_seconds": 5.374406207934953,
+      "verified_frames": [
+        0,
+        1,
+        2,
+        3,
+        310,
+        624,
+        663,
+        1546,
+        1955,
+        2579,
+        3422,
+        4610,
+        7878,
+        9185,
+        9355,
+        9843
+      ],
+      "exact_input_equality": true
+    },
+    {
+      "method": "irmf_h2_a1.41",
+      "shape": [
+        12000,
+        36,
+        1024
+      ],
+      "path": "/Users/mikhail/Datasets/imf-classification/dronerf/results/representations/stack_irmf_h2_a1.41_d2_21242495b6588817.npy",
+      "created": true,
+      "setup_seconds": 5.367684082943015,
+      "verified_frames": [
+        0,
+        1,
+        2,
+        3,
+        310,
+        624,
+        663,
+        1546,
+        1955,
+        2579,
+        3422,
+        4610,
+        7878,
+        9185,
+        9355,
+        9843
+      ],
+      "exact_input_equality": true
+    },
+    {
+      "method": "irmf_h2_a1.41_conv",
+      "shape": [
+        12000,
+        36,
+        1024
+      ],
+      "path": "/Users/mikhail/Datasets/imf-classification/dronerf/results/representations/stack_irmf_h2_a1.41_conv_d2_3a12338d3ffeb5fa.npy",
+      "created": true,
+      "setup_seconds": 5.255702125024982,
+      "verified_frames": [
+        0,
+        1,
+        2,
+        3,
+        310,
+        624,
+        663,
+        1546,
+        1955,
+        2579,
+        3422,
+        4610,
+        7878,
+        9185,
+        9355,
+        9843
+      ],
+      "exact_input_equality": true
+    },
+    {
+      "method": "irmf_h2_a2_conv",
+      "shape": [
+        12000,
+        20,
+        1024
+      ],
+      "path": "/Users/mikhail/Datasets/imf-classification/dronerf/results/representations/stack_irmf_h2_a2_conv_d2_651540ca35d1d531.npy",
+      "created": true,
+      "setup_seconds": 2.9870467090513557,
+      "verified_frames": [
+        0,
+        1,
+        2,
+        3,
+        310,
+        624,
+        663,
+        1546,
+        1955,
+        2579,
+        3422,
+        4610,
+        7878,
+        9185,
+        9355,
+        9843
+      ],
+      "exact_input_equality": true
+    },
+    {
+      "method": "imf_linear_a2",
+      "shape": [
+        12000,
+        20,
+        1024
+      ],
+      "path": "/Users/mikhail/Datasets/imf-classification/dronerf/results/representations/stack_imf_linear_a2_d2_3869aef99d97b5c0.npy",
+      "created": true,
+      "setup_seconds": 3.0836959161097184,
+      "verified_frames": [
+        0,
+        1,
+        2,
+        3,
+        310,
+        624,
+        663,
+        1546,
+        1955,
+        2579,
+        3422,
+        4610,
+        7878,
+        9185,
+        9355,
+        9843
+      ],
+      "exact_input_equality": true
+    }
+  ]
+}
