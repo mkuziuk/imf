@@ -1,0 +1,426 @@
+{
+  "pimf": {
+    "version": "0.4.0",
+    "files": {
+      "__init__.py": "fc7c0a84b39b1a4787a7973ded0eff50a882ee05b8f1d68a995941c1667c3391",
+      "_erf.py": "01ffbc30bd9e50752980716d5c8c01d6be94ba2e724b253d5ccdc48117ab465e",
+      "contrasts.py": "38556222cc9645c21285faaa8d388b3b53bd2c87758a79f03c64e9f000013c2f",
+      "decompose.py": "f71fe8ba5e08f2f5ce7f3572c762346543ac124712760f74411f2253d3551688",
+      "kernels.py": "fb65d469cb7fb594734e768bc8cde8a6926214c985c5f044e9f4517d3a220c11"
+    }
+  },
+  "pre_registration_commit": "0b19623",
+  "protocol_sha256": "374d581182b6e12a8a73e6506476146133cf09dd308f4b37981f5e83f39df548",
+  "analysis_sha256": "641b0d02978bafc6c8e161f600ea7a29781bde5957ee5820d0af4f7e23d02038",
+  "presentation_sha256": "140d177d0adf1cc3ad7a3bece825cb644f8b99593ed96cb04b2255018300cd8c",
+  "verified_code_manifests": [
+    {
+      "dataset": "synthetic",
+      "manifest": "processing_manifest.json",
+      "path": "components/processing.py",
+      "sha256": "e3126cb1554cae26dcffea571ab2d43e46f1f11134c0fd261d06ee0f17f8e867"
+    },
+    {
+      "dataset": "synthetic",
+      "manifest": "processing_manifest.json",
+      "path": "components/construction.py",
+      "sha256": "bb6a148174f7e61595ee9a2961b5830962c803c471c05673971df578d4589417"
+    },
+    {
+      "dataset": "synthetic",
+      "manifest": "processing_manifest.json",
+      "path": "emdirmf/features.py",
+      "sha256": "07a496f3f9813b668349e17ee2187e7c81769b6d05aa41776439e276efb8665e"
+    },
+    {
+      "dataset": "synthetic",
+      "manifest": "classification_manifest_defaults.json",
+      "path": "components/classification.py",
+      "sha256": "2df383ba16a9f2793a3a94afeea6abd1e75bd0b43a186a866c34f6d5a0aeca78"
+    },
+    {
+      "dataset": "synthetic",
+      "manifest": "classification_manifest_defaults.json",
+      "path": "baselines/run_classical.py",
+      "sha256": "c5dac3c8713af2be01488a09d000bfe0370e3da8bb408280034d85b95962a4d1"
+    },
+    {
+      "dataset": "synthetic",
+      "manifest": "classification_manifest_defaults.json",
+      "path": "ml/run_trees.py",
+      "sha256": "80bc913ee10ce73f66a49d0a42d8701e900f07c89c41c5fd9f1a0dca9709b713"
+    },
+    {
+      "dataset": "synthetic",
+      "manifest": "classification_manifest_defaults.json",
+      "path": "ml/common.py",
+      "sha256": "2f3341d87dff0c99bce74b700fb1483902607c17224f60cd0385cadee5624786"
+    },
+    {
+      "dataset": "synthetic",
+      "manifest": "classification_manifest_defaults.json",
+      "path": "emdirmf/cv.py",
+      "sha256": "2eb94abae6daa96bb9d7424644332a07bb092cf1a6072b720e785333036f77d4"
+    },
+    {
+      "dataset": "synthetic",
+      "manifest": "classification_manifest_defaults.json",
+      "path": "emdirmf/features.py",
+      "sha256": "07a496f3f9813b668349e17ee2187e7c81769b6d05aa41776439e276efb8665e"
+    },
+    {
+      "dataset": "synthetic",
+      "manifest": "classification_manifest_experiment.json",
+      "path": "components/classification.py",
+      "sha256": "2df383ba16a9f2793a3a94afeea6abd1e75bd0b43a186a866c34f6d5a0aeca78"
+    },
+    {
+      "dataset": "synthetic",
+      "manifest": "classification_manifest_experiment.json",
+      "path": "baselines/run_classical.py",
+      "sha256": "c5dac3c8713af2be01488a09d000bfe0370e3da8bb408280034d85b95962a4d1"
+    },
+    {
+      "dataset": "synthetic",
+      "manifest": "classification_manifest_experiment.json",
+      "path": "ml/run_trees.py",
+      "sha256": "80bc913ee10ce73f66a49d0a42d8701e900f07c89c41c5fd9f1a0dca9709b713"
+    },
+    {
+      "dataset": "synthetic",
+      "manifest": "classification_manifest_experiment.json",
+      "path": "ml/common.py",
+      "sha256": "2f3341d87dff0c99bce74b700fb1483902607c17224f60cd0385cadee5624786"
+    },
+    {
+      "dataset": "synthetic",
+      "manifest": "classification_manifest_experiment.json",
+      "path": "emdirmf/cv.py",
+      "sha256": "2eb94abae6daa96bb9d7424644332a07bb092cf1a6072b720e785333036f77d4"
+    },
+    {
+      "dataset": "synthetic",
+      "manifest": "classification_manifest_experiment.json",
+      "path": "emdirmf/features.py",
+      "sha256": "07a496f3f9813b668349e17ee2187e7c81769b6d05aa41776439e276efb8665e"
+    },
+    {
+      "dataset": "synthetic",
+      "manifest": "budgeted_classification_manifest.json",
+      "path": "components/run_budgeted.py",
+      "sha256": "408ad326d5ad1d3c3273ff11a012ed4245312a1f8077e2b46f52825135aa2d7b"
+    },
+    {
+      "dataset": "synthetic",
+      "manifest": "budgeted_classification_manifest.json",
+      "path": "components/budget.py",
+      "sha256": "abe0f016b0e4eae70d1f25b1235c66e99cc2367180df11e2f00fc61ab970365a"
+    },
+    {
+      "dataset": "dronerf",
+      "manifest": "processing_manifest.json",
+      "path": "components/processing.py",
+      "sha256": "e3126cb1554cae26dcffea571ab2d43e46f1f11134c0fd261d06ee0f17f8e867"
+    },
+    {
+      "dataset": "dronerf",
+      "manifest": "processing_manifest.json",
+      "path": "components/construction.py",
+      "sha256": "bb6a148174f7e61595ee9a2961b5830962c803c471c05673971df578d4589417"
+    },
+    {
+      "dataset": "dronerf",
+      "manifest": "processing_manifest.json",
+      "path": "emdirmf/features.py",
+      "sha256": "07a496f3f9813b668349e17ee2187e7c81769b6d05aa41776439e276efb8665e"
+    },
+    {
+      "dataset": "dronerf",
+      "manifest": "classification_manifest_defaults.json",
+      "path": "components/classification.py",
+      "sha256": "2df383ba16a9f2793a3a94afeea6abd1e75bd0b43a186a866c34f6d5a0aeca78"
+    },
+    {
+      "dataset": "dronerf",
+      "manifest": "classification_manifest_defaults.json",
+      "path": "baselines/run_classical.py",
+      "sha256": "c5dac3c8713af2be01488a09d000bfe0370e3da8bb408280034d85b95962a4d1"
+    },
+    {
+      "dataset": "dronerf",
+      "manifest": "classification_manifest_defaults.json",
+      "path": "ml/run_trees.py",
+      "sha256": "80bc913ee10ce73f66a49d0a42d8701e900f07c89c41c5fd9f1a0dca9709b713"
+    },
+    {
+      "dataset": "dronerf",
+      "manifest": "classification_manifest_defaults.json",
+      "path": "ml/common.py",
+      "sha256": "2f3341d87dff0c99bce74b700fb1483902607c17224f60cd0385cadee5624786"
+    },
+    {
+      "dataset": "dronerf",
+      "manifest": "classification_manifest_defaults.json",
+      "path": "emdirmf/cv.py",
+      "sha256": "2eb94abae6daa96bb9d7424644332a07bb092cf1a6072b720e785333036f77d4"
+    },
+    {
+      "dataset": "dronerf",
+      "manifest": "classification_manifest_defaults.json",
+      "path": "emdirmf/features.py",
+      "sha256": "07a496f3f9813b668349e17ee2187e7c81769b6d05aa41776439e276efb8665e"
+    },
+    {
+      "dataset": "dronerf",
+      "manifest": "classification_manifest_experiment.json",
+      "path": "components/classification.py",
+      "sha256": "2df383ba16a9f2793a3a94afeea6abd1e75bd0b43a186a866c34f6d5a0aeca78"
+    },
+    {
+      "dataset": "dronerf",
+      "manifest": "classification_manifest_experiment.json",
+      "path": "baselines/run_classical.py",
+      "sha256": "c5dac3c8713af2be01488a09d000bfe0370e3da8bb408280034d85b95962a4d1"
+    },
+    {
+      "dataset": "dronerf",
+      "manifest": "classification_manifest_experiment.json",
+      "path": "ml/run_trees.py",
+      "sha256": "80bc913ee10ce73f66a49d0a42d8701e900f07c89c41c5fd9f1a0dca9709b713"
+    },
+    {
+      "dataset": "dronerf",
+      "manifest": "classification_manifest_experiment.json",
+      "path": "ml/common.py",
+      "sha256": "2f3341d87dff0c99bce74b700fb1483902607c17224f60cd0385cadee5624786"
+    },
+    {
+      "dataset": "dronerf",
+      "manifest": "classification_manifest_experiment.json",
+      "path": "emdirmf/cv.py",
+      "sha256": "2eb94abae6daa96bb9d7424644332a07bb092cf1a6072b720e785333036f77d4"
+    },
+    {
+      "dataset": "dronerf",
+      "manifest": "classification_manifest_experiment.json",
+      "path": "emdirmf/features.py",
+      "sha256": "07a496f3f9813b668349e17ee2187e7c81769b6d05aa41776439e276efb8665e"
+    },
+    {
+      "dataset": "dronerf",
+      "manifest": "budgeted_classification_manifest.json",
+      "path": "components/run_budgeted.py",
+      "sha256": "408ad326d5ad1d3c3273ff11a012ed4245312a1f8077e2b46f52825135aa2d7b"
+    },
+    {
+      "dataset": "dronerf",
+      "manifest": "budgeted_classification_manifest.json",
+      "path": "components/budget.py",
+      "sha256": "abe0f016b0e4eae70d1f25b1235c66e99cc2367180df11e2f00fc61ab970365a"
+    },
+    {
+      "dataset": "birdclef2023",
+      "manifest": "processing_manifest.json",
+      "path": "components/processing.py",
+      "sha256": "e3126cb1554cae26dcffea571ab2d43e46f1f11134c0fd261d06ee0f17f8e867"
+    },
+    {
+      "dataset": "birdclef2023",
+      "manifest": "processing_manifest.json",
+      "path": "components/construction.py",
+      "sha256": "bb6a148174f7e61595ee9a2961b5830962c803c471c05673971df578d4589417"
+    },
+    {
+      "dataset": "birdclef2023",
+      "manifest": "processing_manifest.json",
+      "path": "emdirmf/features.py",
+      "sha256": "07a496f3f9813b668349e17ee2187e7c81769b6d05aa41776439e276efb8665e"
+    },
+    {
+      "dataset": "birdclef2023",
+      "manifest": "classification_manifest_defaults.json",
+      "path": "components/classification.py",
+      "sha256": "2df383ba16a9f2793a3a94afeea6abd1e75bd0b43a186a866c34f6d5a0aeca78"
+    },
+    {
+      "dataset": "birdclef2023",
+      "manifest": "classification_manifest_defaults.json",
+      "path": "baselines/run_classical.py",
+      "sha256": "c5dac3c8713af2be01488a09d000bfe0370e3da8bb408280034d85b95962a4d1"
+    },
+    {
+      "dataset": "birdclef2023",
+      "manifest": "classification_manifest_defaults.json",
+      "path": "ml/run_trees.py",
+      "sha256": "80bc913ee10ce73f66a49d0a42d8701e900f07c89c41c5fd9f1a0dca9709b713"
+    },
+    {
+      "dataset": "birdclef2023",
+      "manifest": "classification_manifest_defaults.json",
+      "path": "ml/common.py",
+      "sha256": "2f3341d87dff0c99bce74b700fb1483902607c17224f60cd0385cadee5624786"
+    },
+    {
+      "dataset": "birdclef2023",
+      "manifest": "classification_manifest_defaults.json",
+      "path": "emdirmf/cv.py",
+      "sha256": "2eb94abae6daa96bb9d7424644332a07bb092cf1a6072b720e785333036f77d4"
+    },
+    {
+      "dataset": "birdclef2023",
+      "manifest": "classification_manifest_defaults.json",
+      "path": "emdirmf/features.py",
+      "sha256": "07a496f3f9813b668349e17ee2187e7c81769b6d05aa41776439e276efb8665e"
+    },
+    {
+      "dataset": "birdclef2023",
+      "manifest": "classification_manifest_experiment.json",
+      "path": "components/classification.py",
+      "sha256": "2df383ba16a9f2793a3a94afeea6abd1e75bd0b43a186a866c34f6d5a0aeca78"
+    },
+    {
+      "dataset": "birdclef2023",
+      "manifest": "classification_manifest_experiment.json",
+      "path": "baselines/run_classical.py",
+      "sha256": "c5dac3c8713af2be01488a09d000bfe0370e3da8bb408280034d85b95962a4d1"
+    },
+    {
+      "dataset": "birdclef2023",
+      "manifest": "classification_manifest_experiment.json",
+      "path": "ml/run_trees.py",
+      "sha256": "80bc913ee10ce73f66a49d0a42d8701e900f07c89c41c5fd9f1a0dca9709b713"
+    },
+    {
+      "dataset": "birdclef2023",
+      "manifest": "classification_manifest_experiment.json",
+      "path": "ml/common.py",
+      "sha256": "2f3341d87dff0c99bce74b700fb1483902607c17224f60cd0385cadee5624786"
+    },
+    {
+      "dataset": "birdclef2023",
+      "manifest": "classification_manifest_experiment.json",
+      "path": "emdirmf/cv.py",
+      "sha256": "2eb94abae6daa96bb9d7424644332a07bb092cf1a6072b720e785333036f77d4"
+    },
+    {
+      "dataset": "birdclef2023",
+      "manifest": "classification_manifest_experiment.json",
+      "path": "emdirmf/features.py",
+      "sha256": "07a496f3f9813b668349e17ee2187e7c81769b6d05aa41776439e276efb8665e"
+    },
+    {
+      "dataset": "birdclef2023",
+      "manifest": "budgeted_classification_manifest.json",
+      "path": "components/run_budgeted.py",
+      "sha256": "408ad326d5ad1d3c3273ff11a012ed4245312a1f8077e2b46f52825135aa2d7b"
+    },
+    {
+      "dataset": "birdclef2023",
+      "manifest": "budgeted_classification_manifest.json",
+      "path": "components/budget.py",
+      "sha256": "abe0f016b0e4eae70d1f25b1235c66e99cc2367180df11e2f00fc61ab970365a"
+    },
+    {
+      "dataset": "esc50_animals",
+      "manifest": "processing_manifest.json",
+      "path": "components/processing.py",
+      "sha256": "e3126cb1554cae26dcffea571ab2d43e46f1f11134c0fd261d06ee0f17f8e867"
+    },
+    {
+      "dataset": "esc50_animals",
+      "manifest": "processing_manifest.json",
+      "path": "components/construction.py",
+      "sha256": "bb6a148174f7e61595ee9a2961b5830962c803c471c05673971df578d4589417"
+    },
+    {
+      "dataset": "esc50_animals",
+      "manifest": "processing_manifest.json",
+      "path": "emdirmf/features.py",
+      "sha256": "07a496f3f9813b668349e17ee2187e7c81769b6d05aa41776439e276efb8665e"
+    },
+    {
+      "dataset": "esc50_animals",
+      "manifest": "classification_manifest_defaults.json",
+      "path": "components/classification.py",
+      "sha256": "2df383ba16a9f2793a3a94afeea6abd1e75bd0b43a186a866c34f6d5a0aeca78"
+    },
+    {
+      "dataset": "esc50_animals",
+      "manifest": "classification_manifest_defaults.json",
+      "path": "baselines/run_classical.py",
+      "sha256": "c5dac3c8713af2be01488a09d000bfe0370e3da8bb408280034d85b95962a4d1"
+    },
+    {
+      "dataset": "esc50_animals",
+      "manifest": "classification_manifest_defaults.json",
+      "path": "ml/run_trees.py",
+      "sha256": "80bc913ee10ce73f66a49d0a42d8701e900f07c89c41c5fd9f1a0dca9709b713"
+    },
+    {
+      "dataset": "esc50_animals",
+      "manifest": "classification_manifest_defaults.json",
+      "path": "ml/common.py",
+      "sha256": "2f3341d87dff0c99bce74b700fb1483902607c17224f60cd0385cadee5624786"
+    },
+    {
+      "dataset": "esc50_animals",
+      "manifest": "classification_manifest_defaults.json",
+      "path": "emdirmf/cv.py",
+      "sha256": "2eb94abae6daa96bb9d7424644332a07bb092cf1a6072b720e785333036f77d4"
+    },
+    {
+      "dataset": "esc50_animals",
+      "manifest": "classification_manifest_defaults.json",
+      "path": "emdirmf/features.py",
+      "sha256": "07a496f3f9813b668349e17ee2187e7c81769b6d05aa41776439e276efb8665e"
+    },
+    {
+      "dataset": "esc50_animals",
+      "manifest": "classification_manifest_experiment.json",
+      "path": "components/classification.py",
+      "sha256": "2df383ba16a9f2793a3a94afeea6abd1e75bd0b43a186a866c34f6d5a0aeca78"
+    },
+    {
+      "dataset": "esc50_animals",
+      "manifest": "classification_manifest_experiment.json",
+      "path": "baselines/run_classical.py",
+      "sha256": "c5dac3c8713af2be01488a09d000bfe0370e3da8bb408280034d85b95962a4d1"
+    },
+    {
+      "dataset": "esc50_animals",
+      "manifest": "classification_manifest_experiment.json",
+      "path": "ml/run_trees.py",
+      "sha256": "80bc913ee10ce73f66a49d0a42d8701e900f07c89c41c5fd9f1a0dca9709b713"
+    },
+    {
+      "dataset": "esc50_animals",
+      "manifest": "classification_manifest_experiment.json",
+      "path": "ml/common.py",
+      "sha256": "2f3341d87dff0c99bce74b700fb1483902607c17224f60cd0385cadee5624786"
+    },
+    {
+      "dataset": "esc50_animals",
+      "manifest": "classification_manifest_experiment.json",
+      "path": "emdirmf/cv.py",
+      "sha256": "2eb94abae6daa96bb9d7424644332a07bb092cf1a6072b720e785333036f77d4"
+    },
+    {
+      "dataset": "esc50_animals",
+      "manifest": "classification_manifest_experiment.json",
+      "path": "emdirmf/features.py",
+      "sha256": "07a496f3f9813b668349e17ee2187e7c81769b6d05aa41776439e276efb8665e"
+    },
+    {
+      "dataset": "esc50_animals",
+      "manifest": "budgeted_classification_manifest.json",
+      "path": "components/run_budgeted.py",
+      "sha256": "408ad326d5ad1d3c3273ff11a012ed4245312a1f8077e2b46f52825135aa2d7b"
+    },
+    {
+      "dataset": "esc50_animals",
+      "manifest": "budgeted_classification_manifest.json",
+      "path": "components/budget.py",
+      "sha256": "abe0f016b0e4eae70d1f25b1235c66e99cc2367180df11e2f00fc61ab970365a"
+    }
+  ]
+}

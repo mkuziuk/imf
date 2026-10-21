@@ -4,6 +4,7 @@ import argparse
 import json
 import shutil
 import time
+from datetime import datetime, timezone
 from pathlib import Path
 
 import matplotlib
@@ -18,6 +19,7 @@ from components.budget import eligible, load_plan, selection
 from components.construction import BASE_TAGS, DEFAULTS, EMD_K, NATIVE_K, TRUNC_K, all_tags, native_ratio, parse_tag
 from components.integrity import DATA_ROOT, DATASETS, HERE, check_pimf, record_entry
 from components.processing import BLOCK_SIZE
+from components.presentation import write_overview
 from components.storage import OUTPUT, STUDY, allocated_bytes, file_hash, run_dir, write_json
 from emdirmf.decompose import MethodSpec, imf_schedule, scale_order
 from emdirmf.stats import holm, paired_comparison
@@ -89,6 +91,7 @@ def load_scores(plan=None):
                         rows.append({**row, "analysis_eligible": use})
     table = pd.DataFrame(rows)
     assert len(table) == expected and np.isfinite(table[list(METRICS)]).all().all()
+    assert table[list(METRICS)].ge(0).all().all() and table[list(METRICS)].le(1).all().all()
     assert len(table[table.classifier != "lightgbm"]) == 3480
     actual = sum(len(list((run_dir(dataset) / "fits").glob("*/*/*/*.json"))) for dataset in DATASETS)
     assert actual == expected, ("unexpected or incomplete fit coverage", actual, expected)
@@ -161,7 +164,7 @@ def count_and_padding():
 
 
 def processing_tables():
-    costs, energies, caps, verification, pilot, validations = [], [], [], [], [], []
+    costs, energies, caps, failures, verification, pilot, validations = [], [], [], [], [], [], []
     for dataset in DATASETS:
         root = run_dir(dataset)
         shape = json.loads((root / "processing_manifest.json").read_text())["shape"]
@@ -195,6 +198,12 @@ def processing_tables():
                     row["maximum_reconstruction_error"] = max(row["maximum_reconstruction_error"], metadata["reconstruction_relative_error"])
                     for channel in metadata["diagnostics"]:
                         for attempt in channel["attempts"]:
+                            if attempt["error"] is not None:
+                                failures.append({"dataset": dataset, "method": tag,
+                                                 "frame_id": channel["frame_id"], "channel": channel["channel"],
+                                                 "cap": attempt["cap"], "error": attempt["error"],
+                                                 "failed_rows": sum(stage["failed_rows"] for stage in attempt["diagnostics"]),
+                                                 "resolved_by_retry": attempt["cap"] == 100})
                             for stage in attempt["cap_stages"]:
                                 caps.append({"dataset": dataset, "method": tag, "frame_id": channel["frame_id"],
                                              "channel": channel["channel"], "cap": attempt["cap"], "coarse_stage": stage,
@@ -213,11 +222,12 @@ def processing_tables():
                                          "scale_rank": order.index(slot), "radius_samples": radii[slot] if slot < spec.k else np.nan,
                                          "slot_label": f"stage_radius_{radii[slot]:.6g}" if slot < spec.k else "residual_fine",
                                          "relative_energy_median": np.median(values[:, slot]),
-                                         "relative_energy_p95": np.percentile(values[:, slot], 95), "n_channels": len(values)})
+                                         "relative_energy_p95": np.percentile(values[:, slot], 95), "n_channel_frames": len(values)})
             row["new_decomposition_cpu_seconds_per_frame"] = row["decomposition_cpu_seconds"] / n
             costs.append(row)
     return (pd.DataFrame(costs), pd.DataFrame(energies),
             pd.DataFrame(caps, columns=["dataset", "method", "frame_id", "channel", "cap", "coarse_stage", "failed_rows", "error"]),
+            pd.DataFrame(failures, columns=["dataset", "method", "frame_id", "channel", "cap", "failed_rows", "error", "resolved_by_retry"]),
             pd.concat(verification, ignore_index=True), pd.concat(pilot, ignore_index=True), pd.DataFrame(validations))
 
 
@@ -255,7 +265,7 @@ def survival_reading(tests):
 
 def plot_curves(summary, figures):
     for dataset in DATASETS:
-        fig, axes = plt.subplots(2, 2, figsize=(11.8, 8.2), sharex=True, constrained_layout=True)
+        fig, axes = plt.subplots(2, 2, figsize=(11.8, 8.2), sharex=True, sharey=True, constrained_layout=True)
         for col, classifier in enumerate((CLASSICAL[dataset], "lightgbm")):
             for row, feature_set in enumerate(FEATURE_SETS):
                 axis = axes[row, col]
@@ -278,6 +288,7 @@ def plot_curves(summary, figures):
                 axis.set_title(f"{classifier}, {feature_set}, {int(cell.n_splits.iloc[0])} splits")
                 axis.set_xlabel("Extracted components K, plus one residual")
                 axis.set_ylabel("Mean balanced accuracy (%)")
+                axis.set_xticks(sorted({*EMD_K, *NATIVE_K, 15 if dataset == "synthetic" else 17}))
                 axis.grid(alpha=.2)
                 if row == 0 and col == 0:
                     axis.legend(fontsize=8)
@@ -327,40 +338,80 @@ def compute_totals(scores, costs, pilot):
             sessions.append({"dataset": dataset, "file": path.name, **session})
     cpu = scores.cpu_seconds.sum() + costs.decomposition_cpu_seconds.sum() + costs.feature_cpu_seconds.sum() + pilot.cpu_seconds.sum()
     wall = sum(row["wall_seconds"] for row in sessions) + 182.04723087500315
+    pilot_entries = [json.loads(path.read_text())["time_utc"] for dataset in DATASETS
+                     for path in (run_dir(dataset) / "audit").glob("*.json")
+                     if json.loads(path.read_text())["runner"] == "pilot"]
+    first_pilot = min(datetime.fromisoformat(stamp) for stamp in pilot_entries)
+    analysis_time = datetime.now(timezone.utc)
     return {"measured_cpu_seconds": float(cpu), "runner_wall_seconds": float(wall),
+            "classification_cpu_seconds": float(scores.cpu_seconds.sum()),
+            "decomposition_and_folding_cpu_seconds": float(costs.decomposition_cpu_seconds.sum()),
+            "feature_cpu_seconds": float(costs.feature_cpu_seconds.sum()),
+            "native_timing_pilot_cpu_seconds": float(pilot.cpu_seconds.sum()),
+            "elapsed_since_first_pilot_seconds": (analysis_time - first_pilot).total_seconds(),
+            "first_pilot_utc": first_pilot.isoformat(), "analysis_time_utc": analysis_time.isoformat(),
             "new_data_bytes": allocated_bytes(), "pilot_wall_seconds": 182.04723087500315,
+            "native_irmf_channel_decompositions": int((costs.loc[(costs.family == "irmf") &
+                (costs.construction == "native"), "n_frames"] * costs.loc[(costs.family == "irmf") &
+                (costs.construction == "native"), "n_channels"]).sum()),
+            "pilot_cap_hit_attempts": int(pilot.cap_hits.sum()),
             "sessions": sessions,
-            "cpu_scope": "fit CPU, block decomposition and feature CPU, and native timing pilot; excludes normalization, direct pilot verification, JIT/startup and orchestration"}
+            "wall_scope": "timed processing and classification sections plus the pilot; classification timers begin after input-array preparation",
+            "cpu_scope": "fit CPU, block decomposition and feature CPU, and native timing pilot; excludes normalization, input-array preparation, direct pilot verification, JIT/startup, tests and orchestration"}
 
 
-def write_report(destination, summary, best, tests, reading, counts, padding, costs, caps, verification, validations, totals, plan):
+def write_report(destination, summary, best, tests, reading, counts, padding, costs, caps, failures, verification, validations, totals, plan):
     primary = tests[(tests.variant == "classical/comp") & (tests.metric == "balanced_accuracy")]
     family_a = primary[primary.family == "A"]
     family_c = primary[primary.family == "C"]
     primary_best = best[(best.feature_set == "comp") & (best.classifier != "lightgbm")].copy()
     primary_best["BA (%)"] = (100 * primary_best.balanced_accuracy).map(lambda x: f"{x:.3f}")
+    defaults, changes, best_p = [], [], []
+    for row in primary_best.itertuples():
+        default_tag = "emd" if row.family == "emd" else DEFAULTS[row.family]
+        reference = summary[(summary.dataset == row.dataset) & (summary.classifier == row.classifier) &
+                            (summary.feature_set == "comp") & (summary.method == default_tag)].iloc[0]
+        defaults.append(f"{100*reference.balanced_accuracy_mean:.3f}")
+        changes.append(f"{100*(row.balanced_accuracy-reference.balanced_accuracy_mean):+.3f}")
+        pair = primary[(primary.family == "B") & (primary.dataset == row.dataset) &
+                       (primary.method_a == row.method) & (primary.method_b == default_tag)]
+        best_p.append(f"{pair.iloc[0].p_nb_holm:.6g}" if len(pair) else "reference")
+    primary_best["Default BA (%)"] = defaults
+    primary_best["Best - default, pp"] = changes
+    primary_best["Family B Holm p"] = best_p
     padding_table = padding.pivot(index="dataset", columns="k", values="padding_fraction") * 100
     padding_table = padding_table.rename(columns=lambda k: f"K={k}, % padded").reset_index()
     native_costs = costs[costs.construction == "native"].pivot(
         index=["dataset", "family"], columns="k", values="new_decomposition_cpu_seconds_per_frame")
     native_costs = native_costs.rename(columns=lambda k: f"K={k}").reset_index()
-    lines = ["# Component count and signal classification", "", "## Question and design", "",
+    met = reading.loc[reading.survives_matched_counts, "dataset"].tolist()
+    unmet = reading.loc[~reading.survives_matched_counts, "dataset"].tolist()
+    outcome = "The registered matched-count criterion requires both IMF methods to beat EMD at K=5 and K=6 after Holm correction. "
+    outcome += ("It is met for " + ", ".join(met) + ". " if met else "It is met for none of the four datasets. ")
+    if unmet:
+        outcome += "It is not met for " + ", ".join(unmet) + "."
+    lines = ["# Component count and signal classification", "", outcome.strip(), "", "## Question and design", "",
              "Does the IMF advantage over EMD persist when the extracted component count is matched? "
              "This experiment compares clean prepared frames on four datasets using the existing 15 grouped splits. "
              "Every K has K extracted slots and one residual. Native linear IMF and converged IRMF span radius "
-             "0.25 L to 1.5 samples. EMD retains its first K IMFs, with zero padding where needed. A separate "
+             "0.25 L to 1.5 samples. Linear IMF uses Quadratic; IRMF keeps H=2 sigma_hat and uses the shared "
+             "NewtonSmoothAbs lookup-score solver at tolerance 1e-12. Any window reaching 100 iterations "
+             "triggers a full-channel retry at cap 1000; unresolved fits stop the run. "
+             "EMD uses PyEMD defaults and retains its first K IMFs, with zero padding where needed. A separate "
              "construction truncates the default IMF cascade at the coarsest k_max stages.", "",
              "The pre-registration commit is `0b19623`. The [protocol](../../../experiments/classification-emd-irmf/components/PROTOCOL_components.md) "
              "records tags, exact ratios, the 50-frame label-free pilot and the initial 9.93-hour budget projection. "
              "An audit of historical tree thread counts revised that projection to 10.53 hours, still below the cut threshold. "
              "The study default ends at radius 2 samples and has 15 extracted stages for synthetic, 17 for the "
              "other datasets. Native K therefore changes both count and spacing, with a slightly finer endpoint. "
-             "Matched counts control feature dimension; they do not make the decompositions' scale bands identical.", "",
+             "Matched counts control input feature dimension; they do not make the decompositions' scale bands identical. "
+             "The shared classical pipelines' training-fold constant-feature filter can leave different effective widths.", "",
              "Fixed models are logistic regression for synthetic and BirdCLEF, linear SVM for DroneRF and ESC-50. "
              "DroneRF retains its historical fixed C=0.1; the others reuse the original grouped training-fold searches. "
              "LightGBM reuses the exact shared fit_tree implementation with one thread. Both comp and comp+log_scale "
              "are evaluated. Each channel-slot contributes 20 unchanged shared features. "
-             "[Costs and feature counts](costs.csv) list each input's dimensions.", "",
+             "[Costs and feature counts](costs.csv) list each input's dimensions, checked against the "
+             "actual feature width recorded for every fit.", "",
              "## Cache and baseline checks", "",
              f"The direct checks used 50 frames per dataset and every channel. Across {len(verification)} checks, "
              f"the largest relative L2 difference from direct decomposition was {verification.relative_error.max():.3g}, "
@@ -377,24 +428,45 @@ def write_report(destination, summary, best, tests, reading, counts, padding, co
              "Two-sided corrected-t p values use Holm across all 48 tests. Wilcoxon is secondary and saved with "
              "its own Holm adjustment. Macro-F1 and accuracy form separate supporting families. "
              "[All paired tests](paired_tests.csv), [family A source](family_a.csv), "
-             "[forest plot](figures/family_a_forest.png).", "", markdown_tests(family_a), "",
+             "[forest plot](figures/family_a_forest.png), [filterable primary tables](overview.html).", "", markdown_tests(family_a), "",
              "The pre-specified reading requires both IMF-vs-EMD gains to be positive and Holm-significant at "
              "K=5 and K=6. The result for each dataset is:", ""]
     for row in reading.itertuples():
         lines.append(f"- {row.dataset}: {'survives matched counts' if row.survives_matched_counts else 'does not meet the pre-specified criterion'}, "
                      f"{row.positive_and_holm_significant}/4 required contrasts are positive and significant.")
+        if not row.survives_matched_counts:
+            matched = family_a[(family_a.dataset == row.dataset) & family_a.k.isin([5, 6]) &
+                               family_a.method_b.str.startswith("emd")]
+            lines.append(f"  The four point gains range from {100*matched.mean_diff.min():+.3f} to "
+                         f"{100*matched.mean_diff.max():+.3f} pp.")
+            missing = matched[matched.p_nb_holm >= .05]
+            if len(missing) == 1:
+                failed = missing.iloc[0]
+                lines.append(f"  The failed requirement is {failed.contrast} at K={failed.k}: "
+                             f"{100*failed.mean_diff:+.3f} pp [{100*failed.ci_low:+.3f}, "
+                             f"{100*failed.ci_high:+.3f}], Holm p={failed.p_nb_holm:.6g}.")
     lines += ["", "## Native count curves, family B", "",
               "Each of 17 counts-versus-default contrasts per dataset has its own paired difference and "
               "corrected interval in [family_b.csv](family_b.csv), with Holm within the dataset. "
               "A best observed K is descriptive, chosen from the native grid and the study default; it does not "
               "estimate performance after independent model selection. The primary comp results are:", "",
-              primary_best[["dataset", "family", "k", "BA (%)", "n_features"]].to_markdown(index=False), ""]
+              primary_best[["dataset", "family", "k", "BA (%)", "Default BA (%)", "Best - default, pp",
+                            "Family B Holm p", "n_features"]].to_markdown(index=False), ""]
     for dataset in DATASETS:
         part = primary[(primary.family == "B") & (primary.dataset == dataset)]
         sig = part[part.p_nb_holm < .05]
         lines.append(f"- {dataset}: {len(sig)}/17 counts differ from default after Holm; "
                      f"{int((sig.mean_diff < 0).sum())} are lower and {int((sig.mean_diff > 0).sum())} are higher. "
                      f"[BA curves for both classifiers and feature sets](figures/ba_vs_k_{dataset}.png).")
+    lines += ["", "The best observed EMD count is three or four on every dataset with the fixed classical model. "
+              "For the datasets where that best-count improvement passes family B's correction:", ""]
+    for row in primary_best[primary_best.family == "emd"].itertuples():
+        pair = primary[(primary.family == "B") & (primary.dataset == row.dataset) &
+                       (primary.method_a == row.method)]
+        if len(pair) and pair.iloc[0].p_nb_holm < .05:
+            effect = pair.iloc[0]
+            lines.append(f"- {row.dataset}, EMD K={row.k}: {100*effect.mean_diff:+.3f} pp "
+                         f"[{100*effect.ci_low:+.3f}, {100*effect.ci_high:+.3f}], Holm p={effect.p_nb_holm:.6g}, versus K=8.")
     lines += ["", "## Default k_max truncation, family C", "",
               "These inputs keep the coarsest sequential stages. Their final residual combines every finer "
               "stage and the finest solver residual. They therefore answer a different question from the native "
@@ -410,9 +482,11 @@ def write_report(destination, summary, best, tests, reading, counts, padding, co
               "LightGBM/comp and LightGBM/comp+log_scale. Fixed-classical results retain 15 splits. "
               f"LightGBM uses {5*len(plan['lightgbm_seeds'])} splits on seeds {plan['lightgbm_seeds']}, "
               f"with feature sets {plan['lightgbm_feature_sets']}. "
-              "Completed default fits outside that scope are saved in per_split_scores.csv with analysis_eligible=False. "
+              + (f"All {int(summary.n_splits.sum()):,} completed fits are in the planned scope. " if not plan['cuts'] else
+                 "Completed default fits outside that scope are saved in per_split_scores.csv with analysis_eligible=False. ") +
               "[Scores](per_split_scores.csv), [mean scores](score_summary.csv), "
               "[best observed K](best_k.csv) and [secondary test details](paired_tests.csv) provide the numbers.", ""]
+    secondary_rows = []
     for variant in ("classical/comp+log_scale", "lightgbm/comp", "lightgbm/comp+log_scale"):
         part = tests[(tests.variant == variant) & (tests.metric == "balanced_accuracy")]
         if part.empty:
@@ -422,6 +496,17 @@ def write_report(destination, summary, best, tests, reading, counts, padding, co
         negative = ((a.mean_diff < 0) & (a.p_nb_holm < .05)).sum()
         lines.append(f"- {variant}: family A has {positive} positive and {negative} negative Holm-significant "
                      f"contrasts out of {len(a)}. Family C has {int((c.p_nb_holm < .05).sum())}/{len(c)} significant contrasts.")
+        for dataset in DATASETS:
+            matched = a[(a.dataset == dataset) & a.k.isin([5, 6]) & a.method_b.str.startswith("emd")]
+            gd = c[(c.dataset == dataset) & (c.method_b == "irmf_h2_a1.41")].iloc[0]
+            secondary_rows.append({"Variant": variant, "Dataset": dataset,
+                                   "K=5,6 gains positive/significant": f"{int(((matched.mean_diff > 0) & (matched.p_nb_holm < .05)).sum())}/{len(matched)}",
+                                   "GD60 k8 - full, pp": f"{100*gd.mean_diff:+.3f}",
+                                   "C Holm p": f"{gd.p_nb_holm:.6g}"})
+    lines += ["", "The exploratory summary below counts positive, Holm-significant IMF-vs-EMD gains at "
+              "K=5 and K=6, out of the available four contrasts. It also shows the GD60/k_max=8 change "
+              "against GD60/full. The primary matched-count reading remains the classical/comp family A.", "",
+              pd.DataFrame(secondary_rows).to_markdown(index=False), ""]
     for dataset in DATASETS:
         part = summary[(summary.dataset == dataset) & (summary.feature_set == "comp")]
         raw = part[part.method == "raw"]
@@ -429,7 +514,7 @@ def write_report(destination, summary, best, tests, reading, counts, padding, co
             f"{r.classifier} {100*r.balanced_accuracy_mean:.3f}%" for r in raw.itertuples()) + ".")
     lines += ["", "## Slot contents and padding", "",
               "[Slot energies](slot_energies.csv) report median and 95th-percentile relative power for every "
-              "native slot, plus radius and true scale rank. Energy uses the shared feature definition, each "
+              "native slot, pooled over frame-channels, plus radius and true scale rank. Energy uses the shared feature definition, each "
               "slot's power divided by the sum of slot powers. The decompositions are not orthogonal, so this "
               "is not an additive partition of input power. Slot numbers alone do not equate scales across "
               "methods or across native schedules. The IMF solver residual is the finest content. "
@@ -437,10 +522,13 @@ def write_report(destination, summary, best, tests, reading, counts, padding, co
               "cached slots. Feature count matches across methods at matched K even where EMD has padding.", "",
               padding_table.to_markdown(index=False, floatfmt=".4f"), "",
               "## Compute cost and solver integrity", "",
-              f"Measured runner wall time including the pilot is {totals['runner_wall_seconds']/3600:.3f} hours. "
+              f"Timed processing and classification sections, plus the pilot, total {totals['runner_wall_seconds']/3600:.3f} wall hours. "
+              "Classification timers begin after input-array preparation. "
+              f"Calendar elapsed time from the first pilot entry to analysis is {totals['elapsed_since_first_pilot_seconds']/3600:.3f} hours, "
+              "including tests, commits, implementation and waits between phases. "
               f"The summed measured CPU time is {totals['measured_cpu_seconds']/3600:.3f} hours. CPU includes "
               "classification fits, block decomposition/feature work and native pilot fits; it excludes direct "
-              "normalization, direct pilot verification, worker JIT/startup and orchestration. These are concurrent-load measurements. "
+              "normalization, input-array preparation, direct pilot verification, worker JIT/startup, tests and orchestration. These are concurrent-load measurements. "
               f"New external data occupy {totals['new_data_bytes']/1e9:.3f} GB against the 60 GB cap. "
               "[Session timings](compute_totals.json), [costs per input](costs.csv), [pilot timings](pilot_timings.csv).", "",
               "Measured native decomposition CPU seconds per complete frame, including every channel, "
@@ -449,16 +537,22 @@ def write_report(destination, summary, best, tests, reading, counts, padding, co
               native_costs.to_markdown(index=False, floatfmt=".6f"), "",
               f"There are {len(caps)} recorded Newton window-stage cap hits, across "
               f"{len(caps[['dataset','method','frame_id','channel']].drop_duplicates()) if len(caps) else 0} channels. "
+              f"The full population includes {totals['native_irmf_channel_decompositions']:,} native IRMF channel decompositions. "
+              f"The timing pilot recorded {totals['pilot_cap_hit_attempts']} cap-hit attempts. "
               "Every accepted native IRMF channel converged. There are zero unresolved Newton failures. "
+              f"There are {len(failures)} failed solver attempts before any retry. "
               "[Cap events](newton_cap_events.csv) preserves every 100-iteration retry and its failed-row count. "
+              "[Failed attempts](newton_failures.csv) includes errors independently of cap status. "
               "pimf stayed at 0.4.0 with all five installed Python-file hashes equal to the initial fingerprint. "
-              "Each runner's complete fingerprint record stays under the external components/audit/ directories.", "",
+              "Each runner's complete fingerprint record stays under the external components/audit/ directories. "
+              "The [final integrity record](integrity.json) also confirms that model, construction and shared "
+              "feature code hashes match the manifests used by their runs.", "",
               "## Deviations and limits", "",
               "No fixed-classical dataset, contrast, split, component count or feature set was cut. "
               + ("No LightGBM budget cut was triggered. " if not plan['cuts'] else
                  "The pre-specified LightGBM cuts applied were: " + "; ".join(plan['cuts']) + ". ") +
               "No shared study module or installed pimf file changed. "
-              "The initial pilot and test commands were launched concurrently. Their combined worker peak "
+              "During setup, the initial pilot and test commands were launched concurrently, an execution oversight. Their combined worker peak "
               "was not recorded, so compliance with the aggregate worker cap cannot be verified for that "
               "initial interval. Subsequent processing, classification and test phases ran sequentially. "
               "The label-free pilot supplied timing only. "
@@ -477,7 +571,8 @@ def write_report(destination, summary, best, tests, reading, counts, padding, co
               "The CPU total has the measurement exclusions stated above, so it is not a complete operating-system "
               "accounting of every process. These timing exclusions changed no fitted input or result.", "",
               "This comparison concerns the fixed prepared populations and chosen classifiers. Matching feature "
-              "count does not match information per slot, active EMD components, or the scale spacing. "
+              "count does not match information per slot, active EMD components, or the scale spacing; "
+              "classical training-fold removal of constant features can also leave different effective widths. "
               "Best-K estimates use the same outer folds and remain descriptive.", "",
               "## Reproduce", "", "```bash",
               "cd /Users/mikhail/.t3/worktrees/imf/t3-44ed3594/experiments/classification-emd-irmf",
@@ -492,7 +587,9 @@ def write_report(destination, summary, best, tests, reading, counts, padding, co
               "../../.venv/bin/python -m components.analysis --out /absolute/path/to/fresh/export",
               "```", "", "Completed checkpoints resume without replacement. The original label-free pilot is already "
               "recorded and is not rerun over its immutable outputs. The full instructions and initial fingerprint "
-              "are in the [components README](../../../experiments/classification-emd-irmf/components/README.md).", ""]
+              "are in the [components README](../../../experiments/classification-emd-irmf/components/README.md), "
+              "including detached launches with fresh logs and PID records. The production new-input job "
+              "used nohup, a new session, closed stdin and regular-file stdout/stderr.", ""]
     (destination / "REPORT.md").write_text("\n".join(lines))
 
 
@@ -513,7 +610,13 @@ def main():
     summary, best = summarize(analytic)
     reading = survival_reading(tests)
     counts, padding = count_and_padding()
-    costs, energies, caps, verification, pilot, validations = processing_tables()
+    costs, energies, caps, failures, verification, pilot, validations = processing_tables()
+    feature_counts = {(row.dataset, row.method, feature_set): int(count)
+                      for row in costs.itertuples()
+                      for feature_set, count in (("comp", row.comp_features),
+                                                 ("comp+log_scale", row.comp_log_scale_features))}
+    assert all(row.n_features == feature_counts[row.dataset, row.method, row.feature_set]
+               for row in scores.itertuples())
     totals = compute_totals(scores, costs, pilot)
     assert totals["new_data_bytes"] <= 60_000_000_000
     # Build a fresh external draft first. Never replace a published export.
@@ -523,7 +626,7 @@ def main():
     tables = {"per_split_scores": scores, "score_summary": summary, "paired_tests": tests,
               "best_k": best, "survival_reading": reading, "emd_counts": counts,
               "padding_fractions": padding, "costs": costs, "slot_energies": energies,
-              "newton_cap_events": caps, "verification": verification,
+              "newton_cap_events": caps, "newton_failures": failures, "verification": verification,
               "pilot_timings": pilot, "default_validation": validations}
     for family in ("A", "B", "C"):
         tables[f"family_{family.lower()}"] = tests[(tests.family == family) &
@@ -538,10 +641,13 @@ def main():
         write_json(draft / "budget_timing_audit.json", json.loads(timing_audit.read_text()))
     write_json(draft / "integrity.json", {"pimf": check_pimf(), "pre_registration_commit": "0b19623",
                "protocol_sha256": file_hash(HERE / "PROTOCOL_components.md"),
+               "analysis_sha256": file_hash(Path(__file__)),
+               "presentation_sha256": file_hash(HERE / "presentation.py"),
                "verified_code_manifests": code_records})
     plot_curves(summary, figures)
     plot_forest(tests, figures)
-    write_report(draft, summary, best, tests, reading, counts, padding, costs, caps, verification, validations, totals, plan)
+    write_report(draft, summary, best, tests, reading, counts, padding, costs, caps, failures, verification, validations, totals, plan)
+    write_overview(draft, tests, best, reading, totals)
     args.out.mkdir(parents=True, exist_ok=True)
     if any(args.out.iterdir()):
         raise RuntimeError(f"refuse to overwrite existing export: {args.out}; fresh draft is {draft}")
