@@ -186,6 +186,8 @@ def render_report(out,scores,tests,stability,costs,diagnostics,fit_costs,reading
     exact_checks=sum(r['exact'] for v in verifications for r in v['rows'])
     total_checks=sum(len(v['rows']) for v in verifications)
     restart_notes=[]
+    parallel_path=root('dronerf')/'runs/parallel_schedule.json'
+    parallel=json.loads(parallel_path.read_text())
     for dataset in DATASETS:
         for path in sorted((root(dataset)/'runs/restarts').glob('*.json')):
             record=json.loads(path.read_text())
@@ -331,8 +333,10 @@ def render_report(out,scores,tests,stability,costs,diagnostics,fit_costs,reading
        'Every accepted IRMF channel converged. The timing pilots had zero cap hits and '
        'zero failed channels. [Pilot measurements](../../../experiments/classification-emd-irmf/robustness/provenance/pilot_costs.csv).','',
        '## Compute cost and dependency audit','',
-       'At most six single-thread worker processes were used for this experiment. The '
-       'three real datasets ran serially; another agent could use other cores. '
+       'The real datasets overlapped after the dated scheduling change. DroneRF used six '
+       'workers, BirdCLEF four and ESC-50 two, for at most 12 robustness workers '
+       'total; each used one BLAS/OpenMP thread. Stage wall times below overlap, so '
+       'their sum is total stage exposure rather than elapsed real-batch makespan. '
        'The table separates stage wall time from measured CPU summed over worker fits. '
        'Feature CPU includes decomposition, feature extraction and stack/drift comparison '
        'inside each method timer. It excludes worker initialization, I/O and the shared '
@@ -385,6 +389,16 @@ def render_report(out,scores,tests,stability,costs,diagnostics,fit_costs,reading
        '- An initial multiprocessing launch from stdin failed before computation. '
        'All successful runs use importable modules. No checkpoint or result was replaced.',
        *restart_notes,
+       f'- On {parallel["utc"]}, at the user\'s request, BirdCLEF and ESC-50 were '
+       'started concurrently with DroneRF to bring their results forward. The serial '
+       f'launcher (PID {parallel["prior_serial_launcher_pid"]}) was stopped while its '
+       f'DroneRF child (PID {parallel["preserved_dronerf_runner_pid"]}) continued. '
+       'The old report waiter was replaced with one that checks each dataset completion. '
+       'Dataset-specific locks prevent concurrent runs on the same dataset. The '
+       'allocation was DroneRF six, BirdCLEF four and ESC-50 two single-thread '
+       'workers. Within each dataset, all feature conditions precede shift classical '
+       'fits, which precede LightGBM and matched fits. Only scheduling changed; '
+       f'conditions, features, classifiers and splits did not. [Run record]({parallel_path}).',
        '- The shared current classical grids are used as requested. In particular, '
        'DroneRF uses the full shared SVM C grid, whereas the historical 10class report '
        'used fixed C=.1. The new clean scores are therefore the baselines for every '
@@ -408,7 +422,10 @@ def render_report(out,scores,tests,stability,costs,diagnostics,fit_costs,reading
        'PY=../../.venv/bin/python', '$PY -m pytest -q tests robustness/tests',
        '$PY -m robustness.run --dataset synthetic --workers 6',
        "$PY -c 'from robustness.analysis import smoke; smoke()'",
-       '$PY -m robustness.run_real', '$PY -m robustness.analyse', '```','',
+       '$PY -m robustness.run_locked --dataset dronerf --workers 6',
+       '$PY -m robustness.run_locked --dataset birdclef2023 --workers 4',
+       '$PY -m robustness.run_locked --dataset esc50_animals --workers 2',
+       '$PY -m robustness.analyse', '```','',
        'The timing pilot commands and protocol details are in '
        '[robustness/README.md](../../../experiments/classification-emd-irmf/robustness/README.md). '
        'All full data, numeric checkpoints and predictions remain under each dataset\'s '

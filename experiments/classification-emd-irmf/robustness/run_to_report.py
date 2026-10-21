@@ -8,20 +8,29 @@ from datetime import datetime, timezone
 import psutil
 
 from emdirmf.paths import OUTPUT_ROOT
+from robustness.contamination import DATASETS
 from robustness.environment import verify
 from robustness.storage import root, save_json
 
 
 def wait_for_real_batch():
-    runs = root('dronerf')/'runs'
-    while not (runs/'real_batch.json').exists():
+    record = json.loads((root('dronerf')/'runs/parallel_schedule.json').read_text())
+    pids = {'dronerf': record['preserved_dronerf_runner_pid']}
+    pids.update({dataset: launch['pid']
+                 for dataset, launch in record['detached_launches'].items()})
+    for dataset in DATASETS[1:]:
+        if dataset not in pids:
+            raise RuntimeError(f'Missing detached run for {dataset}')
+    while True:
         verify()
-        records = sorted((runs/'detached').glob('*.json'))
-        if records:
-            record = json.loads(records[-1].read_text())
-            if not psutil.pid_exists(record['pid']):
-                raise RuntimeError(f'Detached real-data batch exited before success: {record}')
-        print(f'{datetime.now(timezone.utc).isoformat()} waiting for real batch', flush=True)
+        pending = [dataset for dataset in DATASETS[1:]
+                   if not (root(dataset)/'runs/classification.json').exists()]
+        if not pending:
+            break
+        for dataset in pending:
+            if not psutil.pid_exists(pids[dataset]):
+                raise RuntimeError(f'{dataset} runner {pids[dataset]} exited before success')
+        print(f'{datetime.now(timezone.utc).isoformat()} waiting for {pending}', flush=True)
         time.sleep(30)
     verify()
 

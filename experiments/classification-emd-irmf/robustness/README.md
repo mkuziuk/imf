@@ -71,3 +71,15 @@ constraint. A separate detached completion process (PID 12822) waits for the
 three real datasets, then runs the required tests and publishes the report;
 its [log](/Users/mikhail/Datasets/imf-classification/dronerf/robustness/runs/report_supervisor.log)
 is in the same directory.
+
+At 2026-10-21 15:02 UTC the user requested concurrent real-dataset runs. The
+serial launcher (PID 19215) and its old report waiter (PID 12822) were stopped;
+the existing DroneRF child (PID 19217) and its six workers continued. BirdCLEF
+started as detached PID 1882 with four workers and ESC-50 as detached PID 1883
+with two workers. Each new launcher holds a dataset-specific kernel lock and
+writes to its own file-backed log. The [scheduling record](/Users/mikhail/Datasets/imf-classification/dronerf/robustness/runs/parallel_schedule.json)
+contains the timestamps, PIDs, log paths and pinned dependency hashes. Thus
+the robustness total is at most 12 single-thread workers while the separate
+job uses four cores. Each dataset completes features before any classifiers;
+shift classical fits for all methods and both feature sets precede LightGBM
+and matched fits. The final report lists this scheduling deviation.
