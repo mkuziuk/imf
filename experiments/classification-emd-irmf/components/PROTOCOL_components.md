@@ -208,4 +208,41 @@ Direct-cache verification covers the same 50 frames/dataset, every channel,
 EMD K=3..8, both converged IMF truncations at k=4,8,12, and GD60/k=8.
 The acceptance threshold is relative L2 error <2e-7 after float32 storage,
 consistent with independent rounding of cached stages and residuals.
+
+## Initial resource-audit limitation
+
+The initial pilot and test commands were launched concurrently. Each
+experimental pool was limited to six workers, but the combined peak including
+test workers was not recorded. Subsequent processing, classification and test
+phases run sequentially. The pilot used no labels and supplied timing only;
+this gap concerns the initial resource audit.
 The unit tests additionally assert reconstruction and every native endpoint.
+
+## Historical tree timing audit after pre-registration
+
+The initial projection treated historical tree wall times as single-thread CPU
+equivalents. The run JSONs show two threads for synthetic and BirdCLEF, and one
+thread for DroneRF and ESC-50. This corrects a timing assumption, without using
+new-input classification results. Multiplying the historical fit wall times by
+their declared thread counts gives a conservative tree CPU-equivalent estimate
+of 42592.5 seconds. The revised total projection, with the same 20% allowance, is
+10.534 hours on six workers. This remains below 12 hours, so no cut is triggered.
+All actual new fits use one thread per process. Source hashes and the calculation
+are in DATA_ROOT/synthetic/components/budget_timing_audit.json.
+
+## Measured default timing decision
+
+Before any new-input classification, the completed default fits supplied
+single-thread CPU measurements. The budget uses timing fields only, without
+new-input scores. Completed runner wall time is retained, and remaining fits
+use their full-default family's CPU mean per feature set, divided by six
+with a 20% allowance. This is conservative for inputs with fewer features.
+
+- Tier 0: projected total wall 11.148 hours.
+
+Chosen tier 0: no cuts.
+All fixed-classical families retain all 15 splits and both feature sets.
+Completed default LightGBM fits outside the selected seed/feature scope stay
+on disk and in the score export, flagged as unused for paired analysis.
+The complete timing-only decision and checkpoint hashes are in
+DATA_ROOT/synthetic/components/budget_plan.json.

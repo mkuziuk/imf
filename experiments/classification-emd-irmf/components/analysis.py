@@ -13,7 +13,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
-from components.classification import CLASSICAL, FEATURE_SETS
+from components.classification import CLASSICAL, FEATURE_SETS, population
+from components.budget import eligible, load_plan, selection
 from components.construction import BASE_TAGS, DEFAULTS, EMD_K, NATIVE_K, TRUNC_K, all_tags, native_ratio, parse_tag
 from components.integrity import DATA_ROOT, DATASETS, HERE, check_pimf, record_entry
 from components.processing import BLOCK_SIZE
@@ -25,6 +26,21 @@ METRICS = ("balanced_accuracy", "macro_f1", "accuracy")
 CONTRASTS = (("irmf", "emd"), ("linear", "emd"), ("irmf", "linear"))
 COLORS = {"linear": "#2673a8", "irmf": "#c45b28", "emd": "#278b63"}
 DISPLAY = {"linear": "Linear IMF", "irmf": "IRMF", "emd": "EMD"}
+
+
+def verify_code_manifests():
+    records = []
+    for dataset in DATASETS:
+        for name in ("processing_manifest.json", "classification_manifest_defaults.json",
+                     "classification_manifest_experiment.json", "budgeted_classification_manifest.json"):
+            manifest = json.loads((run_dir(dataset) / name).read_text())
+            for relative_path, expected in manifest["code"].items():
+                current = file_hash(STUDY / relative_path)
+                if current != expected:
+                    raise RuntimeError(f"STOP: code changed since {dataset}/{name}: {relative_path}")
+                records.append({"dataset": dataset, "manifest": name, "path": relative_path,
+                                "sha256": current})
+    return records
 
 
 def registered_pairs(family):
@@ -48,8 +64,10 @@ def registered_pairs(family):
     return pairs
 
 
-def load_scores():
+def load_scores(plan=None):
+    plan = selection(0) if plan is None else plan
     rows = []
+    expected = 0
     for dataset in DATASETS:
         validation = json.loads((run_dir(dataset) / "default_validation.json").read_text())
         if not validation["passed"]:
@@ -58,22 +76,34 @@ def load_scores():
             for feature_set in FEATURE_SETS:
                 for tag in all_tags():
                     for split_id in range(15):
+                        seed = population(dataset)[3][split_id].seed
+                        use = eligible({"classifier": classifier, "method": tag,
+                                        "feature_set": feature_set, "seed": seed}, plan)
+                        if tag not in BASE_TAGS and not use:
+                            continue
+                        expected += 1
                         path = run_dir(dataset) / "fits" / classifier / feature_set / tag / f"{split_id:02d}.json"
                         row = json.loads(path.read_text())
                         assert (row["dataset"], row["method"], row["classifier"], row["feature_set"], row["split_id"]) == (
                             dataset, tag, classifier, feature_set, split_id)
-                        rows.append(row)
+                        rows.append({**row, "analysis_eligible": use})
     table = pd.DataFrame(rows)
-    assert len(table) == 6960 and np.isfinite(table[list(METRICS)]).all().all()
+    assert len(table) == expected and np.isfinite(table[list(METRICS)]).all().all()
+    assert len(table[table.classifier != "lightgbm"]) == 3480
+    actual = sum(len(list((run_dir(dataset) / "fits").glob("*/*/*/*.json"))) for dataset in DATASETS)
+    assert actual == expected, ("unexpected or incomplete fit coverage", actual, expected)
     return table
 
 
-def paired_tests(scores):
+def paired_tests(scores, plan=None):
+    plan = selection(0) if plan is None else plan
     rows = []
     for family in ("A", "B", "C"):
         for tree, feature_set in ((False, "comp"), (False, "comp+log_scale"),
                                   (True, "comp"), (True, "comp+log_scale")):
             if family == "B" and (tree or feature_set != "comp"):
+                continue
+            if tree and feature_set not in plan["lightgbm_feature_sets"]:
                 continue
             variant = ("lightgbm" if tree else "classical") + "/" + feature_set
             for dataset in DATASETS:
@@ -81,9 +111,12 @@ def paired_tests(scores):
                 cell = scores[(scores.dataset == dataset) & (scores.classifier == classifier) &
                               (scores.feature_set == feature_set)]
                 for k, contrast, a, b in registered_pairs(family):
+                    if tree and (a not in plan["lightgbm_tags"] or b not in plan["lightgbm_tags"]):
+                        continue
                     first = cell[cell.method == a].sort_values("split_id").reset_index(drop=True)
                     second = cell[cell.method == b].sort_values("split_id").reset_index(drop=True)
-                    assert len(first) == len(second) == 15
+                    n_splits = 5 * len(plan["lightgbm_seeds"]) if tree else 15
+                    assert len(first) == len(second) == n_splits
                     assert np.array_equal(first.split_id, second.split_id)
                     assert np.array_equal(first.n_train, second.n_train) and np.array_equal(first.n_test, second.n_test)
                     for metric in METRICS:
@@ -97,7 +130,11 @@ def paired_tests(scores):
     tests["holm_family"] = tests.apply(lambda r: "/".join(
         [r.family, r.variant, r.metric] + ([] if r.family == "A" else [r.dataset])), axis=1)
     for _, indices in tests.groupby("holm_family").groups.items():
-        expected = {"A": 48, "B": 17, "C": 8}[tests.loc[indices[0], "family"]]
+        row = tests.loc[indices[0]]
+        tree = row.variant.startswith("lightgbm/")
+        expected = sum(not tree or (a in plan["lightgbm_tags"] and b in plan["lightgbm_tags"])
+                       for _, _, a, b in registered_pairs(row.family))
+        expected *= 4 if row.family == "A" else 1
         assert len(indices) == expected
         for kind in ("nb", "wilcoxon"):
             tests.loc[indices, f"p_{kind}_holm"] = holm(tests.loc[indices, f"p_{kind}"])
@@ -188,6 +225,7 @@ def summarize(scores):
     keys = ["dataset", "classifier", "feature_set", "method", "n_features"]
     summary = scores.groupby(keys)[list(METRICS)].agg(["mean", "std"]).reset_index()
     summary.columns = ["_".join(part for part in col if part) if isinstance(col, tuple) else col for col in summary.columns]
+    summary = summary.merge(scores.groupby(keys).size().reset_index(name="n_splits"), on=keys, validate="one_to_one")
     best = []
     for (dataset, classifier, feature_set), cell in summary.groupby(["dataset", "classifier", "feature_set"]):
         for family in ("linear", "irmf", "emd"):
@@ -198,7 +236,8 @@ def summarize(scores):
             winner = candidates.sort_values(["balanced_accuracy_mean", "k"], ascending=[False, True]).iloc[0]
             best.append({"dataset": dataset, "classifier": classifier, "feature_set": feature_set, "family": family,
                          "k": int(winner.k), "method": winner.method,
-                         "balanced_accuracy": winner.balanced_accuracy_mean, "n_features": winner.n_features})
+                         "balanced_accuracy": winner.balanced_accuracy_mean, "n_features": winner.n_features,
+                         "n_splits": int(winner.n_splits)})
     return summary, pd.DataFrame(best)
 
 
@@ -221,6 +260,10 @@ def plot_curves(summary, figures):
             for row, feature_set in enumerate(FEATURE_SETS):
                 axis = axes[row, col]
                 cell = summary[(summary.dataset == dataset) & (summary.classifier == classifier) & (summary.feature_set == feature_set)]
+                if cell.empty:
+                    axis.text(.5, .5, "Omitted by pre-specified budget cut", ha="center", va="center")
+                    axis.set_axis_off()
+                    continue
                 for family in ("emd", "linear", "irmf"):
                     part = cell[cell.method.map(lambda t: parse_tag(t).family == family and parse_tag(t).construction in ("default", "native", "fold"))].copy()
                     length = 1024 if dataset == "synthetic" else 2048
@@ -232,7 +275,7 @@ def plot_curves(summary, figures):
                     axis.scatter([last.k], [100 * last.balanced_accuracy_mean], marker="s", s=65, color=COLORS[family])
                 raw = cell[cell.method == "raw"].iloc[0].balanced_accuracy_mean
                 axis.axhline(100 * raw, color="#777777", linestyle=":", label="Raw")
-                axis.set_title(f"{classifier}, {feature_set}")
+                axis.set_title(f"{classifier}, {feature_set}, {int(cell.n_splits.iloc[0])} splits")
                 axis.set_xlabel("Extracted components K, plus one residual")
                 axis.set_ylabel("Mean balanced accuracy (%)")
                 axis.grid(alpha=.2)
@@ -290,12 +333,17 @@ def compute_totals(scores, costs, pilot):
             "cpu_scope": "fit CPU, block decomposition and feature CPU, and native timing pilot; excludes normalization, direct pilot verification, JIT/startup and orchestration"}
 
 
-def write_report(destination, summary, best, tests, reading, counts, padding, costs, caps, verification, validations, totals):
+def write_report(destination, summary, best, tests, reading, counts, padding, costs, caps, verification, validations, totals, plan):
     primary = tests[(tests.variant == "classical/comp") & (tests.metric == "balanced_accuracy")]
     family_a = primary[primary.family == "A"]
     family_c = primary[primary.family == "C"]
     primary_best = best[(best.feature_set == "comp") & (best.classifier != "lightgbm")].copy()
     primary_best["BA (%)"] = (100 * primary_best.balanced_accuracy).map(lambda x: f"{x:.3f}")
+    padding_table = padding.pivot(index="dataset", columns="k", values="padding_fraction") * 100
+    padding_table = padding_table.rename(columns=lambda k: f"K={k}, % padded").reset_index()
+    native_costs = costs[costs.construction == "native"].pivot(
+        index=["dataset", "family"], columns="k", values="new_decomposition_cpu_seconds_per_frame")
+    native_costs = native_costs.rename(columns=lambda k: f"K={k}").reset_index()
     lines = ["# Component count and signal classification", "", "## Question and design", "",
              "Does the IMF advantage over EMD persist when the extracted component count is matched? "
              "This experiment compares clean prepared frames on four datasets using the existing 15 grouped splits. "
@@ -303,7 +351,8 @@ def write_report(destination, summary, best, tests, reading, counts, padding, co
              "0.25 L to 1.5 samples. EMD retains its first K IMFs, with zero padding where needed. A separate "
              "construction truncates the default IMF cascade at the coarsest k_max stages.", "",
              "The pre-registration commit is `0b19623`. The [protocol](../../../experiments/classification-emd-irmf/components/PROTOCOL_components.md) "
-             "records tags, exact ratios, the 50-frame label-free pilot and the 9.93-hour budget projection. "
+             "records tags, exact ratios, the 50-frame label-free pilot and the initial 9.93-hour budget projection. "
+             "An audit of historical tree thread counts revised that projection to 10.53 hours, still below the cut threshold. "
              "The study default ends at radius 2 samples and has 15 extracted stages for synthetic, 17 for the "
              "other datasets. Native K therefore changes both count and spacing, with a slightly finer endpoint. "
              "Matched counts control feature dimension; they do not make the decompositions' scale bands identical.", "",
@@ -357,17 +406,22 @@ def write_report(destination, summary, best, tests, reading, counts, padding, co
                      f"[{100*row.ci_low:+.3f}, {100*row.ci_high:+.3f}], Holm p={row.p_nb_holm:.6g}.")
     lines += ["", "## Secondary results", "",
               "The exploratory variants have separate corrections: 48 family-A tests across datasets and "
-              "eight family-C tests within each dataset, separately for classical/comp+log_scale, "
-              "LightGBM/comp and LightGBM/comp+log_scale. All retain 15 splits. "
+              "eight family-C tests within each dataset before budget cuts, separately for classical/comp+log_scale, "
+              "LightGBM/comp and LightGBM/comp+log_scale. Fixed-classical results retain 15 splits. "
+              f"LightGBM uses {5*len(plan['lightgbm_seeds'])} splits on seeds {plan['lightgbm_seeds']}, "
+              f"with feature sets {plan['lightgbm_feature_sets']}. "
+              "Completed default fits outside that scope are saved in per_split_scores.csv with analysis_eligible=False. "
               "[Scores](per_split_scores.csv), [mean scores](score_summary.csv), "
               "[best observed K](best_k.csv) and [secondary test details](paired_tests.csv) provide the numbers.", ""]
     for variant in ("classical/comp+log_scale", "lightgbm/comp", "lightgbm/comp+log_scale"):
         part = tests[(tests.variant == variant) & (tests.metric == "balanced_accuracy")]
+        if part.empty:
+            continue
         a, c = part[part.family == "A"], part[part.family == "C"]
         positive = ((a.mean_diff > 0) & (a.p_nb_holm < .05)).sum()
         negative = ((a.mean_diff < 0) & (a.p_nb_holm < .05)).sum()
         lines.append(f"- {variant}: family A has {positive} positive and {negative} negative Holm-significant "
-                     f"contrasts out of 48. Family C has {int((c.p_nb_holm < .05).sum())}/32 significant contrasts.")
+                     f"contrasts out of {len(a)}. Family C has {int((c.p_nb_holm < .05).sum())}/{len(c)} significant contrasts.")
     for dataset in DATASETS:
         part = summary[(summary.dataset == dataset) & (summary.feature_set == "comp")]
         raw = part[part.method == "raw"]
@@ -381,6 +435,7 @@ def write_report(destination, summary, best, tests, reading, counts, padding, co
               "methods or across native schedules. The IMF solver residual is the finest content. "
               "[Padding fractions](padding_fractions.csv) report absent Kth EMD slots, checked against all-zero "
               "cached slots. Feature count matches across methods at matched K even where EMD has padding.", "",
+              padding_table.to_markdown(index=False, floatfmt=".4f"), "",
               "## Compute cost and solver integrity", "",
               f"Measured runner wall time including the pilot is {totals['runner_wall_seconds']/3600:.3f} hours. "
               f"The summed measured CPU time is {totals['measured_cpu_seconds']/3600:.3f} hours. CPU includes "
@@ -388,6 +443,10 @@ def write_report(destination, summary, best, tests, reading, counts, padding, co
               "normalization, direct pilot verification, worker JIT/startup and orchestration. These are concurrent-load measurements. "
               f"New external data occupy {totals['new_data_bytes']/1e9:.3f} GB against the 60 GB cap. "
               "[Session timings](compute_totals.json), [costs per input](costs.csv), [pilot timings](pilot_timings.csv).", "",
+              "Measured native decomposition CPU seconds per complete frame, including every channel, "
+              "are below. Shared normalization and feature extraction are separate. These are full-population "
+              "measurements rather than the pilot projections.", "",
+              native_costs.to_markdown(index=False, floatfmt=".6f"), "",
               f"There are {len(caps)} recorded Newton window-stage cap hits, across "
               f"{len(caps[['dataset','method','frame_id','channel']].drop_duplicates()) if len(caps) else 0} channels. "
               "Every accepted native IRMF channel converged. There are zero unresolved Newton failures. "
@@ -395,9 +454,26 @@ def write_report(destination, summary, best, tests, reading, counts, padding, co
               "pimf stayed at 0.4.0 with all five installed Python-file hashes equal to the initial fingerprint. "
               "Each runner's complete fingerprint record stays under the external components/audit/ directories.", "",
               "## Deviations and limits", "",
-              "No dataset, fixed-classical contrast, split, component count or feature set was cut. "
-              "No LightGBM budget cut was triggered. No shared study module or installed pimf file changed. "
+              "No fixed-classical dataset, contrast, split, component count or feature set was cut. "
+              + ("No LightGBM budget cut was triggered. " if not plan['cuts'] else
+                 "The pre-specified LightGBM cuts applied were: " + "; ".join(plan['cuts']) + ". ") +
+              "No shared study module or installed pimf file changed. "
+              "The initial pilot and test commands were launched concurrently. Their combined worker peak "
+              "was not recorded, so compliance with the aggregate worker cap cannot be verified for that "
+              "initial interval. Subsequent processing, classification and test phases ran sequentially. "
+              "The label-free pilot supplied timing only. "
               "The protocol explicitly retained the historical DroneRF C=0.1 rather than the generic SVM grid. "
+              "After pre-registration, the historical LightGBM timing sources were found to use two threads for "
+              "synthetic and BirdCLEF, rather than the single-thread assumption used in the initial CPU-equivalent "
+              "projection. Multiplying those wall times by their declared thread counts raised the projection "
+              "from 9.93 to 10.53 hours. This timing correction used no new-input scores and triggered no cut. "
+              "The appended protocol run notes and external budget_timing_audit.json preserve the correction. "
+              "The new default LightGBM fits then showed higher CPU costs than those historical timings. "
+              "Before classifying any new input, the default-only timing measurements were used to freeze "
+              f"budget tier {plan['level']}. The uncut projection was {plan['projections'][0]['projected_total_wall_hours']:.3f} hours; "
+              f"the selected tier projected {plan['projected_total_wall_hours']:.3f} hours. "
+              "[The complete timing-only decision](budget_plan.json) records every "
+              "tested cut tier, completed wall time and projected remaining CPU cost. It uses no new-input scores. "
               "The CPU total has the measurement exclusions stated above, so it is not a complete operating-system "
               "accounting of every process. These timing exclusions changed no fitted input or result.", "",
               "This comparison concerns the fixed prepared populations and chosen classifiers. Matching feature "
@@ -411,7 +487,8 @@ def write_report(destination, summary, best, tests, reading, counts, padding, co
               "../../.venv/bin/python -m pytest -q tests components/tests",
               "../../.venv/bin/python -m components.processing --workers 6",
               "../../.venv/bin/python -m components.classification --phase defaults --workers 6",
-              "../../.venv/bin/python -m components.classification --phase experiment --workers 6",
+              "../../.venv/bin/python -m components.budget --append-notes",
+              "../../.venv/bin/python -m components.run_budgeted --workers 6",
               "../../.venv/bin/python -m components.analysis --out /absolute/path/to/fresh/export",
               "```", "", "Completed checkpoints resume without replacement. The original label-free pilot is already "
               "recorded and is not rerun over its immutable outputs. The full instructions and initial fingerprint "
@@ -426,9 +503,14 @@ def main():
     for dataset in DATASETS:
         record_entry(dataset, "final_analysis")
     check_pimf()
-    scores = load_scores()
-    tests = paired_tests(scores)
-    summary, best = summarize(scores)
+    if not (run_dir("synthetic") / "budget_plan.json").exists():
+        raise RuntimeError("Freeze the measured-default timing budget before final analysis")
+    plan = load_plan()
+    code_records = verify_code_manifests()
+    scores = load_scores(plan)
+    analytic = scores[scores.analysis_eligible].copy()
+    tests = paired_tests(analytic, plan)
+    summary, best = summarize(analytic)
     reading = survival_reading(tests)
     counts, padding = count_and_padding()
     costs, energies, caps, verification, pilot, validations = processing_tables()
@@ -450,11 +532,16 @@ def main():
     for name, table in tables.items():
         table.to_csv(draft / f"{name}.csv", index=False)
     write_json(draft / "compute_totals.json", totals)
+    write_json(draft / "budget_plan.json", plan)
+    timing_audit = run_dir("synthetic") / "budget_timing_audit.json"
+    if timing_audit.exists():
+        write_json(draft / "budget_timing_audit.json", json.loads(timing_audit.read_text()))
     write_json(draft / "integrity.json", {"pimf": check_pimf(), "pre_registration_commit": "0b19623",
-               "protocol_sha256": file_hash(HERE / "PROTOCOL_components.md")})
+               "protocol_sha256": file_hash(HERE / "PROTOCOL_components.md"),
+               "verified_code_manifests": code_records})
     plot_curves(summary, figures)
     plot_forest(tests, figures)
-    write_report(draft, summary, best, tests, reading, counts, padding, costs, caps, verification, validations, totals)
+    write_report(draft, summary, best, tests, reading, counts, padding, costs, caps, verification, validations, totals, plan)
     args.out.mkdir(parents=True, exist_ok=True)
     if any(args.out.iterdir()):
         raise RuntimeError(f"refuse to overwrite existing export: {args.out}; fresh draft is {draft}")

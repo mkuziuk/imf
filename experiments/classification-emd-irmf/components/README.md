@@ -17,7 +17,8 @@ study_python=../../.venv/bin/python
 "$study_python" -m components.pilot
 "$study_python" -m components.processing --workers 6
 "$study_python" -m components.classification --phase defaults --workers 6
-"$study_python" -m components.classification --phase experiment --workers 6
+"$study_python" -m components.budget --append-notes
+"$study_python" -m components.run_budgeted --workers 6
 "$study_python" -m components.analysis
 ```
 
@@ -27,6 +28,30 @@ incomplete checkpoint is an explicit error. Default validation precedes new
 input classification. Each entry records and checks pimf against
 [pimf_baseline.json](pimf_baseline.json). A changed version or hash stops the run.
 The final analysis requires complete expected coverage and verified defaults.
+
+Launch long runners detached, one phase at a time. Redirect stdin, stdout and
+stderr, retain the PID, and inspect the log and immutable checkpoints before
+starting the next phase. For example, after freezing the budget:
+
+```bash
+run_log="$IMF_CLS_DATA/synthetic/components/budgeted_run.log"
+nohup "$study_python" -u -m components.run_budgeted --workers 6 \
+  </dev/null >"$run_log" 2>&1 &
+run_pid=$!
+printf '%s\n' "$run_pid" >"$IMF_CLS_DATA/synthetic/components/budgeted_run.pid"
+```
+
+Use fresh log and PID filenames for another launch; retain earlier records.
+Do not run multiple experimental pools at once. A fresh session created with
+`subprocess.Popen(..., start_new_session=True)` is also supported.
+
+The default fits also supply measured CPU costs for the 12-hour rule. The
+budget command freezes the first sufficient pre-specified cut tier before any
+new-input fit. It uses timing fields only. The budgeted runner keeps every
+fixed-classical job, and applies any cuts only to LightGBM. Completed default
+fits outside the selected LightGBM scope remain intact; the score export flags
+them as unused for paired analysis. Do not launch the original full-grid
+`classification --phase experiment` entry after freezing a reduced budget.
 
 Use `--datasets synthetic` to restrict a runner for diagnosis. Stored native
 stacks, features, diagnostics, predictions and logs remain in each external
