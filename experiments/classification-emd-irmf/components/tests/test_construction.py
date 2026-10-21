@@ -8,6 +8,7 @@ from components.construction import (
 )
 from components.integrity import check_pimf
 from emdirmf.decompose import decompose_signal, emd_components, normalize_frame
+from emdirmf.irmf_newton import NewtonSmoothAbs
 
 
 @pytest.mark.parametrize("length", [1024, 2048])
@@ -54,3 +55,38 @@ def test_tags_are_unique_and_local():
     for bad in ("linear_native_k8", "emd_k9", "irmf_trunc_k6"):
         with pytest.raises(ValueError):
             parse_tag(bad)
+
+
+def test_newton_recomputes_entire_channel_at_larger_cap(monkeypatch):
+    import components.construction as construction
+
+    class CapOnLastIteration(NewtonSmoothAbs):
+        def solve(self, windows, weights):
+            values = super().solve(windows, weights)
+            if self.root_max_iter == 100:
+                self.diagnostics[-1]["iterations_max"] = 100
+            return values
+
+    y = normalize_frame(np.random.default_rng(18).normal(size=1024))[0]
+    expected, _ = native_components(y, "irmf", 3)
+    monkeypatch.setattr(construction, "NewtonSmoothAbs", CapOnLastIteration)
+    actual, info = native_components(y, "irmf", 3)
+    assert [attempt["cap"] for attempt in info["attempts"]] == [100, 1000]
+    assert info["attempts"][0]["cap_stages"] == [0, 1, 2]
+    assert not info["attempts"][1]["cap_stages"]
+    np.testing.assert_array_equal(actual, expected)
+
+
+def test_newton_never_accepts_failed_retry(monkeypatch):
+    import components.construction as construction
+
+    class FailedRoot(NewtonSmoothAbs):
+        def solve(self, windows, weights):
+            super().solve(windows, weights)
+            self.diagnostics[-1].update(iterations_max=self.root_max_iter, failed_rows=1)
+            raise RuntimeError("injected unconverged row")
+
+    y = normalize_frame(np.random.default_rng(19).normal(size=1024))[0]
+    monkeypatch.setattr(construction, "NewtonSmoothAbs", FailedRoot)
+    with pytest.raises(RuntimeError, match="unaccepted Newton fit after retry"):
+        native_components(y, "irmf", 3)
