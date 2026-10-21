@@ -25,3 +25,28 @@ def test_did_uses_same_split_clean_gap():
     d, train, test = did_vector(table,'synthetic','logreg','comp','shift','impulse2_0.04','imf_linear_a1.41')
     np.testing.assert_allclose(d,.3)
     np.testing.assert_array_equal(test/train, np.repeat(.25,15))
+
+
+def test_common_frame_rescoring_handles_equal_counts_different_ids(monkeypatch, tmp_path):
+    from robustness.analysis import common_impulse_gauss_vector
+    truth=np.array(['a','b','a','b','a','b'])
+    ids=np.arange(6)
+    for method in ('irmf_h2_a1.41_conv','imf_linear_a1.41'):
+        folder=tmp_path/method
+        folder.mkdir()
+        robust=method.startswith('irmf')
+        np.savez(folder/'predictions.npz',
+                 clean__ids=ids, clean__pred=truth,
+                 **{'impulse2_0.04__ids':ids[:4],
+                    'impulse2_0.04__pred':truth[:4] if robust else truth[:4][::-1],
+                    'gauss_0.04__ids':ids[2:],
+                    'gauss_0.04__pred':truth[2:][::-1] if robust else truth[2:]})
+    monkeypatch.setattr('robustness.classification.checkpoint',lambda d,s,c,m,f,i:tmp_path/m)
+    monkeypatch.setattr('robustness.analysis.load_info',lambda d:{'primary_task':'signal','tasks':{'signal':'y_signal'}})
+    monkeypatch.setattr('robustness.analysis.load_meta',lambda d:pd.DataFrame({'y_signal':truth}))
+    rows=[dict(dataset='synthetic',classifier='logreg',feature_set='comp',scenario='shift',
+          condition='impulse2_0.04',method='irmf_h2_a1.41_conv',split_id=i,n_train=100) for i in range(15)]
+    d,train,test=common_impulse_gauss_vector(pd.DataFrame(rows),'synthetic','logreg','comp',
+                                            'impulse2_0.04','imf_linear_a1.41')
+    np.testing.assert_array_equal(d,np.full(15,2.))
+    np.testing.assert_array_equal(test,np.full(15,2))

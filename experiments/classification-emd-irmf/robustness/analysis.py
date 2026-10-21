@@ -78,6 +78,43 @@ def specs(dataset):
                    scenario='shift', comparator=LINEAR, condition=condition, contrast='impulse_minus_gauss_DiD')
 
 
+
+def common_impulse_gauss_vector(scores, dataset, classifier, feature_set, condition, comparator):
+    """Rescore the same held-out IDs if condition failures differ, even at equal counts."""
+    from robustness.classification import checkpoint
+    gauss = 'gauss_' + condition.rsplit('_', 1)[1]
+    info, meta = load_info(dataset), load_meta(dataset)
+    y = meta[label_column(info)].to_numpy(dtype=str)
+    differences, train_sizes, test_sizes = [], [], []
+    for sid in range(15):
+        predictions = {}
+        common = None
+        for method in (ROBUST, comparator):
+            path = checkpoint(dataset, 'shift', classifier, method, feature_set, sid)/'predictions.npz'
+            with np.load(path, allow_pickle=False) as z:
+                for c in (condition, gauss, 'clean'):
+                    ids, pred = z[c+'__ids'], z[c+'__pred']
+                    predictions[(method,c)] = dict(zip(ids.tolist(),pred.tolist()))
+                    common = set(ids.tolist()) if common is None else common & set(ids.tolist())
+        ids = np.array(sorted(common),dtype=int)
+        if set(y[ids]) != set(y):
+            raise RuntimeError('common impulse/Gaussian fold loses classes')
+        gaps = []
+        for c in (condition, gauss):
+            scores_c = []
+            for method in (ROBUST, comparator):
+                pred = np.array([predictions[(method,c)][int(i)] for i in ids],dtype=str)
+                scores_c.append(balanced_accuracy_score(y[ids], pred))
+            gaps.append(scores_c[0]-scores_c[1])
+        differences.append(gaps[0]-gaps[1])
+        a = scores[(scores.dataset==dataset)&(scores.classifier==classifier)&
+            (scores.feature_set==feature_set)&(scores.scenario=='shift')&
+            (scores.condition==condition)&(scores.method==ROBUST)&(scores.split_id==sid)]
+        train_sizes.append(int(a.iloc[0].n_train))
+        test_sizes.append(len(ids))
+    return np.array(differences),np.array(train_sizes),np.array(test_sizes)
+
+
 def paired_tests(scores, datasets=DATASETS):
     verify()
     rows, vectors = [], []
@@ -88,9 +125,13 @@ def paired_tests(scores, datasets=DATASETS):
             if spec['contrast'] == 'impulse_minus_gauss_DiD':
                 other = dict(args, condition='gauss_'+spec['condition'].rsplit('_',1)[1])
                 dg, nt, ne = did_vector(scores, **other)
-                if not np.array_equal(test, ne):
-                    raise RuntimeError('Differential failures require common-frame rescoring before impulse/Gaussian tests')
-                d = d-dg
+                valid_a = np.load(root(dataset)/'matrices'/spec['condition']/'valid.npy', allow_pickle=False)
+                valid_b = np.load(root(dataset)/'matrices'/other['condition']/'valid.npy', allow_pickle=False)
+                if not np.array_equal(valid_a, valid_b):
+                    d, train, test = common_impulse_gauss_vector(scores, dataset, spec['classifier'],
+                        spec['feature_set'], spec['condition'], spec['comparator'])
+                else:
+                    d = d-dg
             row = dict(spec, n_splits=len(d), holm_family=('synthetic_added' if dataset == 'synthetic' else spec['family']),
                        status=('synthetic, added after pre-registration at the user\'s request'
                                if dataset == 'synthetic' else ('confirmatory' if spec['family']=='Primary' else 'exploratory')))

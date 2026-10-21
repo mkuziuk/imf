@@ -33,3 +33,15 @@ requires inspection; no overwrite flag is provided. Full component stacks exist
 only for the 100 fixed pilot/figure frames per condition. Numeric NPZ files use
 allow_pickle=False; estimators are never pickled. Small report tables and figures
 will live in `output/classification-emd-irmf/robustness/`.
+
+The active feature provenance files are `manifest_v2.json` and
+`clean_verification_v2.json`. Each `features/<condition>/part_<start>.npz`
+contains all four methods' numeric arrays. The failed first raw-precision audit
+is preserved separately; it produced no contaminated outputs. The report builder
+verifies exact clean reproduction and recomputes all per-split metrics from the
+saved Unicode predictions. `run_real` runs the three real datasets serially.
+
+The 2026-10-21 amendment adds all 87 synthetic contrasts in one separate Holm
+family. Real-data family membership remains as pre-registered. Every summary
+figure includes all four datasets. `analyse --out <new-directory>` can render
+another report copy without replacing an existing artifact directory.

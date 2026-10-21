@@ -60,3 +60,13 @@ def test_checkpoints_do_not_replace_or_pickle(tmp_path):
         np.testing.assert_array_equal(z['x'], np.arange(10))
     with pytest.raises(TypeError):
         save_npz(tmp_path/'bad.npz', x=np.array([object()]))
+
+
+def test_raw_preserves_shared_float64_feature_path():
+    from emdirmf.features import frame_features, raw_components
+    x=np.random.default_rng(99).normal(size=(1,2,1024)).astype(np.float32)
+    components,scale=raw_components(x)
+    expected=np.r_[frame_features(components)[0].astype(np.float32).astype(float),scale[0]]
+    actual,_,_,error=extract(x[0],'synthetic',1,'clean','raw')
+    assert not error
+    np.testing.assert_array_equal(actual,expected)
