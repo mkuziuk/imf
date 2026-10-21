@@ -151,6 +151,9 @@ Throughput is about 1 ms per frame at L = 1024 with 16 slots.
   standard error), the corrected t-test, a Wilcoxon signed-rank test, win/tie/loss
   counts, and Holm-adjusted p-values over the whole table. The default pairs are
   irmf-emd, irmf-imf_linear, imf_linear-emd, and each method against raw.
+  Additional tags also get cross-family and within-family pairs, so H,
+  convergence and schedule variants are never collapsed to one representative.
+  Pass explicit `pairs` to restrict the comparison family.
 
 `baselines/run_classical.py` runs phase 2. It computes Kruskal-Wallis H and
 epsilon² and binned Miller-Madow mutual information per feature. It then fits
@@ -160,6 +163,17 @@ imputer, constant filter, StandardScaler and classifier, with tuning by grouped
 inner 3-fold CV. Each runs with and without `log_scale`. `--breakdown COLUMN`
 adds metrics per subset of a meta column. Outputs go to
 `output/classification-emd-irmf/NAME/classical/`.
+
+For a new classical run, use `--results-tag RUN_NAME` to write predictions to
+`DATA_ROOT/NAME/results/RUN_NAME/classical_<task>_predictions.parquet` and
+`--out` to isolate its small tables. Omitting the tag preserves the legacy path.
+`--save-probabilities` adds native `prob_<class>` columns from the same fitted
+model. Columns identify class order; absent training classes get zero and models
+without `predict_proba`, including linear SVM, get NaN. No calibration or score
+conversion is performed. The default label-only export is unchanged.
+`fit_predict_split(..., return_probabilities=True)` returns metrics, predictions,
+probabilities and class order; its default still returns metrics and predictions.
+String labels use NumPy Unicode so wrapper NPZ exports can use `allow_pickle=False`.
 
 ## Timing (one process, CPU seconds per frame and channel)
 

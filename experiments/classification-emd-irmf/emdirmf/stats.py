@@ -11,6 +11,8 @@ splits (J = 5 folds x 3 seeds = 15).
 - Holm step-down adjustment within each comparison table.
 """
 
+from itertools import combinations
+
 import numpy as np
 import pandas as pd
 from scipy import stats as scipy_stats
@@ -104,8 +106,25 @@ def representative_tags(methods):
 
 
 def default_pairs(methods):
+    """Keep the primary pair order, then include every other distinct tag pair.
+
+    Ablation tags must not disappear behind one representative of their family.
+    Cross-family contrasts retain DEFAULT_FAMILY_PAIRS orientation; same-family
+    contrasts use input order. The four-method default is unchanged.
+    """
+    methods = list(dict.fromkeys(methods))
     chosen = representative_tags(methods)
-    return [(chosen[a], chosen[b]) for a, b in DEFAULT_FAMILY_PAIRS if a in chosen and b in chosen]
+    pairs = [(chosen[a], chosen[b]) for a, b in DEFAULT_FAMILY_PAIRS if a in chosen and b in chosen]
+    seen = {frozenset(pair) for pair in pairs}
+    for a, b in combinations(methods, 2):
+        if frozenset((a, b)) in seen:
+            continue
+        families = (parse_method(a).family, parse_method(b).family)
+        if families[::-1] in DEFAULT_FAMILY_PAIRS:
+            a, b = b, a
+        pairs.append((a, b))
+        seen.add(frozenset((a, b)))
+    return pairs
 
 
 def to_long(per_split, metrics=("balanced_accuracy", "macro_f1", "accuracy"), id_columns=None):

@@ -150,8 +150,18 @@ def split_metrics(y_true, y_pred, labels):
     return out
 
 
-def fit_predict_split(estimator, X, y, split, *, groups=None, labels=None):
-    """Fit a fresh clone on split.train, predict split.test; returns (metrics row, predictions)."""
+def fit_predict_split(estimator, X, y, split, *, groups=None, labels=None,
+                      return_probabilities=False):
+    """Return metrics and predictions from a fresh training-fold fit.
+
+    String labels use Unicode arrays; numeric labels retain their dtype. With
+    return_probabilities, also return native probabilities and their class order.
+    Estimators without predict_proba return an (n_test, 0) array. The default
+    two-item return value is unchanged.
+    """
+    y = np.asarray(y)
+    if y.dtype.kind == "O" and all(isinstance(label, str) for label in y):
+        y = y.astype(str)
     labels = sorted(set(y)) if labels is None else labels
     model = clone(estimator)
     fit_params = {}
@@ -163,8 +173,14 @@ def fit_predict_split(estimator, X, y, split, *, groups=None, labels=None):
         model.fit(X[split.train], y[split.train], **fit_params)
         fit_seconds = time.perf_counter() - started
         started = time.perf_counter()
-        y_pred = model.predict(X[split.test])
+        y_pred = np.asarray(model.predict(X[split.test]))
+        if y.dtype.kind == "U":
+            y_pred = y_pred.astype(str)
         predict_seconds = time.perf_counter() - started
+        if return_probabilities:
+            probabilities = model.predict_proba(X[split.test]) if hasattr(model, "predict_proba") \
+                else np.empty((len(split.test), 0))
+            classes = np.asarray(model.classes_, dtype=y.dtype) if probabilities.shape[1] else np.array([], dtype=y.dtype)
     row = {
         "split_id": split.split_id,
         "seed": split.seed,
@@ -176,7 +192,9 @@ def fit_predict_split(estimator, X, y, split, *, groups=None, labels=None):
         "best_params": json.dumps(getattr(model, "best_params_", None), default=str),
     }
     row.update(split_metrics(y[split.test], y_pred, labels))
-    return row, np.asarray(y_pred)
+    if return_probabilities:
+        return row, y_pred, probabilities, classes
+    return row, y_pred
 
 
 def evaluate(pipeline_factory, X, y, splits, *, groups=None, n_jobs=1, return_predictions=False):

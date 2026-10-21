@@ -2,7 +2,8 @@
 
   .venv/bin/python experiments/classification-emd-irmf/baselines/run_classical.py \
       --dataset NAME [--task TASK] [--methods raw emd imf_linear_a1.41 irmf_h2_a1.41] \
-      [--workers 6] [--breakdown META_COLUMN] [--quick]
+      [--workers 6] [--breakdown META_COLUMN] [--quick] \
+      [--save-probabilities] [--results-tag RUN_NAME]
 
 For every method tag (feature table from emdirmf.run_features) and both feature
 sets (components only, components + log_scale) this runs
@@ -21,6 +22,8 @@ sets (components only, components + log_scale) this runs
 on the shared splits (emdirmf.cv.make_splits). Outputs go to
 output/classification-emd-irmf/NAME/classical/ (long-format CSV, comparison
 tables, summary.md); out-of-fold predictions go to DATA_ROOT/NAME/results/.
+--results-tag isolates predictions under results/RUN_NAME/. --save-probabilities
+adds native prob_<class> columns, with NaN for nonprobabilistic classifiers.
 """
 
 import argparse
@@ -174,7 +177,10 @@ def discriminability(table, y, method, slot_labels):
 # ---------------------------------------------------------------------------
 
 
-def _job(key, estimator, X, y, split, groups, labels):
+def _job(key, estimator, X, y, split, groups, labels, save_probabilities=False):
+    if save_probabilities:
+        return (key, *fit_predict_split(estimator, X, y, split, groups=groups, labels=labels,
+                                       return_probabilities=True))
     row, y_pred = fit_predict_split(estimator, X, y, split, groups=groups, labels=labels)
     return key, row, y_pred
 
@@ -273,13 +279,16 @@ def write_summary(path, context, folds, comparisons, disc, costs, breakdown):
 
 
 def run(dataset, task=None, methods=DEFAULT_METHODS, workers=1, breakdown=None, quick=False,
-        classifier_names=None, out=None):
+        classifier_names=None, out=None, *, save_probabilities=False, results_tag=None):
+    if results_tag is not None and (not results_tag or results_tag in (".", "..")
+                                    or "/" in results_tag or "\\" in results_tag):
+        raise ValueError("results_tag must be a nonempty directory name, not a path")
     started = time.perf_counter()
     workers = check_workers(workers)
     single_thread_env()
     info, meta = load_info(dataset), load_meta(dataset)
     task = info["primary_task"] if task is None else task
-    y = meta[label_column(info, task)].astype(str).to_numpy()
+    y = meta[label_column(info, task)].to_numpy(dtype=str)
     groups = meta["group"].astype(str).to_numpy()
     labels = sorted(set(y))
     splits = make_splits(dataset, task)
@@ -320,28 +329,43 @@ def run(dataset, task=None, methods=DEFAULT_METHODS, workers=1, breakdown=None, 
                     for split in splits:
                         jobs.append(((tag, feature_set, name), model, X, split))
         print(f"{len(jobs)} fits on {workers} workers", flush=True)
+        # Do not pass a new keyword to existing dataset-local worker wrappers
+        # unless probability export was explicitly requested.
+        job_options = {"save_probabilities": True} if save_probabilities else {}
         with parallel_config(backend="loky", inner_max_num_threads=1):
             outputs = Parallel(n_jobs=workers, verbose=0)(
-                delayed(_job)(key, model, X, y, split, groups, labels) for key, model, X, split in jobs
+                delayed(_job)(key, model, X, y, split, groups, labels, **job_options)
+                for key, model, X, split in jobs
             )
         del jobs, X
     rows, predictions = [], []
     split_by_id = {split.split_id: split for split in splits}
-    for (tag, feature_set, name), row, y_pred in outputs:
+    for (tag, feature_set, name), row, y_pred, *probability_output in outputs:
         row.update(method=tag, feature_set=feature_set, classifier=name)
         rows.append(row)
         split = split_by_id[row["split_id"]]
-        predictions.append(pd.DataFrame({
+        prediction = pd.DataFrame({
             "method": tag, "feature_set": feature_set, "classifier": name, "split_id": split.split_id,
             "seed": split.seed, "fold": split.fold, "n_train": len(split.train), "n_test": len(split.test),
-            "frame_id": split.test, "y_true": y[split.test], "y_pred": y_pred,
-        }))
+            "frame_id": split.test, "y_true": y[split.test], "y_pred": np.asarray(y_pred, dtype=str),
+        })
+        if save_probabilities:
+            probabilities, classes = probability_output
+            # Column names carry the class order. Missing training classes get
+            # zero; estimators without native probabilities get NaN, not scores.
+            for label in labels:
+                prediction[f"prob_{label}"] = 0.0 if len(classes) else np.nan
+            for index, label in enumerate(classes):
+                prediction[f"prob_{label}"] = probabilities[:, index]
+        predictions.append(prediction)
     folds = pd.DataFrame(rows)
     folds.insert(0, "task", task)
     folds.insert(0, "dataset", dataset)
     folds["subset"] = "all"
     predictions = pd.concat(predictions, ignore_index=True)
     pred_dir = results_dir(dataset)
+    if results_tag is not None:
+        pred_dir = pred_dir / results_tag
     pred_dir.mkdir(parents=True, exist_ok=True)
     categorical = ["method", "feature_set", "classifier", "y_true", "y_pred"]
     predictions.astype({column: "category" for column in categorical}).to_parquet(
@@ -383,7 +407,9 @@ def run(dataset, task=None, methods=DEFAULT_METHODS, workers=1, breakdown=None, 
     write_summary(out / f"summary_{task}.md", context, folds, comparisons, disc, costs, breakdown_rows)
     with open(out / f"run_{task}.json", "w") as handle:
         json.dump({**context, "classifiers": list(models), "feature_sets": list(FEATURE_SETS),
-                   "pairs": pairs, "quick": quick}, handle, indent=2)
+                   "pairs": pairs, "quick": quick, "results_tag": results_tag,
+                   "save_probabilities": save_probabilities,
+                   "predictions": str(pred_dir / f"classical_{task}_predictions.parquet")}, handle, indent=2)
     print(f"wrote {out} in {context['seconds']:.0f} s")
     return folds, comparisons
 
@@ -399,9 +425,13 @@ def main(argv=None):
     parser.add_argument("--breakdown", default=None, help="meta column for per-subset metrics")
     parser.add_argument("--quick", action="store_true", help="first seed only (5 splits)")
     parser.add_argument("--out", default=None, help="output directory (default output/.../NAME/classical)")
+    parser.add_argument("--results-tag", default=None,
+                        help="prediction subdirectory under DATA_ROOT/NAME/results (default: legacy path)")
+    parser.add_argument("--save-probabilities", action="store_true",
+                        help="save native OOF prob_<class> columns; NaN for models without predict_proba")
     args = parser.parse_args(argv)
     run(args.dataset, args.task, args.methods, args.workers, args.breakdown, args.quick, args.classifiers,
-        args.out)
+        args.out, save_probabilities=args.save_probabilities, results_tag=args.results_tag)
     return 0
 
 
