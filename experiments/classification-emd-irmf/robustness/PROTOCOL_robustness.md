@@ -220,3 +220,23 @@ represent the planning proxy as an observed CPU total.
 Tests passed before pre-registration: 108 existing and 4 new tests, 112 total.
 Every later commit requires the existing suite plus robustness tests. Commits
 are local, with explicit paths and the required Co-Authored-By trailer.
+
+## Amendment requested on 2026-10-21
+
+After pre-registration commit d44a287, the user requested that synthetic receive
+all new comparisons in addition to its smoke-test role. Keep every pre-registered
+real-data family and the pilot budget decisions above unchanged. Run the six
+synthetic impulse DiDs and the synthetic counterparts of S1 through S5 wherever
+data exist, plus the same stability measures. Label them "synthetic, added after
+pre-registration at the user's request". Holm correct all synthetic test rows
+together in one separate family, retaining the original contrast/family labels
+for interpretation. Under the selected budget there are 87 synthetic tests: 6
+primary counterparts, 6 S1, 9 S2, 18 S3, 36 S4 and 12 S5. They do not enter the
+18-test confirmatory family or any pre-registered real-data secondary family.
+Show synthetic alongside the real datasets in every result table and figure,
+with its post-registration status stated. Record this amendment in REPORT.md.
+
+A separate agent owns the component-count experiment. Do not inspect, edit or
+stage its code, output or external data directories. Use explicit file paths in
+both git add and git commit. Keep this experiment's pool at six workers even
+while the other agent runs its own six-worker pool.
