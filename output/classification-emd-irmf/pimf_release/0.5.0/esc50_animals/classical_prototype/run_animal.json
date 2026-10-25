@@ -1,0 +1,29 @@
+{
+  "dataset": "esc50_animals",
+  "task": "animal",
+  "methods": [
+    "irmf_h2_a1.41_conv"
+  ],
+  "n_frames": 5100,
+  "n_groups": 157,
+  "n_classes": 10,
+  "n_splits": 15,
+  "n_seeds": 3,
+  "workers": 4,
+  "seconds": 1038.650410540984,
+  "breakdown": null,
+  "classifiers": [
+    "lda",
+    "logreg",
+    "linsvm"
+  ],
+  "feature_sets": [
+    "comp",
+    "comp+log_scale"
+  ],
+  "pairs": [],
+  "quick": false,
+  "results_tag": "prototype",
+  "save_probabilities": false,
+  "predictions": "/Users/mikhail/Datasets/imf-classification-prototype-conv/esc50_animals/results/prototype/classical_animal_predictions.parquet"
+}
