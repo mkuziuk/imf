@@ -571,7 +571,6 @@ def laplace_charts(out: Path, laplace_dir: Path):
                                   "reading": reading.to_dict(orient="records")}
     if final:
         laplace_matched_chart(out, scores, present)
-        spike_vs_laplace_chart(out, laplace_dir)
 
 
 METHOD_KEY = {"irmf_h2_a1.41_conv": "irmf", "imf_linear_a1.41": "linear", "emd": "emd", "raw": "raw"}
@@ -609,46 +608,6 @@ def laplace_matched_chart(out: Path, scores: pd.DataFrame, datasets):
     handles.append(Line2D([], [], color=AXIS, lw=0.8, ls=(0, (2, 2)), label="chance"))
     fig.legend(handles=handles, loc="upper center", ncol=5, bbox_to_anchor=(0.53, 1.0), handlelength=1.2)
     save(fig, out, "lap_matched", {"values": values})
-
-
-def spike_vs_laplace_chart(out: Path, laplace_dir: Path):
-    """Primary gap changes (IRMF - linear IMF) of the spike and Laplace experiments, one panel per dataset."""
-    spike = pd.read_csv(OUT_ROOT / "robustness" / "primary_tests.csv")
-    lap = pd.read_csv(laplace_dir / "primary_tests.csv")
-    series = [(spike, "impulse1_", IMPULSE_RATES, 0, -0.13, "o", "one-sided spikes"),
-              (spike, "impulse2_", IMPULSE_RATES, 0, 0.13, "D", "two-sided spikes"),
-              (lap, "laplace_", ["0.1", "0.2", "0.3", "0.4"], 4, 0.0, "s", "Laplace noise")]
-    fig, axes = plt.subplots(1, 4, figsize=(FULL_W, FULL_H), sharey=True)
-    fig.subplots_adjust(left=0.085, right=0.99, top=0.84, bottom=0.15, wspace=0.12)
-    values = {}
-    for ax, ds in zip(axes, FOLLOW_UP_ORDER):
-        for tab, prefix, levels, x0, off, mk, label in series:
-            for i, lev in enumerate(levels):
-                r = tab[(tab.dataset == ds) & (tab.condition == prefix + lev) & (tab.contrast == "DiD")]
-                if len(r) != 1:
-                    raise ValueError(f"{ds} {prefix}{lev}: {len(r)} rows")
-                r = r.iloc[0]
-                ci_point(ax, x0 + i + off, pp(r.mean_diff), pp(r.ci_low), pp(r.ci_high), COLORS["irmf"],
-                         r.p_nb_holm < 0.05, horizontal=False, marker=mk, size=6.0 if mk == "o" else 5.5)
-                values.setdefault(ds, {}).setdefault(label, []).append(
-                    dict(condition=prefix + lev, did_pp=float(pp(r.mean_diff)), p_holm=float(r.p_nb_holm)))
-        zero_line(ax, horizontal=False)
-        ax.axvline(3, color=GRID, lw=0.9, zorder=0)
-        ax.set_xticks([0, 1, 2, 4, 5, 6, 7])
-        ax.set_xticklabels(["0.2", "1", "4", "10", "20", "30", "40"], fontsize=11)
-        ax.set_xlim(-0.6, 7.5)
-        ax.text(1, -0.1, "spikes, %", transform=ax.get_xaxis_transform(), ha="center", va="top", fontsize=12)
-        ax.text(5.5, -0.1, "Laplace, %", transform=ax.get_xaxis_transform(), ha="center", va="top", fontsize=12)
-        ax.set_title(DATASET_LABELS[ds], fontsize=14.5, pad=6)
-        ax.grid(axis="y", color=GRID, lw=0.6, zorder=0)
-        signed_ticks(ax, "y")
-    axes[0].set_ylabel("Change in IRMF " + MINUS + " linear IMF, pp")
-    handles = [Line2D([], [], ls="none", marker=mk, ms=6.5, mfc=COLORS["irmf"], mec="white", label=label)
-               for *_, mk, label in series]
-    handles += sig_legend_handles()
-    fig.legend(handles=handles, loc="upper center", ncol=5, bbox_to_anchor=(0.53, 1.0), handletextpad=0.1,
-               columnspacing=0.9, fontsize=11.5)
-    save(fig, out, "spike_vs_laplace_did", {"values": values})
 
 
 # --------------------------------------------------------------------------

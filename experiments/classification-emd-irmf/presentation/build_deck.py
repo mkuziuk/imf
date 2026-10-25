@@ -33,7 +33,7 @@ import pandas as pd
 REPO = Path(__file__).resolve().parents[3]
 OUT_ROOT = REPO / "output" / "classification-emd-irmf"
 DECK_DIR = Path.home() / "Documents" / "IRMF decks"
-DECK_NAME = "20261022 Spo LI Hae Kuz IRMF classification and robustness"
+DECK_NAME = "IRMF classification and robustness"
 CHARTS = DECK_DIR / "charts"
 MASTER = "Content Slide Enumeration"
 MINUS = "\u2212"
@@ -131,32 +131,18 @@ def slides(data, laplace_dir: Path, v3_dir: Path):
 
     IE, IL, LE = (f"IRMF {MINUS} EMD", f"IRMF {MINUS} linear IMF", f"Linear IMF {MINUS} EMD")
 
-    add(section=None, title="Outline", body=[
-        "The question and the datasets",
-        "Methods and what we compared",
-        "Main study: IRMF, EMD, linear IMF and raw frames",
-        "Number of components",
-        "pimf 0.5.0 and 0.5.1 releases",
-        "Robustness: impulsive spikes and Laplace noise",
-        "Notebook-scale spikes at each method's best number of components",
-        "Conclusions and backup",
-    ], notes="Order: design first (data, methods, comparisons), then the results as plots.")
-
     add(section="Design", title="The Question", body=[
         "Does a robust multiscale decomposition (IRMF) give better classification features than EMD, "
         "linear IMF and raw frames?",
         "Does it hold up better when the test signals are contaminated?",
-        "Every input sees the same normalized frames, the same 20 features per component, "
-        "the same classifiers and the same grouped folds",
-        "Linear IMF is the same recursive IMF with a quadratic contrast, so IRMF − linear IMF isolates "
-        "the robust contrast",
-    ], size=22, notes="Linear IMF is the key control: same schedule and kernel, only the contrast changes. "
-                      "Raw frames go through the same feature functions as a single component.")
+    ], size=24, notes="Linear IMF is the key control: same schedule and kernel, only the contrast changes. "
+                      "Every input sees the same normalized frames, the same 20 features per component, the same "
+                      "classifiers and the same grouped folds. Raw frames go through the same feature functions "
+                      "as a single component.")
 
     add(section="Design", title="Datasets", body=[
-        "Examples: frame 0 of each dataset, channel 0 (DroneRF L band), after median/MAD normalization",
-        "Groups never split across train and test; every comparison uses the same frames",
-        "60 GHz radar: main study only, excluded from all follow-ups (next slide)",
+        "Grouped by: frames from one group never appear in both training and test folds",
+        "Examples: first frame of each dataset, channel 0 (DroneRF L band), median/MAD normalized",
     ], size=16, body_y=588, body_h=118, image="dataset_frames.png", image_box=(BODY_X, 392, BODY_W), table=dict(
         header=["Dataset", "Signal", "Classes", "Frame length", "Frames", "Grouped by"],
         rows=[
@@ -175,55 +161,53 @@ def slides(data, laplace_dir: Path, v3_dir: Path):
               "The robustness runs exclude 100 fixed pilot frames per dataset.")
 
     add(section="Design", title="Datasets: 60 GHz Radar (Main Study Only)", body=[
-        "Public subset of Kang et al. (IEEE VTC2024-Fall; IEEE DataPort, doi 10.21227/c8r5-6h79): one indoor "
-        "campaign, 60 GHz radar, I and Q channels",
-        "Targets mounted on a turntable or tripod in front of absorbers: DJI Mavic, DJI Phantom 3 Pro and a "
-        "flapping-wing toy bird; task bird vs drone",
-        "49 moving recordings, 784 frames of 1,000 samples (320 bird, 464 drone), 45 target-plus-pose groups; "
-        "16 range-angle cells per recording, clutter removed by subtracting each recording's mean",
-        "Main study: best balanced accuracy per input 96.5 to 99.3%; with the fixed LDA, IRMF − EMD +1.75 pp "
-        "and IRMF − linear IMF +0.83 pp, both Holm p = 1",
-        "Left out of the follow-ups: few groups and accuracy near the ceiling cannot separate the methods, "
-        "and mounted targets in one session are far from field conditions",
-    ], size=17, body_h=318, image="radar_frames.png", image_box=(BODY_X, 462, BODY_W),
-        notes="Source: github.com/sk8053/drone_bird_detection_with_radar (no license; research use only) and "
-              "the VTC2024-Fall paper. The pulse repetition frequency is undocumented, so frequencies are in "
+        "Public subset of Kang et al. (IEEE VTC2024-Fall): one indoor campaign, 60 GHz radar, I and Q channels",
+        "DJI Mavic, DJI Phantom 3 Pro and a flapping-wing toy bird on a turntable or tripod in front of "
+        "absorbers; task bird vs drone",
+        "49 moving recordings, 784 frames of 1,000 samples (320 bird, 464 drone), 45 target-plus-pose groups",
+        "Left out of the follow-ups: every input reaches 96.5 to 99.3% and no contrast is significant, "
+        "so these data cannot separate the methods",
+    ], size=17, body_h=250, image="radar_frames.png", image_box=(BODY_X, 430, BODY_W),
+        notes="Source: IEEE DataPort, doi 10.21227/c8r5-6h79; github.com/sk8053/drone_bird_detection_with_radar "
+              "(no license; research use only) and the VTC2024-Fall paper. 16 range-angle cells per recording, "
+              "clutter removed by subtracting each recording's mean. Mounted targets in one session are also "
+              "far from field conditions. The pulse repetition frequency is undocumented, so frequencies are in "
               "cycles per sample. The full 15 GB DataPort release was not used. Examples: the first bird and the "
               "first drone frame, I channel, median/MAD normalized. Best balanced accuracy per input (main study): "
-              "raw 96.53, EMD 97.60, linear IMF 98.48, IRMF 99.32 (60-step gradient descent).")
+              "raw 96.53, EMD 97.60, linear IMF 98.48, IRMF 99.32 (60-step gradient descent). With the fixed LDA, "
+              "IRMF − EMD +1.75 pp and IRMF − linear IMF +0.83 pp, both Holm p = 1.")
 
     add(section="Design", title="Methods: Decompositions", body=[
-        "Shared input: subtract the median, divide by 1.4826 MAD; the per-frame log scale is a separate "
-        "feature, results with and without it",
+        "Shared input: subtract the median, divide by 1.4826 MAD; the per-frame log scale is an optional extra "
+        "feature",
         "EMD: PyEMD defaults, 8 IMFs plus residue (zero padded when fewer)",
-        "Linear IMF: pimf.IMF(Quadratic()), window schedule h1 = 0.25, ratio a = √2, down to a 3 to 5 sample window",
-        "IRMF: the same recursive IMF with the robust SmoothAbs(H) contrast, H = 2σ, "
-        "σ = median|Δy| / (0.6745 √2) estimated on each normalized channel",
-        "IRMF solved to convergence by a safeguarded Newton solver in Numba (tolerance 1e−12), pimf 0.4.0 as driver",
-        "Main-study tables use pimf's default 60 gradient steps; the converged solver changes BA by "
-        "+0.83, +0.07 and −0.31 pp (DroneRF, BirdCLEF, ESC-50)",
+        "Linear IMF: pimf.IMF(Quadratic()), windows from h1 = 0.25 down to 3 to 5 samples, ratio a = √2",
+        "IRMF: the same recursive IMF with the robust SmoothAbs(H) contrast, so IRMF − linear IMF isolates the "
+        "robust fit; H = 2σ, σ = median|Δy| / (0.6745 √2) per normalized channel",
+        "Solver: pimf's default 60 gradient steps in the main study, a converged Newton solver (Numba, tolerance "
+        "1e−12) in the follow-ups; switching moves main-study BA by at most 0.83 pp",
     ], size=19, notes="Both IMF methods use one schedule, h_min = 1.5/L, 17 stages at L = 2,048 and 15 at 1,024. "
+                      "The converged solver changes balanced accuracy by +0.83, +0.07 and −0.31 pp (DroneRF, "
+                      "BirdCLEF, ESC-50); pimf 0.4.0 drives it. "
                       "The pimf default gradient solver leaves 16.6 to 55.0% of frames with a capped stage; "
                       "Newton solves the same lookup objective at 11.9 to 27.3 times lower cost on the "
-                      "RF and audio data. Follow-ups all use the converged solver.")
+                      "RF and audio data.")
 
-    add(section="Design", title="Methods: Features, Classifiers, Tests", body=[
+    add(section="Design", title="Methods: Features and Tests", body=[
         "20 features per component and channel: energy share, log energy, SD, mean |x|, skewness, kurtosis, "
         "crest, zero-crossing and extrema rates, Hilbert amplitude and frequency, spectral shape, "
         "Hjorth parameters, permutation entropy",
-        "Classifiers on these features: a fixed classical model per dataset and LightGBM (next slide)",
-        "5 grouped folds × 3 seeds; all scaling and tuning inside training folds",
+        "5 grouped folds × 3 seeds; all scaling and tuning inside the training folds",
         "Paired Nadeau-Bengio corrected t-tests and 95% intervals, Holm correction within each family",
         "Primary metric: balanced accuracy",
     ], size=19, notes="Holm families differ between studies; each slide uses the family of its source table.")
 
     add(section="Design", title="Methods: Classical Models and LightGBM", body=[
-        "Classical models are standard statistical classifiers on the per-component features. All share one "
-        "pipeline, fitted on the training fold only: median imputation, drop constant features, standardize, classify",
+        "Classical models: the six statistical classifiers below, one pipeline fitted on the training fold "
+        "(median imputation, drop constant features, standardize, classify), tuned by grouped 3-fold CV",
         "Fixed classical model: per dataset, the family with the best average over raw, EMD, linear IMF and IRMF "
         "in the main study, then held fixed for every input, so differences come from the features",
-        "Tuned parameters are chosen by grouped 3-fold CV inside the training fold",
-    ], size=16, body_h=190, table=dict(
+    ], size=16, body_h=150, table=dict(
         header=["Model", "What it is", "Tuned", "Fixed model for"],
         rows=[
             ["LDA", "linear discriminant, Ledoit-Wolf shrinkage", "none", "60 GHz radar"],
@@ -235,7 +219,7 @@ def slides(data, laplace_dir: Path, v3_dir: Path):
             ["LightGBM", "gradient-boosted trees, 15 leaves, rate 0.05", "rounds (≤ 500, early stop)",
              "second model, all datasets"],
         ],
-        widths=[180, 330, 190, 200], font=14, y=335, h=330),
+        widths=[180, 330, 190, 200], font=14, y=310, h=330),
         notes="Classical = the six statistical families of the main study's classical baselines "
               "(baselines/run_classical.py). The main study also ran ML models on the same features or on the "
               "frames (XGBoost, ExtraTrees, ROCKET variants, a 1-D CNN); the follow-ups use LightGBM as the "
@@ -247,10 +231,11 @@ def slides(data, laplace_dir: Path, v3_dir: Path):
         "(b) Number of components: K = 3 to 17, pre-registered equal-count test, pimf's default k_max = 8",
         "(c) pimf 0.5.0 and 0.5.1 releases vs our Newton prototype, on every frame",
         "(d) Impulsive spikes on 0.2%, 1% and 4% of test samples (amplitude A = 10)",
-        "(e) Laplace noise on 10% to 40% of test samples (scale = 1 robust SD); also trained and tested at 40%",
-        "(f) Notebook-scale spikes (scale 3σ, about 1.5 H) on 10% to 40% of test samples, IMF methods stopped "
-        "at 31 samples, each method at its best K; also trained and tested at 40%",
-        "(d) to (f): models trained on clean data, tested on the same folds clean and contaminated",
+        "(e) Laplace noise on 10% to 40% of test samples (scale = 1 robust SD)",
+        "(f) Notebook-scale spikes (scale 3σ, about 1.5 H) on 10% to 40% of test samples; IMF windows stop at "
+        "31 samples; each method at its best K",
+        "(d) to (f): trained on clean data, tested clean and contaminated on the same folds; (e) and (f) also "
+        "trained and tested at 40%",
     ], size=20, notes="(b), (d), (e) and (f) were pre-registered. Synthetic was added to (d) after pre-registration "
                       "at our request and has its own Holm family. (f) has a dated amendment, made before any "
                       "result: IRMF uses a fixed H per dataset.")
@@ -269,9 +254,8 @@ def slides(data, laplace_dir: Path, v3_dir: Path):
         "only DroneRF keeps Holm significance. IRMF here is the pimf default solver.")
 
     add(section="Main study", title="Main Study: Best Balanced Accuracy per Input", body=[
-        "Classical models: linear IMF and IRMF well above EMD and raw frames on the three large datasets",
-        "DroneRF: linear IMF best (57.5% classical, 69.5% LightGBM); BirdCLEF: a CNN on raw frames reaches 52.6% "
-        "vs 52.9% for IRMF",
+        "Linear IMF is best on DroneRF (57.5% classical, 69.5% LightGBM); with ML models the gaps narrow, and on "
+        "BirdCLEF a CNN on raw frames (52.6%) matches IRMF (52.9%)",
     ], size=18, image="main_best_ba.png", notes="Best outer-CV balanced accuracy among the models tried on each "
         "input, chosen separately per input. Descriptive, not a paired test. Converged IRMF (classical: "
         "DroneRF 50.36, BirdCLEF 49.57, ESC-50 65.29%) is within one point of the default. Synthetic ML used five "
@@ -286,9 +270,9 @@ def slides(data, laplace_dir: Path, v3_dir: Path):
 
     add(section="Components", title="Component Count: Balanced Accuracy vs K", body=[
         "IMF methods gain from more components; EMD is best with 3 or 4 IMFs and declines after that",
-        "Fixed classical model, features without log_scale; diamonds mark the study defaults "
-        "(17 IMF stages, 15 on synthetic; EMD 8 IMFs)",
-    ], size=18, image="comp_ba_vs_k.png", notes="For IMF and IRMF, K stages span the same range of scales as the "
+    ], size=18, image="comp_ba_vs_k.png", notes="Fixed classical model, features without log_scale. Diamonds mark "
+        "the study defaults (17 IMF stages, 15 on synthetic; EMD 8 IMFs). "
+        "For IMF and IRMF, K stages span the same range of scales as the "
         "default 17 stages, so fewer stages means wider spacing. EMD keeps its first K IMFs; the rest stays in the "
         "residue. Best EMD count improves on EMD K = 8 by +1.9 pp on DroneRF and +2.5 pp on BirdCLEF (Holm "
         "within dataset). Converged Newton IRMF throughout.")
@@ -297,18 +281,20 @@ def slides(data, laplace_dir: Path, v3_dir: Path):
     add(section="Components", title="Component Count: Equal Numbers of Components", body=[
         "Pre-registered test (both IMF methods beat EMD at K = 5 and 6, Holm): met on DroneRF and synthetic, "
         "not on ESC-50 (3 of 4) or BirdCLEF (0 of 4)",
-        f"{IE} at K = 5: {s(pp_(r5['dronerf']))} pp DroneRF, {s(pp_(r5['birdclef2023']))} BirdCLEF, "
-        f"{s(pp_(r5['esc50_animals']))} ESC-50 (Holm {p_text(r5['esc50_animals'].p_nb_holm)})",
-    ], size=18, image="comp_equal_k.png", notes="Holm across all 48 tests. Matched counts control feature "
+    ], size=18, image="comp_equal_k.png", notes="Fixed classical model, features without log_scale, Holm across "
+        f"all 48 tests. {IE} at K = 5: {s(pp_(r5['dronerf']))} pp DroneRF, {s(pp_(r5['birdclef2023']))} BirdCLEF, "
+        f"{s(pp_(r5['esc50_animals']))} ESC-50 (Holm {p_text(r5['esc50_animals'].p_nb_holm)}), "
+        f"{s(pp_(r5['synthetic']))} synthetic. Matched counts control feature "
         "dimension, not scale bands. DroneRF still favors linear IMF over IRMF at every K. With default counts the "
-        "IRMF − EMD gap was 11.6, 6.1, 10.7 and 34.3 pp (DroneRF, BirdCLEF, ESC-50, synthetic).")
+        "IRMF − EMD gap was 11.6, 6.1, 10.7 and 34.3 pp (DroneRF, BirdCLEF, ESC-50, synthetic). "
+        "Source: output/classification-emd-irmf/components/family_a.csv.")
 
     add(section="Components", title="Component Count: pimf Default k_max = 8", body=[
-        "Keeping only the 8 coarsest stages costs 8.8 to 10.4 pp on all four datasets (Holm p < 0.001)",
-        f"With pimf defaults, {IE} is +0.4 pp DroneRF and +1.2 ESC-50 (not significant), "
-        "−4.2 BirdCLEF (Holm p < 0.001)",
-        "pimf defaults = 60-step gradient descent with k_max = 8, i.e. pimf.IMF(SmoothAbs(H)).decompose(y)",
-    ], size=18, image="comp_kmax8.png", notes="With k_max = 8 pimf extracts the coarsest stages first and lumps "
+        "pimf's defaults (60 gradient steps, k_max = 8) keep only the 8 coarsest stages, which costs 8.8 to "
+        "10.4 pp on all four datasets (Holm p < 0.001)",
+        "Against EMD they lose the main-study advantage on real data; BirdCLEF falls to −4.2 pp (Holm p < 0.001)",
+    ], size=18, image="comp_kmax8.png", notes="pimf defaults = pimf.IMF(SmoothAbs(H)).decompose(y). With "
+        "k_max = 8 pimf extracts the coarsest stages first and lumps "
         "every finer stage into the residual. Holm within each dataset across eight contrasts. Synthetic keeps "
         "+25.7 pp over EMD.")
 
@@ -328,8 +314,7 @@ def slides(data, laplace_dir: Path, v3_dir: Path):
         f"(DroneRF {dr_within * 100:.1f}%); the rest differ where the score is flat",
         f"Classification, release − prototype: at most 0.18 pp (fixed classical), {max_all:.2f} pp over all "
         "classifiers; Holm p = 1 everywhere",
-        f"0.5.1: features byte-identical to 0.5.0 on all {n_ch:,} channels; Newton "
-        f"{timing['speedup_vs_0.5.0'].min():.1f}–{timing['speedup_vs_0.5.0'].max():.1f}× faster than 0.5.0",
+        f"0.5.1: features byte-identical to 0.5.0 on all {n_ch:,} channels",
     ], size=17, body_h=210, table=dict(
         header=["CPU s per frame", "Prototype", "pimf 0.5.0", "pimf 0.5.1", "0.5.1 vs 0.5.0"],
         rows=[[DS[ds], f"{r.cpu_s_prototype:.3f}", f"{r['cpu_s_pimf_0.5.0']:.3f}",
@@ -353,14 +338,16 @@ def slides(data, laplace_dir: Path, v3_dir: Path):
     I, L = "irmf_h2_a1.41_conv", "imf_linear_a1.41"
     c4 = "impulse2_0.04"
     add(section="Robustness", title="Impulsive Spikes: Balanced Accuracy", body=[
-        "Trained on clean data, tested on the same folds with spikes: on real data every input falls close to chance",
-        f"Two-sided spikes on 4% of samples, IRMF vs linear IMF: synthetic {ba('synthetic', I, c4):.1f} vs "
-        f"{ba('synthetic', L, c4):.1f}%, DroneRF {ba('dronerf', I, c4):.1f} vs {ba('dronerf', L, c4):.1f}%, "
-        f"BirdCLEF {ba('birdclef2023', I, c4):.1f} vs {ba('birdclef2023', L, c4):.1f}%, "
-        f"ESC-50 {ba('esc50_animals', I, c4):.1f} vs {ba('esc50_animals', L, c4):.1f}%",
-    ], size=18, image="imp_ba_curves.png", notes="Fixed classical model, features without log_scale. One-sided "
+        "Clean-trained models fall close to chance on every real dataset",
+        f"Synthetic is the exception: with spikes on 4% of samples IRMF keeps {ba('synthetic', I, c4):.1f}%, "
+        f"linear IMF {ba('synthetic', L, c4):.1f}%",
+    ], size=18, image="imp_ba_curves.png", notes="Fixed classical model, features without log_scale, tested on "
+        "the same folds clean and with spikes. One-sided "
         "spikes give almost the same curves. Gaussian noise of the same average power is the control. "
-        "H is re-estimated from each contaminated channel.")
+        "H is re-estimated from each contaminated channel. Two-sided spikes on 4%, IRMF vs linear IMF: "
+        f"DroneRF {ba('dronerf', I, c4):.1f} vs {ba('dronerf', L, c4):.1f}%, "
+        f"BirdCLEF {ba('birdclef2023', I, c4):.1f} vs {ba('birdclef2023', L, c4):.1f}%, "
+        f"ESC-50 {ba('esc50_animals', I, c4):.1f} vs {ba('esc50_animals', L, c4):.1f}%.")
 
     t = data["imp_tests"]
     prim = t[(t.family == "Primary") & (t.contrast == "DiD")]
@@ -375,8 +362,8 @@ def slides(data, laplace_dir: Path, v3_dir: Path):
     add(section="Robustness", title=f"Impulsive Spikes: Change in the IRMF {MINUS} Linear IMF Gap", body=[
         f"DroneRF {s(dr_lo)} to {s(dr_hi)} pp at every rate (Holm p < 0.001); BirdCLEF {s(bc_lo)} to {s(bc_hi)} pp, "
         "significant at 0.2% and 1% only; ESC-50 no gain",
-        "Pre-registered rule (positive and Holm significant at 4%, smaller under Gaussian noise): met on DroneRF "
-        f"and synthetic ({s(sy_lo)} to {s(sy_hi)} pp, added after registration)",
+        "Pre-registered rule (positive and Holm significant at 4%, smaller under Gaussian noise) met on DroneRF "
+        f"and on synthetic ({s(sy_lo)} to {s(sy_hi)} pp, added after registration)",
     ], size=18, image="imp_did_linear.png", notes="Difference in differences: (IRMF − linear IMF) contaminated "
         "minus (IRMF − linear IMF) clean, per paired split. Positive means contamination hurt linear IMF more. "
         "Holm across the 18 real-data tests; synthetic has its own 87-test family. A positive DiD can coexist "
@@ -411,20 +398,18 @@ def slides(data, laplace_dir: Path, v3_dir: Path):
                 max(r.p_nb_holm for r in rows))
 
     add(section="Robustness", title="Laplace Noise: Balanced Accuracy", body=[
-        "Clean-trained models drop sharply on the real datasets, already at 10% noise",
-        f"DroneRF at 10%: linear IMF {lba('dronerf', L, 'clean'):.1f} → {lba('dronerf', L, 'laplace_0.1'):.1f}%, "
-        f"IRMF {lba('dronerf', I, 'clean'):.1f} → {lba('dronerf', I, 'laplace_0.1'):.1f}%",
-        f"Synthetic degrades gradually: at 40%, IRMF {lba('synthetic', I, 'clean'):.1f} → "
-        f"{lba('synthetic', I, 'laplace_0.4'):.1f}%, linear IMF {lba('synthetic', L, 'clean'):.1f} → "
-        f"{lba('synthetic', L, 'laplace_0.4'):.1f}%",
-        f"BirdCLEF at 40%: IRMF {lba('birdclef2023', I, 'laplace_0.4'):.1f}, linear IMF "
-        f"{lba('birdclef2023', L, 'laplace_0.4'):.1f}, EMD {lba('birdclef2023', 'emd', 'laplace_0.4'):.1f}, "
-        f"raw {lba('birdclef2023', 'raw', 'laplace_0.4'):.1f}%",
+        "Clean-trained models drop sharply on the real datasets already at 10% noise; synthetic degrades gradually",
+        "On BirdCLEF both IMF methods stay well above EMD and raw frames, about twice their accuracy at 40%",
     ], size=17, image="lap_ba_curves.png",
         notes="Laplace(0, b) noise on a share p of test samples, b = 1 robust SD of the clean channel, before "
               "the median/MAD normalization. Same design as the spike run: clean-trained fixed classical model, "
               "features without log_scale, H re-estimated from each contaminated channel. The noisy samples are "
-              "nested across p. No Gaussian control in this run. Source: robustness_laplace/score_summary.csv.")
+              "nested across p. No Gaussian control in this run. "
+              f"DroneRF at 10%: linear IMF {lba('dronerf', L, 'clean'):.1f} → {lba('dronerf', L, 'laplace_0.1'):.1f}%, "
+              f"IRMF {lba('dronerf', I, 'clean'):.1f} → {lba('dronerf', I, 'laplace_0.1'):.1f}%. "
+              f"BirdCLEF at 40%: IRMF {lba('birdclef2023', I, 'laplace_0.4'):.1f}, linear IMF "
+              f"{lba('birdclef2023', L, 'laplace_0.4'):.1f}, EMD {lba('birdclef2023', 'emd', 'laplace_0.4'):.1f}, "
+              f"raw {lba('birdclef2023', 'raw', 'laplace_0.4'):.1f}%. Source: robustness_laplace/score_summary.csv.")
 
     dr_lo, dr_hi, dr_p = lrange("dronerf", "Primary", L)
     others = {ds: lrange(ds, "Primary", L) for ds in ("birdclef2023", "esc50_animals")}
@@ -438,11 +423,14 @@ def slides(data, laplace_dir: Path, v3_dir: Path):
     e_bc = lrange("birdclef2023", "S1", "emd", levels[1:])
     assert e_dr[2] < 0.05 and e_bc[2] < 0.05 and e_dr[1] < 0 and e_bc[0] > 0
     bc, es = others["birdclef2023"], others["esc50_animals"]
+    bc_imf = {c: min(lba("birdclef2023", m, c) for m in (I, L)) for c in levels}
+    bc_base = {c: max(lba("birdclef2023", m, c) for m in ("emd", "raw")) for c in levels}
+    assert all(bc_imf[c] > bc_base[c] + 5 for c in levels)  # BA slide: "well above EMD and raw"
+    assert bc_imf["laplace_0.4"] >= 1.8 * bc_base["laplace_0.4"]  # "about twice their accuracy at 40%"
     add(section="Robustness", title="Laplace Noise: Change in the IRMF Gap", body=[
         f"{IL}: DroneRF {s(dr_lo)} to {s(dr_hi)} pp at every rate (Holm p ≤ {math.ceil(dr_p * 1000) / 1000:.3f}), "
-        "the only pre-registered win",
-        f"Yet DroneRF ends near chance at 40% (IRMF {lba('dronerf', I, 'laplace_0.4'):.1f}, linear IMF "
-        f"{lba('dronerf', L, 'laplace_0.4'):.1f}%, chance 10%): linear IMF had more to lose",
+        f"the only pre-registered win, yet both end near chance at 40% (IRMF {lba('dronerf', I, 'laplace_0.4'):.1f}, "
+        f"linear IMF {lba('dronerf', L, 'laplace_0.4'):.1f}%, chance 10%)",
         f"BirdCLEF {s(bc[0])} to {s(bc[1])} pp, ESC-50 {s(es[0])} to {s(es[1])} pp, synthetic "
         f"{s(100 * sy40.mean_diff)} pp at 40%: none survives Holm",
         f"{IE} gap: {s(e_dr[0])} to {s(e_dr[1])} pp on DroneRF, {s(e_bc[0])} to {s(e_bc[1])} pp on BirdCLEF "
@@ -450,8 +438,6 @@ def slides(data, laplace_dir: Path, v3_dir: Path):
     ], size=16, image="lap_did.png",
         notes="Difference in differences: the IRMF gap under noise minus the gap on clean data, per paired split. "
               "The DroneRF gain mostly reflects how much more linear IMF's higher clean score had to lose. "
-              "Pre-registered reading at 40%: IRMF more robust on DroneRF; no significant difference on BirdCLEF, "
-              "ESC-50 or synthetic. "
               "Diamonds: primary family, 12 real-data tests against linear IMF. Circles: S1 against EMD, its own "
               "12-test family. Synthetic has its own 36-test family. Rule: IRMF more robust if the 40% DiD is "
               "positive with Holm p < .05. Sources: primary_tests.csv, paired_tests.csv, "
@@ -469,12 +455,12 @@ def slides(data, laplace_dir: Path, v3_dir: Path):
     add(section="Robustness", title="Laplace Noise: Training at 40%", body=[
         f"Training and testing at 40% wins back {recovered('dronerf', L):.0f}% of linear IMF's loss on DroneRF, "
         f"{recovered('birdclef2023', L):.0f}% on BirdCLEF and {recovered('esc50_animals', L):.0f}% on ESC-50",
-        f"Balanced accuracy at 40%, linear IMF / IRMF / EMD / raw: DroneRF {matched_row('dronerf')}%, "
-        f"BirdCLEF {matched_row('birdclef2023')}%, ESC-50 {matched_row('esc50_animals')}%",
         f"Matched vs clean, change in the {IL} gap (S5): {s(100 * s5['dronerf'].mean_diff)} pp on DroneRF "
         f"(Holm {p_text(s5['dronerf'].p_nb_holm)}), not significant elsewhere",
-    ], size=16, body_h=125, image="lap_matched.png",
+    ], size=16, body_h=90, image="lap_matched.png",
         notes="Matched models are trained and tested at 40% with the full grid search, on the same folds. "
+              f"Balanced accuracy at 40%, linear IMF / IRMF / EMD / raw: DroneRF {matched_row('dronerf')}%, "
+              f"BirdCLEF {matched_row('birdclef2023')}%, ESC-50 {matched_row('esc50_animals')}%. "
               "Share won back = (matched − clean-trained) / (clean − clean-trained), all at 40%. "
               f"Synthetic recovers least: {recovered('synthetic', L):.0f}% for linear IMF, "
               f"{recovered('synthetic', I):.0f}% for IRMF. S5 is its own 12-test family. "
@@ -539,19 +525,17 @@ def slides(data, laplace_dir: Path, v3_dir: Path):
     assert "IRMF now uses a fixed H per dataset" in protocol
 
     add(section="Robustness", title="Notebook-Scale Spikes: Design", body=[
-        "The Laplace run scaled the noise to the signal (b = 1 robust SD), below IRMF's threshold H; "
-        "the notebooks put spikes at about 1.5 H",
-        "Spikes: signed exponential with scale b = 3σ of the clean channel on 10% to 40% of test samples; "
-        "H = 2σ, so b is about 1.5 H. No Gaussian term",
+        "Spikes at the notebooks' scale: signed exponential, b = 3σ of the clean channel, about 1.5 H, on 10% "
+        "to 40% of test samples (the Laplace run's noise sat below H)",
         "Linear IMF and IRMF stop at a 31-sample window instead of 3 to 5 samples; finer content stays in "
         "the residual",
-        "Each method at its best number of components on clean data (K*), per dataset and classifier, "
-        "fixed at every noise level",
-        "K grids: EMD 2, 3, 4, 6, 8; linear IMF and IRMF 3, 4, 6, 8, 11 (synthetic 3, 4, 6, 8, 9)",
+        "K grids: EMD 2, 3, 4, 6, 8; linear IMF and IRMF 3, 4, 6, 8, 11 (synthetic 3, 4, 6, 8, 9); each method "
+        "at its best clean K (next slide)",
         "IRMF uses one fixed H per dataset, 2σ from the 100 excluded pilot frames, for clean and noisy inputs",
         "An IQR-based σ was tested on the pilot frames and not adopted: component errors within ±0.5% of "
         "the current estimator",
-    ], size=18, notes="σ = median|Δy| / (0.6745 √2), the estimator behind H = 2σ. b is set per channel from the "
+    ], size=18, notes="σ = median|Δy| / (0.6745 √2), the estimator behind H = 2σ. No Gaussian term. "
+        "b is set per channel from the "
         "clean raw channel; noise is added before the median/MAD normalization, with the same random positions "
         "as the Laplace run, nested across rates. The Laplace run had b/H of about 0.4 to 1. The 31-sample stop "
         "follows the notebook audit, which found IRMF's component errors larger at the finest windows. The IQR "
@@ -582,7 +566,8 @@ def slides(data, laplace_dir: Path, v3_dir: Path):
             cost.append(best - vba(ds, fam, "clean"))
     assert all(x > 0 for x in cost)
     add(section="Robustness", title="Best Number of Components", body=[
-        "K* = the K with the best mean clean balanced accuracy over the 15 splits, ties to the smaller K",
+        "K* = the K with the best mean clean balanced accuracy over the 15 splits (ties to the smaller K), "
+        "per dataset and classifier, kept at every noise level",
         "EMD picks K = 2, the bottom of its grid, on DroneRF and BirdCLEF; the IMF methods mostly pick the top",
         f"With the 31-sample stop, clean IMF scores are {min(cost):.1f} to {max(cost):.1f} pp below the "
         "component-count study's best on real data",
@@ -600,18 +585,17 @@ def slides(data, laplace_dir: Path, v3_dir: Path):
 
     # balanced accuracy curves
     vdr40 = {f: vba("dronerf", f, "nb3_0.4") for f in FAM}
-    assert all(v < 14 for v in vdr40.values())
+    assert all(v < 14 for v in vdr40.values()) and vdr40["irmf"] < vdr40["linear"]
     assert all(vba("dronerf", "irmf", c) < 11 for c in V3)
     add(section="Robustness", title="Notebook-Scale Spikes: Balanced Accuracy", body=[
-        "Clean-trained fixed classical model, each method at its K* (panel titles)",
-        "Real-data accuracy falls steeply at 10% already; DroneRF IRMF is within 1 pp of chance from 10% on",
-        f"At 40%, IRMF / linear IMF / EMD / raw: DroneRF {slash('dronerf', 'nb3_0.4')}%, "
-        f"BirdCLEF {slash('birdclef2023', 'nb3_0.4')}%, ESC-50 {slash('esc50_animals', 'nb3_0.4')}%, "
-        f"synthetic {slash('synthetic', 'nb3_0.4')}%",
+        "Real-data accuracy falls steeply already at 10%; DroneRF IRMF is within 1 pp of chance from 10% on",
     ], size=17, image="v3_ba_curves.png",
-        notes="Fixed classical model as before (linear SVM on DroneRF and ESC-50, logistic regression on "
-              "BirdCLEF and synthetic), features without log_scale. K* is chosen on clean data and kept at every "
-              "rate. Chance: 10% DroneRF and ESC-50, 6.25% BirdCLEF, 20% synthetic. "
+        notes="Clean-trained fixed classical model (linear SVM on DroneRF and ESC-50, logistic regression on "
+              "BirdCLEF and synthetic), features without log_scale, each method at its K* (panel titles). "
+              "Chance: 10% DroneRF and ESC-50, 6.25% BirdCLEF, 20% synthetic. "
+              f"At 40%, IRMF / linear IMF / EMD / raw: DroneRF {slash('dronerf', 'nb3_0.4')}%, "
+              f"BirdCLEF {slash('birdclef2023', 'nb3_0.4')}%, ESC-50 {slash('esc50_animals', 'nb3_0.4')}%, "
+              f"synthetic {slash('synthetic', 'nb3_0.4')}%. "
               "Source: robustness_v3/best_vs_best_ba.csv.")
 
     # gap changes
@@ -631,18 +615,18 @@ def slides(data, laplace_dir: Path, v3_dir: Path):
                                                                              "synthetic"))
     add(section="Robustness", title="Notebook-Scale Spikes: Change in the Gaps", body=[
         f"{IL}: DroneRF {s(v_dr[0])} to {s(v_dr[1])} pp at every rate ({p_le(v_dr[2])}), the only "
-        f"pre-specified win; yet at 40% IRMF {vdr40['irmf']:.1f}%, linear IMF {vdr40['linear']:.1f}%, chance 10%",
+        f"pre-specified win, yet IRMF stays below linear IMF at 40% ({vdr40['irmf']:.1f} vs "
+        f"{vdr40['linear']:.1f}%, chance 10%)",
         f"BirdCLEF {s(v_bc[0])} to {s(v_bc[1])} pp, ESC-50 {s(v_es[0])} to {s(v_es[1])} pp, synthetic "
         f"{s(v_sy[0])} to {s(v_sy[1])} pp: not significant",
         f"{IE}: BirdCLEF {s(e_bc[0])} to {s(e_bc[1])} pp, ESC-50 {s(e_es[0])} to {s(e_es[1])} pp "
-        f"({p_le(max(e_bc[2], e_es[2]))}), EMD collapses; DroneRF {s(e_dr[0])} to {s(e_dr[1])} pp "
+        f"({p_le(max(e_bc[2], e_es[2]))}) as EMD collapses; DroneRF {s(e_dr[0])} to {s(e_dr[1])} pp "
         f"({p_le(e_dr[2])})",
     ], size=16, image="v3_did.png",
         notes="Difference in differences at K*: the IRMF gap under spikes minus the gap on clean data, per paired "
               "split; each arm at its own K* (panel titles). Positive means the comparator lost more. The DroneRF "
               "gain comes from linear IMF's higher clean score (50.5 vs 42.9%) falling to chance. "
-              "Pre-specified reading at 40%: IRMF more robust on DroneRF; the test does not reject on BirdCLEF, "
-              "ESC-50 or synthetic, which is not equivalence. Holm families: primary 12 real-data tests, S1 12, "
+              "Not significant is not equivalence. Holm families: primary 12 real-data tests, S1 12, "
               "synthetic its own 18. Source: robustness_v3/paired_tests.csv and prespecified_reading.csv.")
 
     # LightGBM and training at 40%
@@ -656,26 +640,25 @@ def slides(data, laplace_dir: Path, v3_dir: Path):
     es40 = {f: vba("esc50_animals", f, "nb3_0.4", lg) for f in FAM}
     assert es40["irmf"] > es40["linear"] > es40["emd"]
     m40 = {ds: {f: vba(ds, f, "nb3_0.4", scen="matched") for f in FAM} for ds in ORDER}
-    dec = ("irmf", "linear", "emd")
     s5 = {ds: vtest(ds, "S5", "linear", "nb3_0.4") for ds in ORDER}
     assert s5["dronerf"].p_nb_holm < 0.001 and all(s5[d].p_nb_holm >= 0.05 for d in ORDER[1:])
     dr_clean_gap = vba("dronerf", "irmf", "clean") - vba("dronerf", "linear", "clean")
+    for f in ("irmf", "linear"):  # "returns to its clean level"
+        assert abs(m40["esc50_animals"][f] - vba("esc50_animals", f, "clean")) < 1.5, f
     add(section="Robustness", title="Notebook-Scale Spikes: LightGBM and Training at 40%", body=[
-        f"LightGBM on ESC-50 (K: IRMF {kk('esc50_animals', 'irmf', lg)}, linear "
-        f"{kk('esc50_animals', 'linear', lg)}, EMD {kk('esc50_animals', 'emd', lg)}): IRMF loses "
-        f"{g_es[0]:.1f} to {g_es[1]:.1f} pp less than linear IMF at 20 to 40% ({p_le(g_es[2])}); at 40% "
-        f"IRMF {es40['irmf']:.1f}%, linear IMF {es40['linear']:.1f}%, EMD {es40['emd']:.1f}%",
+        f"LightGBM on ESC-50: IRMF loses {g_es[0]:.1f} to {g_es[1]:.1f} pp less than linear IMF at 20 to 40% "
+        f"({p_le(g_es[2])})",
         f"LightGBM on DroneRF (K: IRMF {kk('dronerf', 'irmf', lg)}, linear {kk('dronerf', 'linear', lg)}): "
         f"{s(g_dr[0])} to {s(g_dr[1])} pp vs linear IMF (Holm p < 0.001), but only "
         f"{vba('dronerf', 'irmf', 'nb3_0.4', lg):.1f} vs {vba('dronerf', 'linear', 'nb3_0.4', lg):.1f}% at 40%; "
         "BirdCLEF not significant",
-        f"Trained and tested at 40%, classical model at K*: ESC-50 back to {m40['esc50_animals']['irmf']:.1f}% "
-        f"IRMF and {m40['esc50_animals']['linear']:.1f}% linear IMF; BirdCLEF "
-        f"{min(m40['birdclef2023'][f] for f in dec):.1f} to {max(m40['birdclef2023'][f] for f in dec):.1f}%; "
-        f"DroneRF {min(m40['dronerf'].values()):.1f} to {max(m40['dronerf'].values()):.1f}% for every input",
-    ], size=16, image="v3_lgbm_matched.png",
+        f"Trained and tested at 40% (classical model), ESC-50 returns to its clean level "
+        f"({m40['esc50_animals']['irmf']:.1f}% IRMF, {m40['esc50_animals']['linear']:.1f}% linear IMF); DroneRF "
+        f"reaches only {min(m40['dronerf'].values()):.1f} to {max(m40['dronerf'].values()):.1f}% for every input",
+    ], size=16, body_h=150, image="v3_lgbm_matched.png",
         notes="LightGBM picks its own K* on clean data (best-components slide). S3 is its own 24-test Holm family "
-              "over both comparators. At 10% the ESC-50 LightGBM gain is "
+              f"over both comparators. At 40% with LightGBM on ESC-50: IRMF {es40['irmf']:.1f}%, linear IMF "
+              f"{es40['linear']:.1f}%, EMD {es40['emd']:.1f}%. At 10% the ESC-50 LightGBM gain is "
               f"{s(100 * g_es10.mean_diff)} pp, not significant. Trained and tested at 40%, BirdCLEF IRMF / "
               f"linear IMF / EMD / raw: {slash('birdclef2023', 'nb3_0.4', scen='matched')}%; synthetic "
               f"{slash('synthetic', 'nb3_0.4', scen='matched')}%. Matched vs clean, change in the IRMF − linear "
@@ -688,82 +671,71 @@ def slides(data, laplace_dir: Path, v3_dir: Path):
     dr40 = ltest("dronerf", "Primary", L, "laplace_0.4")
     assert v_dr[1] == 100 * vtest("dronerf", "Primary", "linear", "nb3_0.4").mean_diff
     assert min(e_bc[0], e_es[0]) == e_es[0] and max(e_bc[1], e_es[1]) == e_bc[1]
+    # DroneRF gains over linear IMF in all three runs, with both near chance
+    imp_dr = prim[prim.dataset == "dronerf"]
+    assert (imp_dr.mean_diff > 0).all() and (imp_dr.p_nb_holm < 0.05).all() and dr_lo > 0
+    assert max(ba("dronerf", I, c4), ba("dronerf", L, c4)) < 20
+    assert max(lba("dronerf", I, "laplace_0.4"), lba("dronerf", L, "laplace_0.4")) < 20
+    # elsewhere on real data, only light spikes on BirdCLEF
+    imp_bc = prim[(prim.dataset == "birdclef2023") & (prim.p_nb_holm < 0.05)]
+    assert (imp_bc.mean_diff > 0).all() and not imp_bc.condition.str.endswith("0.04").any() and len(imp_bc) == 4
+    assert (prim[prim.dataset == "esc50_animals"].p_nb_holm >= 0.05).all()
     for ds in ("dronerf", "birdclef2023", "esc50_animals"):  # training at 40% beats any choice of input
         shift40 = {f: vba(ds, f, "nb3_0.4") for f in FAM}
         assert min(m40[ds][f] - shift40[f] for f in FAM) > max(shift40.values()) - min(shift40.values()), ds
+        lshift = {m: lba(ds, m, "laplace_0.4") for m in (L, I, "emd", "raw")}
+        lgain = min(lba(ds, m, "laplace_0.4", "matched") - lshift[m] for m in lshift)
+        assert lgain > max(lshift.values()) - min(lshift.values()), ds
     add(section="Summary", title="Conclusions", body=[
-        f"IRMF beats EMD by {s(d_ie['birdclef2023'].d)} to {s(d_ie['esc50_animals'].d)} pp with a fixed classical "
-        "model on DroneRF, BirdCLEF and ESC-50 (Holm p < 0.001)",
-        f"Linear IMF gains as much over EMD as IRMF on BirdCLEF and ESC-50, and {n(-d_il.d)} pp more on DroneRF",
-        "The two differ only in the local fit, so the gain over EMD comes from the recursive IMF itself, "
+        f"Clean data: IRMF beats EMD by {s(d_ie['birdclef2023'].d)} to {s(d_ie['esc50_animals'].d)} pp on DroneRF, "
+        f"BirdCLEF and ESC-50 (Holm p < 0.001); linear IMF gains as much, and {n(-d_il.d)} pp more on DroneRF",
+        "The two IMF methods differ only in the local fit, so the gain comes from the recursive IMF itself, "
         "partly from its larger number of components; on clean data the robust fit adds nothing",
         "At equal component counts the gain over EMD holds on DroneRF and synthetic only; pimf's k_max = 8 "
         "costs about 10 pp",
-        "pimf 0.5.0/0.5.1 Newton reproduces our results; 0.5.1 is 1.8–2.5× faster than 0.5.0",
-        f"With test-time spikes IRMF loses less than linear IMF on DroneRF ({s(100 * imp4.mean_diff.min())} to "
-        f"{s(100 * imp4.mean_diff.max())} pp at 4%), at light rates on BirdCLEF, not on ESC-50",
-        f"Under Laplace noise IRMF loses less than linear IMF only on DroneRF ({s(100 * dr40.mean_diff)} pp "
-        "at 40%), and both end near chance there",
-        f"Notebook-scale spikes at each method's best K: IRMF loses less than linear IMF on DroneRF "
-        f"({s(v_dr[1])} pp at 40%, both near chance) and, with LightGBM, on ESC-50 ({es40['irmf']:.1f} vs "
-        f"{es40['linear']:.1f}% at 40%); not significant on BirdCLEF and ESC-50 with the classical model",
-        f"In that run IRMF loses {e_es[0]:.1f} to {e_bc[1]:.1f} pp less than EMD on BirdCLEF and ESC-50, more on "
-        "DroneRF; training at 40% recovers more than any choice of decomposition",
-    ], size=17, notes="Real-data accuracy under spikes or Laplace noise is close to chance for every clean-trained "
-        "input, so the relative gains do not mean IRMF classifies contaminated signals well. Training on noisy "
-        "data recovers far more than any choice of decomposition. The notebook-scale run compares each method at "
-        "its own clean-selected K; the IRMF − EMD numbers there are classical-model gap changes.")
+        f"pimf 0.5.0/0.5.1 Newton reproduces our results; 0.5.1 is {timing['speedup_vs_0.5.0'].min():.1f}–"
+        f"{timing['speedup_vs_0.5.0'].max():.1f}× faster than 0.5.0",
+        "Under contamination IRMF loses less than linear IMF on DroneRF in all three runs, but both end near "
+        "chance; on the other real datasets only under light spikes on BirdCLEF",
+        f"With LightGBM, IRMF also loses less on ESC-50 under notebook-scale spikes ({es40['irmf']:.1f} vs "
+        f"{es40['linear']:.1f}% at 40%)",
+        f"Under notebook-scale spikes IRMF loses {e_es[0]:.1f} to {e_bc[1]:.1f} pp less than EMD on BirdCLEF and "
+        "ESC-50, more on DroneRF",
+        "On real data, training on contaminated data recovers more than any choice of decomposition",
+    ], size=17, notes="Contamination results use the clean-trained fixed classical model unless LightGBM is named. "
+        f"DroneRF change in the IRMF − linear IMF gap: {s(100 * imp4.mean_diff.min())} to "
+        f"{s(100 * imp4.mean_diff.max())} pp with spikes on 4%, {s(100 * dr40.mean_diff)} pp with Laplace noise "
+        f"at 40%, {s(v_dr[1])} pp with notebook-scale spikes at 40%. Real-data accuracy under contamination is "
+        "close to chance for every clean-trained input, so the relative gains do not mean IRMF classifies "
+        "contaminated signals well. The notebook-scale run compares each method at its own clean-selected K; "
+        "the IRMF − EMD numbers there are classical-model gap changes.")
 
     # ---------------- Backup
-    def contrast_table(fs):
-        rows = []
-        for ds in ["dronerf", "birdclef2023", "esc50_animals", "uas_birds_60ghz", "synthetic"]:
-            row = [DS[ds]]
-            for c in (IE, IL, LE):
-                r = main_cell(tab, ds, c, fs=fs)
-                row.append(f"{s(r.d, 2)} [{s(r.lo, 2)}, {s(r.hi, 2)}]\nHolm p {p_cell(r.p)}")
-            rows.append(row)
-        return rows
-
-    for fs, lab in (("comp", "Without log_scale"), ("comp+log_scale", "With log_scale")):
-        add(section="Backup", title=f"Backup: Main Study Contrasts, {lab}", body=[
-            "Fixed classical model, mean Δ balanced accuracy in pp [95% corrected CI]; Holm p from the source table",
-        ], size=16, table=dict(header=["Dataset", IE, IL, LE], rows=contrast_table(fs),
-                               widths=[180, 240, 240, 240], font=14, y=200, h=440),
-            notes="Sources: dataset classical CSVs linked in output/classification-emd-irmf/SUMMARY.md. "
-                  "IRMF is the pimf default solver here.")
+    contrast_rows = []
+    for ds in ["dronerf", "birdclef2023", "esc50_animals", "uas_birds_60ghz", "synthetic"]:
+        row = [DS[ds]]
+        for c in (IE, IL, LE):
+            r = main_cell(tab, ds, c, fs="comp+log_scale")
+            row.append(f"{s(r.d, 2)} [{s(r.lo, 2)}, {s(r.hi, 2)}]\nHolm p {p_cell(r.p)}")
+        contrast_rows.append(row)
+    add(section="Backup", title="Backup: Main Study Contrasts With log_scale", body=[
+        "Fixed classical model with the per-frame log scale as an extra feature; mean Δ balanced accuracy in pp "
+        "[95% corrected CI]",
+    ], size=16, table=dict(header=["Dataset", IE, IL, LE], rows=contrast_rows,
+                           widths=[180, 240, 240, 240], font=14, y=200, h=440),
+        notes="Holm p from each dataset's source table. Without log_scale the contrasts are on the main-study "
+              "slide (synthetic on the next slide). Sources: dataset classical CSVs linked in "
+              "output/classification-emd-irmf/SUMMARY.md. IRMF is the pimf default solver here.")
 
     add(section="Backup", title="Backup: Synthetic Main Contrasts", body=[
         "Synthetic data carry impulsive noise by design; its ML runs used five quick folds",
     ], size=18, image="main_contrasts_synthetic.png", notes="Shown on a separate scale because the effects are "
         "three to four times larger than on real data.")
 
-    rows = []
-    for ds in ORDER:
-        for k in (5, 6):
-            row = [f"{DS[ds]}, K = {k}"]
-            for c in ("IRMF - EMD", "Linear IMF - EMD", "IRMF - Linear IMF"):
-                r = fa_row(ds, k, c)
-                row.append(f"{s(100 * r.mean_diff, 2)} (Holm p {p_cell(r.p_nb_holm)})")
-            rows.append(row)
-    add(section="Backup", title="Backup: Equal-Count Contrasts at K = 5 and 6", body=[
-        "Fixed classical model, features without log_scale, Holm across 48 tests",
-    ], size=16, table=dict(header=["Dataset", IE, LE, IL], rows=rows, widths=[220, 225, 225, 225], font=14,
-                           y=190, h=470),
-        notes="Source: output/classification-emd-irmf/components/family_a.csv.")
-
     add(section="Backup", title=f"Backup: Spikes, Change in the IRMF {MINUS} EMD Gap", body=[
         "The IRMF − EMD gap shrinks under spikes on DroneRF and ESC-50 (all Holm significant), not on BirdCLEF",
     ], size=18, image="imp_did_emd.png", notes="Secondary family S1, 18 real-data tests with its own Holm "
         "correction; synthetic in its own family.")
-
-    add(section="Backup", title=f"Backup: Spikes vs Laplace Noise, IRMF {MINUS} Linear IMF", body=[
-        "Same primary contrast in both runs: DroneRF gains under both; BirdCLEF under light spikes only; "
-        "ESC-50 under neither; synthetic under spikes, not under Laplace noise",
-    ], size=18, image="spike_vs_laplace_did.png", notes="Change in the IRMF − linear IMF gap, clean-trained fixed "
-        "classical model. Holm within each run's primary family; synthetic has its own family in both. The "
-        "spikes have amplitude 10 robust SD; the Laplace noise has scale 1 robust SD on many more samples. "
-        "Sources: robustness/primary_tests.csv and robustness_laplace/primary_tests.csv.")
 
     st = data["stability"]
     st = st[(st.measure == "feature_drift") & (st.feature_set == "comp") & (st.slot == "all")
