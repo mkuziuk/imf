@@ -1,0 +1,57 @@
+{
+  "dataset": "uas_birds_60ghz",
+  "task": "bird_drone",
+  "methods": [
+    "raw",
+    "emd",
+    "imf_linear_a1.41",
+    "irmf_h2_a1.41"
+  ],
+  "n_frames": 784,
+  "n_groups": 45,
+  "n_classes": 2,
+  "n_splits": 15,
+  "n_seeds": 3,
+  "workers": 3,
+  "seconds": 95.67274958302733,
+  "breakdown": null,
+  "classifiers": [
+    "lda",
+    "qda",
+    "gnb",
+    "logreg",
+    "knn",
+    "linsvm"
+  ],
+  "feature_sets": [
+    "comp",
+    "comp+log_scale"
+  ],
+  "pairs": [
+    [
+      "irmf_h2_a1.41",
+      "emd"
+    ],
+    [
+      "irmf_h2_a1.41",
+      "imf_linear_a1.41"
+    ],
+    [
+      "imf_linear_a1.41",
+      "emd"
+    ],
+    [
+      "irmf_h2_a1.41",
+      "raw"
+    ],
+    [
+      "imf_linear_a1.41",
+      "raw"
+    ],
+    [
+      "emd",
+      "raw"
+    ]
+  ],
+  "quick": false
+}

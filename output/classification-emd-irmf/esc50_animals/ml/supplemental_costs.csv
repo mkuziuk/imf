@@ -1,0 +1,9 @@
+stage,task,workers,wall_seconds,n_fits
+sensitivity,animal,1,689.8554767499445,90
+slots9,animal,1,455.68258270807564,90
+matched,animal,1,312.9021614579251,60
+concat,animal,1,830.8623179999413,60
+sensitivity,bird,1,127.43518425000366,90
+slots9,bird,1,74.3483210420236,90
+matched,bird,1,54.1165463749785,60
+concat,bird,1,147.6549958330579,60

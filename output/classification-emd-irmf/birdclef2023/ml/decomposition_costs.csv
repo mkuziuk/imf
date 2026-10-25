@@ -1,0 +1,6 @@
+method,cpu_seconds_per_frame,wall_seconds_per_frame,channels_all_converged,source_solver
+raw,0.0,0.0,,
+emd,0.011645109083333337,0.011680636879512651,,PyEMD.EMD
+imf_linear_a1.41,0.006321592749999997,0.0063700712469193,,pimf.IMF
+irmf_h2_a1.41,1.320493968666666,1.3429560216438645,7888.0,pimf.IMF
+irmf_h2_a1.41_conv,0.05791799583333339,0.057927622471266656,12000.0,emdirmf.irmf_newton.NewtonSmoothAbs

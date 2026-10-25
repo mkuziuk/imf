@@ -1,0 +1,9 @@
+{
+  "started_utc": "2026-10-20T19:37:36+00:00",
+  "completed_analysis_utc": "2026-10-20T21:19:59.130221+00:00",
+  "elapsed_seconds": 6143.130221,
+  "evaluation_fits_audited": 2020,
+  "predictions_audited": 2060400,
+  "pilot_fits_excluded": 20,
+  "cpu_budget": "at most three CPU workers plus MPS; bird MiniRocket uses two CPU threads after other main jobs finish"
+}

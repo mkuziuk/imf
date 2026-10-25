@@ -1,0 +1,29 @@
+{
+  "dataset": "birdclef2023",
+  "task": "species",
+  "methods": [
+    "irmf_h2_a1.41_conv"
+  ],
+  "n_frames": 12000,
+  "n_groups": 451,
+  "n_classes": 16,
+  "n_splits": 15,
+  "n_seeds": 3,
+  "workers": 4,
+  "seconds": 4432.124825417064,
+  "breakdown": null,
+  "classifiers": [
+    "lda",
+    "logreg",
+    "linsvm"
+  ],
+  "feature_sets": [
+    "comp",
+    "comp+log_scale"
+  ],
+  "pairs": [],
+  "quick": false,
+  "results_tag": "prototype",
+  "save_probabilities": false,
+  "predictions": "/Users/mikhail/Datasets/imf-classification-prototype-conv/birdclef2023/results/prototype/classical_species_predictions.parquet"
+}

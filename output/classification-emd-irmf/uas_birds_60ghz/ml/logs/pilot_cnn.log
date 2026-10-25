@@ -1,0 +1,5 @@
+raw comp compact_resnet split=0: BA=0.984, fit=6.82s, predict=0.04s
+raw comp+log_scale compact_resnet split=0: BA=1.000, fit=3.39s, predict=0.04s
+irmf_h2_a1.41 comp compact_resnet split=0: BA=0.977, fit=2.52s, predict=0.03s
+irmf_h2_a1.41 comp+log_scale compact_resnet split=0: BA=0.969, fit=2.83s, predict=0.03s
+wrote output/classification-emd-irmf/uas_birds_60ghz/ml/pilot_cnn, total 16.0s

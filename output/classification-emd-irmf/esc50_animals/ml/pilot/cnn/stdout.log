@@ -1,0 +1,5 @@
+raw comp compact_resnet split=0: BA=0.448, fit=7.66s, predict=0.47s
+raw comp+log_scale compact_resnet split=0: BA=0.484, fit=3.65s, predict=0.19s
+irmf_h2_a1.41 comp compact_resnet split=0: BA=0.427, fit=5.68s, predict=0.35s
+irmf_h2_a1.41 comp+log_scale compact_resnet split=0: BA=0.467, fit=5.88s, predict=0.34s
+wrote /Users/mikhail/.t3/worktrees/imf/t3-44ed3594/output/classification-emd-irmf/esc50_animals/ml/pilot/cnn, total 24.5s

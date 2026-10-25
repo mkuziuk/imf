@@ -1,0 +1,5 @@
+dataset,condition,irmf_k,linear_k,did,ci_low,ci_high,p_nb_holm,verdict,status
+dronerf,nb3_0.4,8,11,0.06068321015140599,0.046395980731687506,0.07497043957112448,3.512272218818904e-06,IRMF more robust,primary
+birdclef2023,nb3_0.4,11,11,-0.02051913238891241,-0.04065149298555161,-0.00038677179227321334,0.32776668101288753,does not reject; not equivalence,primary
+esc50_animals,nb3_0.4,11,11,-0.0012577473951977983,-0.05021826568413817,0.047702770893742565,1.0,does not reject; not equivalence,primary
+synthetic,nb3_0.4,9,6,-0.029226056175340808,-0.09124827124282169,0.032796158892140076,1.0,does not reject; not equivalence,"synthetic, separate family"

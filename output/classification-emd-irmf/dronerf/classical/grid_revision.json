@@ -1,0 +1,25 @@
+{
+  "time_utc": "2026-10-20T19:42:32.455500+00:00",
+  "partial_4class_seconds": 328,
+  "old_svm_grid": [
+    0.001,
+    0.01
+  ],
+  "new_svm_grid": [
+    0.01,
+    0.1
+  ],
+  "reason": "The full binary run chose C>=0.1 in all SVM folds; retain that range while removing expensive C=1 from multiclass tuning.",
+  "stopped_owned_pids": [
+    34683,
+    50112,
+    50178,
+    50179,
+    52754,
+    52850,
+    52853
+  ],
+  "cached_non_svm_fits_reused": 351,
+  "discarded_svm_outer_fits": 60,
+  "cache_migration": "Input/split/model-source hashes unchanged; only SVM grid changed; all SVM checkpoints discarded."
+}

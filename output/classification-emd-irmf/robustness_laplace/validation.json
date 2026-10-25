@@ -1,0 +1,127 @@
+{
+  "datasets": [
+    {
+      "dataset": "synthetic",
+      "predictions_recomputed": 369600,
+      "clean_exact_checks": 200,
+      "clean_checks": 200,
+      "clean_max_absolute_error": 0.0,
+      "pilot_exclusions": 100,
+      "grouped_splits_verified": 15,
+      "feature_manifest_sha256": "b8919f4a2707eeb75fddb47dc048cbda91206390c2f9dd4bc3b9315df456c002",
+      "classification_manifest_sha256": "42442ad5075bca6edee9e923fe4aa5b4df0909b3d128bc523cecab624427a565",
+      "inputs_verified": 10,
+      "impulse_inputs_match": true,
+      "impulse_classifier_sources_match": true,
+      "reused_reference_checkpoints": 120,
+      "reused_reference_digest": "ae7b8d44263df803116663192126258dcd03b22bccdb0de0f49525862cd6ac82"
+    },
+    {
+      "dataset": "dronerf",
+      "predictions_recomputed": 3141600,
+      "clean_exact_checks": 200,
+      "clean_checks": 200,
+      "clean_max_absolute_error": 0.0,
+      "pilot_exclusions": 100,
+      "grouped_splits_verified": 15,
+      "feature_manifest_sha256": "253a122058f898e571dbc2e791bc3bc9bb7ecb97e0f8d5d1cdaedb091dfa6806",
+      "classification_manifest_sha256": "bae35a4470992363abc58ba40355c76233423670706fe8ba8532e978f0a12b2f",
+      "inputs_verified": 10,
+      "impulse_inputs_match": true,
+      "impulse_classifier_sources_match": true,
+      "reused_reference_checkpoints": 120,
+      "reused_reference_digest": "b0b5efa0232b96aec5268f2cdcd71a88739795dbc7094f0c0af457de7b78abff"
+    },
+    {
+      "dataset": "birdclef2023",
+      "predictions_recomputed": 3141600,
+      "clean_exact_checks": 200,
+      "clean_checks": 200,
+      "clean_max_absolute_error": 0.0,
+      "pilot_exclusions": 100,
+      "grouped_splits_verified": 15,
+      "feature_manifest_sha256": "db0ad6903c57c9b8ce6a83b7fb979c84ddab6debcfd6575ca16b2f90deb640a5",
+      "classification_manifest_sha256": "2f2076444bfd1a5a4ca413f5e95ec0aa7a1f6009f8ccabf8d6ac663559dcb7ea",
+      "inputs_verified": 10,
+      "impulse_inputs_match": true,
+      "impulse_classifier_sources_match": true,
+      "reused_reference_checkpoints": 120,
+      "reused_reference_digest": "ddeb3c55b8ae3a85bd333f79337e047920a0e303f0f9589b3a652c925e4f220d"
+    },
+    {
+      "dataset": "esc50_animals",
+      "predictions_recomputed": 1320000,
+      "clean_exact_checks": 200,
+      "clean_checks": 200,
+      "clean_max_absolute_error": 0.0,
+      "pilot_exclusions": 100,
+      "grouped_splits_verified": 15,
+      "feature_manifest_sha256": "2927959fa2d0fb2b3e0e15efc50cf1003685f50c0ecbe401352b04322b08472f",
+      "classification_manifest_sha256": "1e5918da18096950e17ed7e3730978d1844761ea70aba9426f0ecc6b1ff7c714",
+      "inputs_verified": 10,
+      "impulse_inputs_match": true,
+      "impulse_classifier_sources_match": true,
+      "reused_reference_checkpoints": 120,
+      "reused_reference_digest": "e77e111a608e345f55c6a16a49bac89723bafb8b845bca0c903983c3faf2c452"
+    }
+  ],
+  "families": {
+    "Primary": 12,
+    "S1": 12,
+    "S3": 24,
+    "S4": 48,
+    "S5": 12,
+    "synthetic": 36
+  },
+  "expected_families": {
+    "Primary": 12,
+    "S1": 12,
+    "S3": 24,
+    "S4": 48,
+    "S5": 12,
+    "synthetic": 36
+  },
+  "all_prediction_metrics_recomputed": true,
+  "shift_classical_selection": [
+    {
+      "dataset": "birdclef2023",
+      "selection": "grid_search",
+      "fits": 240
+    },
+    {
+      "dataset": "birdclef2023",
+      "selection": "impulse_run_choice",
+      "fits": 120
+    },
+    {
+      "dataset": "dronerf",
+      "selection": "grid_search",
+      "fits": 240
+    },
+    {
+      "dataset": "dronerf",
+      "selection": "impulse_run_choice",
+      "fits": 120
+    },
+    {
+      "dataset": "esc50_animals",
+      "selection": "grid_search",
+      "fits": 240
+    },
+    {
+      "dataset": "esc50_animals",
+      "selection": "impulse_run_choice",
+      "fits": 120
+    },
+    {
+      "dataset": "synthetic",
+      "selection": "grid_search",
+      "fits": 240
+    },
+    {
+      "dataset": "synthetic",
+      "selection": "impulse_run_choice",
+      "fits": 120
+    }
+  ]
+}

@@ -1,0 +1,625 @@
+{
+  "level": 0,
+  "cuts": [],
+  "lightgbm_seeds": [
+    0,
+    1,
+    2
+  ],
+  "lightgbm_feature_sets": [
+    "comp",
+    "comp+log_scale"
+  ],
+  "lightgbm_tags": [
+    "raw",
+    "emd",
+    "imf_linear_a1.41",
+    "irmf_h2_a1.41_conv",
+    "irmf_h2_a1.41",
+    "linear_native_k3",
+    "linear_native_k4",
+    "linear_native_k5",
+    "linear_native_k6",
+    "linear_native_k9",
+    "linear_native_k13",
+    "irmf_native_k3",
+    "irmf_native_k4",
+    "irmf_native_k5",
+    "irmf_native_k6",
+    "irmf_native_k9",
+    "irmf_native_k13",
+    "emd_k3",
+    "emd_k4",
+    "emd_k5",
+    "emd_k6",
+    "emd_k7",
+    "linear_trunc_k4",
+    "linear_trunc_k8",
+    "linear_trunc_k12",
+    "irmf_trunc_k4",
+    "irmf_trunc_k8",
+    "irmf_trunc_k12",
+    "gd60_trunc_k8"
+  ],
+  "projections": [
+    {
+      "level": 0,
+      "projected_total_wall_hours": 11.14847916464807,
+      "future_classical_cpu_seconds": 104894.75690300015,
+      "future_lightgbm_cpu_seconds": 62155.09158899999
+    }
+  ],
+  "projected_total_wall_hours": 11.14847916464807,
+  "actual_completed_runner_wall_seconds": 6724.555294333026,
+  "threshold_hours": 12,
+  "default_checkpoint_sha256": {
+    "synthetic": "6595a2eb4387ef82ff9998d41564e0be5cbe88891e428245d7977d61b40f0e9f",
+    "dronerf": "e9b31db77116dbc0efc026d3a11700f3b0cfdd4cc8102e6057f0c328a5f181a1",
+    "birdclef2023": "94dbd10ab1cbe1e290c8e9cad8d8667a791379a7d505b017e844dfcea6377bf6",
+    "esc50_animals": "6c69eb692d79ecef10697eb0d6bee16ab6327a92940f3ba419bf0edf77efcc9e"
+  },
+  "projection_rule": "Actual completed runner wall plus 1.2 * remaining model CPU / six workers. Each new input conservatively uses its full-default family's mean CPU per feature set.",
+  "timing_inputs": [
+    {
+      "dataset": "birdclef2023",
+      "classifier": "lightgbm",
+      "feature_set": "comp",
+      "method": "emd",
+      "cpu_seconds": 10.419678733333326
+    },
+    {
+      "dataset": "birdclef2023",
+      "classifier": "lightgbm",
+      "feature_set": "comp",
+      "method": "imf_linear_a1.41",
+      "cpu_seconds": 21.042834133333347
+    },
+    {
+      "dataset": "birdclef2023",
+      "classifier": "lightgbm",
+      "feature_set": "comp",
+      "method": "irmf_h2_a1.41",
+      "cpu_seconds": 21.703220666666684
+    },
+    {
+      "dataset": "birdclef2023",
+      "classifier": "lightgbm",
+      "feature_set": "comp",
+      "method": "irmf_h2_a1.41_conv",
+      "cpu_seconds": 21.77241620000002
+    },
+    {
+      "dataset": "birdclef2023",
+      "classifier": "lightgbm",
+      "feature_set": "comp",
+      "method": "raw",
+      "cpu_seconds": 1.4365621333333403
+    },
+    {
+      "dataset": "birdclef2023",
+      "classifier": "lightgbm",
+      "feature_set": "comp+log_scale",
+      "method": "emd",
+      "cpu_seconds": 10.468128933333332
+    },
+    {
+      "dataset": "birdclef2023",
+      "classifier": "lightgbm",
+      "feature_set": "comp+log_scale",
+      "method": "imf_linear_a1.41",
+      "cpu_seconds": 20.95728746666668
+    },
+    {
+      "dataset": "birdclef2023",
+      "classifier": "lightgbm",
+      "feature_set": "comp+log_scale",
+      "method": "irmf_h2_a1.41",
+      "cpu_seconds": 21.054067800000023
+    },
+    {
+      "dataset": "birdclef2023",
+      "classifier": "lightgbm",
+      "feature_set": "comp+log_scale",
+      "method": "irmf_h2_a1.41_conv",
+      "cpu_seconds": 21.82243206666666
+    },
+    {
+      "dataset": "birdclef2023",
+      "classifier": "lightgbm",
+      "feature_set": "comp+log_scale",
+      "method": "raw",
+      "cpu_seconds": 1.343713266666661
+    },
+    {
+      "dataset": "birdclef2023",
+      "classifier": "logreg",
+      "feature_set": "comp",
+      "method": "emd",
+      "cpu_seconds": 10.329298666666666
+    },
+    {
+      "dataset": "birdclef2023",
+      "classifier": "logreg",
+      "feature_set": "comp",
+      "method": "imf_linear_a1.41",
+      "cpu_seconds": 22.2935228
+    },
+    {
+      "dataset": "birdclef2023",
+      "classifier": "logreg",
+      "feature_set": "comp",
+      "method": "irmf_h2_a1.41",
+      "cpu_seconds": 22.654154599999995
+    },
+    {
+      "dataset": "birdclef2023",
+      "classifier": "logreg",
+      "feature_set": "comp",
+      "method": "irmf_h2_a1.41_conv",
+      "cpu_seconds": 22.582599399999996
+    },
+    {
+      "dataset": "birdclef2023",
+      "classifier": "logreg",
+      "feature_set": "comp",
+      "method": "raw",
+      "cpu_seconds": 1.7509271333333336
+    },
+    {
+      "dataset": "birdclef2023",
+      "classifier": "logreg",
+      "feature_set": "comp+log_scale",
+      "method": "emd",
+      "cpu_seconds": 10.162085
+    },
+    {
+      "dataset": "birdclef2023",
+      "classifier": "logreg",
+      "feature_set": "comp+log_scale",
+      "method": "imf_linear_a1.41",
+      "cpu_seconds": 23.44421726666667
+    },
+    {
+      "dataset": "birdclef2023",
+      "classifier": "logreg",
+      "feature_set": "comp+log_scale",
+      "method": "irmf_h2_a1.41",
+      "cpu_seconds": 20.995928666666668
+    },
+    {
+      "dataset": "birdclef2023",
+      "classifier": "logreg",
+      "feature_set": "comp+log_scale",
+      "method": "irmf_h2_a1.41_conv",
+      "cpu_seconds": 21.698017199999995
+    },
+    {
+      "dataset": "birdclef2023",
+      "classifier": "logreg",
+      "feature_set": "comp+log_scale",
+      "method": "raw",
+      "cpu_seconds": 1.7476428666666666
+    },
+    {
+      "dataset": "dronerf",
+      "classifier": "lightgbm",
+      "feature_set": "comp",
+      "method": "emd",
+      "cpu_seconds": 31.196423133333337
+    },
+    {
+      "dataset": "dronerf",
+      "classifier": "lightgbm",
+      "feature_set": "comp",
+      "method": "imf_linear_a1.41",
+      "cpu_seconds": 63.66619886666664
+    },
+    {
+      "dataset": "dronerf",
+      "classifier": "lightgbm",
+      "feature_set": "comp",
+      "method": "irmf_h2_a1.41",
+      "cpu_seconds": 65.32040193333336
+    },
+    {
+      "dataset": "dronerf",
+      "classifier": "lightgbm",
+      "feature_set": "comp",
+      "method": "irmf_h2_a1.41_conv",
+      "cpu_seconds": 68.13907253333335
+    },
+    {
+      "dataset": "dronerf",
+      "classifier": "lightgbm",
+      "feature_set": "comp",
+      "method": "raw",
+      "cpu_seconds": 3.639046066666636
+    },
+    {
+      "dataset": "dronerf",
+      "classifier": "lightgbm",
+      "feature_set": "comp+log_scale",
+      "method": "emd",
+      "cpu_seconds": 32.53341646666668
+    },
+    {
+      "dataset": "dronerf",
+      "classifier": "lightgbm",
+      "feature_set": "comp+log_scale",
+      "method": "imf_linear_a1.41",
+      "cpu_seconds": 57.861707466666665
+    },
+    {
+      "dataset": "dronerf",
+      "classifier": "lightgbm",
+      "feature_set": "comp+log_scale",
+      "method": "irmf_h2_a1.41",
+      "cpu_seconds": 64.33970220000005
+    },
+    {
+      "dataset": "dronerf",
+      "classifier": "lightgbm",
+      "feature_set": "comp+log_scale",
+      "method": "irmf_h2_a1.41_conv",
+      "cpu_seconds": 65.87783320000007
+    },
+    {
+      "dataset": "dronerf",
+      "classifier": "lightgbm",
+      "feature_set": "comp+log_scale",
+      "method": "raw",
+      "cpu_seconds": 3.928684266666702
+    },
+    {
+      "dataset": "dronerf",
+      "classifier": "linsvm",
+      "feature_set": "comp",
+      "method": "emd",
+      "cpu_seconds": 15.6456696
+    },
+    {
+      "dataset": "dronerf",
+      "classifier": "linsvm",
+      "feature_set": "comp",
+      "method": "imf_linear_a1.41",
+      "cpu_seconds": 62.27200913333333
+    },
+    {
+      "dataset": "dronerf",
+      "classifier": "linsvm",
+      "feature_set": "comp",
+      "method": "irmf_h2_a1.41",
+      "cpu_seconds": 115.33119766666665
+    },
+    {
+      "dataset": "dronerf",
+      "classifier": "linsvm",
+      "feature_set": "comp",
+      "method": "irmf_h2_a1.41_conv",
+      "cpu_seconds": 91.23353233333334
+    },
+    {
+      "dataset": "dronerf",
+      "classifier": "linsvm",
+      "feature_set": "comp",
+      "method": "raw",
+      "cpu_seconds": 0.43000293333333334
+    },
+    {
+      "dataset": "dronerf",
+      "classifier": "linsvm",
+      "feature_set": "comp+log_scale",
+      "method": "emd",
+      "cpu_seconds": 15.303186866666666
+    },
+    {
+      "dataset": "dronerf",
+      "classifier": "linsvm",
+      "feature_set": "comp+log_scale",
+      "method": "imf_linear_a1.41",
+      "cpu_seconds": 53.6488342
+    },
+    {
+      "dataset": "dronerf",
+      "classifier": "linsvm",
+      "feature_set": "comp+log_scale",
+      "method": "irmf_h2_a1.41",
+      "cpu_seconds": 116.43044739999998
+    },
+    {
+      "dataset": "dronerf",
+      "classifier": "linsvm",
+      "feature_set": "comp+log_scale",
+      "method": "irmf_h2_a1.41_conv",
+      "cpu_seconds": 82.97365526666667
+    },
+    {
+      "dataset": "dronerf",
+      "classifier": "linsvm",
+      "feature_set": "comp+log_scale",
+      "method": "raw",
+      "cpu_seconds": 0.44242546666666677
+    },
+    {
+      "dataset": "esc50_animals",
+      "classifier": "lightgbm",
+      "feature_set": "comp",
+      "method": "emd",
+      "cpu_seconds": 4.877161866666666
+    },
+    {
+      "dataset": "esc50_animals",
+      "classifier": "lightgbm",
+      "feature_set": "comp",
+      "method": "imf_linear_a1.41",
+      "cpu_seconds": 8.793302733333318
+    },
+    {
+      "dataset": "esc50_animals",
+      "classifier": "lightgbm",
+      "feature_set": "comp",
+      "method": "irmf_h2_a1.41",
+      "cpu_seconds": 8.667898199999991
+    },
+    {
+      "dataset": "esc50_animals",
+      "classifier": "lightgbm",
+      "feature_set": "comp",
+      "method": "irmf_h2_a1.41_conv",
+      "cpu_seconds": 8.753091800000039
+    },
+    {
+      "dataset": "esc50_animals",
+      "classifier": "lightgbm",
+      "feature_set": "comp",
+      "method": "raw",
+      "cpu_seconds": 0.5343943333333755
+    },
+    {
+      "dataset": "esc50_animals",
+      "classifier": "lightgbm",
+      "feature_set": "comp+log_scale",
+      "method": "emd",
+      "cpu_seconds": 5.259297066666629
+    },
+    {
+      "dataset": "esc50_animals",
+      "classifier": "lightgbm",
+      "feature_set": "comp+log_scale",
+      "method": "imf_linear_a1.41",
+      "cpu_seconds": 9.096033266666716
+    },
+    {
+      "dataset": "esc50_animals",
+      "classifier": "lightgbm",
+      "feature_set": "comp+log_scale",
+      "method": "irmf_h2_a1.41",
+      "cpu_seconds": 9.357828600000008
+    },
+    {
+      "dataset": "esc50_animals",
+      "classifier": "lightgbm",
+      "feature_set": "comp+log_scale",
+      "method": "irmf_h2_a1.41_conv",
+      "cpu_seconds": 9.226429066666666
+    },
+    {
+      "dataset": "esc50_animals",
+      "classifier": "lightgbm",
+      "feature_set": "comp+log_scale",
+      "method": "raw",
+      "cpu_seconds": 0.595019866666659
+    },
+    {
+      "dataset": "esc50_animals",
+      "classifier": "linsvm",
+      "feature_set": "comp",
+      "method": "emd",
+      "cpu_seconds": 13.410248133333335
+    },
+    {
+      "dataset": "esc50_animals",
+      "classifier": "linsvm",
+      "feature_set": "comp",
+      "method": "imf_linear_a1.41",
+      "cpu_seconds": 31.076049333333337
+    },
+    {
+      "dataset": "esc50_animals",
+      "classifier": "linsvm",
+      "feature_set": "comp",
+      "method": "irmf_h2_a1.41",
+      "cpu_seconds": 128.74577820000005
+    },
+    {
+      "dataset": "esc50_animals",
+      "classifier": "linsvm",
+      "feature_set": "comp",
+      "method": "irmf_h2_a1.41_conv",
+      "cpu_seconds": 112.08788493333331
+    },
+    {
+      "dataset": "esc50_animals",
+      "classifier": "linsvm",
+      "feature_set": "comp",
+      "method": "raw",
+      "cpu_seconds": 0.4567793333333333
+    },
+    {
+      "dataset": "esc50_animals",
+      "classifier": "linsvm",
+      "feature_set": "comp+log_scale",
+      "method": "emd",
+      "cpu_seconds": 13.499407933333332
+    },
+    {
+      "dataset": "esc50_animals",
+      "classifier": "linsvm",
+      "feature_set": "comp+log_scale",
+      "method": "imf_linear_a1.41",
+      "cpu_seconds": 34.8441276
+    },
+    {
+      "dataset": "esc50_animals",
+      "classifier": "linsvm",
+      "feature_set": "comp+log_scale",
+      "method": "irmf_h2_a1.41",
+      "cpu_seconds": 125.97343286666667
+    },
+    {
+      "dataset": "esc50_animals",
+      "classifier": "linsvm",
+      "feature_set": "comp+log_scale",
+      "method": "irmf_h2_a1.41_conv",
+      "cpu_seconds": 113.47488040000002
+    },
+    {
+      "dataset": "esc50_animals",
+      "classifier": "linsvm",
+      "feature_set": "comp+log_scale",
+      "method": "raw",
+      "cpu_seconds": 0.4651321333333334
+    },
+    {
+      "dataset": "synthetic",
+      "classifier": "lightgbm",
+      "feature_set": "comp",
+      "method": "emd",
+      "cpu_seconds": 0.9943643333333331
+    },
+    {
+      "dataset": "synthetic",
+      "classifier": "lightgbm",
+      "feature_set": "comp",
+      "method": "imf_linear_a1.41",
+      "cpu_seconds": 2.185319733333334
+    },
+    {
+      "dataset": "synthetic",
+      "classifier": "lightgbm",
+      "feature_set": "comp",
+      "method": "irmf_h2_a1.41",
+      "cpu_seconds": 2.2338738666666673
+    },
+    {
+      "dataset": "synthetic",
+      "classifier": "lightgbm",
+      "feature_set": "comp",
+      "method": "irmf_h2_a1.41_conv",
+      "cpu_seconds": 2.100620666666667
+    },
+    {
+      "dataset": "synthetic",
+      "classifier": "lightgbm",
+      "feature_set": "comp",
+      "method": "raw",
+      "cpu_seconds": 0.08952553333333313
+    },
+    {
+      "dataset": "synthetic",
+      "classifier": "lightgbm",
+      "feature_set": "comp+log_scale",
+      "method": "emd",
+      "cpu_seconds": 0.6306626000000003
+    },
+    {
+      "dataset": "synthetic",
+      "classifier": "lightgbm",
+      "feature_set": "comp+log_scale",
+      "method": "imf_linear_a1.41",
+      "cpu_seconds": 1.8810720666666667
+    },
+    {
+      "dataset": "synthetic",
+      "classifier": "lightgbm",
+      "feature_set": "comp+log_scale",
+      "method": "irmf_h2_a1.41",
+      "cpu_seconds": 2.001554266666668
+    },
+    {
+      "dataset": "synthetic",
+      "classifier": "lightgbm",
+      "feature_set": "comp+log_scale",
+      "method": "irmf_h2_a1.41_conv",
+      "cpu_seconds": 2.0575219999999996
+    },
+    {
+      "dataset": "synthetic",
+      "classifier": "lightgbm",
+      "feature_set": "comp+log_scale",
+      "method": "raw",
+      "cpu_seconds": 0.07506713333333342
+    },
+    {
+      "dataset": "synthetic",
+      "classifier": "logreg",
+      "feature_set": "comp",
+      "method": "emd",
+      "cpu_seconds": 0.5623457999999999
+    },
+    {
+      "dataset": "synthetic",
+      "classifier": "logreg",
+      "feature_set": "comp",
+      "method": "imf_linear_a1.41",
+      "cpu_seconds": 0.5767243333333333
+    },
+    {
+      "dataset": "synthetic",
+      "classifier": "logreg",
+      "feature_set": "comp",
+      "method": "irmf_h2_a1.41",
+      "cpu_seconds": 0.5194418
+    },
+    {
+      "dataset": "synthetic",
+      "classifier": "logreg",
+      "feature_set": "comp",
+      "method": "irmf_h2_a1.41_conv",
+      "cpu_seconds": 0.5231774000000001
+    },
+    {
+      "dataset": "synthetic",
+      "classifier": "logreg",
+      "feature_set": "comp",
+      "method": "raw",
+      "cpu_seconds": 0.1924027333333333
+    },
+    {
+      "dataset": "synthetic",
+      "classifier": "logreg",
+      "feature_set": "comp+log_scale",
+      "method": "emd",
+      "cpu_seconds": 0.5665613999999998
+    },
+    {
+      "dataset": "synthetic",
+      "classifier": "logreg",
+      "feature_set": "comp+log_scale",
+      "method": "imf_linear_a1.41",
+      "cpu_seconds": 0.571922
+    },
+    {
+      "dataset": "synthetic",
+      "classifier": "logreg",
+      "feature_set": "comp+log_scale",
+      "method": "irmf_h2_a1.41",
+      "cpu_seconds": 0.5183439333333332
+    },
+    {
+      "dataset": "synthetic",
+      "classifier": "logreg",
+      "feature_set": "comp+log_scale",
+      "method": "irmf_h2_a1.41_conv",
+      "cpu_seconds": 0.5234076666666668
+    },
+    {
+      "dataset": "synthetic",
+      "classifier": "logreg",
+      "feature_set": "comp+log_scale",
+      "method": "raw",
+      "cpu_seconds": 0.1918818
+    }
+  ],
+  "decision_uses_new_input_scores": false
+}

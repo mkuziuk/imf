@@ -1,0 +1,10 @@
+{
+  "reference": {
+    "version": "0.4.0"
+  },
+  "candidate": {
+    "version": "0.5.1"
+  },
+  "n_frames": 40,
+  "seed": 20261021
+}

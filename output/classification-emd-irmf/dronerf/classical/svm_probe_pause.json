@@ -1,0 +1,14 @@
+{
+  "time_utc": "2026-10-20T20:06:24.833620+00:00",
+  "partial_4class_resumed_seconds": 1396,
+  "reason": "Check SVM convergence and equivalent-solver runtime before primary multiclass task",
+  "stopped_owned_pids": [
+    53362,
+    53363,
+    53365,
+    53366,
+    54089,
+    57175,
+    57288
+  ]
+}

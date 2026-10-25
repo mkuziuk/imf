@@ -1,0 +1,28 @@
+{
+  "outer_fits": 1440,
+  "tasks": [
+    "bird_drone",
+    "target3"
+  ],
+  "splits_per_task": 15,
+  "workers_max": 3,
+  "all_outer_classes_present": true,
+  "no_group_or_recording_overlap": true,
+  "all_metrics_finite": true,
+  "holm_matches_statsmodels_all_tables": true,
+  "max_reconstruction_error": 1.6792313033420214e-06,
+  "versions": {
+    "python": "3.12.13",
+    "numpy": "2.3.5",
+    "scipy": "1.17.1",
+    "pandas": "3.0.6",
+    "pimf": "0.4.0",
+    "PyEMD": "1.10.0",
+    "platform": "macOS-26.6.2-arm64-arm-64bit"
+  },
+  "source_sha256": {
+    "analyze_classical.py": "7bad21510c0ad059d46e05227164d72d47353a7b403aa3e648cbcbe8f5a547ce",
+    "convert_pickles.py": "9e3077a1806752850487931ff31f7921879c38ea0c98e1641950408fc623b48b",
+    "prepare.py": "35df97938f47a9b92bc42144ce83133d8367f5ea50d8a6a63427c2061b93f8d7"
+  }
+}

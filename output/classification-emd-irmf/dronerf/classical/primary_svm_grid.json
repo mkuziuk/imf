@@ -1,0 +1,11 @@
+{
+  "task": "10class",
+  "classifier": "linsvm",
+  "C_candidates": [
+    0.1
+  ],
+  "selection": "Fixed before primary-task results, informed by secondary-task tuning and runtime.",
+  "scope": "Identical for all four methods and both feature sets; 15 outer splits retained.",
+  "inner_cv": "Skipped because a single candidate gives the same final estimator as one-candidate GridSearchCV.",
+  "4class": "Retains the two-candidate C={0.01,0.1} grid; active process unaffected."
+}

@@ -1,0 +1,6 @@
+{
+  "reason": "Full ps inventory revealed four background joblib workers; H=1/H=4 and STFT pilot launches were terminated before any evaluation fit completed.",
+  "discarded_evaluation_fits": 0,
+  "approximate_overlapped_seconds": 25,
+  "recorded_utc": "2026-10-20T22:09:09.506083+00:00"
+}

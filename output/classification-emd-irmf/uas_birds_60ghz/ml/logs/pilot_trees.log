@@ -1,0 +1,13 @@
+raw comp lightgbm split=0: BA=0.992, fit=0.08s, predict=0.00s
+raw comp xgboost split=0: BA=0.992, fit=0.14s, predict=0.00s
+raw comp extratrees split=0: BA=0.930, fit=0.47s, predict=0.01s
+raw comp+log_scale lightgbm split=0: BA=1.000, fit=0.09s, predict=0.00s
+raw comp+log_scale xgboost split=0: BA=1.000, fit=0.15s, predict=0.00s
+raw comp+log_scale extratrees split=0: BA=0.984, fit=0.44s, predict=0.01s
+irmf_h2_a1.41 comp lightgbm split=0: BA=1.000, fit=1.95s, predict=0.00s
+irmf_h2_a1.41 comp xgboost split=0: BA=0.995, fit=1.53s, predict=0.00s
+irmf_h2_a1.41 comp extratrees split=0: BA=1.000, fit=0.67s, predict=0.01s
+irmf_h2_a1.41 comp+log_scale lightgbm split=0: BA=1.000, fit=1.95s, predict=0.00s
+irmf_h2_a1.41 comp+log_scale xgboost split=0: BA=0.995, fit=1.49s, predict=0.00s
+irmf_h2_a1.41 comp+log_scale extratrees split=0: BA=1.000, fit=0.68s, predict=0.01s
+wrote output/classification-emd-irmf/uas_birds_60ghz/ml/pilot_trees, total 9.8s

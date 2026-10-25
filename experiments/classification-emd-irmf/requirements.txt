@@ -1,0 +1,28 @@
+# Shared emdirmf package, phase-2 baselines and tests (versions as installed in .venv).
+numpy==2.3.5
+scipy==1.17.1
+pandas==3.0.6
+pyarrow==26.0.0
+scikit-learn==1.9.1
+joblib==1.6.0
+threadpoolctl==3.7.0
+pimf==0.4.0
+EMD-signal==1.10.0
+tabulate==0.10.0
+statsmodels==0.15.0
+pytest==9.1.1
+
+# Phase-3 ML runners. Already installed; no additional packages required.
+lightgbm==4.7.0
+xgboost==3.4.1
+torch==2.14.1
+aeon==1.6.0
+numba==0.63.1
+
+# Dataset preparation and result figures, as installed for the completed study.
+matplotlib==3.11.2
+librosa==1.0.0
+soundfile==0.14.0
+huggingface-hub==2.2.0
+fsspec==2026.9.0
+soxr==1.1.0

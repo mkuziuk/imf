@@ -1,0 +1,32 @@
+{
+  "checked_utc": "2026-10-21T00:07:57.724737+00:00",
+  "other_heavy_python_processes": [],
+  "command": [
+    "/Users/mikhail/.t3/worktrees/imf/t3-44ed3594/.venv/bin/python",
+    "-u",
+    "/Users/mikhail/.t3/worktrees/imf/t3-44ed3594/experiments/classification-emd-irmf/datasets/dronerf/run_phase3.py",
+    "rocket",
+    "--dataset",
+    "dronerf",
+    "--task",
+    "10class",
+    "--methods",
+    "raw",
+    "irmf_h2_a1.41_conv",
+    "--folds",
+    "1",
+    "--workers",
+    "8",
+    "--out",
+    "/Users/mikhail/.t3/worktrees/imf/t3-44ed3594/output/classification-emd-irmf/dronerf/ml/pilot_rocket8",
+    "--run-name",
+    "dronerf_pilot_rocket8",
+    "--features",
+    "1008",
+    "--head-epochs",
+    "5",
+    "--fit-samples",
+    "128"
+  ],
+  "scope": "Timing calibration only; excluded from inference"
+}

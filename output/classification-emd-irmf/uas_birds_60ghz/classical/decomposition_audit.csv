@@ -1,0 +1,4 @@
+method,slots,failed_channels,cpu_seconds_per_frame,run_wall_seconds,max_abs_reconstruction_error,all_stages_converged_channels,total_channels,unconverged_stages,total_stages,frames_with_unconverged_channel
+emd,9,0,0.030470590561224514,10.678760000038892,1.5226521590250286e-06,,,,,
+imf_linear_a1.41,16,0,0.004420591836734692,2.8167149169603363,8.398986466318092e-07,,,,,
+irmf_h2_a1.41,16,0,0.3547211403061224,106.922648207983,1.6792313033420214e-06,1374.0,1568.0,355.0,23520.0,126.0

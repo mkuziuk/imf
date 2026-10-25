@@ -1,0 +1,766 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EMD, linear IMF and IRMF: new experiments</title>
+<style>
+.viz-root {
+  color-scheme: light;
+  --page: #f9f9f7;
+  --surface-1: #fcfcfb;
+  --text-primary: #0b0b0b;
+  --text-secondary: #52514e;
+  --text-muted: #898781;
+  --grid: #e1e0d9;
+  --baseline: #c3c2b7;
+  --border: rgba(11, 11, 11, 0.10);
+  --link: #1c5cab;
+  --code-bg: #f0efec;
+  --wash: rgba(42, 120, 214, 0.08);
+  --series-1: #2a78d6;
+  --series-2: #eb6834;
+  --series-3: #1baf7a;
+}
+@media (prefers-color-scheme: dark) {
+  :root:where(:not([data-theme="light"])) .viz-root {
+    color-scheme: dark;
+    --page: #0d0d0d;
+    --surface-1: #1a1a19;
+    --text-primary: #f0efec;
+    --text-secondary: #c3c2b7;
+    --text-muted: #898781;
+    --grid: #2c2c2a;
+    --baseline: #383835;
+    --border: rgba(255, 255, 255, 0.10);
+    --link: #86b6ef;
+    --code-bg: #2c2c2a;
+    --wash: rgba(57, 135, 229, 0.14);
+    --series-1: #3987e5;
+    --series-2: #d95926;
+    --series-3: #199e70;
+  }
+}
+:root[data-theme="dark"] .viz-root {
+  color-scheme: dark;
+  --page: #0d0d0d;
+  --surface-1: #1a1a19;
+  --text-primary: #f0efec;
+  --text-secondary: #c3c2b7;
+  --text-muted: #898781;
+  --grid: #2c2c2a;
+  --baseline: #383835;
+  --border: rgba(255, 255, 255, 0.10);
+  --link: #86b6ef;
+  --code-bg: #2c2c2a;
+  --wash: rgba(57, 135, 229, 0.14);
+  --series-1: #3987e5;
+  --series-2: #d95926;
+  --series-3: #199e70;
+}
+
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--page); color: var(--text-primary); font: 15px/1.55 system-ui, -apple-system, "Segoe UI", sans-serif; }
+main { max-width: 1120px; margin: 0 auto; padding: 36px 24px 72px; }
+h1 { font-size: 30px; line-height: 1.2; margin: 6px 0 10px; font-weight: 650; letter-spacing: -0.01em; }
+h2 { font-size: 21px; line-height: 1.3; margin: 0 0 8px; font-weight: 620; }
+h3 { font-size: 15px; margin: 0 0 4px; font-weight: 600; }
+section { margin-top: 48px; }
+p { margin: 0 0 10px; max-width: 78ch; }
+ul { margin: 6px 0 10px; padding-left: 20px; max-width: 80ch; }
+li { margin: 4px 0; }
+a { color: var(--link); text-underline-offset: 2px; }
+code { font: 12.5px ui-monospace, SFMono-Regular, Menlo, monospace; background: var(--code-bg); padding: 1px 4px; border-radius: 4px; }
+.eyebrow { color: var(--text-secondary); font-size: 13px; margin: 0; }
+.meta { color: var(--text-secondary); font-size: 13px; }
+.lead { font-size: 17px; line-height: 1.55; max-width: 74ch; margin-top: 14px; }
+.note { color: var(--text-secondary); font-size: 13.5px; }
+.status { display: inline-block; font-size: 12.5px; color: var(--text-secondary); border: 1px solid var(--baseline); border-radius: 999px; padding: 1px 9px; margin-left: 8px; vertical-align: 3px; font-weight: 500; }
+
+.controls { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; margin: 14px 0 0; }
+.controls-label { font-size: 13px; font-weight: 600; }
+.seg { display: inline-flex; border: 1px solid var(--baseline); border-radius: 8px; overflow: hidden; }
+.seg button { font: inherit; font-size: 13px; padding: 5px 12px; border: 0; cursor: pointer; background: transparent; color: var(--text-secondary); }
+.seg button + button { border-left: 1px solid var(--baseline); }
+.seg button[aria-pressed="true"] { background: var(--text-primary); color: var(--surface-1); font-weight: 600; }
+.seg button:focus-visible, .view-toggle:focus-visible { outline: 2px solid var(--series-1); outline-offset: 2px; }
+
+.tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 12px; margin-top: 14px; }
+.tile { background: var(--surface-1); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px 12px; }
+.tile-label { font-size: 13px; color: var(--text-secondary); }
+.tile-value { font-size: 32px; font-weight: 600; line-height: 1.15; margin: 6px 0 2px; }
+.tile-value .unit { font-size: 15px; font-weight: 500; color: var(--text-secondary); }
+.tile-sub { font-size: 13px; color: var(--text-secondary); }
+.tile-sig { font-size: 13px; margin-top: 2px; }
+.tile-meta { font-size: 12.5px; color: var(--text-secondary); margin-top: 10px; padding-top: 8px; border-top: 1px solid var(--grid); }
+
+.card { background: var(--surface-1); border: 1px solid var(--border); border-radius: 12px; padding: 16px 20px 14px; margin: 14px 0 0; }
+.card-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 16px; margin-bottom: 8px; }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 13px; color: var(--text-secondary); }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.dotkey { display: inline-block; width: 10px; height: 10px; border-radius: 50%; border: 2px solid var(--series-1); }
+.dotkey.filled { background: var(--series-1); }
+.view-toggle { font: inherit; font-size: 12.5px; padding: 4px 10px; cursor: pointer; border: 1px solid var(--baseline); border-radius: 7px; background: transparent; color: var(--text-secondary); }
+.view-toggle[aria-pressed="true"] { color: var(--text-primary); border-color: var(--text-secondary); }
+figcaption { font-size: 12.5px; color: var(--text-secondary); margin-top: 10px; max-width: 100ch; }
+.chart svg { display: block; overflow: visible; }
+.multiples { display: grid; grid-template-columns: repeat(auto-fit, minmax(330px, 1fr)); gap: 18px 28px; }
+.multiples h3 .dst { font-weight: 400; color: var(--text-secondary); font-size: 13px; margin-left: 6px; }
+details { margin-top: 14px; }
+summary { cursor: pointer; font-size: 14px; color: var(--text-secondary); }
+summary:focus-visible { outline: 2px solid var(--series-1); outline-offset: 2px; }
+
+.table-wrap { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-size: 13.5px; }
+th, td { text-align: left; padding: 7px 10px; border-bottom: 1px solid var(--grid); vertical-align: top; }
+th { font-weight: 600; color: var(--text-secondary); font-size: 12.5px; }
+.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+td.strong, .strong { font-weight: 650; }
+td .ci, td .p, th .ci { display: block; font-size: 12px; color: var(--text-secondary); font-weight: 400; }
+td.rowhead { font-weight: 500; }
+
+.ptitle { font-size: 14px; font-weight: 600; fill: var(--text-primary); }
+.psub { font-size: 12px; fill: var(--text-secondary); }
+.ax { font-size: 11.5px; fill: var(--text-muted); font-variant-numeric: tabular-nums; }
+.lbl { font-size: 13px; fill: var(--text-primary); }
+.dsl { font-size: 13.5px; font-weight: 600; fill: var(--text-primary); }
+.dst { font-size: 12.5px; font-weight: 400; fill: var(--text-secondary); }
+.dlab { font-size: 11.5px; fill: var(--text-secondary); font-variant-numeric: tabular-nums; }
+.grid { stroke: var(--grid); stroke-width: 1; }
+.chance { stroke: var(--text-muted); stroke-width: 1; }
+.zero { stroke: var(--baseline); stroke-width: 1; }
+.sep { stroke: var(--grid); stroke-width: 1; }
+.cross { stroke: var(--text-muted); stroke-width: 1; opacity: 0; }
+.cross.on { opacity: 1; }
+.ci-line { stroke: var(--series-1); stroke-width: 2; stroke-linecap: round; }
+.ring { fill: var(--surface-1); }
+.dot { fill: var(--series-1); }
+.dot-hollow { fill: var(--surface-1); stroke: var(--series-1); stroke-width: 2; }
+.s1 { --c: var(--series-1); } .s2 { --c: var(--series-2); } .s3 { --c: var(--series-3); }
+.line { fill: none; stroke: var(--c); stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
+.mark { fill: var(--c); stroke: var(--surface-1); stroke-width: 2; }
+.mark.default { fill: var(--surface-1); stroke: var(--c); stroke-width: 2; }
+.wash { fill: var(--wash); opacity: 0; }
+.wash.on { opacity: 1; }
+.hit { fill: transparent; }
+.hit:focus { outline: none; }
+.key { display: inline-block; width: 14px; height: 0; border-top: 2px solid var(--c); vertical-align: middle; }
+.shape { display: inline-block; width: 12px; height: 12px; }
+
+.tip { position: fixed; left: 0; top: 0; z-index: 30; pointer-events: none; background: var(--surface-1); color: var(--text-primary); border: 1px solid var(--border); border-radius: 8px; box-shadow: 0 6px 22px rgba(0, 0, 0, 0.14); padding: 8px 10px; font-size: 12.5px; line-height: 1.45; max-width: 340px; opacity: 0; transition: opacity 80ms; }
+.tip .tv { display: flex; align-items: center; gap: 8px; font-size: 15px; font-weight: 650; font-variant-numeric: tabular-nums; }
+.tip .row { display: flex; align-items: center; gap: 8px; }
+.tip .row b { font-variant-numeric: tabular-nums; min-width: 46px; }
+.tip .tl { color: var(--text-secondary); }
+.tip .mono { font: 11px ui-monospace, SFMono-Regular, Menlo, monospace; color: var(--text-muted); margin-top: 2px; }
+
+footer { margin-top: 56px; padding-top: 14px; border-top: 1px solid var(--grid); font-size: 12.5px; color: var(--text-secondary); }
+@media (max-width: 640px) { main { padding: 24px 14px 56px; } h1 { font-size: 25px; } .card { padding: 14px 12px 12px; } }
+@media print { .tip { display: none; } }
+</style>
+</head>
+<body class="viz-root">
+<main>
+
+<header>
+  <p class="eyebrow">Classification study, follow-up experiments</p>
+  <h1>EMD, linear IMF and IRMF: component count, pimf 0.5.0 and robustness</h1>
+  <p class="meta" id="meta"></p>
+  <p class="lead" id="lead"></p>
+</header>
+
+<section id="components">
+  <h2>How many components?</h2>
+  <p>Each method was rerun with K extracted components plus one residual, on the same 15 grouped splits as the main study. For IMF and IRMF, K is the number of stages of a recursive IMF that covers the same range of scales as the default 17 (15 on synthetic), so fewer stages means wider spacing between them. For EMD, K is the number of IMFs kept, and everything coarser stays in the residue. The comparison at equal counts was pre-registered before any of these models were fit.</p>
+  <p><span id="components-reading"></span></p>
+  <div class="tiles" id="comp-tiles"></div>
+
+  <figure class="card" data-view>
+    <div class="card-head">
+      <div class="legend" id="curve-legend"></div>
+      <button type="button" class="view-toggle" aria-pressed="false">Table view</button>
+    </div>
+    <div class="controls" role="group" aria-label="Classifier and features">
+      <span class="controls-label">Model</span>
+      <div class="seg" id="seg-clf">
+        <button type="button" data-v="classical" aria-pressed="true">Fixed classical</button>
+        <button type="button" data-v="lightgbm" aria-pressed="false">LightGBM</button>
+      </div>
+      <span class="controls-label">Features</span>
+      <div class="seg" id="seg-fs">
+        <button type="button" data-v="comp" aria-pressed="true">Without log_scale</button>
+        <button type="button" data-v="comp+log_scale" aria-pressed="false">With log_scale</button>
+      </div>
+    </div>
+    <div class="multiples" id="curves" style="margin-top:12px"></div>
+    <div class="table-wrap" id="curves-table" hidden></div>
+    <figcaption>Mean balanced accuracy over 15 grouped splits. Hollow markers are each method's study default: 17 components for IMF and IRMF (15 on synthetic), 8 IMFs for EMD. The fixed classical models are logistic regression for synthetic and BirdCLEF and linear SVM for DroneRF and ESC-50. Hover or focus a chart for the values at each K, or use the table view.</figcaption>
+  </figure>
+
+  <h3 style="margin-top:26px">Equal component counts</h3>
+  <p class="note">Paired differences in balanced-accuracy points, fixed classical model, features without <code>log_scale</code>. Bold cells passed Holm correction across all 48 tests. The pre-registered reading counts a dataset as keeping the IMF advantage if both IMF methods beat EMD significantly at K = 5 and K = 6.</p>
+  <div class="card table-wrap" id="family-a"></div>
+
+  <h3 style="margin-top:26px">pimf's default <code>k_max = 8</code></h3>
+  <p class="note">pimf extracts the coarsest stages first. With <code>k_max = 8</code> it stops early, and every finer stage ends up lumped into the residual. The chart compares that cut-off with all stages of the recursive IMF, and pimf's full defaults (60-step gradient descent with <code>k_max = 8</code>) with EMD's default.</p>
+  <figure class="card" data-view>
+    <div class="card-head">
+      <div class="legend"><span><i class="dotkey filled"></i>Holm p &lt; 0.05</span><span><i class="dotkey"></i>not significant</span></div>
+      <button type="button" class="view-toggle" aria-pressed="false">Table view</button>
+    </div>
+    <div class="chart" id="family-c"></div>
+    <div class="table-wrap" id="family-c-table" hidden></div>
+    <figcaption>Fixed classical model, features without <code>log_scale</code>, Holm correction within each dataset. "pimf defaults" means pimf's 60-step gradient descent with <code>k_max = 8</code>, which is what calling <code>pimf.IMF(SmoothAbs(H)).decompose(y)</code> gives.</figcaption>
+  </figure>
+
+  <h3 style="margin-top:26px">How empty EMD's later slots are</h3>
+  <p class="note">The share of channels where EMD produced fewer than K IMFs, so slot K is zero padding.</p>
+  <div class="card table-wrap" id="padding"></div>
+</section>
+
+<section id="release">
+  <h2>Switching to pimf 0.5.0 and 0.5.1</h2>
+  <p>pimf 0.5.0 adds <code>IMF(..., solver="newton")</code>, and gradient descent now warns when a stage hits its iteration cap. pimf 0.5.1 makes that Newton solver faster without changing its results. Each release was rerun on every frame of the four datasets, in its own environment. 0.5.0 is compared with the 0.4.0 results the experiments used, and 0.5.1 with 0.5.0.</p>
+  <div class="tiles" id="release-tiles"></div>
+  <h3 style="margin-top:26px">Decompositions on every frame</h3>
+  <p class="note">pimf 0.5.0's Newton solver compared with our Numba prototype, channel by channel. Linear IMF from 0.5.0 matched the cache exactly on every channel.</p>
+  <div class="card table-wrap" id="release-full"></div>
+  <h3 style="margin-top:26px">Classification</h3>
+  <p class="note" id="release-class-note"></p>
+  <div class="card table-wrap" id="release-class"></div>
+  <details>
+    <summary>Every classifier and feature set</summary>
+    <div class="card table-wrap" id="release-class-all"></div>
+  </details>
+  <h3 style="margin-top:26px">pimf 0.5.1 against 0.5.0</h3>
+  <p class="note" id="next-note"></p>
+  <div class="card table-wrap" id="next-full"></div>
+  <h3 style="margin-top:26px">Speed</h3>
+  <p class="note" id="release-speed-note"></p>
+  <div class="card table-wrap" id="release-speed"></div>
+</section>
+
+<section id="robustness">
+  <h2>Robustness to impulsive contamination <span class="status" id="rob-status"></span></h2>
+  <div id="rob-body"></div>
+  <div id="rob-results" hidden>
+    <div class="tiles" id="rob-tiles"></div>
+    <figure class="card" data-view>
+      <div class="card-head">
+        <div class="legend" id="rob-legend"></div>
+        <button type="button" class="view-toggle" aria-pressed="false">Table view</button>
+      </div>
+      <div class="multiples rob-grid" id="rob-curves"></div>
+      <div class="table-wrap" id="rob-curves-table" hidden></div>
+      <figcaption>Mean balanced accuracy over 15 grouped splits, with models trained on clean data and tested on the same held-out fold clean and contaminated. The leftmost point is clean. The others add spikes, or Gaussian noise of the same average power, at 0.2%, 1% and 4% of samples. The thin gray line marks chance. Fixed classical model, features without <code>log_scale</code>.</figcaption>
+    </figure>
+    <h3 style="margin-top:26px">How the gaps change under contamination</h3>
+    <p class="note">Each cell is the change in a paired gap from clean to contaminated test data, in balanced-accuracy points. For example, IRMF − linear IMF under contamination minus IRMF − linear IMF on clean data. A positive value means contamination hurt the comparison method more than IRMF. Bold cells have p below 0.05. <span id="rob-did-note"></span> "Not tested" means the protocol didn't pre-specify that contrast.</p>
+    <div class="card table-wrap" id="rob-did"></div>
+    <h3 style="margin-top:26px">How far the features move</h3>
+    <p class="note">Median change of each frame's features when contamination is added, in units of each feature's spread across clean frames. The 95th percentile is underneath. Lower means the features stay closer to their clean values.</p>
+    <div class="card table-wrap" id="rob-drift"></div>
+  </div>
+</section>
+
+<section id="sources">
+  <h2>Reports and source files</h2>
+  <ul id="source-list"></ul>
+</section>
+
+<footer id="footer"></footer>
+</main>
+
+<div class="tip" id="tip" role="status" aria-live="polite"></div>
+<script type="application/json" id="data">__DATA__</script>
+<script>
+(() => {
+  const DATA = JSON.parse(document.getElementById('data').textContent);
+  const NS = 'http://www.w3.org/2000/svg';
+  const MINUS = '−';
+  const DS = { synthetic: ['Synthetic', '5 classes'], dronerf: ['DroneRF', '10 classes'], birdclef2023: ['BirdCLEF 2023', '16 species'], esc50_animals: ['ESC-50 animals', '10 classes'] };
+  const DS_ORDER = ['dronerf', 'birdclef2023', 'esc50_animals', 'synthetic'];
+  const SERIES = [
+    { key: 'irmf', label: 'IRMF, converged', cls: 's1', shape: 'circle' },
+    { key: 'linear', label: 'Linear IMF', cls: 's2', shape: 'square' },
+    { key: 'emd', label: 'EMD', cls: 's3', shape: 'diamond' },
+  ];
+
+  function svgEl(tag, attrs, parent, text) { const e = document.createElementNS(NS, tag); for (const [k, v] of Object.entries(attrs || {})) e.setAttribute(k, v); if (text != null) e.textContent = text; if (parent) parent.appendChild(e); return e; }
+  function htmlEl(tag, attrs, parent, text) { const e = document.createElement(tag); for (const [k, v] of Object.entries(attrs || {})) { if (k === 'class') e.className = v; else e.setAttribute(k, v); } if (text != null) e.textContent = text; if (parent) parent.appendChild(e); return e; }
+  function signed(v, d) { const s = Math.abs(v).toFixed(d); if (Number(s) === 0) return s; return (v < 0 ? MINUS : '+') + s; }
+  const SUP = { '-': '⁻', '0': '⁰', '1': '¹', '2': '²', '3': '³', '4': '⁴', '5': '⁵', '6': '⁶', '7': '⁷', '8': '⁸', '9': '⁹' };
+  function fmtP(p) {
+    if (p == null || Number.isNaN(p)) return 'n/a';
+    if (p >= 0.995) return '1';
+    if (p >= 0.01) return p.toFixed(2);
+    if (p >= 0.001) return p.toPrecision(2);
+    let e = Math.floor(Math.log10(p)); let m = p / Math.pow(10, e);
+    if (m >= 9.95) { m /= 10; e += 1; }
+    return `${m.toFixed(1)} × 10${String(e).split('').map(c => SUP[c]).join('')}`;
+  }
+  function fmtSci(v) { if (v === 0) return '0'; const e = Math.floor(Math.log10(Math.abs(v))); return `${(v / Math.pow(10, e)).toFixed(1)}e${e}`; }
+  const isSig = p => p < 0.05;
+  const pct = (v, d = 1) => `${v.toFixed(d)}%`;
+
+  // Tooltip: values lead, labels follow; text goes in through textContent.
+  const tip = document.getElementById('tip');
+  function placeTip(x, y) {
+    tip.style.opacity = '1';
+    const b = tip.getBoundingClientRect();
+    let left = x + 14, top = y + 14;
+    if (left + b.width > window.innerWidth - 8) left = x - 14 - b.width;
+    if (top + b.height > window.innerHeight - 8) top = y - 14 - b.height;
+    tip.style.left = `${Math.max(8, left)}px`; tip.style.top = `${Math.max(8, top)}px`;
+  }
+  function hideTip() { tip.style.opacity = '0'; }
+  function bindTip(hit, build, marks) {
+    const on = v => (marks || []).forEach(m => m.classList.toggle('on', v));
+    const show = (x, y) => { tip.replaceChildren(); build(tip); placeTip(x, y); };
+    hit.addEventListener('pointermove', e => { on(true); show(e.clientX, e.clientY); });
+    hit.addEventListener('pointerleave', () => { on(false); hideTip(); });
+    hit.addEventListener('focus', () => { on(true); const b = hit.getBoundingClientRect(); show(b.left + b.width * 0.6, b.top + b.height / 2); });
+    hit.addEventListener('blur', () => { on(false); hideTip(); });
+  }
+  function niceStep(span, target) { const raw = span / target; const mag = Math.pow(10, Math.floor(Math.log10(raw))); for (const m of [1, 2, 2.5, 5, 10]) if (m * mag >= raw) return m * mag; return 10 * mag; }
+  function shapeEl(parent, shape, x, y, r, cls) {
+    if (shape === 'square') return svgEl('rect', { x: x - r, y: y - r, width: 2 * r, height: 2 * r, rx: 1, class: cls }, parent);
+    if (shape === 'diamond') return svgEl('path', { d: `M${x},${y - r * 1.3}L${x + r * 1.3},${y}L${x},${y + r * 1.3}L${x - r * 1.3},${y}Z`, class: cls }, parent);
+    return svgEl('circle', { cx: x, cy: y, r, class: cls }, parent);
+  }
+  function legendShape(parent, s) {
+    const svg = svgEl('svg', { width: 26, height: 12, class: `shape ${s.cls}`, 'aria-hidden': 'true' }, parent);
+    svgEl('line', { x1: 1, x2: 25, y1: 6, y2: 6, class: 'line' }, svg);
+    shapeEl(svg, s.shape, 13, 6, 3.5, 'mark');
+  }
+  function tableFrom(host, headers, rows) {
+    host.replaceChildren();
+    const t = htmlEl('table', {}, host);
+    const hr = htmlEl('tr', {}, htmlEl('thead', {}, t));
+    for (const [txt, cls] of headers) htmlEl('th', cls ? { class: cls } : {}, hr, txt);
+    const tb = htmlEl('tbody', {}, t);
+    for (const row of rows) {
+      const tr = htmlEl('tr', {}, tb);
+      row.forEach((cell, i) => {
+        const td = htmlEl('td', { class: [headers[i][1] || '', cell && cell.strong ? 'strong' : ''].join(' ').trim() }, tr);
+        if (cell && typeof cell === 'object') {
+          if (cell.href) htmlEl('a', { href: cell.href }, td, cell.text); else td.appendChild(document.createTextNode(cell.text));
+          if (cell.sub) htmlEl('span', { class: 'ci' }, td, cell.sub);
+          if (cell.p) htmlEl('span', { class: 'p' }, td, cell.p);
+        } else td.textContent = cell == null ? '' : String(cell);
+      });
+    }
+    return t;
+  }
+
+  // ---------- Header ----------
+  document.getElementById('meta').textContent = DATA.meta.line;
+  document.getElementById('lead').textContent = DATA.meta.lead;
+  document.getElementById('components-reading').textContent = DATA.components.readingText;
+  document.getElementById('footer').textContent = DATA.meta.footer;
+  const srcList = document.getElementById('source-list');
+  for (const [text, href] of DATA.meta.sources) { const li = htmlEl('li', {}, srcList); htmlEl('a', { href }, li, text); }
+
+  // ---------- Component tiles ----------
+  (function tiles() {
+    const host = document.getElementById('comp-tiles');
+    for (const ds of DS_ORDER) {
+      const a = DATA.components.familyA.find(r => r.dataset === ds && r.k === 6 && r.contrast === 'IRMF - EMD');
+      const gap = DATA.components.defaultGap[ds];
+      const t = htmlEl('div', { class: 'tile' }, host);
+      htmlEl('div', { class: 'tile-label' }, t, `${DS[ds][0]} · 6 components each`);
+      const v = htmlEl('div', { class: 'tile-value' }, t, signed(a.d, 1)); htmlEl('span', { class: 'unit' }, v, ' pp');
+      htmlEl('div', { class: 'tile-sub' }, t, 'IRMF over EMD at equal counts');
+      htmlEl('div', { class: 'tile-sig' }, t, `${isSig(a.p) ? 'Significant' : 'Not significant'}, Holm p ${fmtP(a.p)}`);
+      htmlEl('div', { class: 'tile-meta' }, t, `At the default counts (17 vs 8): ${signed(gap, 1)} pp`);
+    }
+  })();
+
+  // ---------- BA vs K curves ----------
+  let CLF = 'classical', FSC = 'comp';
+  const legendHost = document.getElementById('curve-legend');
+  for (const s of SERIES) { const span = htmlEl('span', {}, legendHost); legendShape(span, s); span.appendChild(document.createTextNode(s.label)); }
+  const curveHosts = [];
+  (function buildCurves() {
+    const wrap = document.getElementById('curves');
+    for (const ds of DS_ORDER) {
+      const cell = htmlEl('div', {}, wrap);
+      const h = htmlEl('h3', {}, cell, DS[ds][0]); htmlEl('span', { class: 'dst' }, h, DS[ds][1]);
+      curveHosts.push([htmlEl('div', { class: 'chart' }, cell), ds]);
+    }
+  })();
+  function curveData(ds) { return DATA.components.curves[`${ds}|${CLF}|${FSC}`]; }
+  function renderCurve(host, ds) {
+    const W = host.clientWidth; if (!W) return; host.replaceChildren();
+    const d = curveData(ds);
+    const padL = 40, padR = 12, padT = 10, padB = 30, H = 230;
+    const pw = W - padL - padR, ph = H - padT - padB;
+    const ks = [...new Set(SERIES.flatMap(s => d.series[s.key].map(p => p.k)))].sort((a, b) => a - b);
+    const kmax = Math.max(...ks);
+    const vals = SERIES.flatMap(s => d.series[s.key].map(p => p.ba));
+    let lo = Math.min(...vals), hi = Math.max(...vals); const padY = (hi - lo) * 0.12 || 1; lo -= padY; hi += padY;
+    const step = niceStep(hi - lo, 4);
+    const sx = k => padL + (k - 2.5) / (kmax + 0.5 - 2.5) * pw;
+    const sy = v => padT + (1 - (v - lo) / (hi - lo)) * ph;
+    const svg = svgEl('svg', { width: W, height: H, viewBox: `0 0 ${W} ${H}`, role: 'img', 'aria-label': `Balanced accuracy against component count on ${DS[ds][0]}. The table view lists every value.` }, host);
+    for (let t = Math.ceil(lo / step) * step; t <= hi + 1e-9; t += step) {
+      svgEl('line', { x1: padL, x2: W - padR, y1: sy(t), y2: sy(t), class: 'grid' }, svg);
+      svgEl('text', { x: padL - 6, y: sy(t) + 4, class: 'ax', 'text-anchor': 'end' }, svg, `${+t.toFixed(1)}`);
+    }
+    svgEl('line', { x1: padL, x2: W - padR, y1: H - padB, y2: H - padB, class: 'zero' }, svg);
+    for (const k of ks) svgEl('text', { x: sx(k), y: H - padB + 16, class: 'ax', 'text-anchor': 'middle' }, svg, String(k));
+    svgEl('text', { x: W - padR, y: H - 2, class: 'ax', 'text-anchor': 'end' }, svg, 'components (K)');
+    svgEl('text', { x: padL, y: padT - 0, class: 'ax' }, svg, '%');
+    const cross = svgEl('line', { x1: 0, x2: 0, y1: padT, y2: H - padB, class: 'cross' }, svg);
+    for (const s of SERIES) {
+      const pts = d.series[s.key];
+      const g = svgEl('g', { class: s.cls }, svg);
+      svgEl('path', { d: pts.map((p, i) => `${i ? 'L' : 'M'}${sx(p.k)},${sy(p.ba)}`).join(''), class: 'line' }, g);
+      for (const p of pts) shapeEl(g, s.shape, sx(p.k), sy(p.ba), 4, p.isDefault ? 'mark default' : 'mark');
+    }
+    const overlay = svgEl('rect', { x: padL, y: padT, width: pw, height: ph, class: 'hit', tabindex: 0, 'aria-label': `${DS[ds][0]} curves; use arrow keys to step through K` }, svg);
+    let current = ks[ks.length - 1];
+    const build = k => box => {
+      const head = htmlEl('div', { class: 'tl' }, box, `${DS[ds][0]} · K = ${k}`);
+      for (const s of SERIES) {
+        const p = d.series[s.key].find(q => q.k === k);
+        const row = htmlEl('div', { class: `row ${s.cls}` }, box);
+        htmlEl('i', { class: 'key' }, row);
+        htmlEl('b', {}, row, p ? pct(p.ba, 2) : '–');
+        htmlEl('span', { class: 'tl' }, row, `${s.label}${p && p.isDefault ? ' (default)' : ''}${p ? `, ${p.nf} features` : ''}`);
+      }
+      return head;
+    };
+    const nearest = x => ks.reduce((best, k) => Math.abs(sx(k) - x) < Math.abs(sx(best) - x) ? k : best, ks[0]);
+    const showAt = (k, cx, cy) => { current = k; cross.setAttribute('x1', sx(k)); cross.setAttribute('x2', sx(k)); cross.classList.add('on'); tip.replaceChildren(); build(k)(tip); placeTip(cx, cy); };
+    overlay.addEventListener('pointermove', e => { const r = svg.getBoundingClientRect(); showAt(nearest(e.clientX - r.left), e.clientX, e.clientY); });
+    overlay.addEventListener('pointerleave', () => { cross.classList.remove('on'); hideTip(); });
+    overlay.addEventListener('focus', () => { const r = svg.getBoundingClientRect(); showAt(current, r.left + sx(current), r.top + padT + ph / 2); });
+    overlay.addEventListener('blur', () => { cross.classList.remove('on'); hideTip(); });
+    overlay.addEventListener('keydown', e => {
+      const i = ks.indexOf(current);
+      if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+        e.preventDefault();
+        const k = ks[Math.max(0, Math.min(ks.length - 1, i + (e.key === 'ArrowRight' ? 1 : -1)))];
+        const r = svg.getBoundingClientRect(); showAt(k, r.left + sx(k), r.top + padT + ph / 2);
+      }
+    });
+  }
+  function renderCurvesTable() {
+    const rows = [];
+    for (const ds of DS_ORDER) for (const s of SERIES) for (const p of curveData(ds).series[s.key])
+      rows.push([DS[ds][0], s.label, { text: String(p.k), sub: p.isDefault ? 'default' : '' }, pct(p.ba, 2), String(p.nf)]);
+    tableFrom(document.getElementById('curves-table'), [['Dataset'], ['Method'], ['K', 'num'], ['Balanced accuracy', 'num'], ['Features', 'num']], rows);
+  }
+  function renderCurves() { for (const [h, ds] of curveHosts) renderCurve(h, ds); renderCurvesTable(); }
+  for (const [id, setter] of [['seg-clf', v => { CLF = v; }], ['seg-fs', v => { FSC = v; }]]) {
+    document.querySelectorAll(`#${id} button`).forEach(b => b.addEventListener('click', () => {
+      setter(b.dataset.v);
+      document.querySelectorAll(`#${id} button`).forEach(o => o.setAttribute('aria-pressed', String(o === b)));
+      renderCurves();
+    }));
+  }
+
+  // ---------- Family A table ----------
+  (function familyA() {
+    const host = document.getElementById('family-a'); host.replaceChildren();
+    const t = htmlEl('table', {}, host);
+    const hr = htmlEl('tr', {}, htmlEl('thead', {}, t));
+    for (const [txt, cls] of [['Dataset'], ['Contrast'], ['K = 3', 'num'], ['K = 4', 'num'], ['K = 5', 'num'], ['K = 6', 'num'], ['Pre-registered reading']]) htmlEl('th', cls ? { class: cls } : {}, hr, txt);
+    const tb = htmlEl('tbody', {}, t);
+    for (const ds of DS_ORDER) {
+      ['IRMF - EMD', 'Linear IMF - EMD', 'IRMF - Linear IMF'].forEach((c, i) => {
+        const tr = htmlEl('tr', {}, tb);
+        if (i === 0) { const td = htmlEl('td', { rowspan: 3, class: 'rowhead' }, tr, DS[ds][0]); }
+        htmlEl('td', {}, tr, c.replace(' - ', ' − '));
+        for (const k of [3, 4, 5, 6]) {
+          const r = DATA.components.familyA.find(x => x.dataset === ds && x.k === k && x.contrast === c);
+          const td = htmlEl('td', { class: isSig(r.p) ? 'num strong' : 'num' }, tr, signed(r.d, 1));
+          htmlEl('span', { class: 'ci' }, td, `${signed(r.lo, 1)} to ${signed(r.hi, 1)}`);
+          htmlEl('span', { class: 'p' }, td, `p ${fmtP(r.p)}`);
+        }
+        if (i === 0) htmlEl('td', { rowspan: 3 }, tr, DATA.components.reading[ds]);
+      });
+    }
+  })();
+
+  // ---------- Forest (single panel) ----------
+  function renderForest(host, groups, opts) {
+    const W = host.clientWidth; if (!W) return; host.replaceChildren();
+    const labelW = W < 640 ? 150 : 250, padR = 10, padT = 34, padB = 30, rowH = 24, headH = 32;
+    const pw = W - labelW - padR;
+    const rows = [];
+    for (const g of groups) { rows.push({ head: g.label }); for (const r of g.rows) rows.push(r); }
+    let y = padT; for (const r of rows) { r.y = y; y += r.head ? headH : rowH; }
+    const H = y + padB;
+    let lo = 0, hi = 0; for (const r of rows) if (!r.head) { lo = Math.min(lo, r.lo); hi = Math.max(hi, r.hi); }
+    const pad = (hi - lo) * 0.04; const d0 = lo - pad, d1 = hi + pad; const step = niceStep(d1 - d0, pw < 300 ? 4 : 7);
+    const sx = v => labelW + (v - d0) / (d1 - d0) * pw;
+    const svg = svgEl('svg', { width: W, height: H, viewBox: `0 0 ${W} ${H}`, role: 'img', 'aria-label': opts.aria }, host);
+    svgEl('text', { x: labelW, y: 16, class: 'psub' }, svg, opts.axis);
+    for (let t = Math.ceil(d0 / step) * step; t <= d1 + 1e-9; t += step) {
+      const tv = Math.round(t * 1e6) / 1e6;
+      svgEl('line', { x1: sx(tv), x2: sx(tv), y1: padT - 6, y2: H - padB + 4, class: tv === 0 ? 'zero' : 'grid' }, svg);
+      svgEl('text', { x: sx(tv), y: H - padB + 19, class: 'ax', 'text-anchor': 'middle' }, svg, tv === 0 ? '0' : signed(tv, 0));
+    }
+    rows.forEach((r, i) => {
+      if (r.head) {
+        if (i) svgEl('line', { x1: 0, x2: W, y1: r.y + 5, y2: r.y + 5, class: 'sep' }, svg);
+        svgEl('text', { x: 0, y: r.y + 24, class: 'dsl' }, svg, r.head);
+        return;
+      }
+      const cy = r.y + rowH / 2;
+      svgEl('text', { x: 10, y: cy + 4.5, class: 'lbl' }, svg, r.label);
+      const wash = svgEl('rect', { x: labelW - 6, y: r.y + 1, width: pw + 12, height: rowH - 2, rx: 4, class: 'wash' }, svg);
+      svgEl('line', { x1: sx(r.lo), x2: sx(r.hi), y1: cy, y2: cy, class: 'ci-line' }, svg);
+      svgEl('circle', { cx: sx(r.d), cy, r: 6.5, class: 'ring' }, svg);
+      if (isSig(r.p)) svgEl('circle', { cx: sx(r.d), cy, r: 4.5, class: 'dot' }, svg); else svgEl('circle', { cx: sx(r.d), cy, r: 3.5, class: 'dot-hollow' }, svg);
+      if (r.labelValue) {
+        let lx = sx(r.hi) + 8, anchor = 'start';
+        if (lx + 40 > W) { lx = sx(r.lo) - 8; anchor = 'end'; }
+        svgEl('text', { x: lx, y: cy + 4, class: 'dlab', 'text-anchor': anchor }, svg, signed(r.d, 1));
+      }
+      const hit = svgEl('rect', { x: labelW - 6, y: r.y, width: pw + 12, height: rowH, class: 'hit', tabindex: 0, 'aria-label': `${r.group}, ${r.label}: ${signed(r.d, 2)} points, 95% interval ${signed(r.lo, 2)} to ${signed(r.hi, 2)}, Holm p ${fmtP(r.p)}` }, svg);
+      bindTip(hit, box => {
+        const top = htmlEl('div', { class: 'tv' }, box); htmlEl('span', {}, top, `${signed(r.d, 2)} pp`);
+        htmlEl('div', { class: 'tl' }, box, `${r.label} · ${r.group}`);
+        htmlEl('div', { class: 'tl' }, box, `95% interval ${signed(r.lo, 2)} to ${signed(r.hi, 2)}`);
+        htmlEl('div', { class: 'tl' }, box, `Holm p ${fmtP(r.p)}`);
+      }, [wash]);
+    });
+  }
+  const C_LABELS = {
+    'Linear IMF k_max=4 - full': 'Linear IMF, k_max 4 vs full', 'Linear IMF k_max=8 - full': 'Linear IMF, k_max 8 vs full', 'Linear IMF k_max=12 - full': 'Linear IMF, k_max 12 vs full',
+    'IRMF k_max=4 - full': 'IRMF, k_max 4 vs full', 'IRMF k_max=8 - full': 'IRMF, k_max 8 vs full', 'IRMF k_max=12 - full': 'IRMF, k_max 12 vs full',
+    'GD60 k_max=8 - GD60 full': 'pimf defaults vs all stages', 'GD60 k_max=8 - EMD K=8': 'pimf defaults vs EMD default',
+  };
+  const familyCGroups = () => DS_ORDER.map(ds => ({
+    label: DS[ds][0],
+    rows: DATA.components.familyC.filter(r => r.dataset === ds).map(r => ({ ...r, group: DS[ds][0], label: C_LABELS[r.contrast] || r.contrast, labelValue: r.contrast.startsWith('GD60') })),
+  }));
+  function renderFamilyC() {
+    renderForest(document.getElementById('family-c'), familyCGroups(), { axis: 'Δ balanced accuracy, pp; left of 0 means the cut-off or pimf default does worse', aria: 'Effect of truncating the recursive IMF with k_max. The table view lists every value.' });
+    const rows = []; for (const g of familyCGroups()) for (const r of g.rows) rows.push([g.label, r.label, { text: signed(r.d, 2), strong: isSig(r.p) }, `${signed(r.lo, 2)} to ${signed(r.hi, 2)}`, fmtP(r.p)]);
+    tableFrom(document.getElementById('family-c-table'), [['Dataset'], ['Comparison'], ['Δ BA, pp', 'num'], ['95% interval', 'num'], ['Holm p', 'num']], rows);
+  }
+
+  // ---------- Padding ----------
+  (function padding() {
+    const rows = DS_ORDER.map(ds => [DS[ds][0], ...[5, 6, 7, 8].map(k => pct(100 * DATA.components.padding[ds][k], 1))]);
+    tableFrom(document.getElementById('padding'), [['Dataset'], ['K = 5', 'num'], ['K = 6', 'num'], ['K = 7', 'num'], ['K = 8 (EMD default)', 'num']], rows);
+  })();
+
+  // ---------- pimf 0.5.0 and 0.5.1 ----------
+  (function release() {
+    const R = DATA.release;
+    const host = document.getElementById('release-tiles');
+    for (const t of R.tiles) {
+      const d = htmlEl('div', { class: 'tile' }, host);
+      htmlEl('div', { class: 'tile-label' }, d, t.label);
+      const v = htmlEl('div', { class: 'tile-value' }, d, t.value); if (t.unit) htmlEl('span', { class: 'unit' }, v, t.unit);
+      htmlEl('div', { class: 'tile-sub' }, d, t.sub);
+      if (t.meta) htmlEl('div', { class: 'tile-meta' }, d, t.meta);
+    }
+    tableFrom(document.getElementById('release-full'),
+      [['Dataset'], ['Channels', 'num'], ['Differ > 1e-6', 'num'], ['Differ > 1e-3', 'num'], ['Largest relative difference', 'num'], ['Frames with changed features', 'num'], ['All converged']],
+      R.full.map(r => [DS[r.dataset][0], r.channels.toLocaleString('en'), r.gt6.toLocaleString('en'), r.gt3.toLocaleString('en'), r.relmax < 1e-4 ? fmtSci(r.relmax) : pct(100 * r.relmax, 1), r.frames_changed.toLocaleString('en'), r.converged ? 'yes' : 'no']));
+    document.getElementById('release-class-note').textContent = R.classNote;
+    tableFrom(document.getElementById('release-class'),
+      [['Dataset'], ['Model'], ['Release − prototype', 'num'], ['IRMF − EMD, release', 'num'], ['IRMF − EMD, prototype', 'num'], ['IRMF − linear IMF, release', 'num'], ['IRMF − linear IMF, prototype', 'num']],
+      R.classMain.map(r => [DS[r.dataset][0], r.model, ...r.cells.map(c => c ? { text: signed(c.d, 2), sub: `${signed(c.lo, 2)} to ${signed(c.hi, 2)}`, p: `p ${fmtP(c.p)}`, strong: isSig(c.p) } : { text: r.missing || 'running' })]));
+    tableFrom(document.getElementById('release-class-all'),
+      [['Dataset'], ['Model'], ['Features'], ['Contrast'], ['Δ BA, pp', 'num'], ['95% interval', 'num'], ['Holm p', 'num']],
+      R.classAll.map(r => [DS[r.dataset][0], r.model, r.fs, r.contrast, { text: signed(r.d, 2), strong: isSig(r.p) }, `${signed(r.lo, 2)} to ${signed(r.hi, 2)}`, fmtP(r.p)]));
+    const N = R.next;
+    document.getElementById('next-note').textContent = N.note;
+    const nextFull = document.getElementById('next-full');
+    if (N.full.length) {
+      tableFrom(nextFull,
+        [['Dataset'], ['Channels', 'num'], [`Feature table identical to ${N.base}`], ['Solver diagnostics identical'], ['All converged']],
+        N.full.map(r => [DS[r.dataset][0], r.channels.toLocaleString('en'), r.features ? 'yes, byte for byte' : 'no', r.diagnostics ? 'yes' : 'no', r.converged ? 'yes' : 'no']));
+    } else nextFull.hidden = true;
+    const speedNote = document.getElementById('release-speed-note');
+    if (N.speed.length) {
+      speedNote.textContent = `Median CPU seconds per frame on the same 40-frame sample per dataset, one thread. The three Newton solvers ran in turn, three rounds each, so they shared the same machine load; other experiments were running throughout. Gradient descent comes from a separate pass under ${N.version} and is rougher.`;
+      tableFrom(document.getElementById('release-speed'),
+        [['Dataset'], ['Our Numba prototype', 'num'], [`pimf ${N.base} Newton`, 'num'], [`pimf ${N.version} Newton`, 'num'], [`${N.version} vs ${N.base}`, 'num'], [`${N.version} ÷ prototype`, 'num'], ['pimf gradient descent (60 steps)', 'num']],
+        N.speed.map(r => [DS[r.dataset][0], r.proto.toFixed(3), r.old.toFixed(3), r.new.toFixed(3), { text: `${r.speedup.toFixed(1)}× faster`, strong: true }, `${r.slowdown.toFixed(1)}× slower`, r.gd == null ? '' : r.gd.toFixed(3)]));
+    } else {
+      speedNote.textContent = 'Median CPU seconds per frame on a 40-frame sample per dataset. Other experiments were running at the same time, so treat these as rough.';
+      tableFrom(document.getElementById('release-speed'),
+        [['Dataset'], ['pimf 0.5.0 Newton', 'num'], ['Our Numba prototype', 'num'], ['pimf gradient descent (60 steps)', 'num'], ['Newton: release ÷ prototype', 'num']],
+        R.speed.map(r => [DS[r.dataset][0], r.newton.toFixed(3), r.proto.toFixed(3), r.gd.toFixed(3), `${(r.newton / r.proto).toFixed(1)}×`]));
+    }
+  })();
+
+  // ---------- Robustness ----------
+  const ROB = DATA.robustness;
+  const KINDS = [['impulse1', 'One-sided spikes'], ['impulse2', 'Two-sided spikes'], ['gauss', 'Gaussian noise, same power']];
+  const LEVELS = [['clean', 'clean'], ['0.002', '0.2%'], ['0.01', '1%'], ['0.04', '4%']];
+  const condKey = (kind, level) => level === 'clean' ? 'clean' : `${kind}_${level}`;
+  const robHosts = [];
+  (function robustness() {
+    document.getElementById('rob-status').textContent = ROB.status;
+    if (ROB.didNote) document.getElementById('rob-did-note').textContent = ROB.didNote;
+    const body = document.getElementById('rob-body');
+    for (const para of ROB.paragraphs) htmlEl('p', {}, body, para);
+    if (ROB.list) { const ul = htmlEl('ul', {}, body); for (const item of ROB.list) htmlEl('li', {}, ul, item); }
+    if (!ROB.datasets || !ROB.datasets.length) return;
+    document.getElementById('rob-results').hidden = false;
+
+    const tiles = document.getElementById('rob-tiles');
+    for (const d of ROB.datasets) {
+      const r = d.reading;
+      const t = htmlEl('div', { class: 'tile' }, tiles);
+      htmlEl('div', { class: 'tile-label' }, t, `${DS[d.dataset][0]} · spikes in 4% of samples${d.tag === 'interim' ? ' · interim' : ''}`);
+      const v = htmlEl('div', { class: 'tile-value' }, t, signed(r.impulse2, 1)); htmlEl('span', { class: 'unit' }, v, ' pp');
+      htmlEl('div', { class: 'tile-sub' }, t, 'change in the IRMF − linear IMF gap, two-sided spikes');
+      htmlEl('div', { class: 'tile-sig' }, t, `One-sided ${signed(r.impulse1, 1)} pp · Gaussian ${signed(r.gauss, 1)} pp`);
+      htmlEl('div', { class: 'tile-meta' }, t, r.text);
+    }
+
+    const legend = document.getElementById('rob-legend');
+    for (const s of SERIES) { const span = htmlEl('span', {}, legend); legendShape(span, s); span.appendChild(document.createTextNode(s.label)); }
+    const grid = document.getElementById('rob-curves');
+    for (const d of ROB.datasets) {
+      const block = htmlEl('div', { style: 'grid-column: 1 / -1' }, grid);
+      const h = htmlEl('h3', {}, block, DS[d.dataset][0]);
+      htmlEl('span', { class: 'dst' }, h, `${d.classifier}${d.tag === 'interim' ? ', interim' : ''}`);
+      const row = htmlEl('div', { class: 'multiples', style: 'grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px 22px' }, block);
+      for (const [kind, label] of KINDS) {
+        const cell = htmlEl('div', {}, row);
+        htmlEl('div', { class: 'note', style: 'margin:0 0 2px' }, cell, label);
+        robHosts.push([htmlEl('div', { class: 'chart' }, cell), d, kind, label]);
+      }
+    }
+    const rows = [];
+    for (const d of ROB.datasets) for (const [kind, label] of KINDS) for (const [lv, lvl] of LEVELS) {
+      if (lv === 'clean' && kind !== 'impulse1') continue;
+      const c = condKey(kind, lv);
+      rows.push([DS[d.dataset][0], lv === 'clean' ? 'Clean' : `${label}, ${lvl}`, ...['irmf', 'linear', 'emd', 'raw'].map(m => pct(d.curves[m][c], 1))]);
+    }
+    tableFrom(document.getElementById('rob-curves-table'), [['Dataset'], ['Test data'], ['IRMF', 'num'], ['Linear IMF', 'num'], ['EMD', 'num'], ['Raw', 'num']], rows);
+
+    const didHost = document.getElementById('rob-did');
+    const t = htmlEl('table', {}, didHost);
+    const hr = htmlEl('tr', {}, htmlEl('thead', {}, t));
+    for (const [txt, cls] of [['Dataset'], ['Contamination'], ['IRMF − linear IMF gap change', 'num'], ['IRMF − EMD gap change', 'num']]) htmlEl('th', cls ? { class: cls } : {}, hr, txt);
+    const tb = htmlEl('tbody', {}, t);
+    for (const d of ROB.datasets) {
+      let first = true;
+      for (const [kind, label] of KINDS) for (const [lv, lvl] of LEVELS.slice(1)) {
+        const tr = htmlEl('tr', {}, tb);
+        const head = htmlEl('td', { class: 'rowhead' }, tr, first ? DS[d.dataset][0] : '');
+        if (first) htmlEl('span', { class: 'ci' }, head, d.final ? 'Holm within synthetic' : (d.tag === 'interim' ? 'interim, uncorrected p' : (ROB.status === 'final' ? 'Holm within the report\'s families' : 'spike rows Holm across real datasets')));
+        first = false;
+        htmlEl('td', {}, tr, `${label}, ${lvl}`);
+        for (const comp of ['imf_linear_a1.41', 'emd']) {
+          const r = d.tests.find(x => x.condition === `${kind}_${lv}` && x.comparator === comp);
+          if (!r) { htmlEl('td', { class: 'num' }, tr, 'not tested'); continue; }
+          const td = htmlEl('td', { class: isSig(r.p) ? 'num strong' : 'num' }, tr, signed(r.d, 1));
+          htmlEl('span', { class: 'ci' }, td, `${signed(r.lo, 1)} to ${signed(r.hi, 1)}`);
+          htmlEl('span', { class: 'p' }, td, `p ${fmtP(r.p)}`);
+        }
+      }
+    }
+
+    const driftRows = [];
+    const order = ['raw', 'emd', 'linear', 'irmf'];
+    for (const d of ROB.datasets) {
+      if (!d.stability.length) continue;
+      for (const [kind, label] of KINDS) for (const [lv, lvl] of LEVELS.slice(1)) {
+        const c = `${kind}_${lv}`;
+        const vals = order.map(m => d.stability.find(s => s.condition === c && s.method === m));
+        const best = Math.min(...vals.map(v => v.median));
+        driftRows.push([DS[d.dataset][0], `${label}, ${lvl}`, ...vals.map(v => ({ text: v.median.toFixed(2), sub: `p95 ${v.p95.toFixed(2)}`, strong: v.median === best }))]);
+      }
+    }
+    tableFrom(document.getElementById('rob-drift'), [['Dataset'], ['Contamination'], ['Raw', 'num'], ['EMD', 'num'], ['Linear IMF', 'num'], ['IRMF', 'num']], driftRows);
+    htmlEl('p', { class: 'note', style: 'margin:10px 0 0' }, document.getElementById('rob-drift'), 'Bold marks the smallest median drift in each row.');
+  })();
+
+  function renderRobCurve(host, d, kind, label) {
+    const W = host.clientWidth; if (!W) return; host.replaceChildren();
+    const padL = 36, padR = 10, padT = 10, padB = 28, H = 200;
+    const pw = W - padL - padR, ph = H - padT - padB;
+    const all = SERIES.flatMap(s => Object.values(d.curves[s.key]));
+    let lo = Math.min(d.chance, ...all), hi = Math.max(...all); const pad = (hi - lo) * 0.08; lo = Math.max(0, lo - pad); hi += pad;
+    const step = niceStep(hi - lo, 4);
+    const sx = i => padL + (i + 0.5) / LEVELS.length * pw;
+    const sy = v => padT + (1 - (v - lo) / (hi - lo)) * ph;
+    const svg = svgEl('svg', { width: W, height: H, viewBox: `0 0 ${W} ${H}`, role: 'img', 'aria-label': `${DS[d.dataset][0]}, ${label}: balanced accuracy from clean to 4%. The table view lists every value.` }, host);
+    for (let t = Math.ceil(lo / step) * step; t <= hi + 1e-9; t += step) {
+      svgEl('line', { x1: padL, x2: W - padR, y1: sy(t), y2: sy(t), class: 'grid' }, svg);
+      svgEl('text', { x: padL - 6, y: sy(t) + 4, class: 'ax', 'text-anchor': 'end' }, svg, `${+t.toFixed(1)}`);
+    }
+    svgEl('line', { x1: padL, x2: W - padR, y1: sy(d.chance), y2: sy(d.chance), class: 'chance', style: 'stroke: var(--text-muted)' }, svg);
+    svgEl('text', { x: padL + 4, y: sy(d.chance) - 4, class: 'ax' }, svg, 'chance');
+    LEVELS.forEach(([, lvl], i) => svgEl('text', { x: sx(i), y: H - padB + 16, class: 'ax', 'text-anchor': 'middle' }, svg, lvl));
+    const cross = svgEl('line', { x1: 0, x2: 0, y1: padT, y2: H - padB, class: 'cross' }, svg);
+    for (const s of SERIES) {
+      const g = svgEl('g', { class: s.cls }, svg);
+      const pts = LEVELS.map(([lv], i) => [sx(i), sy(d.curves[s.key][condKey(kind, lv)])]);
+      svgEl('path', { d: pts.map((p, i) => `${i ? 'L' : 'M'}${p[0]},${p[1]}`).join(''), class: 'line' }, g);
+      for (const [x, y] of pts) shapeEl(g, s.shape, x, y, 4, 'mark');
+    }
+    const overlay = svgEl('rect', { x: padL, y: padT, width: pw, height: ph, class: 'hit', tabindex: 0, 'aria-label': `${DS[d.dataset][0]}, ${label}; use arrow keys to step through levels` }, svg);
+    let current = LEVELS.length - 1;
+    const showAt = (i, cx, cy) => {
+      current = i; cross.setAttribute('x1', sx(i)); cross.setAttribute('x2', sx(i)); cross.classList.add('on');
+      tip.replaceChildren();
+      htmlEl('div', { class: 'tl' }, tip, `${DS[d.dataset][0]} · ${i === 0 ? 'clean' : `${label}, ${LEVELS[i][1]}`}`);
+      for (const s of SERIES) {
+        const row = htmlEl('div', { class: `row ${s.cls}` }, tip);
+        htmlEl('i', { class: 'key' }, row); htmlEl('b', {}, row, pct(d.curves[s.key][condKey(kind, LEVELS[i][0])], 1));
+        htmlEl('span', { class: 'tl' }, row, s.label);
+      }
+      htmlEl('div', { class: 'tl' }, tip, `Chance ${pct(d.chance, 1)}`);
+      placeTip(cx, cy);
+    };
+    const nearest = x => { let best = 0; LEVELS.forEach((_, i) => { if (Math.abs(sx(i) - x) < Math.abs(sx(best) - x)) best = i; }); return best; };
+    overlay.addEventListener('pointermove', e => { const r = svg.getBoundingClientRect(); showAt(nearest(e.clientX - r.left), e.clientX, e.clientY); });
+    overlay.addEventListener('pointerleave', () => { cross.classList.remove('on'); hideTip(); });
+    overlay.addEventListener('focus', () => { const r = svg.getBoundingClientRect(); showAt(current, r.left + sx(current), r.top + padT + ph / 2); });
+    overlay.addEventListener('blur', () => { cross.classList.remove('on'); hideTip(); });
+    overlay.addEventListener('keydown', e => {
+      if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+      e.preventDefault(); const i = Math.max(0, Math.min(LEVELS.length - 1, current + (e.key === 'ArrowRight' ? 1 : -1)));
+      const r = svg.getBoundingClientRect(); showAt(i, r.left + sx(i), r.top + padT + ph / 2);
+    });
+  }
+
+  // ---------- View toggles and resizing ----------
+  document.querySelectorAll('figure[data-view]').forEach(fig => {
+    const btn = fig.querySelector('.view-toggle');
+    const chart = fig.querySelector('.chart, .multiples');
+    const table = fig.querySelector('.table-wrap');
+    const ctrl = fig.querySelector('.controls');
+    btn.addEventListener('click', () => {
+      const showTable = btn.getAttribute('aria-pressed') !== 'true';
+      btn.setAttribute('aria-pressed', String(showTable)); btn.textContent = showTable ? 'Chart view' : 'Table view';
+      chart.hidden = showTable; table.hidden = !showTable; hideTip();
+      if (ctrl) ctrl.hidden = false;
+    });
+  });
+  renderCurves();
+  renderFamilyC();
+  robHosts.forEach(([h, d, k, l]) => renderRobCurve(h, d, k, l));
+  const widths = new WeakMap();
+  const ro = new ResizeObserver(entries => {
+    for (const en of entries) {
+      const w = Math.round(en.contentRect.width);
+      if (!w || widths.get(en.target) === w) continue;
+      widths.set(en.target, w);
+      if (en.target.id === 'family-c') renderFamilyC();
+      else {
+        const hit = curveHosts.find(([h]) => h === en.target); if (hit) renderCurve(hit[0], hit[1]);
+        const rob = robHosts.find(([h]) => h === en.target); if (rob) renderRobCurve(...rob);
+      }
+    }
+  });
+  [document.getElementById('family-c'), ...curveHosts.map(([h]) => h), ...robHosts.map(([h]) => h)].forEach(h => ro.observe(h));
+  window.addEventListener('scroll', hideTip, { passive: true });
+})();
+</script>
+</body>
+</html>

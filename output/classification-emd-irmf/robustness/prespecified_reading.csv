@@ -1,0 +1,9 @@
+dataset,condition,did,gauss_did,positive,holm_significant,gauss_smaller,helps,status
+synthetic,impulse1_0.04,0.1875578724900424,-0.14584810322064212,True,True,True,True,"synthetic, added after pre-registration at the user's request"
+synthetic,impulse2_0.04,0.2040997953323375,-0.14584810322064212,True,True,True,True,"synthetic, added after pre-registration at the user's request"
+dronerf,impulse1_0.04,0.10637626531812971,0.07701517766450214,True,True,True,True,confirmatory
+dronerf,impulse2_0.04,0.1012476550544066,0.07701517766450214,True,True,True,True,confirmatory
+birdclef2023,impulse1_0.04,0.05048458436441092,-0.007210724026360052,True,False,True,False,confirmatory
+birdclef2023,impulse2_0.04,0.04774586310249482,-0.007210724026360052,True,False,True,False,confirmatory
+esc50_animals,impulse1_0.04,-0.015265691648193254,-0.015905443549994524,False,False,True,False,confirmatory
+esc50_animals,impulse2_0.04,-0.049470131979691495,-0.015905443549994524,False,False,False,False,confirmatory

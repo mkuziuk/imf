@@ -1,0 +1,83 @@
+{
+  "checked_at": "2026-10-20T19:29:14.592849+00:00",
+  "convergence": {
+    "all_converged": 2294,
+    "n_frames": 5100,
+    "fraction_stages_unconverged": 0.21566320645905424,
+    "fraction_stages_at_cap": 0.22081891580161475,
+    "mean_iterations": 32.87104959630911
+  },
+  "analysis_seconds": 24.319747457979247,
+  "validation": {
+    "direct_upstream_raw_lda_predictions_match": true,
+    "shared_log_scale_identical": true,
+    "cached_fits": {
+      "animal": 720,
+      "bird": 720
+    },
+    "native_probabilities_finite_normalized_and_match_predictions": true,
+    "warning_records": 264,
+    "joblib_worker_restart_warnings": 1,
+    "qda_minimal_reproduction": {
+      "auto_failed_on_nearly_class_constant_feature": true,
+      "fixed_shrinkage_0.05_succeeded": true
+    },
+    "svm_selected_refit_audit": {
+      "n_warned_grid_fits": 42,
+      "n_selected_refits_at_cap": 2,
+      "minimum_label_agreement": 1.0,
+      "maximum_absolute_ba_difference": 0.0
+    },
+    "versions": {
+      "numpy": "2.3.5",
+      "scipy": "1.17.1",
+      "pandas": "3.0.6",
+      "scikit-learn": "1.9.1",
+      "pimf": "0.4.0",
+      "EMD-signal": "1.10.0"
+    },
+    "source_sha256": {
+      "experiments/classification-emd-irmf/PROTOCOL.md": "98bb70db0168bf32281ba670d8037505c227f5a7b684b0ff4d12edc1d5725c51",
+      "experiments/classification-emd-irmf/baselines/run_classical.py": "b2b94bc8c49251adba0ece318f892330f01c1c04bb1d4d256226f97f251e1386",
+      "experiments/classification-emd-irmf/emdirmf/cv.py": "2f82c07441a38b34f53e270ea6a79d794ae31a954ab5efadd443e013da50ee46",
+      "experiments/classification-emd-irmf/emdirmf/decompose.py": "7fd13b017f033060a43e512ab157cdad0c834640fc5cb2199f65218629f6a2ed"
+    }
+  },
+  "ablation_readiness": [
+    {
+      "tag": "irmf_h1_a1.41",
+      "decomp_json": false,
+      "features_parquet": false,
+      "features_json": false,
+      "ready": false
+    },
+    {
+      "tag": "irmf_h4_a1.41",
+      "decomp_json": false,
+      "features_parquet": false,
+      "features_json": false,
+      "ready": false
+    },
+    {
+      "tag": "irmf_h2_a2",
+      "decomp_json": true,
+      "features_parquet": false,
+      "features_json": false,
+      "ready": false
+    },
+    {
+      "tag": "imf_linear_a2",
+      "decomp_json": true,
+      "features_parquet": false,
+      "features_json": false,
+      "ready": false
+    }
+  ],
+  "all_ablations_ready": false,
+  "ready_ablations": [],
+  "inference": "Holm separately for each task/metric table: six pairs x six classifiers x two feature sets = 72 tests.",
+  "feature_statistics": "Descriptive all-frame H/(N-1) epsilon2 and 16-quantile-bin Miller-Madow-corrected MI, nats.",
+  "frequency": "Hz are observed median centroids of nonzero components; inverse-window Hz is descriptive, not a passband edge.",
+  "clip_aggregation": "Logistic regression fixed for every method. Within each outer fold, average its native probabilities over a clip's frames, then argmax. Headline clip scores pool the 400 held-out clips per seed, then average three seeds. The 15-fold mean is also saved. No artificial SVM probabilities or extra calibration fits.",
+  "selection": "Best classifier selected by mean outer-CV balanced accuracy. Its headline score is exploratory; paired inference always matches classifier and split. Clip classifier is fixed logistic regression."
+}

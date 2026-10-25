@@ -1,0 +1,8 @@
+{
+  "n_frames": 12000,
+  "unconverged_frames": 1997,
+  "unconverged_frame_fraction": 0.16641666666666666,
+  "unconverged_channel_fraction": 0.08395833333333333,
+  "unconverged_stage_fraction": 0.06699509803921569,
+  "unconverged_not_at_cap": 0
+}

@@ -16,6 +16,9 @@ one-dimensional signals with Gaussian noise and one-sided exponential contaminat
 - [`experiments/pimf-as222/`](experiments/pimf-as222/): pip-installed `pimf` versus
   an AS222-style FFT smoother, with paired accuracy checks, fresh timings, and a
   [three-page report](overleaf/pimf_as222_comparison.pdf).
+- [`experiments/classification-emd-irmf/`](experiments/classification-emd-irmf/):
+  grouped classification comparisons of EMD, linear IMF, IRMF and raw signals on
+  RF, bird audio and radar, with a [cross-dataset synthesis](output/classification-emd-irmf/SUMMARY.md).
 - [`experiments/real-vs-calculated/`](experiments/real-vs-calculated/): clean-reference
   comparisons, observation-model variants, limit sweeps, and error-scaling studies.
 - [`experiments/residual-distribution/`](experiments/residual-distribution/): paired

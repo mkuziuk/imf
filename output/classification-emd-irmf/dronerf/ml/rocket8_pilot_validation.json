@@ -1,0 +1,15 @@
+{
+  "runner": "rocket",
+  "task": "10class",
+  "fits": 4,
+  "prediction_rows": 9740,
+  "probability_tied_argmax_labels": 2660,
+  "split_ids": [
+    0
+  ],
+  "bit_identical_labels_and_probabilities": true,
+  "rows_compared": 9740,
+  "max_probability_difference": 0.0,
+  "seconds": 67.62692420789972,
+  "workers": 8
+}

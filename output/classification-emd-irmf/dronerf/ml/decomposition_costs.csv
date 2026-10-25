@@ -1,0 +1,10 @@
+method,seconds_per_frame,n_slots,n_failed,solver
+raw,0.0,1,,
+emd,0.02942912866666671,9,0.0,PyEMD.EMD
+imf_linear_a1.41,0.012638117999999986,18,0.0,pimf.IMF
+imf_linear_a2,0.008542336416666678,10,0.0,pimf.IMF
+irmf_h1_a1.41_conv,0.1111165780833333,18,0.0,emdirmf.irmf_newton.NewtonSmoothAbs
+irmf_h2_a1.41,1.278671008666667,18,0.0,pimf.IMF
+irmf_h2_a1.41_conv,0.10760770241666696,18,0.0,emdirmf.irmf_newton.NewtonSmoothAbs
+irmf_h2_a2_conv,0.06224682250000026,10,0.0,emdirmf.irmf_newton.NewtonSmoothAbs
+irmf_h4_a1.41_conv,0.10395052100000059,18,0.0,emdirmf.irmf_newton.NewtonSmoothAbs

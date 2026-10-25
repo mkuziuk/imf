@@ -1,0 +1,11 @@
+raw comp compact_resnet split=0: BA=0.449, fit=54.90s, predict=0.42s
+raw comp compact_resnet split=1: BA=0.435, fit=54.72s, predict=0.41s
+raw comp compact_resnet split=2: BA=0.463, fit=54.60s, predict=0.41s
+raw comp compact_resnet split=3: BA=0.395, fit=54.70s, predict=0.40s
+raw comp compact_resnet split=4: BA=0.428, fit=56.11s, predict=0.41s
+raw comp+log_scale compact_resnet split=0: BA=0.462, fit=56.09s, predict=0.41s
+raw comp+log_scale compact_resnet split=1: BA=0.438, fit=52.39s, predict=0.40s
+raw comp+log_scale compact_resnet split=2: BA=0.444, fit=55.79s, predict=0.40s
+raw comp+log_scale compact_resnet split=3: BA=0.429, fit=56.69s, predict=0.42s
+raw comp+log_scale compact_resnet split=4: BA=0.456, fit=56.68s, predict=0.40s
+wrote /Users/mikhail/.t3/worktrees/imf/t3-44ed3594/output/classification-emd-irmf/dronerf/ml/spectrogram, total 557.1s

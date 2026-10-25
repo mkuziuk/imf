@@ -1,0 +1,43 @@
+[
+  {
+    "name": "rocket_extra",
+    "task": "10class",
+    "status": "complete",
+    "command": [
+      "/Users/mikhail/.t3/worktrees/imf/t3-44ed3594/.venv/bin/python",
+      "-u",
+      "/Users/mikhail/.t3/worktrees/imf/t3-44ed3594/experiments/classification-emd-irmf/datasets/dronerf/run_phase3.py",
+      "rocket",
+      "--dataset",
+      "dronerf",
+      "--task",
+      "10class",
+      "--methods",
+      "raw",
+      "emd",
+      "imf_linear_a1.41",
+      "irmf_h2_a1.41",
+      "irmf_h2_a1.41_conv",
+      "irmf_h2_a2_conv",
+      "imf_linear_a2",
+      "--folds",
+      "5,6,7,8,9",
+      "--workers",
+      "1",
+      "--out",
+      "/Users/mikhail/.t3/worktrees/imf/t3-44ed3594/output/classification-emd-irmf/dronerf/ml/rocket_extra",
+      "--run-name",
+      "dronerf_phase3_rocket_extra",
+      "--features",
+      "1008",
+      "--head-epochs",
+      "5",
+      "--fit-samples",
+      "128"
+    ],
+    "start_utc": "2026-10-21T00:10:25.055605+00:00",
+    "returncode": 0,
+    "seconds": 1533.876863002777,
+    "end_utc": "2026-10-21T00:35:58.932470+00:00"
+  }
+]

@@ -1,0 +1,26 @@
+{
+  "source_files_scanned": 98,
+  "recording_arrays": 97,
+  "empty_placeholders": 1,
+  "all_source_hashes_verified": true,
+  "all_output_hashes_verified": true,
+  "all_exports_load_allow_pickle_false": true,
+  "reuse_without_unpickling_verified": true,
+  "forbidden_global_rejection_checks": [
+    "os.system",
+    "builtins.eval"
+  ],
+  "object_dtype_rejection_checks": [
+    "ndarray",
+    "list member",
+    "dict member"
+  ],
+  "invalid_top_level_rejected": [
+    "set",
+    "object"
+  ],
+  "numpy_version": "2.3.5",
+  "manifest_sha256": "6b3507d8f5f2a5ef913070107d116df0656058182dbb99575b170bc7d29b7b05",
+  "trusted_numeric_container_roundtrip": true,
+  "object_arrays_rejected_after_restricted_deserialization": true
+}

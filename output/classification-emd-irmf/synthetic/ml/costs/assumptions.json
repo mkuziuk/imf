@@ -1,0 +1,82 @@
+{
+  "targets": {
+    "dronerf": [
+      12000,
+      2,
+      2048,
+      10
+    ],
+    "birdclef2023": [
+      12000,
+      1,
+      2048,
+      16
+    ],
+    "esc50_animals": [
+      5100,
+      1,
+      2048,
+      10
+    ]
+  },
+  "cores": 16,
+  "cpu_efficiency": 0.5,
+  "source": "synthetic",
+  "task": "signal",
+  "assumptions": [
+    "Planning estimates only; no target dataset arrays or feature tables were read.",
+    "All four main tags including raw, both log_scale variants; one primary task per dataset.",
+    "pilot_5fold_minutes scales the validated quick budgets and first-seed five folds. CNN pilot budgets six selection plus six refit epochs; tree early-stop patterns are assumed to match synthetic.",
+    "Trees/ROCKET: 15 folds. CNN: 5 folds, 30 selection plus 30 refit epochs as a budget ceiling. 15-fold CNN costs three times the shown amount; early stopping can reduce it substantially.",
+    "Trees extrapolate to 500 boosting rounds / 300 ExtraTrees trees, including inner selection/refit, with linear N, channel/slot and booster class-count scaling. Synthetic observed rounds are the reference.",
+    "CPU transforms/trees use 16 cores at 50% relative scaling efficiency; serial logistic-head updates get no core-count speedup. MPS gets no assumed speedup from more CPU cores.",
+    "ROCKET uses 10080 features, 256 bias-fit samples and 15 SGD epochs; transform scales with N, L and sqrt(channel count), head with N and class count. Feature/epoch scaling uses the saved synthetic-size head calibration when available, otherwise linear scaling. Shared transforms are counted once.",
+    "CNN uses observed median refit epoch time, scales with N*L, and allocates 10% of time to input-channel scaling. Validation forward cost is approximated as one-third of training forward/backward cost.",
+    "Ranges are 0.5x-2x the model estimate, not statistical confidence intervals. Numba compilation, thermal load, disk bandwidth, class count and different early stopping can change actual times.",
+    "Decomposition and feature-cache generation are excluded. Existing decomposition jobs must finish first."
+  ],
+  "versions": {
+    "python": "3.12.13",
+    "platform": "macOS-26.6.2-arm64-arm-64bit",
+    "numpy": "2.3.5",
+    "scipy": "1.17.1",
+    "pandas": "3.0.6",
+    "scikit-learn": "1.9.1",
+    "lightgbm": "4.7.0",
+    "xgboost": "3.4.1",
+    "torch": "2.14.1",
+    "aeon": "1.6.0"
+  },
+  "head_calibration": {
+    "dataset": "synthetic",
+    "task": "signal",
+    "n_frames": 1500,
+    "seed": 0,
+    "workload": "unit-Gaussian float32 features, three inner heads and one full-train head",
+    "measurements": [
+      {
+        "features": 672,
+        "epochs": 5,
+        "seconds": 0.40242633409798145
+      },
+      {
+        "features": 10080,
+        "epochs": 15,
+        "seconds": 6.559873790945858
+      }
+    ],
+    "full_over_quick": 16.300806470951976,
+    "versions": {
+      "python": "3.12.13",
+      "platform": "macOS-26.6.2-arm64-arm-64bit",
+      "numpy": "2.3.5",
+      "scipy": "1.17.1",
+      "pandas": "3.0.6",
+      "scikit-learn": "1.9.1",
+      "lightgbm": "4.7.0",
+      "xgboost": "3.4.1",
+      "torch": "2.14.1",
+      "aeon": "1.6.0"
+    }
+  }
+}

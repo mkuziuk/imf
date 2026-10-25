@@ -1,0 +1,5 @@
+method,feature_set,classifier,split_id,seed,fold,n_train,n_test,fit_seconds,predict_seconds,best_epoch,n_parameters,best_params,balanced_accuracy,macro_f1,accuracy,recall_bird,recall_uas
+raw,comp,compact_resnet,0,0,0,624,160,6.8216061249841005,0.042419624980539083,15,15458,"{""epochs"": 15, ""seed"": 0}",0.984375,0.9869088528882344,0.9875,0.96875,1.0
+raw,comp+log_scale,compact_resnet,0,0,0,624,160,3.3913591250311583,0.03889099997468293,10,15462,"{""epochs"": 10, ""seed"": 0}",1.0,1.0,1.0,1.0,1.0
+irmf_h2_a1.41,comp,compact_resnet,0,0,0,624,160,2.5249192089540884,0.02844179200474173,10,17138,"{""epochs"": 10, ""seed"": 0}",0.9765625,0.974089068825911,0.975,0.984375,0.96875
+irmf_h2_a1.41,comp+log_scale,compact_resnet,0,0,0,624,160,2.8281034160172567,0.02742208307608962,12,17142,"{""epochs"": 12, ""seed"": 0}",0.96875,0.9675311498031576,0.96875,0.96875,0.96875

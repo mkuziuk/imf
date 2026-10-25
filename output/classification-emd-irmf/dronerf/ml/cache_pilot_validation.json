@@ -1,0 +1,11 @@
+{
+  "cached_pilot_seconds": 52.44619962491561,
+  "native_equivalent_fit_predict_seconds": 289.1711707900977,
+  "max_probability_error": 0.0,
+  "bit_exact_probabilities": true,
+  "native_labels_equal": true,
+  "best_epochs_equal": true,
+  "comparison_rows": 9740,
+  "primary_seconds": 4924.075652667088,
+  "projected_extra10_plus_two_secondary5_seconds": 3572.2655746401697
+}

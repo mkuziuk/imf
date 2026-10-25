@@ -1,0 +1,680 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Robustness to Laplace noise: EMD, linear IMF and IRMF</title>
+<style>
+.viz-root {
+  color-scheme: light;
+  --page: #f9f9f7;
+  --surface-1: #fcfcfb;
+  --text-primary: #0b0b0b;
+  --text-secondary: #52514e;
+  --text-muted: #898781;
+  --grid: #e1e0d9;
+  --baseline: #c3c2b7;
+  --border: rgba(11, 11, 11, 0.10);
+  --link: #1c5cab;
+  --code-bg: #f0efec;
+  --wash: rgba(42, 120, 214, 0.08);
+  --series-1: #2a78d6;
+  --series-2: #eb6834;
+  --series-3: #1baf7a;
+}
+@media (prefers-color-scheme: dark) {
+  :root:where(:not([data-theme="light"])) .viz-root {
+    color-scheme: dark;
+    --page: #0d0d0d;
+    --surface-1: #1a1a19;
+    --text-primary: #f0efec;
+    --text-secondary: #c3c2b7;
+    --text-muted: #898781;
+    --grid: #2c2c2a;
+    --baseline: #383835;
+    --border: rgba(255, 255, 255, 0.10);
+    --link: #86b6ef;
+    --code-bg: #2c2c2a;
+    --wash: rgba(57, 135, 229, 0.14);
+    --series-1: #3987e5;
+    --series-2: #d95926;
+    --series-3: #199e70;
+  }
+}
+:root[data-theme="dark"] .viz-root {
+  color-scheme: dark;
+  --page: #0d0d0d;
+  --surface-1: #1a1a19;
+  --text-primary: #f0efec;
+  --text-secondary: #c3c2b7;
+  --text-muted: #898781;
+  --grid: #2c2c2a;
+  --baseline: #383835;
+  --border: rgba(255, 255, 255, 0.10);
+  --link: #86b6ef;
+  --code-bg: #2c2c2a;
+  --wash: rgba(57, 135, 229, 0.14);
+  --series-1: #3987e5;
+  --series-2: #d95926;
+  --series-3: #199e70;
+}
+
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--page); color: var(--text-primary); font: 15px/1.55 system-ui, -apple-system, "Segoe UI", sans-serif; }
+main { max-width: 1120px; margin: 0 auto; padding: 36px 24px 72px; }
+h1 { font-size: 30px; line-height: 1.2; margin: 6px 0 10px; font-weight: 650; letter-spacing: -0.01em; }
+h2 { font-size: 21px; line-height: 1.3; margin: 0 0 8px; font-weight: 620; }
+h3 { font-size: 15px; margin: 0 0 4px; font-weight: 600; }
+section { margin-top: 48px; }
+p { margin: 0 0 10px; max-width: 78ch; }
+ul { margin: 6px 0 10px; padding-left: 20px; max-width: 80ch; }
+li { margin: 4px 0; }
+a { color: var(--link); text-underline-offset: 2px; }
+code { font: 12.5px ui-monospace, SFMono-Regular, Menlo, monospace; background: var(--code-bg); padding: 1px 4px; border-radius: 4px; }
+.eyebrow { color: var(--text-secondary); font-size: 13px; margin: 0; }
+.meta { color: var(--text-secondary); font-size: 13px; }
+.lead { font-size: 17px; line-height: 1.55; max-width: 74ch; margin-top: 14px; }
+.note { color: var(--text-secondary); font-size: 13.5px; }
+.status { display: inline-block; font-size: 12.5px; color: var(--text-secondary); border: 1px solid var(--baseline); border-radius: 999px; padding: 1px 9px; margin-left: 8px; vertical-align: 3px; font-weight: 500; }
+
+.controls { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; margin: 14px 0 0; }
+.controls-label { font-size: 13px; font-weight: 600; }
+.seg { display: inline-flex; border: 1px solid var(--baseline); border-radius: 8px; overflow: hidden; }
+.seg button { font: inherit; font-size: 13px; padding: 5px 12px; border: 0; cursor: pointer; background: transparent; color: var(--text-secondary); }
+.seg button + button { border-left: 1px solid var(--baseline); }
+.seg button[aria-pressed="true"] { background: var(--text-primary); color: var(--surface-1); font-weight: 600; }
+.seg button:focus-visible, .view-toggle:focus-visible { outline: 2px solid var(--series-1); outline-offset: 2px; }
+
+.tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 12px; margin-top: 14px; }
+.tile { background: var(--surface-1); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px 12px; }
+.tile-label { font-size: 13px; color: var(--text-secondary); }
+.tile-value { font-size: 32px; font-weight: 600; line-height: 1.15; margin: 6px 0 2px; }
+.tile-value .unit { font-size: 15px; font-weight: 500; color: var(--text-secondary); }
+.tile-sub { font-size: 13px; color: var(--text-secondary); }
+.tile-sig { font-size: 13px; margin-top: 2px; }
+.tile-meta { font-size: 12.5px; color: var(--text-secondary); margin-top: 10px; padding-top: 8px; border-top: 1px solid var(--grid); }
+
+.card { background: var(--surface-1); border: 1px solid var(--border); border-radius: 12px; padding: 16px 20px 14px; margin: 14px 0 0; }
+.card-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 16px; margin-bottom: 8px; }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 13px; color: var(--text-secondary); }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.dotkey { display: inline-block; width: 10px; height: 10px; border-radius: 50%; border: 2px solid var(--series-1); }
+.dotkey.filled { background: var(--series-1); }
+.view-toggle { font: inherit; font-size: 12.5px; padding: 4px 10px; cursor: pointer; border: 1px solid var(--baseline); border-radius: 7px; background: transparent; color: var(--text-secondary); }
+.view-toggle[aria-pressed="true"] { color: var(--text-primary); border-color: var(--text-secondary); }
+figcaption { font-size: 12.5px; color: var(--text-secondary); margin-top: 10px; max-width: 100ch; }
+.chart svg { display: block; overflow: visible; }
+.multiples { display: grid; grid-template-columns: repeat(auto-fit, minmax(330px, 1fr)); gap: 18px 28px; }
+.multiples h3 .dst { font-weight: 400; color: var(--text-secondary); font-size: 13px; margin-left: 6px; }
+details { margin-top: 14px; }
+summary { cursor: pointer; font-size: 14px; color: var(--text-secondary); }
+summary:focus-visible { outline: 2px solid var(--series-1); outline-offset: 2px; }
+
+.table-wrap { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-size: 13.5px; }
+th, td { text-align: left; padding: 7px 10px; border-bottom: 1px solid var(--grid); vertical-align: top; }
+th { font-weight: 600; color: var(--text-secondary); font-size: 12.5px; }
+.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+td.strong, .strong { font-weight: 650; }
+td .ci, td .p, th .ci { display: block; font-size: 12px; color: var(--text-secondary); font-weight: 400; }
+td.rowhead { font-weight: 500; }
+
+.ptitle { font-size: 14px; font-weight: 600; fill: var(--text-primary); }
+.psub { font-size: 12px; fill: var(--text-secondary); }
+.ax { font-size: 11.5px; fill: var(--text-muted); font-variant-numeric: tabular-nums; }
+.lbl { font-size: 13px; fill: var(--text-primary); }
+.dsl { font-size: 13.5px; font-weight: 600; fill: var(--text-primary); }
+.dst { font-size: 12.5px; font-weight: 400; fill: var(--text-secondary); }
+.dlab { font-size: 11.5px; fill: var(--text-secondary); font-variant-numeric: tabular-nums; }
+.grid { stroke: var(--grid); stroke-width: 1; }
+.chance { stroke: var(--text-muted); stroke-width: 1; }
+.zero { stroke: var(--baseline); stroke-width: 1; }
+.sep { stroke: var(--grid); stroke-width: 1; }
+.cross { stroke: var(--text-muted); stroke-width: 1; opacity: 0; }
+.cross.on { opacity: 1; }
+.ci-line { stroke: var(--series-1); stroke-width: 2; stroke-linecap: round; }
+.ring { fill: var(--surface-1); }
+.dot { fill: var(--series-1); }
+.dot-hollow { fill: var(--surface-1); stroke: var(--series-1); stroke-width: 2; }
+.s1 { --c: var(--series-1); } .s2 { --c: var(--series-2); } .s3 { --c: var(--series-3); }
+.line { fill: none; stroke: var(--c); stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
+.mark { fill: var(--c); stroke: var(--surface-1); stroke-width: 2; }
+.mark.default { fill: var(--surface-1); stroke: var(--c); stroke-width: 2; }
+.wash { fill: var(--wash); opacity: 0; }
+.wash.on { opacity: 1; }
+.hit { fill: transparent; }
+.hit:focus { outline: none; }
+.key { display: inline-block; width: 14px; height: 0; border-top: 2px solid var(--c); vertical-align: middle; }
+.shape { display: inline-block; width: 12px; height: 12px; }
+
+.tip { position: fixed; left: 0; top: 0; z-index: 30; pointer-events: none; background: var(--surface-1); color: var(--text-primary); border: 1px solid var(--border); border-radius: 8px; box-shadow: 0 6px 22px rgba(0, 0, 0, 0.14); padding: 8px 10px; font-size: 12.5px; line-height: 1.45; max-width: 340px; opacity: 0; transition: opacity 80ms; }
+.tip .tv { display: flex; align-items: center; gap: 8px; font-size: 15px; font-weight: 650; font-variant-numeric: tabular-nums; }
+.tip .row { display: flex; align-items: center; gap: 8px; }
+.tip .row b { font-variant-numeric: tabular-nums; min-width: 46px; }
+.tip .tl { color: var(--text-secondary); }
+.tip .mono { font: 11px ui-monospace, SFMono-Regular, Menlo, monospace; color: var(--text-muted); margin-top: 2px; }
+
+footer { margin-top: 56px; padding-top: 14px; border-top: 1px solid var(--grid); font-size: 12.5px; color: var(--text-secondary); }
+@media (max-width: 640px) { main { padding: 24px 14px 56px; } h1 { font-size: 25px; } .card { padding: 14px 12px 12px; } }
+@media print { .tip { display: none; } }
+
+[hidden] { display: none !important; }
+.meta, .tile-meta, footer { overflow-wrap: anywhere; }
+.multiples { grid-template-columns: repeat(auto-fit, minmax(min(100%, 330px), 1fr)); }
+.tiles { grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr)); }
+.multiples > div { min-width: 0; }
+.shape { width: 26px; height: 14px; overflow: visible; }
+.s4 { --c: var(--text-muted); }
+.s4 .line { stroke-dasharray: 4 4; }
+.ax { fill: var(--text-secondary); }
+.chance { stroke-dasharray: 3 4; }
+.ci-line { stroke: var(--c, var(--series-1)); }
+.dot { fill: var(--c, var(--series-1)); }
+.dot-hollow { stroke: var(--c, var(--series-1)); }
+th.num { white-space: normal; min-width: 112px; }
+.family-row td { font-size: 12px; color: var(--text-secondary); padding-top: 4px; padding-bottom: 12px; }
+.group-start td { border-top: 1px solid var(--baseline); }
+.chart-label { margin: 0 0 4px; color: var(--text-secondary); font-size: 12px; }
+.subheading { margin-top: 26px; }
+.noscript { padding: 16px; border: 1px solid var(--baseline); }
+</style>
+</head>
+<body class="viz-root">
+<main>
+<header>
+  <p class="eyebrow">Classification study, Laplace follow-up</p>
+  <h1>Robustness to Laplace noise: EMD, linear IMF and IRMF</h1>
+  <p class="meta" id="meta"></p>
+  <p class="lead" id="lead"></p>
+  <p class="note" id="availability"></p>
+</header>
+<noscript><p class="noscript">Enable JavaScript to read the embedded results, charts and tables.</p></noscript>
+<section id="design">
+  <h2>Design</h2>
+  <p>Each sample independently receives Laplace noise with probability p. The scale is one robust SD of its clean raw channel, 1.4826 times the MAD, with standard-deviation fallback. Constant channels receive no noise. The levels are clean, 10%, 20%, 30% and 40%. There is no Gaussian term or Gaussian control. Methods share the same noise draws, and contamination masks are nested across levels. Noise enters before the shared median/MAD normalization.</p>
+  <p>The impulse run's prepared datasets, four inputs, 15 grouped splits and 100 excluded pilot frames per dataset are unchanged. The shared 20 features come from float32 component stacks. Fixed classical models are linear SVM for DroneRF and ESC-50, and logistic regression for BirdCLEF and synthetic. LightGBM settings are unchanged. All model scaling and selection use training rows only. Clean features are checked on 50 frames per dataset before contaminated features are computed.</p>
+  <p id="reuse-note"></p>
+  <p>All four datasets share one pool of 14 workers, with one native thread per worker. Feature chunks run first, then fits in descending expected cost. Matched classical training covers 40% contamination only. IRMF uses our safeguarded Numba Newton solver, with tolerance 10⁻¹², a 100-step cap and a retry at 1,000 steps. It recomputes H from each contaminated channel.</p>
+  <p class="note" id="design-links"></p>
+</section>
+<section id="verdicts">
+  <h2>The pre-specified reading at 40%</h2>
+  <p>The main measure is the change in the IRMF − linear IMF balanced-accuracy gap from clean to contaminated test data, paired over the same 15 grouped splits. Positive DiD means linear IMF lost more than IRMF. IRMF counts as more robust if the 40% primary DiD is positive with Holm p &lt; 0.05. A negative significant DiD favors linear IMF. A non-significant result establishes neither direction.</p>
+  <div class="tiles" id="tiles"></div>
+</section>
+<section id="accuracy">
+  <h2>Balanced accuracy vs contamination share</h2>
+  <p>Models train on clean data and predict the same held-out fold at every level. Curves show mean balanced accuracy. Each panel has one y axis; its range includes chance at 1 / classes.</p>
+  <figure class="card" data-view>
+    <div class="card-head">
+      <div class="legend" id="curve-legend"></div>
+      <button type="button" class="view-toggle" aria-pressed="false">Table view</button>
+    </div>
+    <div class="controls" role="group" aria-label="Classifier and features">
+      <span class="controls-label">Model</span>
+      <div class="seg" id="seg-clf">
+        <button type="button" data-v="classical" aria-pressed="true">Fixed classical</button>
+        <button type="button" data-v="lightgbm" aria-pressed="false">LightGBM</button>
+      </div>
+      <span class="controls-label">Features</span>
+      <div class="seg" id="seg-fs">
+        <button type="button" data-v="comp" aria-pressed="true">Without log_scale</button>
+        <button type="button" data-v="comp+log_scale" aria-pressed="false">With log_scale</button>
+      </div>
+    </div>
+    <div class="multiples" id="curves" style="margin-top:16px"></div>
+    <div class="table-wrap" id="curves-table" hidden></div>
+    <figcaption>Raw is the dashed gray series. The dotted horizontal line marks chance. Hover or focus a chart for all four values. Use the left and right arrow keys to step through levels. The table view follows the model and feature controls.</figcaption>
+  </figure>
+</section>
+<section id="gaps">
+  <h2>How the gaps change</h2>
+  <p>DiD(p) = [BA IRMF(p) − BA comparator(p)] − [BA IRMF(clean) − BA comparator(clean)]. Values are percentage points. Positive values mean the comparator lost more accuracy. Read these relative effects alongside the absolute curves.</p>
+  <p class="note">Tests use two-sided Nadeau-Bengio corrected t-tests. Whiskers are marginal 95% corrected intervals. Filled markers and bold cells use Holm p &lt; 0.05. Intervals are not simultaneous, so an interval may exclude zero while the Holm test is not significant.</p>
+  <figure class="card" data-view>
+    <div class="card-head">
+      <div class="legend" id="forest-legend"></div>
+      <button type="button" class="view-toggle" aria-pressed="false">Table view</button>
+    </div>
+    <div class="legend" style="margin-bottom:14px"><span><i class="dotkey filled"></i>Holm p &lt; 0.05</span><span><i class="dotkey"></i>not significant</span></div>
+    <div class="multiples" id="forests"></div>
+    <div class="table-wrap" id="forest-table" hidden></div>
+    <figcaption>Clean-trained fixed classical model, comp features. Each level has a primary contrast against linear IMF and an S1 contrast against EMD. Hover or focus a row for the interval and adjusted p value. Synthetic uses its own 36-test family.</figcaption>
+  </figure>
+  <h3 class="subheading">Fixed classical models and LightGBM</h3>
+  <p class="note">Each cell shows DiD, the 95% corrected interval and Holm p. The feature control also exposes S4. Each real-data family has its own correction across all three real datasets: Primary 12, S1 12, S3 24 and S4 48 tests. All synthetic contrasts share one separate 36-test family.</p>
+  <div class="controls" role="group" aria-label="Gap table features">
+    <span class="controls-label">Features</span>
+    <div class="seg" id="seg-gap-fs">
+      <button type="button" data-v="comp" aria-pressed="true">Without log_scale</button>
+      <button type="button" data-v="comp+log_scale" aria-pressed="false">With log_scale</button>
+    </div>
+  </div>
+  <div class="card table-wrap" id="gap-table"></div>
+</section>
+<section id="matched">
+  <h2>Matched training at 40%</h2>
+  <p>These S5 DiDs use the fixed classical model trained and tested at 40%, relative to the clean-trained, clean-tested gap. Both feature sets and both comparators are shown. The real-data S5 family has 12 tests. Synthetic remains in its own 36-test family. Matched LightGBM was not specified.</p>
+  <div class="card table-wrap" id="matched-table"></div>
+</section>
+<section id="drift">
+  <h2>Feature drift</h2>
+  <p class="note">Comp features only. Drift is the mean absolute feature change divided by each feature's SD across clean frames. This descriptive scaling never enters a classifier. Each cell shows the median with p95 underneath. Bold marks the smallest median in the row.</p>
+  <div class="card table-wrap" id="drift-table"></div>
+</section>
+<section id="solver">
+  <h2>IRMF solver diagnostics</h2>
+  <p class="note">H ratios compare each contaminated channel with its clean H. Cap retries count channels that reached the 100-step cap; affected frames are shown underneath. Failed frames are those still failing after the retry.</p>
+  <p id="convergence"></p>
+  <div class="card table-wrap" id="solver-table"></div>
+</section>
+<section id="sources">
+  <h2>Reports and source files</h2>
+  <ul id="source-list"></ul>
+</section>
+<footer id="footer"></footer>
+</main>
+<div class="tip" id="tip" role="status" aria-live="polite"></div>
+<script type="application/json" id="data">__DATA__</script>
+<script>
+(() => {
+  'use strict';
+  const DATA = JSON.parse(document.getElementById('data').textContent);
+  const NS = 'http://www.w3.org/2000/svg';
+  const MINUS = '−';
+  const LEVELS = [['clean', 'clean'], ['laplace_0.1', '10%'], ['laplace_0.2', '20%'], ['laplace_0.3', '30%'], ['laplace_0.4', '40%']];
+  const SERIES = [
+    { key: 'irmf_h2_a1.41_conv', label: 'IRMF', cls: 's1', shape: 'circle' },
+    { key: 'imf_linear_a1.41', label: 'Linear IMF', cls: 's2', shape: 'square' },
+    { key: 'emd', label: 'EMD', cls: 's3', shape: 'diamond' },
+    { key: 'raw', label: 'Raw', cls: 's4', shape: 'circle' },
+  ];
+  const COMPARATORS = [
+    { key: 'imf_linear_a1.41', label: 'vs linear IMF', family: 'Primary', cls: 's2', shape: 'square' },
+    { key: 'emd', label: 'vs EMD', family: 'S1', cls: 's3', shape: 'diamond' },
+  ];
+  const modelName = key => key === 'linsvm' ? 'Linear SVM' : key === 'logreg' ? 'Logistic regression' : 'LightGBM';
+  function svgEl(tag, attrs, parent, text) { const e = document.createElementNS(NS, tag); for (const [k, v] of Object.entries(attrs || {})) e.setAttribute(k, v); if (text != null) e.textContent = text; if (parent) parent.appendChild(e); return e; }
+  function htmlEl(tag, attrs, parent, text) { const e = document.createElement(tag); for (const [k, v] of Object.entries(attrs || {})) { if (k === 'class') e.className = v; else e.setAttribute(k, v); } if (text != null) e.textContent = text; if (parent) parent.appendChild(e); return e; }
+  function signed(v, d) { const s = Math.abs(v).toFixed(d); if (Number(s) === 0) return s; return (v < 0 ? MINUS : '+') + s; }
+  const SUP = { '-': '⁻', '0': '⁰', '1': '¹', '2': '²', '3': '³', '4': '⁴', '5': '⁵', '6': '⁶', '7': '⁷', '8': '⁸', '9': '⁹' };
+  function fmtP(p) {
+    if (p == null || Number.isNaN(p)) return 'n/a';
+    if (p === 0) return '0';
+    if (p >= 0.995) return '1';
+    if (p >= 0.01) return p.toFixed(2);
+    if (p >= 0.001) return p.toPrecision(2);
+    let e = Math.floor(Math.log10(p)); let m = p / Math.pow(10, e);
+    if (m >= 9.95) { m /= 10; e += 1; }
+    return `${m.toFixed(1)} × 10${String(e).split('').map(c => SUP[c]).join('')}`;
+  }
+  function fmtSci(v) { if (v === 0) return '0'; const e = Math.floor(Math.log10(Math.abs(v))); return `${(v / Math.pow(10, e)).toFixed(1)}e${e}`; }
+  const isSig = p => Number.isFinite(p) && p >= 0 && p < 0.05;
+  const pct = (v, d = 1) => Number.isFinite(v) ? `${v.toFixed(d)}%` : 'not available';
+
+  // Tooltip: values lead, labels follow; text goes in through textContent.
+  const tip = document.getElementById('tip');
+  function placeTip(x, y) {
+    tip.style.opacity = '1';
+    const b = tip.getBoundingClientRect();
+    let left = x + 14, top = y + 14;
+    if (left + b.width > window.innerWidth - 8) left = x - 14 - b.width;
+    if (top + b.height > window.innerHeight - 8) top = y - 14 - b.height;
+    tip.style.left = `${Math.max(8, left)}px`; tip.style.top = `${Math.max(8, top)}px`;
+  }
+  function hideTip() { tip.style.opacity = '0'; }
+  function bindTip(hit, build, marks) {
+    const on = v => (marks || []).forEach(m => m.classList.toggle('on', v));
+    const show = (x, y) => { tip.replaceChildren(); build(tip); placeTip(x, y); };
+    hit.addEventListener('pointermove', e => { on(true); show(e.clientX, e.clientY); });
+    hit.addEventListener('pointerleave', () => { on(false); hideTip(); });
+    hit.addEventListener('focus', () => { on(true); const b = hit.getBoundingClientRect(); show(b.left + b.width * 0.6, b.top + b.height / 2); });
+    hit.addEventListener('blur', () => { on(false); hideTip(); });
+  }
+  function niceStep(span, target) { const raw = span / target; const mag = Math.pow(10, Math.floor(Math.log10(raw))); for (const m of [1, 2, 2.5, 5, 10]) if (m * mag >= raw) return m * mag; return 10 * mag; }
+  function shapeEl(parent, shape, x, y, r, cls) {
+    if (shape === 'square') return svgEl('rect', { x: x - r, y: y - r, width: 2 * r, height: 2 * r, rx: 1, class: cls }, parent);
+    if (shape === 'diamond') return svgEl('path', { d: `M${x},${y - r * 1.3}L${x + r * 1.3},${y}L${x},${y + r * 1.3}L${x - r * 1.3},${y}Z`, class: cls }, parent);
+    return svgEl('circle', { cx: x, cy: y, r, class: cls }, parent);
+  }
+  function legendShape(parent, s) {
+    const svg = svgEl('svg', { width: 26, height: 12, class: `shape ${s.cls}`, 'aria-hidden': 'true' }, parent);
+    svgEl('line', { x1: 1, x2: 25, y1: 6, y2: 6, class: 'line' }, svg);
+    shapeEl(svg, s.shape, 13, 6, 3.5, 'mark');
+  }
+  function tableFrom(host, headers, rows) {
+    host.replaceChildren();
+    const t = htmlEl('table', {}, host);
+    const hr = htmlEl('tr', {}, htmlEl('thead', {}, t));
+    for (const [txt, cls] of headers) htmlEl('th', cls ? { class: cls } : {}, hr, txt);
+    const tb = htmlEl('tbody', {}, t);
+    for (const row of rows) {
+      const tr = htmlEl('tr', {}, tb);
+      row.forEach((cell, i) => {
+        const td = htmlEl('td', { class: [headers[i][1] || '', cell && cell.strong ? 'strong' : ''].join(' ').trim() }, tr);
+        if (cell && typeof cell === 'object') {
+          if (cell.href) htmlEl('a', { href: cell.href }, td, cell.text); else td.appendChild(document.createTextNode(cell.text));
+          if (cell.sub) htmlEl('span', { class: 'ci' }, td, cell.sub);
+          if (cell.p) htmlEl('span', { class: 'p' }, td, cell.p);
+        } else td.textContent = cell == null ? '' : String(cell);
+      });
+    }
+    return t;
+  }
+
+  function findTest(d, condition, comparator, classifier = d.fixed, fs = 'comp', scenario = 'shift') {
+    return d.tests.find(r => r.condition === condition && r.comparator === comparator &&
+      r.classifier === classifier && r.feature_set === fs && r.scenario === scenario);
+  }
+  const finite = Number.isFinite;
+  const value = (v, digits = 2) => finite(v) ? v.toFixed(digits) : 'not available';
+  const signedValue = (v, digits = 2) => finite(v) ? signed(v, digits) : 'not available';
+  function verdict(r) {
+    if (!r || !finite(r.d) || !finite(r.p)) return 'Verdict not available';
+    if (isSig(r.p) && r.d > 0) return 'IRMF more robust';
+    if (isSig(r.p) && r.d < 0) return 'Linear IMF more robust';
+    return 'No significant difference';
+  }
+  function testCell(r) {
+    if (!r || !finite(r.d)) return { text: 'not available' };
+    return { text: `${signedValue(r.d)} pp`, sub: `${signedValue(r.lo)} to ${signedValue(r.hi)}`,
+      p: `Holm p ${fmtP(r.p)}`, strong: isSig(r.p) };
+  }
+  function familyNote(d, rows) {
+    const families = [...new Set(rows.filter(Boolean).map(r => r.holm_family))];
+    if (!families.length) return 'Holm family not available in the source.';
+    const sizes = { Primary: 12, S1: 12, S3: 24, S4: 48, S5: 12, synthetic: 36 };
+    if (families.includes('synthetic')) return 'Holm within synthetic\'s own 36-test family.';
+    return 'Holm families across the three real datasets: ' + families.map(f => `${f} ${sizes[f] || '?'} tests`).join(', ') + '.';
+  }
+  function addLegend(host, series) {
+    for (const s of series) {
+      const span = htmlEl('span', {}, host); legendShape(span, s);
+      span.appendChild(document.createTextNode(s.label));
+    }
+  }
+  document.getElementById('meta').textContent = DATA.meta.line;
+  document.getElementById('lead').textContent = DATA.meta.lead || 'At 40% contamination, ' + DATA.datasets.map(d => {
+    const r = findTest(d, 'laplace_0.4', 'imf_linear_a1.41');
+    return `${d.name}: ${verdict(r)}${r && finite(r.d) ?
+      `, DiD ${signedValue(r.d)} pp, Holm p ${fmtP(r.p)}` : ''}`;
+  }).join('; ') + '. These verdicts use the fixed classical model and comp features. Synthetic has its own Holm correction.';
+  const availability = document.getElementById('availability');
+  if (DATA.meta.missing.length) availability.textContent = `Datasets in this source: ${DATA.datasets.map(d => d.name).join(', ')}. Not yet included: ${DATA.meta.missing.join(', ')}. Rebuild when their analysis tables are available.`;
+  else availability.hidden = true;
+  const f = DATA.fits;
+  document.getElementById('reuse-note').textContent =
+    `To save fitting time, each clean classical model was refit at the C the impulse run had selected for the same training rows, skipping the 12 inner-CV fits. ` +
+    `A refit was kept only if its clean predictions matched the impulse run's on every test frame. ` +
+    (f.fallback ? `${f.verified} of ${f.classical} matched; the other ${f.fallback} reran the full grid search. ` : `All ${f.verified} of ${f.classical} matched, so none needed the full grid search. `) +
+    (f.verified !== f.reused ? 'Some reused fits lack a recorded exact match; check the fit audit. ' : '') +
+    'LightGBM fits reran in full.';
+  const designLinks = document.getElementById('design-links');
+  for (const [label, href] of [['Laplace protocol', DATA.meta.protocol], ['Impulse experiment page', DATA.meta.impulsePage], ['Impulse experiment report', DATA.meta.impulseReport]]) {
+    if (designLinks.childNodes.length) designLinks.appendChild(document.createTextNode(' · '));
+    htmlEl('a', { href }, designLinks, label);
+  }
+  for (const d of DATA.datasets) {
+    const r = findTest(d, 'laplace_0.4', 'imf_linear_a1.41');
+    const emd = findTest(d, 'laplace_0.4', 'emd');
+    const tile = htmlEl('div', { class: 'tile' }, document.getElementById('tiles'));
+    htmlEl('div', { class: 'tile-label' }, tile, `${d.name} · 40% of samples`);
+    const v = htmlEl('div', { class: 'tile-value' }, tile, signedValue(r?.d, 1));
+    if (finite(r?.d)) htmlEl('span', { class: 'unit' }, v, ' pp');
+    htmlEl('div', { class: 'tile-sub' }, tile, 'DiD, IRMF − linear IMF');
+    htmlEl('div', { class: 'tile-sig' }, tile, `${verdict(r)} · Holm p ${fmtP(r?.p)}`);
+    htmlEl('div', { class: 'tile-meta' }, tile, `IRMF − EMD: ${signedValue(emd?.d, 1)} pp · Holm p ${fmtP(emd?.p)}`);
+    htmlEl('div', { class: 'tile-sub' }, tile, `${modelName(d.fixed)} · ${d.key === 'synthetic' ? 'separate 36-test family' : 'Primary family, 12 tests'}`);
+  }
+
+  // Clean-trained accuracy curves and their table share the same controls.
+  let CLF = 'classical', FSC = 'comp', GAP_FS = 'comp';
+  const curveHosts = [], forestHosts = [];
+  addLegend(document.getElementById('curve-legend'), SERIES);
+  addLegend(document.getElementById('forest-legend'), COMPARATORS);
+  for (const d of DATA.datasets) {
+    const cell = htmlEl('div', {}, document.getElementById('curves'));
+    const h = htmlEl('h3', {}, cell, d.name);
+    htmlEl('span', { class: 'dst' }, h, `${d.classes} ${d.key === 'birdclef2023' ? 'species' : 'classes'}`);
+    const label = htmlEl('div', { class: 'chart-label' }, cell);
+    curveHosts.push({ host: htmlEl('div', { class: 'chart' }, cell), d, label });
+    const forestCell = htmlEl('div', {}, document.getElementById('forests'));
+    htmlEl('h3', {}, forestCell, d.name);
+    htmlEl('div', { class: 'chart-label' }, forestCell, `${modelName(d.fixed)} · comp`);
+    forestHosts.push({ host: htmlEl('div', { class: 'chart' }, forestCell), d });
+  }
+  const curveData = d => d.curves[`${CLF === 'classical' ? d.fixed : 'lightgbm'}|${FSC}`];
+  function renderCurve(host, d) {
+    const W = host.clientWidth; if (!W) return; host.replaceChildren();
+    const data = curveData(d);
+    const vals = SERIES.flatMap(s => LEVELS.map(([c]) => data[s.key][c])).filter(finite);
+    if (!vals.length) { htmlEl('p', { class: 'note' }, host, 'Scores not available for this selection.'); return; }
+    const padL = 40, padR = 12, padT = 20, padB = 34, H = 242;
+    const pw = W - padL - padR, ph = H - padT - padB;
+    let lo = Math.min(d.chance, ...vals), hi = Math.max(d.chance, ...vals);
+    const pad = (hi - lo) * 0.09 || 2;
+    lo = Math.max(0, lo - pad); hi = Math.min(100, hi + pad);
+    const step = niceStep(hi - lo, 4);
+    const sx = i => padL + (i + 0.5) / LEVELS.length * pw;
+    const sy = v => padT + (1 - (v - lo) / (hi - lo)) * ph;
+    const svg = svgEl('svg', { width: W, height: H, viewBox: `0 0 ${W} ${H}`, role: 'img',
+      'aria-label': `${d.name}: balanced accuracy from clean to 40% contamination. The table view lists every value.` }, host);
+    svgEl('text', { x: padL, y: 11, class: 'ax' }, svg, 'Balanced accuracy, %');
+    for (let t = Math.ceil(lo / step) * step; t <= hi + 1e-9; t += step) {
+      svgEl('line', { x1: padL, x2: W - padR, y1: sy(t), y2: sy(t), class: 'grid' }, svg);
+      svgEl('text', { x: padL - 7, y: sy(t) + 4, class: 'ax', 'text-anchor': 'end' }, svg, `${+t.toFixed(1)}`);
+    }
+    svgEl('line', { x1: padL, x2: W - padR, y1: sy(d.chance), y2: sy(d.chance), class: 'chance' }, svg);
+    svgEl('text', { x: padL + 4, y: sy(d.chance) - 5, class: 'ax' }, svg, `chance ${pct(d.chance, 1)}`);
+    LEVELS.forEach(([, label], i) => svgEl('text', { x: sx(i), y: H - padB + 19, class: 'ax', 'text-anchor': 'middle' }, svg, label));
+    // Draw raw first so its neutral dashed line remains secondary.
+    for (const s of [...SERIES].reverse()) {
+      const g = svgEl('g', { class: s.cls }, svg); let started = false;
+      const path = LEVELS.map(([c], i) => {
+        const v = data[s.key][c]; if (!finite(v)) { started = false; return ''; }
+        const command = `${started ? 'L' : 'M'}${sx(i)},${sy(v)}`; started = true; return command;
+      }).join('');
+      svgEl('path', { d: path, class: 'line' }, g);
+      LEVELS.forEach(([c], i) => { if (finite(data[s.key][c])) shapeEl(g, s.shape, sx(i), sy(data[s.key][c]), 4.5, 'mark'); });
+    }
+    const cross = svgEl('line', { x1: 0, x2: 0, y1: padT, y2: H - padB, class: 'cross' }, svg);
+    const overlay = svgEl('rect', { x: padL, y: padT, width: pw, height: ph, class: 'hit', tabindex: 0,
+      'aria-label': `${d.name} accuracy; use arrow keys to step through contamination levels` }, svg);
+    let current = LEVELS.length - 1;
+    const showAt = (i, cx, cy) => {
+      current = i; cross.setAttribute('x1', sx(i)); cross.setAttribute('x2', sx(i)); cross.classList.add('on');
+      tip.replaceChildren();
+      htmlEl('div', { class: 'tl' }, tip, `${d.name} · ${LEVELS[i][1]}`);
+      for (const s of SERIES) {
+        const row = htmlEl('div', { class: `row ${s.cls}` }, tip);
+        htmlEl('i', { class: 'key' }, row); htmlEl('b', {}, row, pct(data[s.key][LEVELS[i][0]], 2));
+        htmlEl('span', { class: 'tl' }, row, s.label);
+      }
+      htmlEl('div', { class: 'tl' }, tip, `${modelName(CLF === 'classical' ? d.fixed : 'lightgbm')} · ${FSC} · chance ${pct(d.chance, 2)}`);
+      placeTip(cx, cy);
+    };
+    const nearest = x => LEVELS.reduce((best, _, i) => Math.abs(sx(i) - x) < Math.abs(sx(best) - x) ? i : best, 0);
+    overlay.addEventListener('pointermove', e => { const r = svg.getBoundingClientRect(); showAt(nearest(e.clientX - r.left), e.clientX, e.clientY); });
+    overlay.addEventListener('pointerleave', () => { cross.classList.remove('on'); hideTip(); });
+    const focusAt = i => { const r = svg.getBoundingClientRect(); showAt(i, r.left + sx(i), r.top + padT + ph / 2); };
+    overlay.addEventListener('focus', () => focusAt(current));
+    overlay.addEventListener('blur', () => { cross.classList.remove('on'); hideTip(); });
+    overlay.addEventListener('keydown', e => {
+      if (!['ArrowRight', 'ArrowLeft', 'Home', 'End', 'Escape'].includes(e.key)) return;
+      e.preventDefault();
+      if (e.key === 'Escape') { cross.classList.remove('on'); hideTip(); return; }
+      const i = e.key === 'Home' ? 0 : e.key === 'End' ? LEVELS.length - 1 :
+        Math.max(0, Math.min(LEVELS.length - 1, current + (e.key === 'ArrowRight' ? 1 : -1)));
+      focusAt(i);
+    });
+  }
+  function renderCurves() {
+    hideTip();
+    for (const { host, d, label } of curveHosts) {
+      label.textContent = `${modelName(CLF === 'classical' ? d.fixed : 'lightgbm')} · ${FSC}`;
+      renderCurve(host, d);
+    }
+    const rows = [];
+    for (const d of DATA.datasets) for (const [c, label] of LEVELS) {
+      const data = curveData(d);
+      rows.push([d.name, label, ...SERIES.map(s => pct(data[s.key][c], 2))]);
+    }
+    tableFrom(document.getElementById('curves-table'), [['Dataset'], ['Share'], ...SERIES.map(s => [s.label, 'num'])], rows);
+  }
+
+  // Forest renderer follows the sibling page's whiskers, rings and row tooltips.
+  function forestRows(d) {
+    return LEVELS.slice(1).flatMap(([condition, level]) => COMPARATORS.map(comp => ({
+      ...findTest(d, condition, comp.key), label: `${level} · ${comp.label}`,
+      group: d.name, cls: comp.cls, shape: comp.shape, level, comparatorLabel: comp.label,
+    })));
+  }
+  function renderForest(host, d) {
+    const W = host.clientWidth; if (!W) return; host.replaceChildren();
+    const rows = forestRows(d), labelW = W < 400 ? 122 : 134;
+    const padR = 14, padT = 30, padB = 32, rowH = 30;
+    const H = padT + rows.length * rowH + padB, pw = W - labelW - padR;
+    const all = DATA.datasets.flatMap(forestRows).flatMap(r => [r.lo, r.hi]).filter(finite);
+    let lo = Math.min(0, ...all), hi = Math.max(0, ...all);
+    const pad = (hi - lo) * 0.08 || 1; lo -= pad; hi += pad;
+    const step = niceStep(hi - lo, pw < 260 ? 3 : 5);
+    const sx = v => labelW + (v - lo) / (hi - lo) * pw;
+    const svg = svgEl('svg', { width: W, height: H, viewBox: `0 0 ${W} ${H}`, role: 'img',
+      'aria-label': `${d.name}: changes in IRMF gaps against linear IMF and EMD. The table view lists every value.` }, host);
+    svgEl('text', { x: labelW, y: 14, class: 'psub' }, svg, 'DiD, pp');
+    for (let t = Math.ceil(lo / step) * step; t <= hi + 1e-9; t += step) {
+      const v = Math.round(t * 1e6) / 1e6;
+      svgEl('line', { x1: sx(v), x2: sx(v), y1: padT - 7, y2: H - padB + 4, class: v === 0 ? 'zero' : 'grid' }, svg);
+      svgEl('text', { x: sx(v), y: H - 9, class: 'ax', 'text-anchor': 'middle' }, svg, v === 0 ? '0' : signed(v, step < 1 ? 1 : 0));
+    }
+    rows.forEach((r, i) => {
+      const y = padT + i * rowH, cy = y + rowH / 2;
+      if (i && i % 2 === 0) svgEl('line', { x1: 0, x2: W, y1: y - 1, y2: y - 1, class: 'sep' }, svg);
+      svgEl('text', { x: 0, y: cy + 4, class: 'dlab' }, svg, r.label);
+      if (![r.d, r.lo, r.hi].every(finite)) {
+        svgEl('text', { x: labelW + 4, y: cy + 4, class: 'dlab' }, svg, 'not available'); return;
+      }
+      const wash = svgEl('rect', { x: labelW - 5, y: y + 1, width: pw + 10, height: rowH - 2, rx: 4, class: 'wash' }, svg);
+      const g = svgEl('g', { class: r.cls }, svg);
+      svgEl('line', { x1: sx(r.lo), x2: sx(r.hi), y1: cy, y2: cy, class: 'ci-line' }, g);
+      for (const end of [r.lo, r.hi]) svgEl('line', { x1: sx(end), x2: sx(end), y1: cy - 3, y2: cy + 3, class: 'ci-line' }, g);
+      shapeEl(g, r.shape, sx(r.d), cy, 6.5, 'ring');
+      shapeEl(g, r.shape, sx(r.d), cy, 4.5, isSig(r.p) ? 'dot' : 'dot-hollow');
+      const hit = svgEl('rect', { x: 0, y, width: W, height: rowH, class: 'hit', tabindex: 0,
+        'aria-label': `${d.name}, ${r.label}: ${signedValue(r.d)} pp, 95% interval ${signedValue(r.lo)} to ${signedValue(r.hi)}, Holm p ${fmtP(r.p)}` }, svg);
+      bindTip(hit, box => {
+        htmlEl('div', { class: 'tv' }, box, `${signedValue(r.d)} pp`);
+        htmlEl('div', { class: 'tl' }, box, `${d.name} · ${r.label}`);
+        htmlEl('div', { class: 'tl' }, box, `95% interval ${signedValue(r.lo)} to ${signedValue(r.hi)}`);
+        htmlEl('div', { class: 'tl' }, box, `Holm p ${fmtP(r.p)} · ${isSig(r.p) ? 'significant' : 'not significant'}`);
+        htmlEl('div', { class: 'tl' }, box, familyNote(d, [r]));
+      }, [wash]);
+    });
+  }
+  function renderForestTable() {
+    const rows = [];
+    for (const d of DATA.datasets) for (const r of forestRows(d)) rows.push([
+      { text: d.name, sub: r.holm_family === 'synthetic' ? 'synthetic family, 36 tests' : `${r.family || 'unknown'} family` },
+      r.level, r.comparatorLabel, testCell(r),
+    ]);
+    tableFrom(document.getElementById('forest-table'), [['Dataset'], ['Share'], ['IRMF comparison'], ['DiD and 95% interval', 'num']], rows);
+  }
+  function renderGapTable() {
+    const rows = [];
+    for (const d of DATA.datasets) for (const [condition, label] of LEVELS.slice(1)) rows.push([
+      d.name, label, ...[d.fixed, 'lightgbm'].flatMap(clf => COMPARATORS.map(c => testCell(findTest(d, condition, c.key, clf, GAP_FS)))),
+    ]);
+    const table = tableFrom(document.getElementById('gap-table'), [
+      ['Dataset'], ['Share'], ['IRMF − linear IMF', 'num'], ['IRMF − EMD', 'num'],
+      ['LightGBM vs linear IMF', 'num'], ['LightGBM vs EMD', 'num'],
+    ], rows);
+    const trs = [...table.tBodies[0].rows];
+    DATA.datasets.forEach((d, i) => {
+      trs[i * 4].classList.add('group-start');
+      const note = document.createElement('tr'); note.className = 'family-row';
+      htmlEl('td', { colspan: 6 }, note, `${modelName(d.fixed)} / LightGBM · ${GAP_FS}. ` + familyNote(d,
+        d.tests.filter(r => r.scenario === 'shift' && r.feature_set === GAP_FS)));
+      trs[i * 4 + 3].after(note);
+    });
+  }
+  const matchedRows = [];
+  for (const d of DATA.datasets) for (const fs of ['comp', 'comp+log_scale']) matchedRows.push([
+    { text: d.name, sub: `${modelName(d.fixed)} · ${d.key === 'synthetic' ? 'synthetic, 36 tests' : 'S5, 12 tests'}` },
+    fs, ...COMPARATORS.map(c => testCell(findTest(d, 'laplace_0.4', c.key, d.fixed, fs, 'matched'))),
+  ]);
+  tableFrom(document.getElementById('matched-table'), [['Dataset'], ['Features'], ['IRMF − linear IMF', 'num'], ['IRMF − EMD', 'num']], matchedRows);
+
+  const driftRows = [], driftOrder = [SERIES[3], SERIES[2], SERIES[1], SERIES[0]];
+  for (const d of DATA.datasets) for (const [condition, label] of LEVELS.slice(1)) {
+    const vals = driftOrder.map(s => d.stability.find(r => r.condition === condition && r.method === s.key));
+    const best = Math.min(...vals.map(v => v?.median).filter(finite));
+    driftRows.push([d.name, label, ...vals.map(v => v ? {
+      text: value(v.median, 3), sub: `p95 ${value(v.p95, 3)}`, strong: finite(v.median) && v.median === best,
+    } : 'not available')]);
+  }
+  tableFrom(document.getElementById('drift-table'), [['Dataset'], ['Share'], ...driftOrder.map(s => [s.label, 'num'])], driftRows);
+  const solverRows = [], allDiagnostics = DATA.datasets.flatMap(d => d.diagnostics);
+  for (const d of DATA.datasets) for (const [condition, label] of LEVELS.slice(1)) {
+    const r = d.diagnostics.find(x => x.condition === condition);
+    solverRows.push([d.name, label, value(r?.h_ratio_median), value(r?.h_ratio_p95),
+      r ? { text: value(r.newton_cap_channels, 0), sub: r.newton_cap_frames > 0 ? `${value(r.newton_cap_frames, 0)} affected frames` : '' } : 'not available',
+      value(r?.newton_failed_frames, 0)]);
+  }
+  tableFrom(document.getElementById('solver-table'), [['Dataset'], ['Share'], ['Median H / clean H', 'num'], ['p95', 'num'], ['Cap retries, channels', 'num'], ['Failed frames', 'num']], solverRows);
+  const sum = key => allDiagnostics.reduce((total, r) => total + (r[key] || 0), 0);
+  const completeDiagnostics = DATA.datasets.every(d => LEVELS.slice(1).every(([c]) => {
+    const r = d.diagnostics.find(x => x.condition === c);
+    return r && ['n_frames', 'newton_cap_channels', 'newton_failed_frames'].every(k => finite(r[k]));
+  }));
+  document.getElementById('convergence').textContent = allDiagnostics.length ?
+    `${sum('newton_failed_frames') === 0 && completeDiagnostics ? 'All reported IRMF frames converged' : 'Reported IRMF diagnostics'}: ` +
+    `${sum('newton_failed_frames').toLocaleString('en')} failed frames and ${sum('newton_cap_channels').toLocaleString('en')} channel cap retries across ` +
+    `${sum('n_frames').toLocaleString('en')} condition-frame evaluations.` +
+    (completeDiagnostics ? '' : ' Some dataset levels lack complete diagnostics.') : 'Solver diagnostics are not available.';
+  for (const [label, href] of DATA.meta.sources) htmlEl('a', { href }, htmlEl('li', {}, document.getElementById('source-list')), label);
+  document.getElementById('footer').textContent =
+    `Source: ${DATA.meta.source}. CSV scores and differences are fractions; this page shows accuracy in percent and DiD in points. ` +
+    'Results concern these prepared populations and this injected noise. Positive relative effects can coexist with lower absolute accuracy.';
+
+  function bindSegment(id, setter, render) {
+    const buttons = document.querySelectorAll(`#${id} button`);
+    buttons.forEach(b => b.addEventListener('click', () => {
+      setter(b.dataset.v); buttons.forEach(o => o.setAttribute('aria-pressed', String(o === b))); render();
+    }));
+  }
+  bindSegment('seg-clf', v => { CLF = v; }, renderCurves);
+  bindSegment('seg-fs', v => { FSC = v; }, renderCurves);
+  bindSegment('seg-gap-fs', v => { GAP_FS = v; }, renderGapTable);
+  document.querySelectorAll('figure[data-view]').forEach(fig => {
+    const btn = fig.querySelector('.view-toggle'), chart = fig.querySelector('.multiples');
+    const table = fig.querySelector('.table-wrap');
+    btn.addEventListener('click', () => {
+      const showTable = btn.getAttribute('aria-pressed') !== 'true';
+      btn.setAttribute('aria-pressed', String(showTable)); btn.textContent = showTable ? 'Chart view' : 'Table view';
+      chart.hidden = showTable; table.hidden = !showTable; hideTip();
+      if (!showTable) {
+        if (fig.closest('#accuracy')) renderCurves(); else forestHosts.forEach(({ host, d }) => renderForest(host, d));
+      }
+    });
+  });
+  renderCurves(); renderGapTable(); renderForestTable();
+  forestHosts.forEach(({ host, d }) => renderForest(host, d));
+  const widths = new WeakMap();
+  const ro = new ResizeObserver(entries => {
+    for (const en of entries) {
+      const w = Math.round(en.contentRect.width);
+      if (!w || widths.get(en.target) === w) continue;
+      widths.set(en.target, w);
+      const curve = curveHosts.find(h => h.host === en.target);
+      if (curve) renderCurve(curve.host, curve.d);
+      const forest = forestHosts.find(h => h.host === en.target);
+      if (forest) renderForest(forest.host, forest.d);
+    }
+  });
+  [...curveHosts, ...forestHosts].forEach(({ host }) => ro.observe(host));
+  window.addEventListener('scroll', hideTip, { passive: true });
+  window.addEventListener('resize', hideTip);
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,46 @@
+{
+  "seconds": 393.5693011250114,
+  "workers": 3,
+  "tasks": [
+    "10class"
+  ],
+  "classifiers": {
+    "10class": "linsvm"
+  },
+  "fixed_parameters": {
+    "10class": {
+      "linsvm": {
+        "clf__C": 0.1
+      }
+    }
+  },
+  "selection": "exploratory best method/classifier pair averaged over both feature sets per task",
+  "grids": {
+    "10class": {
+      "lda": null,
+      "qda": {
+        "clf__shrinkage": [
+          "auto",
+          0.2,
+          0.8
+        ]
+      },
+      "gnb": null,
+      "logreg": {
+        "clf__C": [
+          0.01,
+          0.1,
+          1.0
+        ]
+      },
+      "knn": {
+        "clf__n_neighbors": [
+          1,
+          15
+        ]
+      },
+      "linsvm": null
+    }
+  },
+  "log_scale_control": "two original channel log scales only; same selected classifier"
+}
