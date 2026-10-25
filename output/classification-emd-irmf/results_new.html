@@ -1,0 +1,766 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EMD, linear IMF and IRMF: new experiments</title>
+<style>
+.viz-root {
+  color-scheme: light;
+  --page: #f9f9f7;
+  --surface-1: #fcfcfb;
+  --text-primary: #0b0b0b;
+  --text-secondary: #52514e;
+  --text-muted: #898781;
+  --grid: #e1e0d9;
+  --baseline: #c3c2b7;
+  --border: rgba(11, 11, 11, 0.10);
+  --link: #1c5cab;
+  --code-bg: #f0efec;
+  --wash: rgba(42, 120, 214, 0.08);
+  --series-1: #2a78d6;
+  --series-2: #eb6834;
+  --series-3: #1baf7a;
+}
+@media (prefers-color-scheme: dark) {
+  :root:where(:not([data-theme="light"])) .viz-root {
+    color-scheme: dark;
+    --page: #0d0d0d;
+    --surface-1: #1a1a19;
+    --text-primary: #f0efec;
+    --text-secondary: #c3c2b7;
+    --text-muted: #898781;
+    --grid: #2c2c2a;
+    --baseline: #383835;
+    --border: rgba(255, 255, 255, 0.10);
+    --link: #86b6ef;
+    --code-bg: #2c2c2a;
+    --wash: rgba(57, 135, 229, 0.14);
+    --series-1: #3987e5;
+    --series-2: #d95926;
+    --series-3: #199e70;
+  }
+}
+:root[data-theme="dark"] .viz-root {
+  color-scheme: dark;
+  --page: #0d0d0d;
+  --surface-1: #1a1a19;
+  --text-primary: #f0efec;
+  --text-secondary: #c3c2b7;
+  --text-muted: #898781;
+  --grid: #2c2c2a;
+  --baseline: #383835;
+  --border: rgba(255, 255, 255, 0.10);
+  --link: #86b6ef;
+  --code-bg: #2c2c2a;
+  --wash: rgba(57, 135, 229, 0.14);
+  --series-1: #3987e5;
+  --series-2: #d95926;
+  --series-3: #199e70;
+}
+
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--page); color: var(--text-primary); font: 15px/1.55 system-ui, -apple-system, "Segoe UI", sans-serif; }
+main { max-width: 1120px; margin: 0 auto; padding: 36px 24px 72px; }
+h1 { font-size: 30px; line-height: 1.2; margin: 6px 0 10px; font-weight: 650; letter-spacing: -0.01em; }
+h2 { font-size: 21px; line-height: 1.3; margin: 0 0 8px; font-weight: 620; }
+h3 { font-size: 15px; margin: 0 0 4px; font-weight: 600; }
+section { margin-top: 48px; }
+p { margin: 0 0 10px; max-width: 78ch; }
+ul { margin: 6px 0 10px; padding-left: 20px; max-width: 80ch; }
+li { margin: 4px 0; }
+a { color: var(--link); text-underline-offset: 2px; }
+code { font: 12.5px ui-monospace, SFMono-Regular, Menlo, monospace; background: var(--code-bg); padding: 1px 4px; border-radius: 4px; }
+.eyebrow { color: var(--text-secondary); font-size: 13px; margin: 0; }
+.meta { color: var(--text-secondary); font-size: 13px; }
+.lead { font-size: 17px; line-height: 1.55; max-width: 74ch; margin-top: 14px; }
+.note { color: var(--text-secondary); font-size: 13.5px; }
+.status { display: inline-block; font-size: 12.5px; color: var(--text-secondary); border: 1px solid var(--baseline); border-radius: 999px; padding: 1px 9px; margin-left: 8px; vertical-align: 3px; font-weight: 500; }
+
+.controls { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; margin: 14px 0 0; }
+.controls-label { font-size: 13px; font-weight: 600; }
+.seg { display: inline-flex; border: 1px solid var(--baseline); border-radius: 8px; overflow: hidden; }
+.seg button { font: inherit; font-size: 13px; padding: 5px 12px; border: 0; cursor: pointer; background: transparent; color: var(--text-secondary); }
+.seg button + button { border-left: 1px solid var(--baseline); }
+.seg button[aria-pressed="true"] { background: var(--text-primary); color: var(--surface-1); font-weight: 600; }
+.seg button:focus-visible, .view-toggle:focus-visible { outline: 2px solid var(--series-1); outline-offset: 2px; }
+
+.tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 12px; margin-top: 14px; }
+.tile { background: var(--surface-1); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px 12px; }
+.tile-label { font-size: 13px; color: var(--text-secondary); }
+.tile-value { font-size: 32px; font-weight: 600; line-height: 1.15; margin: 6px 0 2px; }
+.tile-value .unit { font-size: 15px; font-weight: 500; color: var(--text-secondary); }
+.tile-sub { font-size: 13px; color: var(--text-secondary); }
+.tile-sig { font-size: 13px; margin-top: 2px; }
+.tile-meta { font-size: 12.5px; color: var(--text-secondary); margin-top: 10px; padding-top: 8px; border-top: 1px solid var(--grid); }
+
+.card { background: var(--surface-1); border: 1px solid var(--border); border-radius: 12px; padding: 16px 20px 14px; margin: 14px 0 0; }
+.card-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 16px; margin-bottom: 8px; }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 13px; color: var(--text-secondary); }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.dotkey { display: inline-block; width: 10px; height: 10px; border-radius: 50%; border: 2px solid var(--series-1); }
+.dotkey.filled { background: var(--series-1); }
+.view-toggle { font: inherit; font-size: 12.5px; padding: 4px 10px; cursor: pointer; border: 1px solid var(--baseline); border-radius: 7px; background: transparent; color: var(--text-secondary); }
+.view-toggle[aria-pressed="true"] { color: var(--text-primary); border-color: var(--text-secondary); }
+figcaption { font-size: 12.5px; color: var(--text-secondary); margin-top: 10px; max-width: 100ch; }
+.chart svg { display: block; overflow: visible; }
+.multiples { display: grid; grid-template-columns: repeat(auto-fit, minmax(330px, 1fr)); gap: 18px 28px; }
+.multiples h3 .dst { font-weight: 400; color: var(--text-secondary); font-size: 13px; margin-left: 6px; }
+details { margin-top: 14px; }
+summary { cursor: pointer; font-size: 14px; color: var(--text-secondary); }
+summary:focus-visible { outline: 2px solid var(--series-1); outline-offset: 2px; }
+
+.table-wrap { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-size: 13.5px; }
+th, td { text-align: left; padding: 7px 10px; border-bottom: 1px solid var(--grid); vertical-align: top; }
+th { font-weight: 600; color: var(--text-secondary); font-size: 12.5px; }
+.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+td.strong, .strong { font-weight: 650; }
+td .ci, td .p, th .ci { display: block; font-size: 12px; color: var(--text-secondary); font-weight: 400; }
+td.rowhead { font-weight: 500; }
+
+.ptitle { font-size: 14px; font-weight: 600; fill: var(--text-primary); }
+.psub { font-size: 12px; fill: var(--text-secondary); }
+.ax { font-size: 11.5px; fill: var(--text-muted); font-variant-numeric: tabular-nums; }
+.lbl { font-size: 13px; fill: var(--text-primary); }
+.dsl { font-size: 13.5px; font-weight: 600; fill: var(--text-primary); }
+.dst { font-size: 12.5px; font-weight: 400; fill: var(--text-secondary); }
+.dlab { font-size: 11.5px; fill: var(--text-secondary); font-variant-numeric: tabular-nums; }
+.grid { stroke: var(--grid); stroke-width: 1; }
+.chance { stroke: var(--text-muted); stroke-width: 1; }
+.zero { stroke: var(--baseline); stroke-width: 1; }
+.sep { stroke: var(--grid); stroke-width: 1; }
+.cross { stroke: var(--text-muted); stroke-width: 1; opacity: 0; }
+.cross.on { opacity: 1; }
+.ci-line { stroke: var(--series-1); stroke-width: 2; stroke-linecap: round; }
+.ring { fill: var(--surface-1); }
+.dot { fill: var(--series-1); }
+.dot-hollow { fill: var(--surface-1); stroke: var(--series-1); stroke-width: 2; }
+.s1 { --c: var(--series-1); } .s2 { --c: var(--series-2); } .s3 { --c: var(--series-3); }
+.line { fill: none; stroke: var(--c); stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
+.mark { fill: var(--c); stroke: var(--surface-1); stroke-width: 2; }
+.mark.default { fill: var(--surface-1); stroke: var(--c); stroke-width: 2; }
+.wash { fill: var(--wash); opacity: 0; }
+.wash.on { opacity: 1; }
+.hit { fill: transparent; }
+.hit:focus { outline: none; }
+.key { display: inline-block; width: 14px; height: 0; border-top: 2px solid var(--c); vertical-align: middle; }
+.shape { display: inline-block; width: 12px; height: 12px; }
+
+.tip { position: fixed; left: 0; top: 0; z-index: 30; pointer-events: none; background: var(--surface-1); color: var(--text-primary); border: 1px solid var(--border); border-radius: 8px; box-shadow: 0 6px 22px rgba(0, 0, 0, 0.14); padding: 8px 10px; font-size: 12.5px; line-height: 1.45; max-width: 340px; opacity: 0; transition: opacity 80ms; }
+.tip .tv { display: flex; align-items: center; gap: 8px; font-size: 15px; font-weight: 650; font-variant-numeric: tabular-nums; }
+.tip .row { display: flex; align-items: center; gap: 8px; }
+.tip .row b { font-variant-numeric: tabular-nums; min-width: 46px; }
+.tip .tl { color: var(--text-secondary); }
+.tip .mono { font: 11px ui-monospace, SFMono-Regular, Menlo, monospace; color: var(--text-muted); margin-top: 2px; }
+
+footer { margin-top: 56px; padding-top: 14px; border-top: 1px solid var(--grid); font-size: 12.5px; color: var(--text-secondary); }
+@media (max-width: 640px) { main { padding: 24px 14px 56px; } h1 { font-size: 25px; } .card { padding: 14px 12px 12px; } }
+@media print { .tip { display: none; } }
+</style>
+</head>
+<body class="viz-root">
+<main>
+
+<header>
+  <p class="eyebrow">Classification study, follow-up experiments</p>
+  <h1>EMD, linear IMF and IRMF: component count, pimf 0.5.0 and robustness</h1>
+  <p class="meta" id="meta"></p>
+  <p class="lead" id="lead"></p>
+</header>
+
+<section id="components">
+  <h2>How many components?</h2>
+  <p>Each method was rerun with K extracted components plus one residual, on the same 15 grouped splits as the main study. For IMF and IRMF, K is the number of stages of a recursive IMF that covers the same range of scales as the default 17 (15 on synthetic), so fewer stages means wider spacing between them. For EMD, K is the number of IMFs kept, and everything coarser stays in the residue. The comparison at equal counts was pre-registered before any of these models were fit.</p>
+  <p><span id="components-reading"></span></p>
+  <div class="tiles" id="comp-tiles"></div>
+
+  <figure class="card" data-view>
+    <div class="card-head">
+      <div class="legend" id="curve-legend"></div>
+      <button type="button" class="view-toggle" aria-pressed="false">Table view</button>
+    </div>
+    <div class="controls" role="group" aria-label="Classifier and features">
+      <span class="controls-label">Model</span>
+      <div class="seg" id="seg-clf">
+        <button type="button" data-v="classical" aria-pressed="true">Fixed classical</button>
+        <button type="button" data-v="lightgbm" aria-pressed="false">LightGBM</button>
+      </div>
+      <span class="controls-label">Features</span>
+      <div class="seg" id="seg-fs">
+        <button type="button" data-v="comp" aria-pressed="true">Without log_scale</button>
+        <button type="button" data-v="comp+log_scale" aria-pressed="false">With log_scale</button>
+      </div>
+    </div>
+    <div class="multiples" id="curves" style="margin-top:12px"></div>
+    <div class="table-wrap" id="curves-table" hidden></div>
+    <figcaption>Mean balanced accuracy over 15 grouped splits. Hollow markers are each method's study default: 17 components for IMF and IRMF (15 on synthetic), 8 IMFs for EMD. The fixed classical models are logistic regression for synthetic and BirdCLEF and linear SVM for DroneRF and ESC-50. Hover or focus a chart for the values at each K, or use the table view.</figcaption>
+  </figure>
+
+  <h3 style="margin-top:26px">Equal component counts</h3>
+  <p class="note">Paired differences in balanced-accuracy points, fixed classical model, features without <code>log_scale</code>. Bold cells passed Holm correction across all 48 tests. The pre-registered reading counts a dataset as keeping the IMF advantage if both IMF methods beat EMD significantly at K = 5 and K = 6.</p>
+  <div class="card table-wrap" id="family-a"></div>
+
+  <h3 style="margin-top:26px">pimf's default <code>k_max = 8</code></h3>
+  <p class="note">pimf extracts the coarsest stages first. With <code>k_max = 8</code> it stops early, and every finer stage ends up lumped into the residual. The chart compares that cut-off with all stages of the recursive IMF, and pimf's full defaults (60-step gradient descent with <code>k_max = 8</code>) with EMD's default.</p>
+  <figure class="card" data-view>
+    <div class="card-head">
+      <div class="legend"><span><i class="dotkey filled"></i>Holm p &lt; 0.05</span><span><i class="dotkey"></i>not significant</span></div>
+      <button type="button" class="view-toggle" aria-pressed="false">Table view</button>
+    </div>
+    <div class="chart" id="family-c"></div>
+    <div class="table-wrap" id="family-c-table" hidden></div>
+    <figcaption>Fixed classical model, features without <code>log_scale</code>, Holm correction within each dataset. "pimf defaults" means pimf's 60-step gradient descent with <code>k_max = 8</code>, which is what calling <code>pimf.IMF(SmoothAbs(H)).decompose(y)</code> gives.</figcaption>
+  </figure>
+
+  <h3 style="margin-top:26px">How empty EMD's later slots are</h3>
+  <p class="note">The share of channels where EMD produced fewer than K IMFs, so slot K is zero padding.</p>
+  <div class="card table-wrap" id="padding"></div>
+</section>
+
+<section id="release">
+  <h2>Switching to pimf 0.5.0 and 0.5.1</h2>
+  <p>pimf 0.5.0 adds <code>IMF(..., solver="newton")</code>, and gradient descent now warns when a stage hits its iteration cap. pimf 0.5.1 makes that Newton solver faster without changing its results. Each release was rerun on every frame of the four datasets, in its own environment. 0.5.0 is compared with the 0.4.0 results the experiments used, and 0.5.1 with 0.5.0.</p>
+  <div class="tiles" id="release-tiles"></div>
+  <h3 style="margin-top:26px">Decompositions on every frame</h3>
+  <p class="note">pimf 0.5.0's Newton solver compared with our Numba prototype, channel by channel. Linear IMF from 0.5.0 matched the cache exactly on every channel.</p>
+  <div class="card table-wrap" id="release-full"></div>
+  <h3 style="margin-top:26px">Classification</h3>
+  <p class="note" id="release-class-note"></p>
+  <div class="card table-wrap" id="release-class"></div>
+  <details>
+    <summary>Every classifier and feature set</summary>
+    <div class="card table-wrap" id="release-class-all"></div>
+  </details>
+  <h3 style="margin-top:26px">pimf 0.5.1 against 0.5.0</h3>
+  <p class="note" id="next-note"></p>
+  <div class="card table-wrap" id="next-full"></div>
+  <h3 style="margin-top:26px">Speed</h3>
+  <p class="note" id="release-speed-note"></p>
+  <div class="card table-wrap" id="release-speed"></div>
+</section>
+
+<section id="robustness">
+  <h2>Robustness to impulsive contamination <span class="status" id="rob-status"></span></h2>
+  <div id="rob-body"></div>
+  <div id="rob-results" hidden>
+    <div class="tiles" id="rob-tiles"></div>
+    <figure class="card" data-view>
+      <div class="card-head">
+        <div class="legend" id="rob-legend"></div>
+        <button type="button" class="view-toggle" aria-pressed="false">Table view</button>
+      </div>
+      <div class="multiples rob-grid" id="rob-curves"></div>
+      <div class="table-wrap" id="rob-curves-table" hidden></div>
+      <figcaption>Mean balanced accuracy over 15 grouped splits, with models trained on clean data and tested on the same held-out fold clean and contaminated. The leftmost point is clean. The others add spikes, or Gaussian noise of the same average power, at 0.2%, 1% and 4% of samples. The thin gray line marks chance. Fixed classical model, features without <code>log_scale</code>.</figcaption>
+    </figure>
+    <h3 style="margin-top:26px">How the gaps change under contamination</h3>
+    <p class="note">Each cell is the change in a paired gap from clean to contaminated test data, in balanced-accuracy points. For example, IRMF − linear IMF under contamination minus IRMF − linear IMF on clean data. A positive value means contamination hurt the comparison method more than IRMF. Bold cells have p below 0.05. <span id="rob-did-note"></span> "Not tested" means the protocol didn't pre-specify that contrast.</p>
+    <div class="card table-wrap" id="rob-did"></div>
+    <h3 style="margin-top:26px">How far the features move</h3>
+    <p class="note">Median change of each frame's features when contamination is added, in units of each feature's spread across clean frames. The 95th percentile is underneath. Lower means the features stay closer to their clean values.</p>
+    <div class="card table-wrap" id="rob-drift"></div>
+  </div>
+</section>
+
+<section id="sources">
+  <h2>Reports and source files</h2>
+  <ul id="source-list"></ul>
+</section>
+
+<footer id="footer"></footer>
+</main>
+
+<div class="tip" id="tip" role="status" aria-live="polite"></div>
+<script type="application/json" id="data">{"meta":{"line":"22 October 2026 \u00b7 branch t3/compare-emd-irmf-classification at 234ad70 \u00b7 built by experiments/classification-emd-irmf/make_results_new_html.py","lead":"Three follow-ups to the main study. Matching the number of components shrinks the IMF advantage over EMD. It holds on DroneRF and synthetic, mostly holds on ESC-50 and largely disappears on BirdCLEF. pimf's default k_max = 8 costs about 10 points of balanced accuracy, enough to erase IRMF's lead over EMD. With spikes added to test signals, IRMF holds up far better than linear IMF on synthetic. On the real datasets, every method trained on clean data falls close to chance once spikes appear. IRMF loses less than linear IMF on DroneRF and, at lighter spike rates, on BirdCLEF, and no less on ESC-50. pimf 0.5.0 matches our converged decompositions apart from tie-breaks on flat windows. pimf 0.5.1 returns exactly the same features on every frame, with a Newton solver 1.8\u20132.5 times faster.","footer":"Built from output/classification-emd-irmf/components/, pimf_release/0.5.0/, pimf_release/0.5.1/ and robustness/ at commit 234ad70. Links are relative to output/classification-emd-irmf/.","sources":[["Component-count report","components/REPORT.md"],["Component-count protocol","../../experiments/classification-emd-irmf/components/PROTOCOL_components.md"],["pimf 0.5.0 full-data comparison","pimf_release/0.5.0/full_data_comparison.csv"],["pimf 0.5.0 paired classification","pimf_release/0.5.0/paired_classical.csv"],["pimf 0.5.1 vs 0.5.0, every frame","pimf_release/0.5.1/full_data_vs_0.5.0.csv"],["pimf 0.5.1 Newton timing","pimf_release/0.5.1/timing.csv"],["Robustness protocol","../../experiments/classification-emd-irmf/robustness/PROTOCOL_robustness.md"],["Laplace-noise robustness page","results_laplace.html"],["Laplace-noise robustness report","robustness_laplace/REPORT.md"],["Notebook-scale spikes page (robustness v3)","results_v3.html"],["Notebook-scale spikes report (robustness v3)","robustness_v3/REPORT.md"],["Main study results page","results.html"]]},"components":{"curves":{"dronerf|classical|comp":{"series":{"irmf":[{"k":3,"ba":44.49404258837501,"nf":160,"isDefault":false},{"k":4,"ba":44.56830297869939,"nf":200,"isDefault":false},{"k":5,"ba":46.83758232833646,"nf":240,"isDefault":false},{"k":6,"ba":47.124218517629615,"nf":280,"isDefault":false},{"k":9,"ba":48.882533757607824,"nf":400,"isDefault":false},{"k":13,"ba":50.06290109511885,"nf":560,"isDefault":false},{"k":17,"ba":50.3594098716285,"nf":720,"isDefault":true}],"linear":[{"k":3,"ba":47.974057741011386,"nf":160,"isDefault":false},{"k":4,"ba":50.51969072782613,"nf":200,"isDefault":false},{"k":5,"ba":53.60189626720804,"nf":240,"isDefault":false},{"k":6,"ba":53.434943632842405,"nf":280,"isDefault":false},{"k":9,"ba":55.94483640829498,"nf":400,"isDefault":false},{"k":13,"ba":57.2631960889599,"nf":560,"isDefault":false},{"k":17,"ba":57.4710191561403,"nf":720,"isDefault":true}],"emd":[{"k":3,"ba":40.649186040410854,"nf":160,"isDefault":false},{"k":4,"ba":40.5651993920639,"nf":200,"isDefault":false},{"k":5,"ba":39.88829769907383,"nf":240,"isDefault":false},{"k":6,"ba":39.34586232105815,"nf":280,"isDefault":false},{"k":7,"ba":38.90304744472346,"nf":320,"isDefault":false},{"k":8,"ba":38.73018979898983,"nf":360,"isDefault":true}]}},"dronerf|classical|comp+log_scale":{"series":{"irmf":[{"k":3,"ba":49.45473469008435,"nf":162,"isDefault":false},{"k":4,"ba":49.61499692533308,"nf":202,"isDefault":false},{"k":5,"ba":51.480349201651144,"nf":242,"isDefault":false},{"k":6,"ba":51.940171241570596,"nf":282,"isDefault":false},{"k":9,"ba":53.686906429103345,"nf":402,"isDefault":false},{"k":13,"ba":54.68495477814045,"nf":562,"isDefault":false},{"k":17,"ba":54.31112932611932,"nf":722,"isDefault":true}],"linear":[{"k":3,"ba":51.10496123498168,"nf":162,"isDefault":false},{"k":4,"ba":51.987349712963585,"nf":202,"isDefault":false},{"k":5,"ba":55.23510139392641,"nf":242,"isDefault":false},{"k":6,"ba":55.02716804767568,"nf":282,"isDefault":false},{"k":9,"ba":57.61141409895669,"nf":402,"isDefault":false},{"k":13,"ba":59.110439920567806,"nf":562,"isDefault":false},{"k":17,"ba":59.487476247070305,"nf":722,"isDefault":true}],"emd":[{"k":3,"ba":45.53862318900105,"nf":162,"isDefault":false},{"k":4,"ba":45.2467642478342,"nf":202,"isDefault":false},{"k":5,"ba":44.4773133391038,"nf":242,"isDefault":false},{"k":6,"ba":43.65657896654336,"nf":282,"isDefault":false},{"k":7,"ba":43.32377150390283,"nf":322,"isDefault":false},{"k":8,"ba":42.91571947763536,"nf":362,"isDefault":true}]}},"dronerf|lightgbm|comp":{"series":{"irmf":[{"k":3,"ba":61.90141661729452,"nf":160,"isDefault":false},{"k":4,"ba":62.999476005721135,"nf":200,"isDefault":false},{"k":5,"ba":64.65200612785374,"nf":240,"isDefault":false},{"k":6,"ba":64.867342315562,"nf":280,"isDefault":false},{"k":9,"ba":65.53488935197261,"nf":400,"isDefault":false},{"k":13,"ba":66.17805321417775,"nf":560,"isDefault":false},{"k":17,"ba":66.47532891952062,"nf":720,"isDefault":true}],"linear":[{"k":3,"ba":65.81225317595185,"nf":160,"isDefault":false},{"k":4,"ba":67.44196112123835,"nf":200,"isDefault":false},{"k":5,"ba":69.42299492222172,"nf":240,"isDefault":false},{"k":6,"ba":69.40559029564056,"nf":280,"isDefault":false},{"k":9,"ba":70.49621042356979,"nf":400,"isDefault":false},{"k":13,"ba":70.75832940621373,"nf":560,"isDefault":false},{"k":17,"ba":70.79054237464504,"nf":720,"isDefault":true}],"emd":[{"k":3,"ba":58.94488271337035,"nf":160,"isDefault":false},{"k":4,"ba":58.35594770647696,"nf":200,"isDefault":false},{"k":5,"ba":58.076844481564805,"nf":240,"isDefault":false},{"k":6,"ba":57.76047419215957,"nf":280,"isDefault":false},{"k":7,"ba":57.69342167717705,"nf":320,"isDefault":false},{"k":8,"ba":57.46575706459086,"nf":360,"isDefault":true}]}},"dronerf|lightgbm|comp+log_scale":{"series":{"irmf":[{"k":3,"ba":65.67842078772411,"nf":162,"isDefault":false},{"k":4,"ba":66.76077326479314,"nf":202,"isDefault":false},{"k":5,"ba":68.33758340929906,"nf":242,"isDefault":false},{"k":6,"ba":68.37820918209428,"nf":282,"isDefault":false},{"k":9,"ba":68.87270071677189,"nf":402,"isDefault":false},{"k":13,"ba":69.16740381588944,"nf":562,"isDefault":false},{"k":17,"ba":69.44503449526376,"nf":722,"isDefault":true}],"linear":[{"k":3,"ba":67.5969075806379,"nf":162,"isDefault":false},{"k":4,"ba":69.16889356743219,"nf":202,"isDefault":false},{"k":5,"ba":70.79444513138264,"nf":242,"isDefault":false},{"k":6,"ba":70.39632676944456,"nf":282,"isDefault":false},{"k":9,"ba":71.38247012334588,"nf":402,"isDefault":false},{"k":13,"ba":71.95031811994794,"nf":562,"isDefault":false},{"k":17,"ba":71.88097398637095,"nf":722,"isDefault":true}],"emd":[{"k":3,"ba":65.0384210568967,"nf":162,"isDefault":false},{"k":4,"ba":64.63752745312091,"nf":202,"isDefault":false},{"k":5,"ba":64.60706449693974,"nf":242,"isDefault":false},{"k":6,"ba":64.14226546710304,"nf":282,"isDefault":false},{"k":7,"ba":64.02592148935473,"nf":322,"isDefault":false},{"k":8,"ba":63.998624476223206,"nf":362,"isDefault":true}]}},"birdclef2023|classical|comp":{"series":{"irmf":[{"k":3,"ba":45.5502228624088,"nf":80,"isDefault":false},{"k":4,"ba":46.565003481684194,"nf":100,"isDefault":false},{"k":5,"ba":46.49452975381963,"nf":120,"isDefault":false},{"k":6,"ba":46.5130684537083,"nf":140,"isDefault":false},{"k":9,"ba":48.02016064513879,"nf":200,"isDefault":false},{"k":13,"ba":49.30677117833253,"nf":280,"isDefault":false},{"k":17,"ba":49.56840273575668,"nf":360,"isDefault":true}],"linear":[{"k":3,"ba":45.19622512697184,"nf":80,"isDefault":false},{"k":4,"ba":45.9608210828398,"nf":100,"isDefault":false},{"k":5,"ba":46.5463810187341,"nf":120,"isDefault":false},{"k":6,"ba":46.453097698027825,"nf":140,"isDefault":false},{"k":9,"ba":47.5879019704703,"nf":200,"isDefault":false},{"k":13,"ba":48.62998245531846,"nf":280,"isDefault":false},{"k":17,"ba":48.85584065438985,"nf":360,"isDefault":true}],"emd":[{"k":3,"ba":45.92899204564358,"nf":80,"isDefault":false},{"k":4,"ba":45.437927451127706,"nf":100,"isDefault":false},{"k":5,"ba":45.143503353886274,"nf":120,"isDefault":false},{"k":6,"ba":44.48132967687126,"nf":140,"isDefault":false},{"k":7,"ba":43.68365689612722,"nf":160,"isDefault":false},{"k":8,"ba":43.450197081642386,"nf":180,"isDefault":true}]}},"birdclef2023|classical|comp+log_scale":{"series":{"irmf":[{"k":3,"ba":45.34879190689768,"nf":81,"isDefault":false},{"k":4,"ba":46.455050864713385,"nf":101,"isDefault":false},{"k":5,"ba":46.28189131090437,"nf":121,"isDefault":false},{"k":6,"ba":46.37883248200373,"nf":141,"isDefault":false},{"k":9,"ba":47.75069278099199,"nf":201,"isDefault":false},{"k":13,"ba":48.97926828128584,"nf":281,"isDefault":false},{"k":17,"ba":49.27001028548713,"nf":361,"isDefault":true}],"linear":[{"k":3,"ba":44.88933394860555,"nf":81,"isDefault":false},{"k":4,"ba":45.70359260454582,"nf":101,"isDefault":false},{"k":5,"ba":46.31715812014708,"nf":121,"isDefault":false},{"k":6,"ba":46.39948519672843,"nf":141,"isDefault":false},{"k":9,"ba":47.09357727229878,"nf":201,"isDefault":false},{"k":13,"ba":48.35798510063582,"nf":281,"isDefault":false},{"k":17,"ba":48.56641947678748,"nf":361,"isDefault":true}],"emd":[{"k":3,"ba":45.789030975607844,"nf":81,"isDefault":false},{"k":4,"ba":45.6561763873019,"nf":101,"isDefault":false},{"k":5,"ba":45.2884733791309,"nf":121,"isDefault":false},{"k":6,"ba":44.69193922141031,"nf":141,"isDefault":false},{"k":7,"ba":43.69672493396228,"nf":161,"isDefault":false},{"k":8,"ba":43.33715859397113,"nf":181,"isDefault":true}]}},"birdclef2023|lightgbm|comp":{"series":{"irmf":[{"k":3,"ba":49.9880676502808,"nf":80,"isDefault":false},{"k":4,"ba":51.10864406472465,"nf":100,"isDefault":false},{"k":5,"ba":51.27738813811196,"nf":120,"isDefault":false},{"k":6,"ba":51.41736074305631,"nf":140,"isDefault":false},{"k":9,"ba":52.22818653159612,"nf":200,"isDefault":false},{"k":13,"ba":52.54720570224457,"nf":280,"isDefault":false},{"k":17,"ba":53.05205357495011,"nf":360,"isDefault":true}],"linear":[{"k":3,"ba":49.439572511323185,"nf":80,"isDefault":false},{"k":4,"ba":50.76126262251979,"nf":100,"isDefault":false},{"k":5,"ba":51.28978755672938,"nf":120,"isDefault":false},{"k":6,"ba":51.53411856729,"nf":140,"isDefault":false},{"k":9,"ba":52.62712068605918,"nf":200,"isDefault":false},{"k":13,"ba":52.20403267503732,"nf":280,"isDefault":false},{"k":17,"ba":52.79621989181449,"nf":360,"isDefault":true}],"emd":[{"k":3,"ba":50.58641878641171,"nf":80,"isDefault":false},{"k":4,"ba":50.21166966849295,"nf":100,"isDefault":false},{"k":5,"ba":50.46167294253677,"nf":120,"isDefault":false},{"k":6,"ba":50.582163418252044,"nf":140,"isDefault":false},{"k":7,"ba":50.46080453256844,"nf":160,"isDefault":false},{"k":8,"ba":50.48655927415003,"nf":180,"isDefault":true}]}},"birdclef2023|lightgbm|comp+log_scale":{"series":{"irmf":[{"k":3,"ba":49.59788971741785,"nf":81,"isDefault":false},{"k":4,"ba":50.82323849110287,"nf":101,"isDefault":false},{"k":5,"ba":50.921161373106315,"nf":121,"isDefault":false},{"k":6,"ba":51.05342774427927,"nf":141,"isDefault":false},{"k":9,"ba":52.0391834402546,"nf":201,"isDefault":false},{"k":13,"ba":52.26259866839354,"nf":281,"isDefault":false},{"k":17,"ba":53.00297064076949,"nf":361,"isDefault":true}],"linear":[{"k":3,"ba":49.4775426004189,"nf":81,"isDefault":false},{"k":4,"ba":50.54169823538679,"nf":101,"isDefault":false},{"k":5,"ba":50.968799708682724,"nf":121,"isDefault":false},{"k":6,"ba":51.21369847539804,"nf":141,"isDefault":false},{"k":9,"ba":52.15372625298513,"nf":201,"isDefault":false},{"k":13,"ba":52.2116707982893,"nf":281,"isDefault":false},{"k":17,"ba":52.43247986153718,"nf":361,"isDefault":true}],"emd":[{"k":3,"ba":50.2305174087508,"nf":81,"isDefault":false},{"k":4,"ba":50.053506180353224,"nf":101,"isDefault":false},{"k":5,"ba":50.21853350382016,"nf":121,"isDefault":false},{"k":6,"ba":50.119879030058534,"nf":141,"isDefault":false},{"k":7,"ba":50.06708703352045,"nf":161,"isDefault":false},{"k":8,"ba":50.08238029200233,"nf":181,"isDefault":true}]}},"esc50_animals|classical|comp":{"series":{"irmf":[{"k":3,"ba":59.80585832522512,"nf":80,"isDefault":false},{"k":4,"ba":61.075069719198225,"nf":100,"isDefault":false},{"k":5,"ba":61.51890123003712,"nf":120,"isDefault":false},{"k":6,"ba":62.604725515704075,"nf":140,"isDefault":false},{"k":9,"ba":64.76580562812796,"nf":200,"isDefault":false},{"k":13,"ba":65.33195220104344,"nf":280,"isDefault":false},{"k":17,"ba":64.97607592657671,"nf":360,"isDefault":true}],"linear":[{"k":3,"ba":59.47420485027174,"nf":80,"isDefault":false},{"k":4,"ba":61.79333745573895,"nf":100,"isDefault":false},{"k":5,"ba":61.72954161611135,"nf":120,"isDefault":false},{"k":6,"ba":62.58424432426428,"nf":140,"isDefault":false},{"k":9,"ba":64.52875751494135,"nf":200,"isDefault":false},{"k":13,"ba":65.2906045013086,"nf":280,"isDefault":false},{"k":17,"ba":65.26917950981966,"nf":360,"isDefault":true}],"emd":[{"k":3,"ba":55.95508274734083,"nf":80,"isDefault":false},{"k":4,"ba":56.51715171108391,"nf":100,"isDefault":false},{"k":5,"ba":55.525455672456836,"nf":120,"isDefault":false},{"k":6,"ba":55.386806172920686,"nf":140,"isDefault":false},{"k":7,"ba":54.910938136625006,"nf":160,"isDefault":false},{"k":8,"ba":54.31936134105636,"nf":180,"isDefault":true}]}},"esc50_animals|classical|comp+log_scale":{"series":{"irmf":[{"k":3,"ba":61.21117532798752,"nf":81,"isDefault":false},{"k":4,"ba":62.71624353121589,"nf":101,"isDefault":false},{"k":5,"ba":63.38174496314918,"nf":121,"isDefault":false},{"k":6,"ba":64.08173212199706,"nf":141,"isDefault":false},{"k":9,"ba":66.1701178328918,"nf":201,"isDefault":false},{"k":13,"ba":66.63898233886685,"nf":281,"isDefault":false},{"k":17,"ba":66.60508834869748,"nf":361,"isDefault":true}],"linear":[{"k":3,"ba":60.787219926471046,"nf":81,"isDefault":false},{"k":4,"ba":63.59191725506822,"nf":101,"isDefault":false},{"k":5,"ba":63.65486309501286,"nf":121,"isDefault":false},{"k":6,"ba":64.02624781438226,"nf":141,"isDefault":false},{"k":9,"ba":66.15053672787371,"nf":201,"isDefault":false},{"k":13,"ba":67.4940407271008,"nf":281,"isDefault":false},{"k":17,"ba":67.43675697559944,"nf":361,"isDefault":true}],"emd":[{"k":3,"ba":57.57099850404599,"nf":81,"isDefault":false},{"k":4,"ba":58.443676604572005,"nf":101,"isDefault":false},{"k":5,"ba":57.41748407353996,"nf":121,"isDefault":false},{"k":6,"ba":56.920554842938685,"nf":141,"isDefault":false},{"k":7,"ba":56.80790608294885,"nf":161,"isDefault":false},{"k":8,"ba":56.54980505818309,"nf":181,"isDefault":true}]}},"esc50_animals|lightgbm|comp":{"series":{"irmf":[{"k":3,"ba":59.1872242770575,"nf":80,"isDefault":false},{"k":4,"ba":62.7838156502878,"nf":100,"isDefault":false},{"k":5,"ba":62.70220042674573,"nf":120,"isDefault":false},{"k":6,"ba":63.522394650752936,"nf":140,"isDefault":false},{"k":9,"ba":64.83200417219922,"nf":200,"isDefault":false},{"k":13,"ba":66.11424802474517,"nf":280,"isDefault":false},{"k":17,"ba":65.88554663517485,"nf":360,"isDefault":true}],"linear":[{"k":3,"ba":58.41299531917187,"nf":80,"isDefault":false},{"k":4,"ba":62.619393458411935,"nf":100,"isDefault":false},{"k":5,"ba":62.35109334943601,"nf":120,"isDefault":false},{"k":6,"ba":63.97601132813835,"nf":140,"isDefault":false},{"k":9,"ba":65.49736656552533,"nf":200,"isDefault":false},{"k":13,"ba":66.85796604550036,"nf":280,"isDefault":false},{"k":17,"ba":67.17608454896865,"nf":360,"isDefault":true}],"emd":[{"k":3,"ba":59.18242950104723,"nf":80,"isDefault":false},{"k":4,"ba":59.03450632411028,"nf":100,"isDefault":false},{"k":5,"ba":59.33252792966518,"nf":120,"isDefault":false},{"k":6,"ba":59.61026652651579,"nf":140,"isDefault":false},{"k":7,"ba":59.27777216063581,"nf":160,"isDefault":false},{"k":8,"ba":59.45672515901982,"nf":180,"isDefault":true}]}},"esc50_animals|lightgbm|comp+log_scale":{"series":{"irmf":[{"k":3,"ba":60.10813140033539,"nf":81,"isDefault":false},{"k":4,"ba":63.298262124971274,"nf":101,"isDefault":false},{"k":5,"ba":62.905347960945704,"nf":121,"isDefault":false},{"k":6,"ba":63.68523843401679,"nf":141,"isDefault":false},{"k":9,"ba":65.43116600925491,"nf":201,"isDefault":false},{"k":13,"ba":66.50458105682499,"nf":281,"isDefault":false},{"k":17,"ba":66.39639523058733,"nf":361,"isDefault":true}],"linear":[{"k":3,"ba":59.557346512128916,"nf":81,"isDefault":false},{"k":4,"ba":63.78524588256125,"nf":101,"isDefault":false},{"k":5,"ba":63.31077115061034,"nf":121,"isDefault":false},{"k":6,"ba":64.65742510992257,"nf":141,"isDefault":false},{"k":9,"ba":66.31563821099911,"nf":201,"isDefault":false},{"k":13,"ba":67.01819553292609,"nf":281,"isDefault":false},{"k":17,"ba":67.4838184372197,"nf":361,"isDefault":true}],"emd":[{"k":3,"ba":58.834896749759615,"nf":81,"isDefault":false},{"k":4,"ba":59.214826961215074,"nf":101,"isDefault":false},{"k":5,"ba":59.28072841298234,"nf":121,"isDefault":false},{"k":6,"ba":59.809312853896046,"nf":141,"isDefault":false},{"k":7,"ba":59.87672659768847,"nf":161,"isDefault":false},{"k":8,"ba":59.69627410575801,"nf":181,"isDefault":true}]}},"synthetic|classical|comp":{"series":{"irmf":[{"k":3,"ba":69.11111111111111,"nf":80,"isDefault":false},{"k":4,"ba":81.91111111111111,"nf":100,"isDefault":false},{"k":5,"ba":82.62222222222222,"nf":120,"isDefault":false},{"k":6,"ba":83.57777777777778,"nf":140,"isDefault":false},{"k":9,"ba":83.64444444444445,"nf":200,"isDefault":false},{"k":13,"ba":84.26666666666667,"nf":280,"isDefault":false},{"k":15,"ba":84.6888888888889,"nf":320,"isDefault":true}],"linear":[{"k":3,"ba":70.73333333333332,"nf":80,"isDefault":false},{"k":4,"ba":74.4,"nf":100,"isDefault":false},{"k":5,"ba":73.73333333333333,"nf":120,"isDefault":false},{"k":6,"ba":73.44444444444443,"nf":140,"isDefault":false},{"k":9,"ba":74.66666666666666,"nf":200,"isDefault":false},{"k":13,"ba":74.46666666666667,"nf":280,"isDefault":false},{"k":15,"ba":73.02222222222223,"nf":320,"isDefault":true}],"emd":[{"k":3,"ba":53.91111111111111,"nf":80,"isDefault":false},{"k":4,"ba":55.31111111111111,"nf":100,"isDefault":false},{"k":5,"ba":54.222222222222214,"nf":120,"isDefault":false},{"k":6,"ba":51.866666666666674,"nf":140,"isDefault":false},{"k":7,"ba":50.84444444444445,"nf":160,"isDefault":false},{"k":8,"ba":50.422222222222224,"nf":180,"isDefault":true}]}},"synthetic|classical|comp+log_scale":{"series":{"irmf":[{"k":3,"ba":69.08888888888889,"nf":81,"isDefault":false},{"k":4,"ba":81.55555555555554,"nf":101,"isDefault":false},{"k":5,"ba":82.31111111111112,"nf":121,"isDefault":false},{"k":6,"ba":82.71111111111111,"nf":141,"isDefault":false},{"k":9,"ba":83.31111111111113,"nf":201,"isDefault":false},{"k":13,"ba":84.44444444444444,"nf":281,"isDefault":false},{"k":15,"ba":84.71111111111111,"nf":321,"isDefault":true}],"linear":[{"k":3,"ba":69.4888888888889,"nf":81,"isDefault":false},{"k":4,"ba":73.97777777777779,"nf":101,"isDefault":false},{"k":5,"ba":73.33333333333333,"nf":121,"isDefault":false},{"k":6,"ba":72.55555555555556,"nf":141,"isDefault":false},{"k":9,"ba":74.24444444444444,"nf":201,"isDefault":false},{"k":13,"ba":73.42222222222222,"nf":281,"isDefault":false},{"k":15,"ba":73.17777777777778,"nf":321,"isDefault":true}],"emd":[{"k":3,"ba":53.77777777777778,"nf":81,"isDefault":false},{"k":4,"ba":54.333333333333336,"nf":101,"isDefault":false},{"k":5,"ba":53.15555555555556,"nf":121,"isDefault":false},{"k":6,"ba":50.866666666666674,"nf":141,"isDefault":false},{"k":7,"ba":50.577777777777776,"nf":161,"isDefault":false},{"k":8,"ba":50.24444444444443,"nf":181,"isDefault":true}]}},"synthetic|lightgbm|comp":{"series":{"irmf":[{"k":3,"ba":52.64444444444444,"nf":80,"isDefault":false},{"k":4,"ba":75.35555555555555,"nf":100,"isDefault":false},{"k":5,"ba":79.95555555555555,"nf":120,"isDefault":false},{"k":6,"ba":77.31111111111112,"nf":140,"isDefault":false},{"k":9,"ba":81.57777777777777,"nf":200,"isDefault":false},{"k":13,"ba":83.48888888888888,"nf":280,"isDefault":false},{"k":15,"ba":85.31111111111112,"nf":320,"isDefault":true}],"linear":[{"k":3,"ba":51.66666666666667,"nf":80,"isDefault":false},{"k":4,"ba":63.51111111111112,"nf":100,"isDefault":false},{"k":5,"ba":68.5111111111111,"nf":120,"isDefault":false},{"k":6,"ba":65.68888888888888,"nf":140,"isDefault":false},{"k":9,"ba":67.57777777777778,"nf":200,"isDefault":false},{"k":13,"ba":72.66666666666667,"nf":280,"isDefault":false},{"k":15,"ba":69.86666666666666,"nf":320,"isDefault":true}],"emd":[{"k":3,"ba":43.75555555555556,"nf":80,"isDefault":false},{"k":4,"ba":41.95555555555555,"nf":100,"isDefault":false},{"k":5,"ba":41.95555555555555,"nf":120,"isDefault":false},{"k":6,"ba":42.77777777777778,"nf":140,"isDefault":false},{"k":7,"ba":42.422222222222224,"nf":160,"isDefault":false},{"k":8,"ba":42.33333333333333,"nf":180,"isDefault":true}]}},"synthetic|lightgbm|comp+log_scale":{"series":{"irmf":[{"k":3,"ba":45.6,"nf":81,"isDefault":false},{"k":4,"ba":70.88888888888889,"nf":101,"isDefault":false},{"k":5,"ba":77.97777777777777,"nf":121,"isDefault":false},{"k":6,"ba":72.91111111111111,"nf":141,"isDefault":false},{"k":9,"ba":78.99999999999999,"nf":201,"isDefault":false},{"k":13,"ba":81.88888888888889,"nf":281,"isDefault":false},{"k":15,"ba":84.22222222222221,"nf":321,"isDefault":true}],"linear":[{"k":3,"ba":45.24444444444444,"nf":81,"isDefault":false},{"k":4,"ba":56.51111111111111,"nf":101,"isDefault":false},{"k":5,"ba":63.66666666666667,"nf":121,"isDefault":false},{"k":6,"ba":59.75555555555555,"nf":141,"isDefault":false},{"k":9,"ba":62.955555555555556,"nf":201,"isDefault":false},{"k":13,"ba":69.44444444444444,"nf":281,"isDefault":false},{"k":15,"ba":66.95555555555556,"nf":321,"isDefault":true}],"emd":[{"k":3,"ba":37.155555555555544,"nf":81,"isDefault":false},{"k":4,"ba":35.75555555555555,"nf":101,"isDefault":false},{"k":5,"ba":36.022222222222226,"nf":121,"isDefault":false},{"k":6,"ba":36.24444444444444,"nf":141,"isDefault":false},{"k":7,"ba":37.08888888888889,"nf":161,"isDefault":false},{"k":8,"ba":37.2,"nf":181,"isDefault":true}]}}},"familyA":[{"dataset":"synthetic","k":3,"contrast":"IRMF - EMD","d":15.2,"lo":11.12320343666688,"hi":19.27679656333311,"p":4.6788373106135546e-05},{"dataset":"synthetic","k":3,"contrast":"Linear IMF - EMD","d":16.82222222222222,"lo":12.14562501070207,"hi":21.49881943374237,"p":6.667223323887436e-05},{"dataset":"synthetic","k":3,"contrast":"IRMF - Linear IMF","d":-1.62222222222222,"lo":-6.2290800015358405,"hi":2.9846355570913903,"p":1.0},{"dataset":"synthetic","k":4,"contrast":"IRMF - EMD","d":26.6,"lo":22.38269856392018,"hi":30.81730143607982,"p":9.107463147268374e-08},{"dataset":"synthetic","k":4,"contrast":"Linear IMF - EMD","d":19.08888888888888,"lo":14.32995319539933,"hi":23.84782458237844,"p":2.152769766975595e-05},{"dataset":"synthetic","k":4,"contrast":"IRMF - Linear IMF","d":7.51111111111111,"lo":4.54743595937743,"hi":10.47478626284478,"p":0.002282359729826},{"dataset":"synthetic","k":5,"contrast":"IRMF - EMD","d":28.4,"lo":23.678298048703468,"hi":33.12170195129652,"p":1.6171513624053428e-07},{"dataset":"synthetic","k":5,"contrast":"Linear IMF - EMD","d":19.51111111111111,"lo":14.22417323541908,"hi":24.79804898680314,"p":5.11494445991337e-05},{"dataset":"synthetic","k":5,"contrast":"IRMF - Linear IMF","d":8.888888888888879,"lo":5.66440394462256,"hi":12.11337383315521,"p":0.0010598495921354},{"dataset":"synthetic","k":6,"contrast":"IRMF - EMD","d":31.711111111111112,"lo":27.77552708051352,"hi":35.6466951417087,"p":3.702292368461477e-09},{"dataset":"synthetic","k":6,"contrast":"Linear IMF - EMD","d":21.577777777777772,"lo":15.24859773949695,"hi":27.906957816058597,"p":0.0001189523646222},{"dataset":"synthetic","k":6,"contrast":"IRMF - Linear IMF","d":10.133333333333331,"lo":5.49164090968411,"hi":14.775025756982549,"p":0.0084673313828091},{"dataset":"dronerf","k":3,"contrast":"IRMF - EMD","d":3.8448565479641497,"lo":2.4288699964974603,"hi":5.26084309943084,"p":0.0011923391608943},{"dataset":"dronerf","k":3,"contrast":"Linear IMF - EMD","d":7.324871700600539,"lo":5.47922959405321,"hi":9.170513807147861,"p":2.3769140015010788e-05},{"dataset":"dronerf","k":3,"contrast":"IRMF - Linear IMF","d":-3.4800151526363803,"lo":-4.5200851862628495,"hi":-2.4399451190099097,"p":0.0001420888448655},{"dataset":"dronerf","k":4,"contrast":"IRMF - EMD","d":4.00310358663548,"lo":2.96273870074107,"hi":5.04346847252989,"p":3.331198200064749e-05},{"dataset":"dronerf","k":4,"contrast":"Linear IMF - EMD","d":9.95449133576221,"lo":8.20919841640108,"hi":11.69978425512335,"p":3.0677346868068957e-07},{"dataset":"dronerf","k":4,"contrast":"IRMF - Linear IMF","d":-5.95138774912672,"lo":-7.80302443053343,"hi":-4.09975106772002,"p":0.0002145787830447},{"dataset":"dronerf","k":5,"contrast":"IRMF - EMD","d":6.949284629262629,"lo":5.50346459502562,"hi":8.39510466349963,"p":2.4962531126826004e-06},{"dataset":"dronerf","k":5,"contrast":"Linear IMF - EMD","d":13.7135985681342,"lo":11.50764065247077,"hi":15.919556483797631,"p":1.0764623974494536e-07},{"dataset":"dronerf","k":5,"contrast":"IRMF - Linear IMF","d":-6.7643139388715605,"lo":-8.023789409320619,"hi":-5.50483846842251,"p":6.313196720629922e-07},{"dataset":"dronerf","k":6,"contrast":"IRMF - EMD","d":7.778356196571461,"lo":6.37258873113807,"hi":9.18412366200484,"p":4.421805945913534e-07},{"dataset":"dronerf","k":6,"contrast":"Linear IMF - EMD","d":14.089081311784241,"lo":12.1319373100126,"hi":16.04622531355588,"p":1.6308993687796062e-08},{"dataset":"dronerf","k":6,"contrast":"IRMF - Linear IMF","d":-6.310725115212771,"lo":-7.405462243807221,"hi":-5.215987986618329,"p":2.738512358728872e-07},{"dataset":"birdclef2023","k":3,"contrast":"IRMF - EMD","d":-0.37876918323477,"lo":-2.39792590426195,"hi":1.6403875377924,"p":1.0},{"dataset":"birdclef2023","k":3,"contrast":"Linear IMF - EMD","d":-0.73276691867174,"lo":-2.5080982618476,"hi":1.04256442450411,"p":1.0},{"dataset":"birdclef2023","k":3,"contrast":"IRMF - Linear IMF","d":0.35399773543697,"lo":-0.8840216993071901,"hi":1.59201717018113,"p":1.0},{"dataset":"birdclef2023","k":4,"contrast":"IRMF - EMD","d":1.12707603055648,"lo":0.08367737000299999,"hi":2.1704746911099497,"p":0.5788600563848132},{"dataset":"birdclef2023","k":4,"contrast":"Linear IMF - EMD","d":0.52289363171209,"lo":-0.9256923211446,"hi":1.9714795845687898,"p":1.0},{"dataset":"birdclef2023","k":4,"contrast":"IRMF - Linear IMF","d":0.60418239884438,"lo":-0.6540262770849501,"hi":1.8623910747737198,"p":1.0},{"dataset":"birdclef2023","k":5,"contrast":"IRMF - EMD","d":1.35102639993335,"lo":-0.21796965687067,"hi":2.9200224567373803,"p":1.0},{"dataset":"birdclef2023","k":5,"contrast":"Linear IMF - EMD","d":1.40287766484782,"lo":0.007279223112918558,"hi":2.7984761065827297,"p":0.685564779575581},{"dataset":"birdclef2023","k":5,"contrast":"IRMF - Linear IMF","d":-0.05185126491446,"lo":-1.6493227882677701,"hi":1.54562025843883,"p":1.0},{"dataset":"birdclef2023","k":6,"contrast":"IRMF - EMD","d":2.0317387768370403,"lo":0.54147391939304,"hi":3.52200363428104,"p":0.2220187291641005},{"dataset":"birdclef2023","k":6,"contrast":"Linear IMF - EMD","d":1.97176802115657,"lo":0.5975764650765,"hi":3.3459595772366297,"p":0.1720093320087195},{"dataset":"birdclef2023","k":6,"contrast":"IRMF - Linear IMF","d":0.05997075568046,"lo":-1.34518875014734,"hi":1.46513026150827,"p":1.0},{"dataset":"esc50_animals","k":3,"contrast":"IRMF - EMD","d":3.8507755778842703,"lo":0.72990411722283,"hi":6.97164703854571,"p":0.3400884498873261},{"dataset":"esc50_animals","k":3,"contrast":"Linear IMF - EMD","d":3.51912210293091,"lo":0.16240010975882999,"hi":6.8758440961029805,"p":0.6174912395452412},{"dataset":"esc50_animals","k":3,"contrast":"IRMF - Linear IMF","d":0.33165347495336,"lo":-2.33250728307396,"hi":2.99581423298069,"p":1.0},{"dataset":"esc50_animals","k":4,"contrast":"IRMF - EMD","d":4.55791800811431,"lo":0.87403181567832,"hi":8.24180420055029,"p":0.3400884498873261},{"dataset":"esc50_animals","k":4,"contrast":"Linear IMF - EMD","d":5.27618574465502,"lo":2.30460945389623,"hi":8.247762035413821,"p":0.042230377556295},{"dataset":"esc50_animals","k":4,"contrast":"IRMF - Linear IMF","d":-0.71826773654071,"lo":-2.6506138677068702,"hi":1.2140783946254299,"p":1.0},{"dataset":"esc50_animals","k":5,"contrast":"IRMF - EMD","d":5.99344555758028,"lo":1.22934520013055,"hi":10.75754591503002,"p":0.3290115422375492},{"dataset":"esc50_animals","k":5,"contrast":"Linear IMF - EMD","d":6.20408594365451,"lo":2.9261100994757103,"hi":9.48206178783331,"p":0.0269474549468849},{"dataset":"esc50_animals","k":5,"contrast":"IRMF - Linear IMF","d":-0.21064038607423002,"lo":-3.37360671540856,"hi":2.9523259432601,"p":1.0},{"dataset":"esc50_animals","k":6,"contrast":"IRMF - EMD","d":7.21791934278338,"lo":4.0382421572330305,"hi":10.39759652833373,"p":0.0062102719027608},{"dataset":"esc50_animals","k":6,"contrast":"Linear IMF - EMD","d":7.197438151343589,"lo":5.46106159795134,"hi":8.93381470473584,"p":1.4924426040948322e-05},{"dataset":"esc50_animals","k":6,"contrast":"IRMF - Linear IMF","d":0.020481191439790002,"lo":-2.30171979037128,"hi":2.34268217325087,"p":1.0}],"familyC":[{"dataset":"synthetic","k":4,"contrast":"Linear IMF k_max=4 - full","d":-9.33333333333333,"lo":-14.444902334741998,"hi":-4.2217643319246605,"p":0.0046543593633808},{"dataset":"synthetic","k":8,"contrast":"Linear IMF k_max=8 - full","d":-7.622222222222221,"lo":-10.949754751083809,"hi":-4.29468969336063,"p":0.0009147871020885},{"dataset":"synthetic","k":12,"contrast":"Linear IMF k_max=12 - full","d":1.28888888888888,"lo":-1.0563214457502599,"hi":3.63409922352804,"p":0.3799030150044618},{"dataset":"synthetic","k":4,"contrast":"IRMF k_max=4 - full","d":-19.288888888888888,"lo":-24.8132242675219,"hi":-13.764553510255888,"p":2.0498090245889377e-05},{"dataset":"synthetic","k":8,"contrast":"IRMF k_max=8 - full","d":-8.53333333333333,"lo":-11.06776815379872,"hi":-5.99889851286793,"p":2.6492766323778363e-05},{"dataset":"synthetic","k":12,"contrast":"IRMF k_max=12 - full","d":1.55555555555555,"lo":-0.8662914660315401,"hi":3.9774025771426498,"p":0.3799030150044618},{"dataset":"synthetic","k":8,"contrast":"GD60 k_max=8 - GD60 full","d":-8.75555555555555,"lo":-11.48191416280809,"hi":-6.02919694830301,"p":3.7337048040641816e-05},{"dataset":"synthetic","k":8,"contrast":"GD60 k_max=8 - EMD K=8","d":25.66666666666666,"lo":20.748753591363787,"hi":30.58457974196953,"p":1.817620875148622e-07},{"dataset":"dronerf","k":4,"contrast":"Linear IMF k_max=4 - full","d":-15.6359490159419,"lo":-16.59220989817817,"hi":-14.679688133705628,"p":3.85305636972647e-14},{"dataset":"dronerf","k":8,"contrast":"Linear IMF k_max=8 - full","d":-12.1911075821038,"lo":-13.710968881033839,"hi":-10.67124628317376,"p":3.278032598088796e-10},{"dataset":"dronerf","k":12,"contrast":"Linear IMF k_max=12 - full","d":-6.73046888851575,"lo":-7.93999404304592,"hi":-5.520943733985581,"p":3.0092183380000663e-08},{"dataset":"dronerf","k":4,"contrast":"IRMF k_max=4 - full","d":-14.363009085189729,"lo":-15.950022580771309,"hi":-12.775995589608149,"p":8.059690317524637e-11},{"dataset":"dronerf","k":8,"contrast":"IRMF k_max=8 - full","d":-11.43619534004856,"lo":-12.593918727808969,"hi":-10.27847195228815,"p":2.949714573330337e-11},{"dataset":"dronerf","k":12,"contrast":"IRMF k_max=12 - full","d":-7.25288678237125,"lo":-8.600375628307901,"hi":-5.9053979364346105,"p":3.0696329443189894e-08},{"dataset":"dronerf","k":8,"contrast":"GD60 k_max=8 - GD60 full","d":-10.364362058945229,"lo":-11.15302226665917,"hi":-9.5757018512313,"p":6.899503167018352e-13},{"dataset":"dronerf","k":8,"contrast":"GD60 k_max=8 - EMD K=8","d":0.43570386582147,"lo":-0.83898498377724,"hi":1.7103927154201999,"p":0.4755863267287948},{"dataset":"birdclef2023","k":4,"contrast":"Linear IMF k_max=4 - full","d":-12.50695438884609,"lo":-14.24133189534616,"hi":-10.77257688234601,"p":2.034941573143154e-09},{"dataset":"birdclef2023","k":8,"contrast":"Linear IMF k_max=8 - full","d":-12.23121944403314,"lo":-13.810987011532818,"hi":-10.65145187653346,"p":1.0526786464299219e-09},{"dataset":"birdclef2023","k":12,"contrast":"Linear IMF k_max=12 - full","d":-5.73905662192062,"lo":-6.77166576068838,"hi":-4.70644748315286,"p":3.0563080294982704e-08},{"dataset":"birdclef2023","k":4,"contrast":"IRMF k_max=4 - full","d":-11.43398313127329,"lo":-12.97551760211673,"hi":-9.892448660429839,"p":1.6324506628817483e-09},{"dataset":"birdclef2023","k":8,"contrast":"IRMF k_max=8 - full","d":-10.60967943585148,"lo":-12.376032102518721,"hi":-8.84332676918424,"p":1.4965110910784072e-08},{"dataset":"birdclef2023","k":12,"contrast":"IRMF k_max=12 - full","d":-4.7254292172785,"lo":-6.09466893581404,"hi":-3.35618949874296,"p":6.685487542295275e-06},{"dataset":"birdclef2023","k":8,"contrast":"GD60 k_max=8 - GD60 full","d":-10.28360176325651,"lo":-11.92039482512295,"hi":-8.64680870139007,"p":1.0417387739597764e-08},{"dataset":"birdclef2023","k":8,"contrast":"GD60 k_max=8 - EMD K=8","d":-4.2310476780521205,"lo":-5.686704577166591,"hi":-2.77539077893766,"p":2.1846382248845712e-05},{"dataset":"esc50_animals","k":4,"contrast":"Linear IMF k_max=4 - full","d":-14.936579087679211,"lo":-19.01539935770428,"hi":-10.85775881765414,"p":8.476824910082265e-06},{"dataset":"esc50_animals","k":8,"contrast":"Linear IMF k_max=8 - full","d":-10.36643927025478,"lo":-14.06951934696836,"hi":-6.66335919354121,"p":0.0001292683996759},{"dataset":"esc50_animals","k":12,"contrast":"Linear IMF k_max=12 - full","d":-3.17895205830047,"lo":-6.54445900449199,"hi":0.18655488789103,"p":0.1245427553633633},{"dataset":"esc50_animals","k":4,"contrast":"IRMF k_max=4 - full","d":-15.156722897492388,"lo":-17.61006186738451,"hi":-12.703383927600271,"p":2.0756642829962233e-08},{"dataset":"esc50_animals","k":8,"contrast":"IRMF k_max=8 - full","d":-9.84063142706556,"lo":-11.67230623115121,"hi":-8.008956622979909,"p":1.1002611308445373e-07},{"dataset":"esc50_animals","k":12,"contrast":"IRMF k_max=12 - full","d":-4.2415738321245,"lo":-7.355000938558421,"hi":-1.12814672569058,"p":0.0334432151776667},{"dataset":"esc50_animals","k":8,"contrast":"GD60 k_max=8 - GD60 full","d":-9.745627580757601,"lo":-11.6584559856889,"hi":-7.8327991758263105,"p":1.8485347794443245e-07},{"dataset":"esc50_animals","k":8,"contrast":"GD60 k_max=8 - EMD K=8","d":1.22104294071604,"lo":-1.45966190760717,"hi":3.90174778903925,"p":0.3451810051442578}],"padding":{"dronerf":{"3":0.0,"4":0.0,"5":0.0,"6":0.0,"7":0.0,"8":0.0215833333333333},"birdclef2023":{"3":0.0,"4":0.0,"5":0.0009166666666666,"6":0.0181666666666666,"7":0.1531666666666666,"8":0.6193333333333333},"esc50_animals":{"3":0.0,"4":0.0,"5":0.0025490196078431,"6":0.0305882352941176,"7":0.2503921568627451,"8":0.7598039215686274},"synthetic":{"3":0.0,"4":0.0,"5":0.0,"6":0.002,"7":0.1786666666666666,"8":0.788}},"reading":{"synthetic":"Keeps the advantage: 4 of 4 required contrasts significant","dronerf":"Keeps the advantage: 4 of 4 required contrasts significant","birdclef2023":"Does not keep it: 0 of 4 required contrasts significant","esc50_animals":"Does not keep it: 3 of 4 required contrasts significant"},"readingText":"At equal counts, the IMF methods keep their advantage over EMD on DroneRF and synthetic. ESC-50 falls one test short of the pre-registered bar, and on BirdCLEF the advantage mostly disappears. EMD itself does best with only 3 or 4 IMFs, and pimf's default k_max = 8 costs about 10 points.","defaultGap":{"dronerf":11.629220072638674,"birdclef2023":6.1182056541142895,"esc50_animals":10.656714585520355,"synthetic":34.266666666666666}},"release":{"tiles":[{"label":"Gradient descent","value":"4 of 4","sub":"datasets bit-for-bit identical to 0.4.0","meta":"Stages that hit the cap now raise a warning"},{"label":"Newton vs our prototype","value":"97.3","unit":"%","sub":"of all channels match to within 1e-6","meta":"DroneRF 95.4%. The rest differ where the score is flat and both answers are valid"},{"label":"Classification change","value":"0.18","unit":" pp","sub":"largest release \u2212 prototype change, fixed classical model","meta":"No difference passes Holm correction"},{"label":"Newton speed, 0.5.1","value":"1.8\u20132.5\u00d7","unit":" faster","sub":"than 0.5.0 on a 40-frame sample per dataset","meta":"Still 2.6\u20133.4\u00d7 slower than our Numba prototype"}],"full":[{"dataset":"dronerf","channels":24000,"gt6":1103,"gt3":610,"relmax":0.1088312559901895,"frames_changed":944,"converged":true},{"dataset":"birdclef2023","channels":12000,"gt6":18,"gt3":7,"relmax":0.0598077133529488,"frames_changed":22,"converged":true},{"dataset":"esc50_animals","channels":5100,"gt6":11,"gt3":7,"relmax":0.0147652021319774,"frames_changed":12,"converged":true},{"dataset":"synthetic","channels":1500,"gt6":0,"gt3":0,"relmax":4.0700580714886146e-08,"frames_changed":2,"converged":true}],"classMain":[{"dataset":"dronerf","model":"Linear SVM","cells":[{"d":0.0073923750784388,"lo":-0.163728955866324,"hi":0.1785137060232016,"p":1.0},{"d":11.462730336498694,"lo":10.287781423905193,"hi":12.637679249092196,"p":1.2811070569529767e-10},{"d":11.455337961420252,"lo":10.27515523208754,"hi":12.635520690752964,"p":1.3728655349432907e-10},{"d":-7.557812242829217,"lo":-8.785638983372944,"hi":-6.32998550228549,"p":6.530926027141124e-08},{"d":-7.565204617907657,"lo":-8.798656114169953,"hi":-6.331753121645361,"p":6.843713600974654e-08}]},{"dataset":"birdclef2023","model":"Logistic regression","cells":[{"d":-0.0055870333749863,"lo":-0.0760499819627741,"hi":0.0648759152128014,"p":1.0},{"d":6.112618620739309,"lo":4.828781623160827,"hi":7.39645561831779,"p":8.546293200289228e-07},{"d":6.118205654114295,"lo":4.842652795528288,"hi":7.393758512700302,"p":7.881876679530874e-07},{"d":0.7069750479918439,"lo":-0.4698898336670307,"hi":1.883839929650719,"p":1.0},{"d":0.7125620813668302,"lo":-0.4582181811480836,"hi":1.8833423438817445,"p":1.0}]},{"dataset":"esc50_animals","model":"Linear SVM","cells":[{"d":0.0,"lo":0.0,"hi":0.0,"p":1.0},{"d":10.656714585520357,"lo":7.213903586432442,"hi":14.09952558460827,"p":7.813388386173485e-05},{"d":10.656714585520357,"lo":7.213903586432442,"hi":14.09952558460827,"p":7.813388386173485e-05},{"d":-0.2931035832429603,"lo":-3.992571203601102,"hi":3.4063640371151815,"p":1.0},{"d":-0.2931035832429603,"lo":-3.992571203601102,"hi":3.4063640371151815,"p":1.0}]},{"dataset":"synthetic","model":"Logistic regression","cells":[{"d":-0.1777777777777767,"lo":-0.5460854048850425,"hi":0.190529849329489,"p":1.0},{"d":34.088888888888896,"lo":29.38861921176963,"hi":38.78915856600816,"p":5.344313868688052e-09},{"d":34.26666666666668,"lo":29.535180821846787,"hi":38.99815251148657,"p":5.445900699425051e-09},{"d":11.488888888888894,"lo":7.67564753963697,"hi":15.302130238140816,"p":0.0002630994684774},{"d":11.66666666666667,"lo":7.7572160126016865,"hi":15.576117320731653,"p":0.0002644875239474}]},{"dataset":"dronerf","model":"LightGBM","cells":[{"d":-0.0680549084159324,"lo":-0.7409666543452191,"hi":0.6048568375133543,"p":1.0},null,null,null,null],"missing":"not rerun"}],"classAll":[{"dataset":"synthetic","model":"LDA","fs":"comp","contrast":"release \u2212 prototype","d":0.0,"lo":0.0,"hi":0.0,"p":1.0},{"dataset":"synthetic","model":"LDA","fs":"comp","contrast":"release IRMF \u2212 EMD","d":39.53333333333333,"lo":34.88915086475223,"hi":44.17751580191443,"p":7.004338350080388e-10},{"dataset":"synthetic","model":"LDA","fs":"comp","contrast":"prototype IRMF \u2212 EMD","d":39.53333333333333,"lo":34.88915086475223,"hi":44.17751580191443,"p":7.372987736926724e-10},{"dataset":"synthetic","model":"LDA","fs":"comp","contrast":"release IRMF \u2212 linear IMF","d":12.066666666666666,"lo":8.33515003550714,"hi":15.79818329782619,"p":0.0001314774619041},{"dataset":"synthetic","model":"LDA","fs":"comp","contrast":"prototype IRMF \u2212 linear IMF","d":12.066666666666666,"lo":8.33515003550714,"hi":15.79818329782619,"p":0.0001314774619041},{"dataset":"synthetic","model":"LDA","fs":"comp+log_scale","contrast":"release \u2212 prototype","d":0.0,"lo":0.0,"hi":0.0,"p":1.0},{"dataset":"synthetic","model":"LDA","fs":"comp+log_scale","contrast":"release IRMF \u2212 EMD","d":39.91111111111111,"lo":34.29833202735876,"hi":45.52389019486346,"p":5.71920774862134e-09},{"dataset":"synthetic","model":"LDA","fs":"comp+log_scale","contrast":"prototype IRMF \u2212 EMD","d":39.91111111111111,"lo":34.29833202735876,"hi":45.52389019486346,"p":6.127722587808579e-09},{"dataset":"synthetic","model":"LDA","fs":"comp+log_scale","contrast":"release IRMF \u2212 linear IMF","d":11.533333333333331,"lo":8.98071725525949,"hi":14.085949411407176,"p":2.8910042598662316e-06},{"dataset":"synthetic","model":"LDA","fs":"comp+log_scale","contrast":"prototype IRMF \u2212 linear IMF","d":11.533333333333331,"lo":8.98071725525949,"hi":14.085949411407176,"p":2.8910042598662316e-06},{"dataset":"synthetic","model":"Linear SVM","fs":"comp","contrast":"release \u2212 prototype","d":-0.0222222222222227,"lo":-0.1260989825342809,"hi":0.0816545380898354,"p":1.0},{"dataset":"synthetic","model":"Linear SVM","fs":"comp","contrast":"release IRMF \u2212 EMD","d":31.8,"lo":27.3960313688203,"hi":36.2039686311797,"p":5.344313868688052e-09},{"dataset":"synthetic","model":"Linear SVM","fs":"comp","contrast":"prototype IRMF \u2212 EMD","d":31.82222222222223,"lo":27.399741367831076,"hi":36.24470307661338,"p":5.585240408445354e-09},{"dataset":"synthetic","model":"Linear SVM","fs":"comp","contrast":"release IRMF \u2212 linear IMF","d":12.644444444444447,"lo":7.887938721851919,"hi":17.400950167036978,"p":0.0008205643142545},{"dataset":"synthetic","model":"Linear SVM","fs":"comp","contrast":"prototype IRMF \u2212 linear IMF","d":12.666666666666668,"lo":7.879794462189407,"hi":17.453538871143927,"p":0.0008593614447925},{"dataset":"synthetic","model":"Linear SVM","fs":"comp+log_scale","contrast":"release \u2212 prototype","d":0.0,"lo":0.0,"hi":0.0,"p":1.0},{"dataset":"synthetic","model":"Linear SVM","fs":"comp+log_scale","contrast":"release IRMF \u2212 EMD","d":32.24444444444445,"lo":27.2138851125399,"hi":37.27500377634899,"p":2.0851054121272572e-08},{"dataset":"synthetic","model":"Linear SVM","fs":"comp+log_scale","contrast":"prototype IRMF \u2212 EMD","d":32.24444444444445,"lo":27.2138851125399,"hi":37.27500377634899,"p":2.0851054121272572e-08},{"dataset":"synthetic","model":"Linear SVM","fs":"comp+log_scale","contrast":"release IRMF \u2212 linear IMF","d":13.244444444444447,"lo":8.857133330003569,"hi":17.631755558885327,"p":0.0002630994684774},{"dataset":"synthetic","model":"Linear SVM","fs":"comp+log_scale","contrast":"prototype IRMF \u2212 linear IMF","d":13.244444444444447,"lo":8.857133330003569,"hi":17.631755558885327,"p":0.0002484828313398},{"dataset":"synthetic","model":"Logistic regression","fs":"comp","contrast":"release \u2212 prototype","d":-0.1777777777777767,"lo":-0.5460854048850425,"hi":0.190529849329489,"p":1.0},{"dataset":"synthetic","model":"Logistic regression","fs":"comp","contrast":"release IRMF \u2212 EMD","d":34.088888888888896,"lo":29.38861921176963,"hi":38.78915856600816,"p":5.344313868688052e-09},{"dataset":"synthetic","model":"Logistic regression","fs":"comp","contrast":"prototype IRMF \u2212 EMD","d":34.26666666666668,"lo":29.535180821846787,"hi":38.99815251148657,"p":5.445900699425051e-09},{"dataset":"synthetic","model":"Logistic regression","fs":"comp","contrast":"release IRMF \u2212 linear IMF","d":11.488888888888894,"lo":7.67564753963697,"hi":15.302130238140816,"p":0.0002630994684774},{"dataset":"synthetic","model":"Logistic regression","fs":"comp","contrast":"prototype IRMF \u2212 linear IMF","d":11.66666666666667,"lo":7.7572160126016865,"hi":15.576117320731653,"p":0.0002644875239474},{"dataset":"synthetic","model":"Logistic regression","fs":"comp+log_scale","contrast":"release \u2212 prototype","d":0.0444444444444469,"lo":-0.2910078807404703,"hi":0.3798967696293642,"p":1.0},{"dataset":"synthetic","model":"Logistic regression","fs":"comp+log_scale","contrast":"release IRMF \u2212 EMD","d":34.511111111111106,"lo":30.00318797334588,"hi":39.01903424887634,"p":2.7533271011468966e-09},{"dataset":"synthetic","model":"Logistic regression","fs":"comp+log_scale","contrast":"prototype IRMF \u2212 EMD","d":34.466666666666676,"lo":29.875058708500564,"hi":39.058274624832784,"p":3.580008407899898e-09},{"dataset":"synthetic","model":"Logistic regression","fs":"comp+log_scale","contrast":"release IRMF \u2212 linear IMF","d":11.57777777777778,"lo":7.201019864431096,"hi":15.95453569112446,"p":0.0008205643142545},{"dataset":"synthetic","model":"Logistic regression","fs":"comp+log_scale","contrast":"prototype IRMF \u2212 linear IMF","d":11.533333333333331,"lo":7.150416297989468,"hi":15.9162503686772,"p":0.0008593614447925},{"dataset":"dronerf","model":"LDA","fs":"comp","contrast":"release \u2212 prototype","d":0.0440853377224152,"lo":-0.11562388322812,"hi":0.2037945586729505,"p":1.0},{"dataset":"dronerf","model":"LDA","fs":"comp","contrast":"release IRMF \u2212 EMD","d":10.950830502185497,"lo":9.867944881472964,"hi":12.03371612289803,"p":8.216428548208045e-11},{"dataset":"dronerf","model":"LDA","fs":"comp","contrast":"prototype IRMF \u2212 EMD","d":10.90674516446308,"lo":9.8250674660205,"hi":11.988422862905662,"p":8.54951507599016e-11},{"dataset":"dronerf","model":"LDA","fs":"comp","contrast":"release IRMF \u2212 linear IMF","d":-5.335361231251938,"lo":-7.1295179823882115,"hi":-3.541204480115665,"p":0.0002745745705471},{"dataset":"dronerf","model":"LDA","fs":"comp","contrast":"prototype IRMF \u2212 linear IMF","d":-5.3794465689743545,"lo":-7.120891597652906,"hi":-3.6380015402958024,"p":0.0002053830742564},{"dataset":"dronerf","model":"LDA","fs":"comp+log_scale","contrast":"release \u2212 prototype","d":0.0424002568831172,"lo":-0.0763848644017995,"hi":0.1611853781680339,"p":1.0},{"dataset":"dronerf","model":"LDA","fs":"comp+log_scale","contrast":"release IRMF \u2212 EMD","d":11.811319728462566,"lo":10.46423571684968,"hi":13.158403740075451,"p":4.94720005366836e-10},{"dataset":"dronerf","model":"LDA","fs":"comp+log_scale","contrast":"prototype IRMF \u2212 EMD","d":11.76891947157945,"lo":10.364014568609644,"hi":13.173824374549254,"p":8.692150855850191e-10},{"dataset":"dronerf","model":"LDA","fs":"comp+log_scale","contrast":"release IRMF \u2212 linear IMF","d":-2.2405374834466545,"lo":-3.7364748221234527,"hi":-0.7446001447698558,"p":0.0814417697152181},{"dataset":"dronerf","model":"LDA","fs":"comp+log_scale","contrast":"prototype IRMF \u2212 linear IMF","d":-2.2829377403297717,"lo":-3.8138703205041424,"hi":-0.752005160155401,"p":0.0837461368586955},{"dataset":"dronerf","model":"Linear SVM","fs":"comp","contrast":"release \u2212 prototype","d":0.0073923750784388,"lo":-0.163728955866324,"hi":0.1785137060232016,"p":1.0},{"dataset":"dronerf","model":"Linear SVM","fs":"comp","contrast":"release IRMF \u2212 EMD","d":11.462730336498694,"lo":10.287781423905193,"hi":12.637679249092196,"p":1.2811070569529767e-10},{"dataset":"dronerf","model":"Linear SVM","fs":"comp","contrast":"prototype IRMF \u2212 EMD","d":11.455337961420252,"lo":10.27515523208754,"hi":12.635520690752964,"p":1.3728655349432907e-10},{"dataset":"dronerf","model":"Linear SVM","fs":"comp","contrast":"release IRMF \u2212 linear IMF","d":-7.557812242829217,"lo":-8.785638983372944,"hi":-6.32998550228549,"p":6.530926027141124e-08},{"dataset":"dronerf","model":"Linear SVM","fs":"comp","contrast":"prototype IRMF \u2212 linear IMF","d":-7.565204617907657,"lo":-8.798656114169953,"hi":-6.331753121645361,"p":6.843713600974654e-08},{"dataset":"dronerf","model":"Linear SVM","fs":"comp+log_scale","contrast":"release \u2212 prototype","d":0.0486865470122022,"lo":-0.1467792206292989,"hi":0.2441523146537033,"p":1.0},{"dataset":"dronerf","model":"Linear SVM","fs":"comp+log_scale","contrast":"release IRMF \u2212 EMD","d":11.420272624312757,"lo":10.44012766817965,"hi":12.40041758044586,"p":1.2366893061700452e-11},{"dataset":"dronerf","model":"Linear SVM","fs":"comp+log_scale","contrast":"prototype IRMF \u2212 EMD","d":11.371586077300556,"lo":10.429385843923402,"hi":12.313786310677711,"p":7.628343255612095e-12},{"dataset":"dronerf","model":"Linear SVM","fs":"comp+log_scale","contrast":"release IRMF \u2212 linear IMF","d":-5.617672636722512,"lo":-6.767950028493732,"hi":-4.467395244951292,"p":1.153720323048015e-06},{"dataset":"dronerf","model":"Linear SVM","fs":"comp+log_scale","contrast":"prototype IRMF \u2212 linear IMF","d":-5.666359183734714,"lo":-6.786711392208043,"hi":-4.546006975261384,"p":7.434651461903228e-07},{"dataset":"dronerf","model":"Logistic regression","fs":"comp","contrast":"release \u2212 prototype","d":-0.0798618078380279,"lo":-0.2787227057764154,"hi":0.1189990901003595,"p":1.0},{"dataset":"dronerf","model":"Logistic regression","fs":"comp","contrast":"release IRMF \u2212 EMD","d":11.214210193022614,"lo":9.651734210817624,"hi":12.776686175227605,"p":5.416658462070058e-09},{"dataset":"dronerf","model":"Logistic regression","fs":"comp","contrast":"prototype IRMF \u2212 EMD","d":11.294072000860645,"lo":9.693595669217862,"hi":12.894548332503424,"p":6.327776859176794e-09},{"dataset":"dronerf","model":"Logistic regression","fs":"comp","contrast":"release IRMF \u2212 linear IMF","d":-6.688512589013053,"lo":-7.815202814255794,"hi":-5.561822363770311,"p":1.0020246382020977e-07},{"dataset":"dronerf","model":"Logistic regression","fs":"comp","contrast":"prototype IRMF \u2212 linear IMF","d":-6.608650781175027,"lo":-7.696158795091379,"hi":-5.5211427672586755,"p":7.397424331367875e-08},{"dataset":"dronerf","model":"Logistic regression","fs":"comp+log_scale","contrast":"release \u2212 prototype","d":-0.0115539744908262,"lo":-0.2006299165577409,"hi":0.1775219675760884,"p":1.0},{"dataset":"dronerf","model":"Logistic regression","fs":"comp+log_scale","contrast":"release IRMF \u2212 EMD","d":11.495272860904166,"lo":10.21602020169159,"hi":12.77452552011674,"p":3.728418929078341e-10},{"dataset":"dronerf","model":"Logistic regression","fs":"comp+log_scale","contrast":"prototype IRMF \u2212 EMD","d":11.50682683539499,"lo":10.168198128263768,"hi":12.845455542526215,"p":6.787007859976474e-10},{"dataset":"dronerf","model":"Logistic regression","fs":"comp+log_scale","contrast":"release IRMF \u2212 linear IMF","d":-4.533973431776458,"lo":-5.607489550790521,"hi":-3.4604573127623945,"p":6.267133822165637e-06},{"dataset":"dronerf","model":"Logistic regression","fs":"comp+log_scale","contrast":"prototype IRMF \u2212 linear IMF","d":-4.522419457285631,"lo":-5.612767597427411,"hi":-3.4320713171438513,"p":7.796112418720477e-06},{"dataset":"birdclef2023","model":"LDA","fs":"comp","contrast":"release \u2212 prototype","d":0.0,"lo":0.0,"hi":0.0,"p":1.0},{"dataset":"birdclef2023","model":"LDA","fs":"comp","contrast":"release IRMF \u2212 EMD","d":7.172561476934694,"lo":4.7816169630714755,"hi":9.563505990797912,"p":7.813388386173485e-05},{"dataset":"birdclef2023","model":"LDA","fs":"comp","contrast":"prototype IRMF \u2212 EMD","d":7.172561476934694,"lo":4.7816169630714755,"hi":9.563505990797912,"p":7.813388386173485e-05},{"dataset":"birdclef2023","model":"LDA","fs":"comp","contrast":"release IRMF \u2212 linear IMF","d":-0.214457675975932,"lo":-1.3056158535570137,"hi":0.8767005016051497,"p":1.0},{"dataset":"birdclef2023","model":"LDA","fs":"comp","contrast":"prototype IRMF \u2212 linear IMF","d":-0.214457675975932,"lo":-1.3056158535570137,"hi":0.8767005016051497,"p":1.0},{"dataset":"birdclef2023","model":"LDA","fs":"comp+log_scale","contrast":"release \u2212 prototype","d":7.408724514027891e-05,"lo":-0.0189382658031815,"hi":0.0190864402934621,"p":1.0},{"dataset":"birdclef2023","model":"LDA","fs":"comp+log_scale","contrast":"release IRMF \u2212 EMD","d":6.926689626609156,"lo":4.666048637630747,"hi":9.187330615587564,"p":7.813388386173485e-05},{"dataset":"birdclef2023","model":"LDA","fs":"comp+log_scale","contrast":"prototype IRMF \u2212 EMD","d":6.926615539364017,"lo":4.663755095358608,"hi":9.189475983369428,"p":7.813388386173485e-05},{"dataset":"birdclef2023","model":"LDA","fs":"comp+log_scale","contrast":"release IRMF \u2212 linear IMF","d":-0.2268515808239354,"lo":-1.2015972497930298,"hi":0.7478940881451589,"p":1.0},{"dataset":"birdclef2023","model":"LDA","fs":"comp+log_scale","contrast":"prototype IRMF \u2212 linear IMF","d":-0.2269256680690756,"lo":-1.2050887200438711,"hi":0.7512373839057198,"p":1.0},{"dataset":"birdclef2023","model":"Linear SVM","fs":"comp","contrast":"release \u2212 prototype","d":-0.0080540482720355,"lo":-0.0678017383628119,"hi":0.0516936418187407,"p":1.0},{"dataset":"birdclef2023","model":"Linear SVM","fs":"comp","contrast":"release IRMF \u2212 EMD","d":6.209049357609283,"lo":4.886969171758581,"hi":7.531129543459984,"p":8.546293200289228e-07},{"dataset":"birdclef2023","model":"Linear SVM","fs":"comp","contrast":"prototype IRMF \u2212 EMD","d":6.217103405881318,"lo":4.919321949785132,"hi":7.514884861977503,"p":7.881876679530874e-07},{"dataset":"birdclef2023","model":"Linear SVM","fs":"comp","contrast":"release IRMF \u2212 linear IMF","d":0.2336154076279395,"lo":-1.077356650571642,"hi":1.544587465827521,"p":1.0},{"dataset":"birdclef2023","model":"Linear SVM","fs":"comp","contrast":"prototype IRMF \u2212 linear IMF","d":0.2416694558999751,"lo":-1.0530126315671,"hi":1.5363515433670505,"p":1.0},{"dataset":"birdclef2023","model":"Linear SVM","fs":"comp+log_scale","contrast":"release \u2212 prototype","d":0.0002273756700695,"lo":-0.0265830004675592,"hi":0.0270377518076983,"p":1.0},{"dataset":"birdclef2023","model":"Linear SVM","fs":"comp+log_scale","contrast":"release IRMF \u2212 EMD","d":5.93786685571513,"lo":4.691842478818548,"hi":7.183891232611712,"p":8.546293200289228e-07},{"dataset":"birdclef2023","model":"Linear SVM","fs":"comp+log_scale","contrast":"prototype IRMF \u2212 EMD","d":5.9376394800450605,"lo":4.689138180532887,"hi":7.186140779557233,"p":7.881876679530874e-07},{"dataset":"birdclef2023","model":"Linear SVM","fs":"comp+log_scale","contrast":"release IRMF \u2212 linear IMF","d":0.3069791560473652,"lo":-0.8647241205917996,"hi":1.47868243268653,"p":1.0},{"dataset":"birdclef2023","model":"Linear SVM","fs":"comp+log_scale","contrast":"prototype IRMF \u2212 linear IMF","d":0.3067517803772956,"lo":-0.871401728858523,"hi":1.4849052896131143,"p":1.0},{"dataset":"birdclef2023","model":"Logistic regression","fs":"comp","contrast":"release \u2212 prototype","d":-0.0055870333749863,"lo":-0.0760499819627741,"hi":0.0648759152128014,"p":1.0},{"dataset":"birdclef2023","model":"Logistic regression","fs":"comp","contrast":"release IRMF \u2212 EMD","d":6.112618620739309,"lo":4.828781623160827,"hi":7.39645561831779,"p":8.546293200289228e-07},{"dataset":"birdclef2023","model":"Logistic regression","fs":"comp","contrast":"prototype IRMF \u2212 EMD","d":6.118205654114295,"lo":4.842652795528288,"hi":7.393758512700302,"p":7.881876679530874e-07},{"dataset":"birdclef2023","model":"Logistic regression","fs":"comp","contrast":"release IRMF \u2212 linear IMF","d":0.7069750479918439,"lo":-0.4698898336670307,"hi":1.883839929650719,"p":1.0},{"dataset":"birdclef2023","model":"Logistic regression","fs":"comp","contrast":"prototype IRMF \u2212 linear IMF","d":0.7125620813668302,"lo":-0.4582181811480836,"hi":1.8833423438817445,"p":1.0},{"dataset":"birdclef2023","model":"Logistic regression","fs":"comp+log_scale","contrast":"release \u2212 prototype","d":-0.0055118119771239,"lo":-0.0659231235417655,"hi":0.0548994995875176,"p":1.0},{"dataset":"birdclef2023","model":"Logistic regression","fs":"comp+log_scale","contrast":"release IRMF \u2212 EMD","d":5.927339879538877,"lo":4.320376060944925,"hi":7.53430369813283,"p":1.4033571620754492e-05},{"dataset":"birdclef2023","model":"Logistic regression","fs":"comp+log_scale","contrast":"prototype IRMF \u2212 EMD","d":5.932851691516003,"lo":4.315857500185009,"hi":7.549845882846997,"p":1.4921163338868742e-05},{"dataset":"birdclef2023","model":"Logistic regression","fs":"comp+log_scale","contrast":"release IRMF \u2212 linear IMF","d":0.698078996722522,"lo":-0.4068423433595382,"hi":1.8030003368045824,"p":1.0},{"dataset":"birdclef2023","model":"Logistic regression","fs":"comp+log_scale","contrast":"prototype IRMF \u2212 linear IMF","d":0.703590808699646,"lo":-0.4066419776981105,"hi":1.8138235950974024,"p":1.0},{"dataset":"esc50_animals","model":"LDA","fs":"comp","contrast":"release \u2212 prototype","d":-0.0066006600660066,"lo":-0.0374618580448366,"hi":0.0242605379128234,"p":1.0},{"dataset":"esc50_animals","model":"LDA","fs":"comp","contrast":"release IRMF \u2212 EMD","d":10.181160982207418,"lo":6.79730607922863,"hi":13.565015885186208,"p":7.813388386173485e-05},{"dataset":"esc50_animals","model":"LDA","fs":"comp","contrast":"prototype IRMF \u2212 EMD","d":10.187761642273424,"lo":6.813818669698879,"hi":13.561704614847969,"p":7.813388386173485e-05},{"dataset":"esc50_animals","model":"LDA","fs":"comp","contrast":"release IRMF \u2212 linear IMF","d":-1.143614264541044,"lo":-3.519579470792282,"hi":1.2323509417101943,"p":1.0},{"dataset":"esc50_animals","model":"LDA","fs":"comp","contrast":"prototype IRMF \u2212 linear IMF","d":-1.1370136044750374,"lo":-3.503616307779009,"hi":1.2295890988289335,"p":1.0},{"dataset":"esc50_animals","model":"LDA","fs":"comp+log_scale","contrast":"release \u2212 prototype","d":0.0,"lo":0.0,"hi":0.0,"p":1.0},{"dataset":"esc50_animals","model":"LDA","fs":"comp+log_scale","contrast":"release IRMF \u2212 EMD","d":10.00392657284447,"lo":6.984487213764648,"hi":13.023365931924294,"p":4.229255796060568e-05},{"dataset":"esc50_animals","model":"LDA","fs":"comp+log_scale","contrast":"prototype IRMF \u2212 EMD","d":10.00392657284447,"lo":6.984487213764648,"hi":13.023365931924294,"p":4.229255796060568e-05},{"dataset":"esc50_animals","model":"LDA","fs":"comp+log_scale","contrast":"release IRMF \u2212 linear IMF","d":-1.0596131598733471,"lo":-3.677983437552479,"hi":1.5587571178057844,"p":1.0},{"dataset":"esc50_animals","model":"LDA","fs":"comp+log_scale","contrast":"prototype IRMF \u2212 linear IMF","d":-1.0596131598733471,"lo":-3.677983437552479,"hi":1.5587571178057844,"p":1.0},{"dataset":"esc50_animals","model":"Linear SVM","fs":"comp","contrast":"release \u2212 prototype","d":0.0,"lo":0.0,"hi":0.0,"p":1.0},{"dataset":"esc50_animals","model":"Linear SVM","fs":"comp","contrast":"release IRMF \u2212 EMD","d":10.656714585520357,"lo":7.213903586432442,"hi":14.09952558460827,"p":7.813388386173485e-05},{"dataset":"esc50_animals","model":"Linear SVM","fs":"comp","contrast":"prototype IRMF \u2212 EMD","d":10.656714585520357,"lo":7.213903586432442,"hi":14.09952558460827,"p":7.813388386173485e-05},{"dataset":"esc50_animals","model":"Linear SVM","fs":"comp","contrast":"release IRMF \u2212 linear IMF","d":-0.2931035832429603,"lo":-3.992571203601102,"hi":3.4063640371151815,"p":1.0},{"dataset":"esc50_animals","model":"Linear SVM","fs":"comp","contrast":"prototype IRMF \u2212 linear IMF","d":-0.2931035832429603,"lo":-3.992571203601102,"hi":3.4063640371151815,"p":1.0},{"dataset":"esc50_animals","model":"Linear SVM","fs":"comp+log_scale","contrast":"release \u2212 prototype","d":0.0066666666666666,"lo":-0.0245031432919517,"hi":0.037836476625285,"p":1.0},{"dataset":"esc50_animals","model":"Linear SVM","fs":"comp+log_scale","contrast":"release IRMF \u2212 EMD","d":10.06194995718104,"lo":6.561920509381124,"hi":13.561979404980956,"p":7.813388386173485e-05},{"dataset":"esc50_animals","model":"Linear SVM","fs":"comp+log_scale","contrast":"prototype IRMF \u2212 EMD","d":10.055283290514373,"lo":6.541617648527839,"hi":13.568948932500907,"p":7.813388386173485e-05},{"dataset":"esc50_animals","model":"Linear SVM","fs":"comp+log_scale","contrast":"release IRMF \u2212 linear IMF","d":-0.8250019602352965,"lo":-3.2958874431430445,"hi":1.645883522672452,"p":1.0},{"dataset":"esc50_animals","model":"Linear SVM","fs":"comp+log_scale","contrast":"prototype IRMF \u2212 linear IMF","d":-0.8316686269019632,"lo":-3.3092671855697273,"hi":1.6459299317658007,"p":1.0},{"dataset":"esc50_animals","model":"Logistic regression","fs":"comp","contrast":"release \u2212 prototype","d":-0.2233592518413056,"lo":-1.1876213753086526,"hi":0.7409028716260414,"p":1.0},{"dataset":"esc50_animals","model":"Logistic regression","fs":"comp","contrast":"release IRMF \u2212 EMD","d":11.417073592601664,"lo":7.723143654202431,"hi":15.1110035310009,"p":7.813388386173485e-05},{"dataset":"esc50_animals","model":"Logistic regression","fs":"comp","contrast":"prototype IRMF \u2212 EMD","d":11.640432844442971,"lo":7.764895972906724,"hi":15.515969715979224,"p":7.813388386173485e-05},{"dataset":"esc50_animals","model":"Logistic regression","fs":"comp","contrast":"release IRMF \u2212 linear IMF","d":-0.0778481839498757,"lo":-2.4000964055885134,"hi":2.2444000376887625,"p":1.0},{"dataset":"esc50_animals","model":"Logistic regression","fs":"comp","contrast":"prototype IRMF \u2212 linear IMF","d":0.1455110678914299,"lo":-2.327435977439513,"hi":2.6184581132223723,"p":1.0},{"dataset":"esc50_animals","model":"Logistic regression","fs":"comp+log_scale","contrast":"release \u2212 prototype","d":-0.0225600285293895,"lo":-0.0703809045526779,"hi":0.0252608474938987,"p":1.0},{"dataset":"esc50_animals","model":"Logistic regression","fs":"comp+log_scale","contrast":"release IRMF \u2212 EMD","d":10.554958477025297,"lo":6.985013340502191,"hi":14.124903613548398,"p":7.813388386173485e-05},{"dataset":"esc50_animals","model":"Logistic regression","fs":"comp+log_scale","contrast":"prototype IRMF \u2212 EMD","d":10.577518505554684,"lo":6.99234255269086,"hi":14.162694458418509,"p":7.813388386173485e-05},{"dataset":"esc50_animals","model":"Logistic regression","fs":"comp+log_scale","contrast":"release IRMF \u2212 linear IMF","d":-0.2547079685870801,"lo":-2.1761227748324528,"hi":1.6667068376582923,"p":1.0},{"dataset":"esc50_animals","model":"Logistic regression","fs":"comp+log_scale","contrast":"prototype IRMF \u2212 linear IMF","d":-0.2321479400576905,"lo":-2.173597577947933,"hi":1.709301697832552,"p":1.0},{"dataset":"dronerf","model":"LightGBM","fs":"comp","contrast":"release \u2212 prototype","d":-0.0680549084159324,"lo":-0.7409666543452191,"hi":0.6048568375133543,"p":1.0},{"dataset":"dronerf","model":"LightGBM","fs":"comp+log_scale","contrast":"release \u2212 prototype","d":-0.204804472329599,"lo":-0.8537594324091048,"hi":0.4441504877499068,"p":1.0}],"classNote":"Both feature sets went through the study's unchanged classical runner on the same 15 grouped splits. Cells show paired differences in balanced-accuracy points with 95% intervals and Holm p, features without log_scale. 'Release' is pimf 0.5.0's Newton, 'prototype' our Numba solver. The runner tunes C for logistic regression and the linear SVM on every dataset. The main study fixed DroneRF's linear SVM at C = 0.1 to save time, so DroneRF's absolute scores here can differ from the main study. Release and prototype use the same tuning, so their difference does not depend on it.","speed":[{"dataset":"dronerf","newton":1.044393499999991,"proto":0.1064279999999975,"gd":0.8571139999999993},{"dataset":"birdclef2023","newton":0.5513024999999914,"proto":0.0616555000000005,"gd":0.9946194999999988},{"dataset":"esc50_animals","newton":0.5610269999999957,"proto":0.0649729999999948,"gd":1.327660999999992},{"dataset":"synthetic","newton":0.1299109999999999,"proto":0.0151569999999998,"gd":0.1423180000000001}],"next":{"version":"0.5.1","base":"0.5.0","full":[{"dataset":"dronerf","channels":24000,"features":true,"diagnostics":true,"converged":true},{"dataset":"birdclef2023","channels":12000,"features":true,"diagnostics":true,"converged":true},{"dataset":"esc50_animals","channels":5100,"features":true,"diagnostics":true,"converged":true},{"dataset":"synthetic","channels":1500,"features":true,"diagnostics":true,"converged":true}],"speed":[{"dataset":"dronerf","proto":0.14783,"old":0.9446540000000004,"new":0.3811135000000005,"speedup":2.488143036744564,"slowdown":2.573352290713818,"identical":true,"gd":0.7556370000000001},{"dataset":"birdclef2023","proto":0.0748319999999995,"old":0.5058690000000006,"new":0.2032749999999995,"speedup":2.481919005402201,"slowdown":2.711710591112552,"identical":true,"gd":0.8583195000000075},{"dataset":"esc50_animals","proto":0.0883434999999995,"old":0.555817,"new":0.2310999999999995,"speedup":2.321633044692019,"slowdown":2.723085088728501,"identical":true,"gd":1.2445515},{"dataset":"synthetic","proto":0.0186289999999995,"old":0.122051,"new":0.068007,"speedup":1.8314492956015145,"slowdown":3.4117474188200916,"identical":true,"gd":0.1297505000000001}],"note":"pimf 0.5.1 only speeds up the Newton solver and should return 0.5.0's results bit for bit. We reran it on every frame and compared its feature tables with 0.5.0's byte by byte. They match on all 4 datasets (42,600 channels), as do the per-channel iteration counts, fallbacks and differences from our prototype. Same features with the same runner, splits and seeds give the same scores, so the classification table above holds for 0.5.1 as well."}},"robustness":{"status":"final","paragraphs":["Spikes were added to the held-out test signals only. Every model was trained on clean data, then scored on the same test fold clean and contaminated. The question is whether IRMF's robust fitting loses less accuracy than linear IMF when that happens.","The pre-registered measure is the change in the IRMF \u2212 linear IMF gap from clean to contaminated test data. A positive value means contamination hurt linear IMF more than IRMF. Robustness counts as helping on a dataset if that change is positive and significant at the heaviest spike rate (4% of samples), and smaller under Gaussian noise of the same power."],"datasets":[{"dataset":"dronerf","classifier":"Linear SVM","curves":{"irmf":{"clean":50.06120684249271,"impulse1_0.002":17.23829137540193,"impulse1_0.01":14.627808643190631,"impulse1_0.04":14.481349747561707,"impulse2_0.002":17.00437978318762,"impulse2_0.01":15.017434164165469,"impulse2_0.04":14.426399032790286,"gauss_0.002":21.38299894496717,"gauss_0.01":15.535588090488142,"gauss_0.04":12.754839060946994},"linear":{"clean":57.87154626719292,"impulse1_0.002":15.360232351180919,"impulse1_0.01":11.585053261865436,"impulse1_0.04":11.654062640448933,"impulse2_0.002":15.683614168644311,"impulse2_0.01":11.637369863306525,"impulse2_0.04":12.111972952049825,"gauss_0.002":21.87992279472712,"gauss_0.01":14.607039827582394,"gauss_0.04":12.863660719196979},"emd":{"clean":38.81914181740147,"impulse1_0.002":18.866748899302433,"impulse1_0.01":13.574604845549276,"impulse1_0.04":11.961768362803351,"impulse2_0.002":19.28304016309004,"impulse2_0.01":13.22760562657748,"impulse2_0.04":12.068526113545671,"gauss_0.002":20.627037501993577,"gauss_0.01":14.616909651759558,"gauss_0.04":12.97394853424119},"raw":{"clean":34.878814736846564,"impulse1_0.002":17.0814414718565,"impulse1_0.01":13.001287558128466,"impulse1_0.04":12.994005733331587,"impulse2_0.002":16.8180401628917,"impulse2_0.01":11.85685151125934,"impulse2_0.04":12.197511919752262,"gauss_0.002":12.369993325999326,"gauss_0.01":11.583268434324276,"gauss_0.04":11.38783559602953}},"tests":[{"condition":"impulse1_0.002","comparator":"imf_linear_a1.41","d":9.688398448921207,"lo":6.472249034920924,"hi":12.90454786292149,"p":0.000179419427804,"pRaw":1.495161898366751e-05,"family":"Primary","corrected":true},{"condition":"impulse1_0.01","comparator":"imf_linear_a1.41","d":10.853094806025396,"lo":7.6135605665277355,"hi":14.092629045523056,"p":6.537071617427999e-05,"pRaw":4.669336869591428e-06,"family":"Primary","corrected":true},{"condition":"impulse1_0.04","comparator":"imf_linear_a1.41","d":10.637626531812971,"lo":7.998391120283609,"hi":13.276861943342332,"p":8.788969309229158e-06,"pRaw":5.493105818268223e-07,"family":"Primary","corrected":true},{"condition":"impulse2_0.002","comparator":"imf_linear_a1.41","d":9.13110503924351,"lo":6.316753879030393,"hi":11.945456199456626,"p":8.671702138305446e-05,"pRaw":6.6705401063888046e-06,"family":"Primary","corrected":true},{"condition":"impulse2_0.01","comparator":"imf_linear_a1.41","d":11.190403725559147,"lo":9.27259785962774,"hi":13.108209591490555,"p":9.80075563824455e-08,"pRaw":5.444864243469195e-09,"family":"Primary","corrected":true},{"condition":"impulse2_0.04","comparator":"imf_linear_a1.41","d":10.12476550544066,"lo":7.756635218629822,"hi":12.492895792251497,"p":4.594347779022225e-06,"pRaw":2.7025575170718974e-07,"family":"Primary","corrected":true},{"condition":"impulse1_0.002","comparator":"emd","d":-12.870522548991747,"lo":-15.261964258331433,"hi":-10.47908083965206,"p":2.459266364446013e-07,"pRaw":1.537041477778758e-08,"family":"S1","corrected":true},{"condition":"impulse1_0.01","comparator":"emd","d":-10.188861227449888,"lo":-12.474685468988028,"hi":-7.903036985911746,"p":2.2762285212086373e-06,"pRaw":1.6258775151490267e-07,"family":"S1","corrected":true},{"condition":"impulse1_0.04","comparator":"emd","d":-8.722483640332888,"lo":-10.722652465605037,"hi":-6.722314815060737,"p":2.762148293993631e-06,"pRaw":2.124729456918178e-07,"family":"S1","corrected":true},{"condition":"impulse2_0.002","comparator":"emd","d":-13.52072540499366,"lo":-16.090335318294596,"hi":-10.951115491692727,"p":3.072774146544919e-07,"pRaw":2.0485160976966126e-08,"family":"S1","corrected":true},{"condition":"impulse2_0.01","comparator":"emd","d":-9.452236487503255,"lo":-10.732749629407303,"hi":-8.171723345599206,"p":4.4758922174001894e-09,"pRaw":2.4866067874445494e-10,"family":"S1","corrected":true},{"condition":"impulse2_0.04","comparator":"emd","d":-8.884192105846632,"lo":-10.526122718978456,"hi":-7.242261492714808,"p":2.4403467748705053e-07,"pRaw":1.4354981028650032e-08,"family":"S1","corrected":true},{"condition":"gauss_0.002","comparator":"imf_linear_a1.41","d":7.313415574940249,"lo":4.9211685345180385,"hi":9.70566261536246,"p":0.000306355152416,"pRaw":1.2764798017334891e-05,"family":"S2","corrected":true},{"condition":"gauss_0.01","comparator":"imf_linear_a1.41","d":8.738887687605944,"lo":6.576187945392295,"hi":10.901587429819593,"p":1.3326423903540056e-05,"pRaw":5.330569561416022e-07,"family":"S2","corrected":true},{"condition":"gauss_0.04","comparator":"imf_linear_a1.41","d":7.7015177664502135,"lo":6.5238275500288365,"hi":8.879207982871591,"p":3.3296246722938857e-08,"pRaw":1.2331943230718096e-09,"family":"S2","corrected":true}],"stability":[{"condition":"impulse1_0.002","method":"raw","median":2.8300172959657215,"p95":9.827207346391871},{"condition":"impulse1_0.002","method":"emd","median":1.081479425141687,"p95":1.9244896064261159},{"condition":"impulse1_0.002","method":"linear","median":1.2565078003749257,"p95":3.291375129763013},{"condition":"impulse1_0.002","method":"irmf","median":0.48431566674681825,"p95":0.8437934088589331},{"condition":"impulse1_0.01","method":"raw","median":6.08962940302147,"p95":10.329807201527773},{"condition":"impulse1_0.01","method":"emd","median":2.0629867747754203,"p95":2.964188915816271},{"condition":"impulse1_0.01","method":"linear","median":2.2298527870049147,"p95":3.424569276331898},{"condition":"impulse1_0.01","method":"irmf","median":0.8024546680304795,"p95":1.1275275070460633},{"condition":"impulse1_0.04","method":"raw","median":5.003503045021742,"p95":6.657858850759216},{"condition":"impulse1_0.04","method":"emd","median":2.952641825485967,"p95":4.125171197376623},{"condition":"impulse1_0.04","method":"linear","median":2.148346349517598,"p95":2.6971403184131812},{"condition":"impulse1_0.04","method":"irmf","median":1.0681608121081698,"p95":1.4066851344363784},{"condition":"impulse2_0.002","method":"raw","median":2.426840888497437,"p95":9.345356306349489},{"condition":"impulse2_0.002","method":"emd","median":1.0768648116398625,"p95":1.9246407477630965},{"condition":"impulse2_0.002","method":"linear","median":1.1243350049830307,"p95":3.1452796378414605},{"condition":"impulse2_0.002","method":"irmf","median":0.4538044291062252,"p95":0.7975799902219476},{"condition":"impulse2_0.01","method":"raw","median":4.263275074804855,"p95":9.121944840253294},{"condition":"impulse2_0.01","method":"emd","median":2.030662320105465,"p95":2.9236449067929335},{"condition":"impulse2_0.01","method":"linear","median":1.7117954998000862,"p95":3.0467949606134694},{"condition":"impulse2_0.01","method":"irmf","median":0.6847424995754117,"p95":0.9827760553327827},{"condition":"impulse2_0.04","method":"raw","median":2.920074457429848,"p95":4.900745301255345},{"condition":"impulse2_0.04","method":"emd","median":2.8695690371399585,"p95":4.040578063026217},{"condition":"impulse2_0.04","method":"linear","median":1.5724517276584415,"p95":2.1862080765329885},{"condition":"impulse2_0.04","method":"irmf","median":0.8505111061498616,"p95":1.157736016739708},{"condition":"gauss_0.002","method":"raw","median":0.3429868234334864,"p95":0.5278663131344713},{"condition":"gauss_0.002","method":"emd","median":0.61145021910429,"p95":0.9294224752416346},{"condition":"gauss_0.002","method":"linear","median":0.4754224202243962,"p95":0.7094597850774038},{"condition":"gauss_0.002","method":"irmf","median":0.4256366186333793,"p95":0.7004344496969211},{"condition":"gauss_0.01","method":"raw","median":0.568470399452756,"p95":0.8635875510997443},{"condition":"gauss_0.01","method":"emd","median":0.6843719377850659,"p95":1.0550969096050966},{"condition":"gauss_0.01","method":"linear","median":0.629397904089489,"p95":0.8913979207398424},{"condition":"gauss_0.01","method":"irmf","median":0.5678163998589696,"p95":0.8735541541222456},{"condition":"gauss_0.04","method":"raw","median":0.684060854120674,"p95":1.0211441769389202},{"condition":"gauss_0.04","method":"emd","median":0.7279956366030427,"p95":1.1318943127216343},{"condition":"gauss_0.04","method":"linear","median":0.7029775594395502,"p95":0.9940300312975162},{"condition":"gauss_0.04","method":"irmf","median":0.6327639201356701,"p95":0.9751012842495296}],"newtonCaps":0,"hRatio":{"impulse1_0.002":1.0,"impulse1_0.01":1.0,"impulse1_0.04":1.0583541400606968,"impulse2_0.002":1.0,"impulse2_0.01":1.0,"impulse2_0.04":1.0576867671025267,"gauss_0.002":1.0279549948996354,"gauss_0.01":1.0063159528290528,"gauss_0.04":0.9926869471421674},"chance":10.0,"final":false,"tag":"main tests complete","reading":{"met":true,"text":"Meets the pre-registered rule. But every method falls to 12\u201314% balanced accuracy at 4% spikes, against 10% chance, and none stays above 19% even at 0.2%. So the gap change mostly measures how much each method had to lose.","impulse1":10.637626531812971,"impulse2":10.12476550544066,"gauss":7.7015177664502135,"floor":true,"mild":19.28304016309004}},{"dataset":"birdclef2023","classifier":"Logistic regression","curves":{"irmf":{"clean":49.70445765414417,"impulse1_0.002":24.677622868954607,"impulse1_0.01":18.785655806167092,"impulse1_0.04":14.35681026740905,"impulse2_0.002":25.22781491667797,"impulse2_0.01":18.612221354297446,"impulse2_0.04":15.053787949398778,"gauss_0.002":30.512757278289598,"gauss_0.01":15.935801187659582,"gauss_0.04":9.48358960704022},"linear":{"clean":48.92114044609214,"impulse1_0.002":17.418357653855317,"impulse1_0.01":10.866174430615086,"impulse1_0.04":8.525034622915932,"impulse2_0.002":18.049470376456828,"impulse2_0.01":11.91644341756402,"impulse2_0.04":9.49588443109727,"gauss_0.002":32.95057897947461,"gauss_0.01":17.110261820330145,"gauss_0.04":9.421344801624198},"emd":{"clean":43.217764952628976,"impulse1_0.002":19.463316407635553,"impulse1_0.01":9.067800659995264,"impulse1_0.04":5.706069986617276,"impulse2_0.002":19.34510100423057,"impulse2_0.01":9.180120421092823,"impulse2_0.04":6.009195971452165,"gauss_0.002":16.273391350313798,"gauss_0.01":8.915549229431324,"gauss_0.04":6.550736614794676},"raw":{"clean":37.58955956909374,"impulse1_0.002":14.326853897098243,"impulse1_0.01":7.926952688981556,"impulse1_0.04":7.47055005765356,"impulse2_0.002":14.285693492601004,"impulse2_0.01":9.005408463841473,"impulse2_0.04":7.9263708810463696,"gauss_0.002":13.758814836721372,"gauss_0.01":9.386997108359182,"gauss_0.04":6.775538951289746}},"tests":[{"condition":"impulse1_0.002","comparator":"imf_linear_a1.41","d":6.475948007047262,"lo":3.527914023708381,"hi":9.423981990386142,"p":0.0036726918327401,"pRaw":0.00033388107570364817,"family":"Primary","corrected":true},{"condition":"impulse1_0.01","comparator":"imf_linear_a1.41","d":7.136164167499978,"lo":3.2083567302718734,"hi":11.063971604728083,"p":0.0145092764235743,"pRaw":0.001612141824841598,"family":"Primary","corrected":true},{"condition":"impulse1_0.04","comparator":"imf_linear_a1.41","d":5.048458436441091,"lo":1.240301898486377,"hi":8.856614974395807,"p":0.0781973153479988,"pRaw":0.01301993263197755,"family":"Primary","corrected":true},{"condition":"impulse2_0.002","comparator":"imf_linear_a1.41","d":6.395027332169116,"lo":4.498245338626246,"hi":8.291809325711986,"p":6.523437434550093e-05,"pRaw":4.3489582897000626e-06,"family":"Primary","corrected":true},{"condition":"impulse2_0.01","comparator":"imf_linear_a1.41","d":5.912460728681401,"lo":3.022136081593815,"hi":8.802785375768988,"p":0.0061968287070536,"pRaw":0.0006196828707053692,"family":"Primary","corrected":true},{"condition":"impulse2_0.04","comparator":"imf_linear_a1.41","d":4.774586310249481,"lo":1.2686467743961858,"hi":8.280525846102778,"p":0.0781973153479988,"pRaw":0.011171045049714114,"family":"Primary","corrected":true},{"condition":"impulse1_0.002","comparator":"emd","d":-1.2723862401961317,"lo":-3.615837566060398,"hi":1.0710650856681345,"p":0.5330796124856384,"pRaw":0.2636739229932018,"family":"S1","corrected":true},{"condition":"impulse1_0.01","comparator":"emd","d":3.2311624446566407,"lo":-0.29407196815421366,"hi":6.756396857467495,"p":0.4031257829606367,"pRaw":0.06946730377111095,"family":"S1","corrected":true},{"condition":"impulse1_0.04","comparator":"emd","d":2.1640475792765885,"lo":-1.1061784464919875,"hi":5.434273605045164,"p":0.5330796124856384,"pRaw":0.17769320416187948,"family":"S1","corrected":true},{"condition":"impulse2_0.002","comparator":"emd","d":-0.6039787890677846,"lo":-2.899233065770369,"hi":1.6912754876348,"p":0.5814226929137415,"pRaw":0.5814226929137415,"family":"S1","corrected":true},{"condition":"impulse2_0.01","comparator":"emd","d":2.9454082316894405,"lo":-0.2383046662708832,"hi":6.129121129649764,"p":0.4031257829606367,"pRaw":0.06718763049343945,"family":"S1","corrected":true},{"condition":"impulse2_0.04","comparator":"emd","d":2.557899276431428,"lo":-0.635801001219348,"hi":5.751599554082204,"p":0.4314395397876293,"pRaw":0.10785988494690733,"family":"S1","corrected":true},{"condition":"gauss_0.002","comparator":"imf_linear_a1.41","d":-3.2211389092370366,"lo":-5.318687716190995,"hi":-1.1235901022830785,"p":0.0905907851983257,"pRaw":0.005328869717548572,"family":"S2","corrected":true},{"condition":"gauss_0.01","comparator":"imf_linear_a1.41","d":-1.9577778407225914,"lo":-3.600188595026638,"hi":-0.31536708641854494,"p":0.2738704599677337,"pRaw":0.022822538330644477,"family":"S2","corrected":true},{"condition":"gauss_0.04","comparator":"imf_linear_a1.41","d":-0.7210724026360052,"lo":-1.7795804895855982,"hi":0.33743568431358784,"p":1.0,"pRaw":0.16607721718319465,"family":"S2","corrected":true}],"stability":[{"condition":"impulse1_0.002","method":"raw","median":1.3825538204700212,"p95":8.287259300082715},{"condition":"impulse1_0.002","method":"emd","median":0.7534269613655531,"p95":1.4364632102967694},{"condition":"impulse1_0.002","method":"linear","median":0.850607362378478,"p95":2.0298356546545286},{"condition":"impulse1_0.002","method":"irmf","median":0.2578087499321632,"p95":0.6935003951922784},{"condition":"impulse1_0.01","method":"raw","median":4.318018933146033,"p95":8.853353248613047},{"condition":"impulse1_0.01","method":"emd","median":1.1834102716200776,"p95":2.082902453422094},{"condition":"impulse1_0.01","method":"linear","median":1.1217461629648793,"p95":1.9605268023552964},{"condition":"impulse1_0.01","method":"irmf","median":0.36956973553505956,"p95":0.9492940387599965},{"condition":"impulse1_0.04","method":"raw","median":4.072958762768408,"p95":5.937780901433738},{"condition":"impulse1_0.04","method":"emd","median":1.601992088652623,"p95":2.6709131129197052},{"condition":"impulse1_0.04","method":"linear","median":1.1666810768673281,"p95":1.892965590180184},{"condition":"impulse1_0.04","method":"irmf","median":0.5818926299567294,"p95":1.216033079832295},{"condition":"impulse2_0.002","method":"raw","median":1.2619881627481304,"p95":7.868021248829992},{"condition":"impulse2_0.002","method":"emd","median":0.7495789182660566,"p95":1.4280703040789378},{"condition":"impulse2_0.002","method":"linear","median":0.7668570363472421,"p95":1.9785869666978715},{"condition":"impulse2_0.002","method":"irmf","median":0.2390750283672935,"p95":0.6772723053778016},{"condition":"impulse2_0.01","method":"raw","median":3.337069483765518,"p95":8.071092175870714},{"condition":"impulse2_0.01","method":"emd","median":1.1801822392215313,"p95":2.0612420019370776},{"condition":"impulse2_0.01","method":"linear","median":0.9301365394676566,"p95":1.7853682799713453},{"condition":"impulse2_0.01","method":"irmf","median":0.3285126650313264,"p95":0.9053373695000269},{"condition":"impulse2_0.04","method":"raw","median":2.900824753379431,"p95":4.878042092049161},{"condition":"impulse2_0.04","method":"emd","median":1.599721889696393,"p95":2.6317985379665876},{"condition":"impulse2_0.04","method":"linear","median":0.9787886593134426,"p95":1.682792481596732},{"condition":"impulse2_0.04","method":"irmf","median":0.5146964819666722,"p95":1.1467578694547464},{"condition":"gauss_0.002","method":"raw","median":0.6267625728725074,"p95":1.180536908799518},{"condition":"gauss_0.002","method":"emd","median":1.0632943249062283,"p95":1.7511423851389862},{"condition":"gauss_0.002","method":"linear","median":0.44955383336512,"p95":1.054117652011818},{"condition":"gauss_0.002","method":"irmf","median":0.4375340844706314,"p95":1.0223806788293544},{"condition":"gauss_0.01","method":"raw","median":1.03172068733033,"p95":1.6566357071280233},{"condition":"gauss_0.01","method":"emd","median":1.2956288810334577,"p95":1.9642235057705721},{"condition":"gauss_0.01","method":"linear","median":0.6208506107072345,"p95":1.2206367788708155},{"condition":"gauss_0.01","method":"irmf","median":0.6125750328290271,"p95":1.1923950592155628},{"condition":"gauss_0.04","method":"raw","median":1.2258353026822277,"p95":1.844739671364767},{"condition":"gauss_0.04","method":"emd","median":1.3936405403950787,"p95":2.0582693471539044},{"condition":"gauss_0.04","method":"linear","median":0.7245486947686497,"p95":1.2993809443553161},{"condition":"gauss_0.04","method":"irmf","median":0.717995169581965,"p95":1.2752285149966895}],"newtonCaps":0,"hRatio":{"impulse1_0.002":1.001858498046152,"impulse1_0.01":1.0115357777997391,"impulse1_0.04":1.0496266255320137,"impulse2_0.002":1.0018737416371897,"impulse2_0.01":1.011596177767003,"impulse2_0.04":1.0506519646085684,"gauss_0.002":1.4225683057372827,"gauss_0.01":1.7923301729060495,"gauss_0.04":1.9707168593264828},"chance":6.25,"final":false,"tag":"main tests complete","reading":{"met":false,"text":"Does not meet the pre-registered rule. At 4% spikes the gap grows by 5.0 and 4.8 points, one- and two-sided, but neither survives Holm correction. At 0.2% and 1% spikes it grows by 6\u20137 points, significant after correction. Still, every method falls to 6\u201315% balanced accuracy at 4% spikes, against 6% chance, and none stays above 25% even at 0.2%.","impulse1":5.048458436441091,"impulse2":4.774586310249481,"gauss":-0.7210724026360052,"floor":true,"mild":25.22781491667797}},{"dataset":"esc50_animals","classifier":"Linear SVM","curves":{"irmf":{"clean":65.57798024418074,"impulse1_0.002":29.23862096948045,"impulse1_0.01":12.536325274327853,"impulse1_0.04":12.211845032417976,"impulse2_0.002":28.878334229584596,"impulse2_0.01":12.640673206545047,"impulse2_0.04":11.695342608341578,"gauss_0.002":22.801559343637752,"gauss_0.01":18.221511708432242,"gauss_0.04":13.37619324014692},"linear":{"clean":65.75789697764054,"impulse1_0.002":29.65869626585253,"impulse1_0.01":17.700220792804767,"impulse1_0.04":13.918330930697104,"impulse2_0.002":30.740947481423625,"impulse2_0.01":21.012177858018486,"impulse2_0.04":16.822272539770527,"gauss_0.002":19.165078899985275,"gauss_0.01":18.089535355403523,"gauss_0.04":15.146654328606171},"emd":{"clean":54.621929010829916,"impulse1_0.002":26.799188886317392,"impulse1_0.01":17.01240080341701,"impulse1_0.04":11.629265842778459,"impulse2_0.002":26.6532863503346,"impulse2_0.01":16.735598519373042,"impulse2_0.04":11.329306770658647,"gauss_0.002":14.82813124752167,"gauss_0.01":10.961430153550282,"gauss_0.04":10.282268000699402},"raw":{"clean":44.33904687525565,"impulse1_0.002":20.2158167280256,"impulse1_0.01":12.84211756828982,"impulse1_0.04":11.36728271513983,"impulse2_0.002":19.39637551803992,"impulse2_0.01":12.536411806853954,"impulse2_0.04":10.58260035271575,"gauss_0.002":13.45945851953014,"gauss_0.01":12.208033881236572,"gauss_0.04":10.466905356590035}},"tests":[{"condition":"impulse1_0.002","comparator":"imf_linear_a1.41","d":-0.24015856291227894,"lo":-5.696489490952156,"hi":5.216172365127599,"p":1.0,"pRaw":0.9261275880491927,"family":"Primary","corrected":true},{"condition":"impulse1_0.01","comparator":"imf_linear_a1.41","d":-4.983978785017115,"lo":-10.188563832996772,"hi":0.22060626296254368,"p":0.2957830746169375,"pRaw":0.0591566149233875,"family":"Primary","corrected":true},{"condition":"impulse1_0.04","comparator":"imf_linear_a1.41","d":-1.5265691648193254,"lo":-7.435019374734614,"hi":4.381881045095963,"p":1.0,"pRaw":0.5882194196195446,"family":"Primary","corrected":true},{"condition":"impulse2_0.002","comparator":"imf_linear_a1.41","d":-1.6826965183792266,"lo":-6.828773437837573,"hi":3.4633804010791205,"p":1.0,"pRaw":0.4945992928794709,"family":"Primary","corrected":true},{"condition":"impulse2_0.01","comparator":"imf_linear_a1.41","d":-8.191587918013637,"lo":-13.750119858856996,"hi":-2.6330559771702755,"p":0.0555320524657495,"pRaw":0.006941506558218695,"family":"Primary","corrected":true},{"condition":"impulse2_0.04","comparator":"imf_linear_a1.41","d":-4.94701319796915,"lo":-10.319095000416809,"hi":0.42506860447851025,"p":0.2957830746169375,"pRaw":0.06831623021577347,"family":"Primary","corrected":true},{"condition":"impulse1_0.002","comparator":"emd","d":-8.516619150187756,"lo":-14.197199872136052,"hi":-2.83603842823946,"p":0.0435729318168756,"pRaw":0.0062247045452679456,"family":"S1","corrected":true},{"condition":"impulse1_0.01","comparator":"emd","d":-15.432126762439974,"lo":-22.4159493355206,"hi":-8.448304189359344,"p":0.0034843905954525,"pRaw":0.00031676278140477286,"family":"S1","corrected":true},{"condition":"impulse1_0.04","comparator":"emd","d":-10.373472043711294,"lo":-15.651744167927797,"hi":-5.095199919494792,"p":0.0077818399829355,"pRaw":0.0008646488869928335,"family":"S1","corrected":true},{"condition":"impulse2_0.002","comparator":"emd","d":-8.731003354100821,"lo":-14.255215656666795,"hi":-3.2067910515348466,"p":0.0352082688163854,"pRaw":0.004401033602048176,"family":"S1","corrected":true},{"condition":"impulse2_0.01","comparator":"emd","d":-15.050976546178807,"lo":-21.692355737807524,"hi":-8.40959735455009,"p":0.0030264267662588,"pRaw":0.0002522022305215748,"family":"S1","corrected":true},{"condition":"impulse2_0.04","comparator":"emd","d":-10.590015395667884,"lo":-15.631327015874657,"hi":-5.5487037754611075,"p":0.0049402285575366,"pRaw":0.0004940228557536687,"family":"S1","corrected":true},{"condition":"gauss_0.002","comparator":"imf_linear_a1.41","d":3.816397177112281,"lo":-0.7244853296205513,"hi":8.357279683845114,"p":0.9301485617195672,"pRaw":0.0930148561719567,"family":"S2","corrected":true},{"condition":"gauss_0.01","comparator":"imf_linear_a1.41","d":0.3118930864885236,"lo":-4.255660197211707,"hi":4.879446370188755,"p":1.0,"pRaw":0.8856496626614042,"family":"S2","corrected":true},{"condition":"gauss_0.04","comparator":"imf_linear_a1.41","d":-1.5905443549994525,"lo":-6.425663234390791,"hi":3.244574524391887,"p":1.0,"pRaw":0.4920466901225736,"family":"S2","corrected":true}],"stability":[{"condition":"impulse1_0.002","method":"raw","median":1.9785612525339835,"p95":13.059635938110508},{"condition":"impulse1_0.002","method":"emd","median":0.5975526663735542,"p95":1.1438172161331792},{"condition":"impulse1_0.002","method":"linear","median":0.7451741369223973,"p95":1.8337573645111447},{"condition":"impulse1_0.002","method":"irmf","median":0.28391562287766214,"p95":0.45731404891583427},{"condition":"impulse1_0.01","method":"raw","median":6.207123871011984,"p95":13.69445946464411},{"condition":"impulse1_0.01","method":"emd","median":0.8494216132759496,"p95":1.514959239579433},{"condition":"impulse1_0.01","method":"linear","median":1.0841682162224457,"p95":1.7714023736882336},{"condition":"impulse1_0.01","method":"irmf","median":0.413340965311708,"p95":0.6520419270410408},{"condition":"impulse1_0.04","method":"raw","median":5.402216088421904,"p95":8.305612789327373},{"condition":"impulse1_0.04","method":"emd","median":1.1942799484303313,"p95":1.9039106169011528},{"condition":"impulse1_0.04","method":"linear","median":1.1387524976646892,"p95":1.6538648892724128},{"condition":"impulse1_0.04","method":"irmf","median":0.6296907507735088,"p95":0.9907268641398894},{"condition":"impulse2_0.002","method":"raw","median":1.8628357790430246,"p95":12.737914835480904},{"condition":"impulse2_0.002","method":"emd","median":0.5920872863748261,"p95":1.118629882688688},{"condition":"impulse2_0.002","method":"linear","median":0.6918879563150516,"p95":1.789982459217073},{"condition":"impulse2_0.002","method":"irmf","median":0.26840453889390786,"p95":0.4375100777487159},{"condition":"impulse2_0.01","method":"raw","median":5.436725058574173,"p95":12.832899033669975},{"condition":"impulse2_0.01","method":"emd","median":0.8491050495672852,"p95":1.5339712237381669},{"condition":"impulse2_0.01","method":"linear","median":0.9506081653503236,"p95":1.6530726549723762},{"condition":"impulse2_0.01","method":"irmf","median":0.38678984350907886,"p95":0.6100392462228326},{"condition":"impulse2_0.04","method":"raw","median":4.438092395066878,"p95":7.4058220421905725},{"condition":"impulse2_0.04","method":"emd","median":1.1998813564463606,"p95":1.9131386807927295},{"condition":"impulse2_0.04","method":"linear","median":1.0010993152133842,"p95":1.5218198046650229},{"condition":"impulse2_0.04","method":"irmf","median":0.5687438915228706,"p95":0.8958377398070921},{"condition":"gauss_0.002","method":"raw","median":1.166742041410771,"p95":1.7026410379841233},{"condition":"gauss_0.002","method":"emd","median":1.388307885006018,"p95":2.020470135854063},{"condition":"gauss_0.002","method":"linear","median":0.5469675519297368,"p95":0.9757872955009457},{"condition":"gauss_0.002","method":"irmf","median":0.5768329204159028,"p95":0.9654560171465928},{"condition":"gauss_0.01","method":"raw","median":1.8638426888023218,"p95":2.4340029318882865},{"condition":"gauss_0.01","method":"emd","median":1.605372940582387,"p95":2.240724191276636},{"condition":"gauss_0.01","method":"linear","median":0.7884691913639931,"p95":1.2366671960281062},{"condition":"gauss_0.01","method":"irmf","median":0.8275876955658951,"p95":1.2346913381822424},{"condition":"gauss_0.04","method":"raw","median":2.1866736160741,"p95":2.702311936662277},{"condition":"gauss_0.04","method":"emd","median":1.7178030903963146,"p95":2.3498969012081594},{"condition":"gauss_0.04","method":"linear","median":0.9612267667405862,"p95":1.392373598845057},{"condition":"gauss_0.04","method":"irmf","median":1.0018888467708322,"p95":1.4047139388471799}],"newtonCaps":0,"hRatio":{"impulse1_0.002":1.0020704814411847,"impulse1_0.01":1.0124932154404531,"impulse1_0.04":1.0540211483830508,"impulse2_0.002":1.0020373184915046,"impulse2_0.01":1.012595638296582,"impulse2_0.04":1.0550850987111025,"gauss_0.002":2.2984280475601917,"gauss_0.01":3.2423709384300636,"gauss_0.04":3.704198899711434},"chance":10.0,"final":false,"tag":"main tests complete","reading":{"met":false,"text":"Does not meet the pre-registered rule. Linear IMF holds up at least as well: at 4% spikes the gap changes by \u22121.5 and \u22124.9 points, one- and two-sided. And every method falls to 11\u201317% balanced accuracy at 4% spikes, against 10% chance, and none stays above 31% even at 0.2%.","impulse1":-1.5265691648193254,"impulse2":-4.94701319796915,"gauss":-1.5905443549994525,"floor":true,"mild":30.740947481423625}},{"dataset":"synthetic","classifier":"Logistic regression","curves":{"irmf":{"clean":84.73110924378506,"impulse1_0.002":84.37595410683303,"impulse1_0.01":78.4339226673418,"impulse1_0.04":61.12271886397678,"impulse2_0.002":83.68250820417045,"impulse2_0.01":80.11128521872324,"impulse2_0.04":63.310475439551496,"gauss_0.002":72.78748727908744,"gauss_0.01":39.61978024432521,"gauss_0.04":21.653902189717158},"linear":{"clean":72.14525122455858,"impulse1_0.002":65.27048866131226,"impulse1_0.01":49.790030992644475,"impulse1_0.04":29.78107359574605,"impulse2_0.002":64.96742628459046,"impulse2_0.01":50.91367540440944,"impulse2_0.04":30.314637887091262,"gauss_0.002":63.28481403285626,"gauss_0.01":35.50982219898114,"gauss_0.04":23.652854492554884},"emd":{"clean":50.64339159253346,"impulse1_0.002":42.072134381095346,"impulse1_0.01":32.36226897401572,"impulse1_0.04":24.545388903193086,"impulse2_0.002":43.18684081231894,"impulse2_0.01":33.76083637982914,"impulse2_0.04":23.78215466189075,"gauss_0.002":46.50515636130746,"gauss_0.01":30.65434902975929,"gauss_0.04":21.79391139068724},"raw":{"clean":48.090445716664775,"impulse1_0.002":42.95952665446266,"impulse1_0.01":37.006801878993834,"impulse1_0.04":23.340352219349104,"impulse2_0.002":42.4448824247296,"impulse2_0.01":35.400264841743095,"impulse2_0.04":23.229920034342282,"gauss_0.002":39.61963751592336,"gauss_0.01":26.12253427198819,"gauss_0.04":19.553519063723964}},"tests":[{"condition":"impulse1_0.002","comparator":"imf_linear_a1.41","d":6.519607426294291,"lo":3.313510702373839,"hi":9.725704150214742,"p":0.021498438748787107,"pRaw":0.0006514678408723366,"family":"Primary","corrected":true},{"condition":"impulse1_0.01","comparator":"imf_linear_a1.41","d":16.05803365547084,"lo":10.372556427663039,"hi":21.743510883278645,"p":0.0016803269302007849,"pRaw":2.9479419828083946e-05,"family":"Primary","corrected":true},{"condition":"impulse1_0.04","comparator":"imf_linear_a1.41","d":18.755787249004243,"lo":11.844129312361165,"hi":25.66744518564732,"p":0.0024441022226047143,"pRaw":4.443822222917662e-05,"family":"Primary","corrected":true},{"condition":"impulse2_0.002","comparator":"imf_linear_a1.41","d":6.129223900353505,"lo":3.0273619602954467,"hi":9.231085840411565,"p":0.026466635516304755,"pRaw":0.0008270823598845236,"family":"Primary","corrected":true},{"condition":"impulse2_0.01","comparator":"imf_linear_a1.41","d":16.611751795087297,"lo":10.477310262244204,"hi":22.746193327930392,"p":0.0024513782010857064,"pRaw":4.539589261269827e-05,"family":"Primary","corrected":true},{"condition":"impulse2_0.04","comparator":"imf_linear_a1.41","d":20.40997953323375,"lo":11.931180495088915,"hi":28.88877857137858,"p":0.005975783868317037,"pRaw":0.00014404976385090493,"family":"Primary","corrected":true},{"condition":"impulse1_0.002","comparator":"emd","d":8.21610207448608,"lo":4.941247074113159,"hi":11.490957074859,"p":0.00474739337857009,"pRaw":9.688557915449164e-05,"family":"S1","corrected":true},{"condition":"impulse1_0.01","comparator":"emd","d":11.983936042074465,"lo":7.219422740893827,"hi":16.748449343255103,"p":0.004725752231191068,"pRaw":9.451504462382136e-05,"family":"S1","corrected":true},{"condition":"impulse1_0.04","comparator":"emd","d":2.4896123095320744,"lo":-4.995143428167548,"hi":9.974368047231696,"p":1.0,"pRaw":0.4873160056439641,"family":"S1","corrected":true},{"condition":"impulse2_0.002","comparator":"emd","d":6.407949740599886,"lo":3.3068122235912143,"hi":9.509087257608558,"p":0.019343143262200595,"pRaw":0.0005689159783000175,"family":"S1","corrected":true},{"condition":"impulse2_0.01","comparator":"emd","d":12.262731187642482,"lo":6.718588676910081,"hi":17.80687369837488,"p":0.01193325713481937,"pRaw":0.0003140330824952466,"family":"S1","corrected":true},{"condition":"impulse2_0.04","comparator":"emd","d":5.4406031264091315,"lo":-3.0917205104084786,"hi":13.97292676322674,"p":1.0,"pRaw":0.19298725980586467,"family":"S1","corrected":true},{"condition":"gauss_0.002","comparator":"imf_linear_a1.41","d":-3.0831847729953035,"lo":-7.40272087633452,"hi":1.2363513303439138,"p":1.0,"pRaw":0.14807367519593997,"family":"S2","corrected":true},{"condition":"gauss_0.01","comparator":"imf_linear_a1.41","d":-8.475899973882413,"lo":-16.525949129806722,"hi":-0.42585081795810525,"p":0.5254619645286478,"pRaw":0.040420151117588295,"family":"S2","corrected":true},{"condition":"gauss_0.04","comparator":"imf_linear_a1.41","d":-14.584810322064213,"lo":-19.361790676060327,"hi":-9.807829968068097,"p":0.0008026178386341953,"pRaw":1.2945449010228957e-05,"family":"S2","corrected":true}],"stability":[{"condition":"impulse1_0.002","method":"raw","median":0.1559301934046403,"p95":1.7181840249871545},{"condition":"impulse1_0.002","method":"emd","median":0.49783803427702283,"p95":1.3068260515912256},{"condition":"impulse1_0.002","method":"linear","median":0.18032624780892154,"p95":1.328353126111766},{"condition":"impulse1_0.002","method":"irmf","median":0.09377998801848303,"p95":0.33511574599937904},{"condition":"impulse1_0.01","method":"raw","median":1.1232128964551438,"p95":2.5051993574985767},{"condition":"impulse1_0.01","method":"emd","median":1.0390729752908818,"p95":1.8386871374041833},{"condition":"impulse1_0.01","method":"linear","median":0.8555542781915204,"p95":1.777528272560705},{"condition":"impulse1_0.01","method":"irmf","median":0.31920669989922096,"p95":0.5278438043949827},{"condition":"impulse1_0.04","method":"raw","median":2.198105724995629,"p95":3.335559908436745},{"condition":"impulse1_0.04","method":"emd","median":1.7120007982901004,"p95":2.6270592031312643},{"condition":"impulse1_0.04","method":"linear","median":1.5194092084109614,"p95":2.275875340719897},{"condition":"impulse1_0.04","method":"irmf","median":0.7006999976745207,"p95":1.0309835895903254},{"condition":"impulse2_0.002","method":"raw","median":0.16617242164910434,"p95":1.6958120158011456},{"condition":"impulse2_0.002","method":"emd","median":0.4820264936920826,"p95":1.2902975528877652},{"condition":"impulse2_0.002","method":"linear","median":0.18093427679334742,"p95":1.293533268512381},{"condition":"impulse2_0.002","method":"irmf","median":0.08997694358286458,"p95":0.32814199728772214},{"condition":"impulse2_0.01","method":"raw","median":1.070797879615555,"p95":2.3748623355169616},{"condition":"impulse2_0.01","method":"emd","median":1.048849589017994,"p95":1.829407164264605},{"condition":"impulse2_0.01","method":"linear","median":0.8431387997349633,"p95":1.7267136669440217},{"condition":"impulse2_0.01","method":"irmf","median":0.3006445411581925,"p95":0.4937825533212674},{"condition":"impulse2_0.04","method":"raw","median":2.1450294215747583,"p95":3.241277689931991},{"condition":"impulse2_0.04","method":"emd","median":1.6629407196803088,"p95":2.6025780777762915},{"condition":"impulse2_0.04","method":"linear","median":1.5080853207833234,"p95":2.243160345331911},{"condition":"impulse2_0.04","method":"irmf","median":0.6214648920052065,"p95":0.8859855182982213},{"condition":"gauss_0.002","method":"raw","median":0.4780827959000554,"p95":0.8656412939066335},{"condition":"gauss_0.002","method":"emd","median":0.6395129444168907,"p95":1.0548067072073526},{"condition":"gauss_0.002","method":"linear","median":0.3710985940580823,"p95":0.5452440998939807},{"condition":"gauss_0.002","method":"irmf","median":0.4514324065185301,"p95":0.6194353130830513},{"condition":"gauss_0.01","method":"raw","median":1.0036057559318547,"p95":1.5393998723929208},{"condition":"gauss_0.01","method":"emd","median":0.7650861991165481,"p95":1.1643554058857295},{"condition":"gauss_0.01","method":"linear","median":0.7393202064917359,"p95":0.9859980543033638},{"condition":"gauss_0.01","method":"irmf","median":0.8583512930467629,"p95":1.0763284968163838},{"condition":"gauss_0.04","method":"raw","median":1.3433153079885938,"p95":1.8798567994848687},{"condition":"gauss_0.04","method":"emd","median":0.8685359158478199,"p95":1.3368867921226126},{"condition":"gauss_0.04","method":"linear","median":1.0309210022737914,"p95":1.2859665341744497},{"condition":"gauss_0.04","method":"irmf","median":1.143807806747289,"p95":1.3837576047638542}],"newtonCaps":0,"hRatio":{"impulse1_0.002":1.000876631711141,"impulse1_0.01":1.010127639388654,"impulse1_0.04":1.0460210650345256,"impulse2_0.002":1.0009623924937112,"impulse2_0.01":1.009975750143325,"impulse2_0.04":1.0479406530267836,"gauss_0.002":1.2866782850178344,"gauss_0.01":1.5509089963165756,"gauss_0.04":1.673566010853969},"chance":20.0,"final":true,"tag":"","reading":{"met":true,"text":"Meets the pre-registered rule. At 4% spikes IRMF keeps 63% against linear IMF's 30%. Under Gaussian noise of the same power, IRMF loses significantly more than linear IMF.","impulse1":18.755787249004243,"impulse2":20.40997953323375,"gauss":-14.584810322064213,"floor":false,"mild":84.37595410683303}}],"didNote":"p-values come from the final report, Holm-corrected within its families: 18 spike tests per comparison across the real datasets, 27 Gaussian tests, and synthetic's own family."}}</script>
+<script>
+(() => {
+  const DATA = JSON.parse(document.getElementById('data').textContent);
+  const NS = 'http://www.w3.org/2000/svg';
+  const MINUS = '−';
+  const DS = { synthetic: ['Synthetic', '5 classes'], dronerf: ['DroneRF', '10 classes'], birdclef2023: ['BirdCLEF 2023', '16 species'], esc50_animals: ['ESC-50 animals', '10 classes'] };
+  const DS_ORDER = ['dronerf', 'birdclef2023', 'esc50_animals', 'synthetic'];
+  const SERIES = [
+    { key: 'irmf', label: 'IRMF, converged', cls: 's1', shape: 'circle' },
+    { key: 'linear', label: 'Linear IMF', cls: 's2', shape: 'square' },
+    { key: 'emd', label: 'EMD', cls: 's3', shape: 'diamond' },
+  ];
+
+  function svgEl(tag, attrs, parent, text) { const e = document.createElementNS(NS, tag); for (const [k, v] of Object.entries(attrs || {})) e.setAttribute(k, v); if (text != null) e.textContent = text; if (parent) parent.appendChild(e); return e; }
+  function htmlEl(tag, attrs, parent, text) { const e = document.createElement(tag); for (const [k, v] of Object.entries(attrs || {})) { if (k === 'class') e.className = v; else e.setAttribute(k, v); } if (text != null) e.textContent = text; if (parent) parent.appendChild(e); return e; }
+  function signed(v, d) { const s = Math.abs(v).toFixed(d); if (Number(s) === 0) return s; return (v < 0 ? MINUS : '+') + s; }
+  const SUP = { '-': '⁻', '0': '⁰', '1': '¹', '2': '²', '3': '³', '4': '⁴', '5': '⁵', '6': '⁶', '7': '⁷', '8': '⁸', '9': '⁹' };
+  function fmtP(p) {
+    if (p == null || Number.isNaN(p)) return 'n/a';
+    if (p >= 0.995) return '1';
+    if (p >= 0.01) return p.toFixed(2);
+    if (p >= 0.001) return p.toPrecision(2);
+    let e = Math.floor(Math.log10(p)); let m = p / Math.pow(10, e);
+    if (m >= 9.95) { m /= 10; e += 1; }
+    return `${m.toFixed(1)} × 10${String(e).split('').map(c => SUP[c]).join('')}`;
+  }
+  function fmtSci(v) { if (v === 0) return '0'; const e = Math.floor(Math.log10(Math.abs(v))); return `${(v / Math.pow(10, e)).toFixed(1)}e${e}`; }
+  const isSig = p => p < 0.05;
+  const pct = (v, d = 1) => `${v.toFixed(d)}%`;
+
+  // Tooltip: values lead, labels follow; text goes in through textContent.
+  const tip = document.getElementById('tip');
+  function placeTip(x, y) {
+    tip.style.opacity = '1';
+    const b = tip.getBoundingClientRect();
+    let left = x + 14, top = y + 14;
+    if (left + b.width > window.innerWidth - 8) left = x - 14 - b.width;
+    if (top + b.height > window.innerHeight - 8) top = y - 14 - b.height;
+    tip.style.left = `${Math.max(8, left)}px`; tip.style.top = `${Math.max(8, top)}px`;
+  }
+  function hideTip() { tip.style.opacity = '0'; }
+  function bindTip(hit, build, marks) {
+    const on = v => (marks || []).forEach(m => m.classList.toggle('on', v));
+    const show = (x, y) => { tip.replaceChildren(); build(tip); placeTip(x, y); };
+    hit.addEventListener('pointermove', e => { on(true); show(e.clientX, e.clientY); });
+    hit.addEventListener('pointerleave', () => { on(false); hideTip(); });
+    hit.addEventListener('focus', () => { on(true); const b = hit.getBoundingClientRect(); show(b.left + b.width * 0.6, b.top + b.height / 2); });
+    hit.addEventListener('blur', () => { on(false); hideTip(); });
+  }
+  function niceStep(span, target) { const raw = span / target; const mag = Math.pow(10, Math.floor(Math.log10(raw))); for (const m of [1, 2, 2.5, 5, 10]) if (m * mag >= raw) return m * mag; return 10 * mag; }
+  function shapeEl(parent, shape, x, y, r, cls) {
+    if (shape === 'square') return svgEl('rect', { x: x - r, y: y - r, width: 2 * r, height: 2 * r, rx: 1, class: cls }, parent);
+    if (shape === 'diamond') return svgEl('path', { d: `M${x},${y - r * 1.3}L${x + r * 1.3},${y}L${x},${y + r * 1.3}L${x - r * 1.3},${y}Z`, class: cls }, parent);
+    return svgEl('circle', { cx: x, cy: y, r, class: cls }, parent);
+  }
+  function legendShape(parent, s) {
+    const svg = svgEl('svg', { width: 26, height: 12, class: `shape ${s.cls}`, 'aria-hidden': 'true' }, parent);
+    svgEl('line', { x1: 1, x2: 25, y1: 6, y2: 6, class: 'line' }, svg);
+    shapeEl(svg, s.shape, 13, 6, 3.5, 'mark');
+  }
+  function tableFrom(host, headers, rows) {
+    host.replaceChildren();
+    const t = htmlEl('table', {}, host);
+    const hr = htmlEl('tr', {}, htmlEl('thead', {}, t));
+    for (const [txt, cls] of headers) htmlEl('th', cls ? { class: cls } : {}, hr, txt);
+    const tb = htmlEl('tbody', {}, t);
+    for (const row of rows) {
+      const tr = htmlEl('tr', {}, tb);
+      row.forEach((cell, i) => {
+        const td = htmlEl('td', { class: [headers[i][1] || '', cell && cell.strong ? 'strong' : ''].join(' ').trim() }, tr);
+        if (cell && typeof cell === 'object') {
+          if (cell.href) htmlEl('a', { href: cell.href }, td, cell.text); else td.appendChild(document.createTextNode(cell.text));
+          if (cell.sub) htmlEl('span', { class: 'ci' }, td, cell.sub);
+          if (cell.p) htmlEl('span', { class: 'p' }, td, cell.p);
+        } else td.textContent = cell == null ? '' : String(cell);
+      });
+    }
+    return t;
+  }
+
+  // ---------- Header ----------
+  document.getElementById('meta').textContent = DATA.meta.line;
+  document.getElementById('lead').textContent = DATA.meta.lead;
+  document.getElementById('components-reading').textContent = DATA.components.readingText;
+  document.getElementById('footer').textContent = DATA.meta.footer;
+  const srcList = document.getElementById('source-list');
+  for (const [text, href] of DATA.meta.sources) { const li = htmlEl('li', {}, srcList); htmlEl('a', { href }, li, text); }
+
+  // ---------- Component tiles ----------
+  (function tiles() {
+    const host = document.getElementById('comp-tiles');
+    for (const ds of DS_ORDER) {
+      const a = DATA.components.familyA.find(r => r.dataset === ds && r.k === 6 && r.contrast === 'IRMF - EMD');
+      const gap = DATA.components.defaultGap[ds];
+      const t = htmlEl('div', { class: 'tile' }, host);
+      htmlEl('div', { class: 'tile-label' }, t, `${DS[ds][0]} · 6 components each`);
+      const v = htmlEl('div', { class: 'tile-value' }, t, signed(a.d, 1)); htmlEl('span', { class: 'unit' }, v, ' pp');
+      htmlEl('div', { class: 'tile-sub' }, t, 'IRMF over EMD at equal counts');
+      htmlEl('div', { class: 'tile-sig' }, t, `${isSig(a.p) ? 'Significant' : 'Not significant'}, Holm p ${fmtP(a.p)}`);
+      htmlEl('div', { class: 'tile-meta' }, t, `At the default counts (17 vs 8): ${signed(gap, 1)} pp`);
+    }
+  })();
+
+  // ---------- BA vs K curves ----------
+  let CLF = 'classical', FSC = 'comp';
+  const legendHost = document.getElementById('curve-legend');
+  for (const s of SERIES) { const span = htmlEl('span', {}, legendHost); legendShape(span, s); span.appendChild(document.createTextNode(s.label)); }
+  const curveHosts = [];
+  (function buildCurves() {
+    const wrap = document.getElementById('curves');
+    for (const ds of DS_ORDER) {
+      const cell = htmlEl('div', {}, wrap);
+      const h = htmlEl('h3', {}, cell, DS[ds][0]); htmlEl('span', { class: 'dst' }, h, DS[ds][1]);
+      curveHosts.push([htmlEl('div', { class: 'chart' }, cell), ds]);
+    }
+  })();
+  function curveData(ds) { return DATA.components.curves[`${ds}|${CLF}|${FSC}`]; }
+  function renderCurve(host, ds) {
+    const W = host.clientWidth; if (!W) return; host.replaceChildren();
+    const d = curveData(ds);
+    const padL = 40, padR = 12, padT = 10, padB = 30, H = 230;
+    const pw = W - padL - padR, ph = H - padT - padB;
+    const ks = [...new Set(SERIES.flatMap(s => d.series[s.key].map(p => p.k)))].sort((a, b) => a - b);
+    const kmax = Math.max(...ks);
+    const vals = SERIES.flatMap(s => d.series[s.key].map(p => p.ba));
+    let lo = Math.min(...vals), hi = Math.max(...vals); const padY = (hi - lo) * 0.12 || 1; lo -= padY; hi += padY;
+    const step = niceStep(hi - lo, 4);
+    const sx = k => padL + (k - 2.5) / (kmax + 0.5 - 2.5) * pw;
+    const sy = v => padT + (1 - (v - lo) / (hi - lo)) * ph;
+    const svg = svgEl('svg', { width: W, height: H, viewBox: `0 0 ${W} ${H}`, role: 'img', 'aria-label': `Balanced accuracy against component count on ${DS[ds][0]}. The table view lists every value.` }, host);
+    for (let t = Math.ceil(lo / step) * step; t <= hi + 1e-9; t += step) {
+      svgEl('line', { x1: padL, x2: W - padR, y1: sy(t), y2: sy(t), class: 'grid' }, svg);
+      svgEl('text', { x: padL - 6, y: sy(t) + 4, class: 'ax', 'text-anchor': 'end' }, svg, `${+t.toFixed(1)}`);
+    }
+    svgEl('line', { x1: padL, x2: W - padR, y1: H - padB, y2: H - padB, class: 'zero' }, svg);
+    for (const k of ks) svgEl('text', { x: sx(k), y: H - padB + 16, class: 'ax', 'text-anchor': 'middle' }, svg, String(k));
+    svgEl('text', { x: W - padR, y: H - 2, class: 'ax', 'text-anchor': 'end' }, svg, 'components (K)');
+    svgEl('text', { x: padL, y: padT - 0, class: 'ax' }, svg, '%');
+    const cross = svgEl('line', { x1: 0, x2: 0, y1: padT, y2: H - padB, class: 'cross' }, svg);
+    for (const s of SERIES) {
+      const pts = d.series[s.key];
+      const g = svgEl('g', { class: s.cls }, svg);
+      svgEl('path', { d: pts.map((p, i) => `${i ? 'L' : 'M'}${sx(p.k)},${sy(p.ba)}`).join(''), class: 'line' }, g);
+      for (const p of pts) shapeEl(g, s.shape, sx(p.k), sy(p.ba), 4, p.isDefault ? 'mark default' : 'mark');
+    }
+    const overlay = svgEl('rect', { x: padL, y: padT, width: pw, height: ph, class: 'hit', tabindex: 0, 'aria-label': `${DS[ds][0]} curves; use arrow keys to step through K` }, svg);
+    let current = ks[ks.length - 1];
+    const build = k => box => {
+      const head = htmlEl('div', { class: 'tl' }, box, `${DS[ds][0]} · K = ${k}`);
+      for (const s of SERIES) {
+        const p = d.series[s.key].find(q => q.k === k);
+        const row = htmlEl('div', { class: `row ${s.cls}` }, box);
+        htmlEl('i', { class: 'key' }, row);
+        htmlEl('b', {}, row, p ? pct(p.ba, 2) : '–');
+        htmlEl('span', { class: 'tl' }, row, `${s.label}${p && p.isDefault ? ' (default)' : ''}${p ? `, ${p.nf} features` : ''}`);
+      }
+      return head;
+    };
+    const nearest = x => ks.reduce((best, k) => Math.abs(sx(k) - x) < Math.abs(sx(best) - x) ? k : best, ks[0]);
+    const showAt = (k, cx, cy) => { current = k; cross.setAttribute('x1', sx(k)); cross.setAttribute('x2', sx(k)); cross.classList.add('on'); tip.replaceChildren(); build(k)(tip); placeTip(cx, cy); };
+    overlay.addEventListener('pointermove', e => { const r = svg.getBoundingClientRect(); showAt(nearest(e.clientX - r.left), e.clientX, e.clientY); });
+    overlay.addEventListener('pointerleave', () => { cross.classList.remove('on'); hideTip(); });
+    overlay.addEventListener('focus', () => { const r = svg.getBoundingClientRect(); showAt(current, r.left + sx(current), r.top + padT + ph / 2); });
+    overlay.addEventListener('blur', () => { cross.classList.remove('on'); hideTip(); });
+    overlay.addEventListener('keydown', e => {
+      const i = ks.indexOf(current);
+      if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+        e.preventDefault();
+        const k = ks[Math.max(0, Math.min(ks.length - 1, i + (e.key === 'ArrowRight' ? 1 : -1)))];
+        const r = svg.getBoundingClientRect(); showAt(k, r.left + sx(k), r.top + padT + ph / 2);
+      }
+    });
+  }
+  function renderCurvesTable() {
+    const rows = [];
+    for (const ds of DS_ORDER) for (const s of SERIES) for (const p of curveData(ds).series[s.key])
+      rows.push([DS[ds][0], s.label, { text: String(p.k), sub: p.isDefault ? 'default' : '' }, pct(p.ba, 2), String(p.nf)]);
+    tableFrom(document.getElementById('curves-table'), [['Dataset'], ['Method'], ['K', 'num'], ['Balanced accuracy', 'num'], ['Features', 'num']], rows);
+  }
+  function renderCurves() { for (const [h, ds] of curveHosts) renderCurve(h, ds); renderCurvesTable(); }
+  for (const [id, setter] of [['seg-clf', v => { CLF = v; }], ['seg-fs', v => { FSC = v; }]]) {
+    document.querySelectorAll(`#${id} button`).forEach(b => b.addEventListener('click', () => {
+      setter(b.dataset.v);
+      document.querySelectorAll(`#${id} button`).forEach(o => o.setAttribute('aria-pressed', String(o === b)));
+      renderCurves();
+    }));
+  }
+
+  // ---------- Family A table ----------
+  (function familyA() {
+    const host = document.getElementById('family-a'); host.replaceChildren();
+    const t = htmlEl('table', {}, host);
+    const hr = htmlEl('tr', {}, htmlEl('thead', {}, t));
+    for (const [txt, cls] of [['Dataset'], ['Contrast'], ['K = 3', 'num'], ['K = 4', 'num'], ['K = 5', 'num'], ['K = 6', 'num'], ['Pre-registered reading']]) htmlEl('th', cls ? { class: cls } : {}, hr, txt);
+    const tb = htmlEl('tbody', {}, t);
+    for (const ds of DS_ORDER) {
+      ['IRMF - EMD', 'Linear IMF - EMD', 'IRMF - Linear IMF'].forEach((c, i) => {
+        const tr = htmlEl('tr', {}, tb);
+        if (i === 0) { const td = htmlEl('td', { rowspan: 3, class: 'rowhead' }, tr, DS[ds][0]); }
+        htmlEl('td', {}, tr, c.replace(' - ', ' − '));
+        for (const k of [3, 4, 5, 6]) {
+          const r = DATA.components.familyA.find(x => x.dataset === ds && x.k === k && x.contrast === c);
+          const td = htmlEl('td', { class: isSig(r.p) ? 'num strong' : 'num' }, tr, signed(r.d, 1));
+          htmlEl('span', { class: 'ci' }, td, `${signed(r.lo, 1)} to ${signed(r.hi, 1)}`);
+          htmlEl('span', { class: 'p' }, td, `p ${fmtP(r.p)}`);
+        }
+        if (i === 0) htmlEl('td', { rowspan: 3 }, tr, DATA.components.reading[ds]);
+      });
+    }
+  })();
+
+  // ---------- Forest (single panel) ----------
+  function renderForest(host, groups, opts) {
+    const W = host.clientWidth; if (!W) return; host.replaceChildren();
+    const labelW = W < 640 ? 150 : 250, padR = 10, padT = 34, padB = 30, rowH = 24, headH = 32;
+    const pw = W - labelW - padR;
+    const rows = [];
+    for (const g of groups) { rows.push({ head: g.label }); for (const r of g.rows) rows.push(r); }
+    let y = padT; for (const r of rows) { r.y = y; y += r.head ? headH : rowH; }
+    const H = y + padB;
+    let lo = 0, hi = 0; for (const r of rows) if (!r.head) { lo = Math.min(lo, r.lo); hi = Math.max(hi, r.hi); }
+    const pad = (hi - lo) * 0.04; const d0 = lo - pad, d1 = hi + pad; const step = niceStep(d1 - d0, pw < 300 ? 4 : 7);
+    const sx = v => labelW + (v - d0) / (d1 - d0) * pw;
+    const svg = svgEl('svg', { width: W, height: H, viewBox: `0 0 ${W} ${H}`, role: 'img', 'aria-label': opts.aria }, host);
+    svgEl('text', { x: labelW, y: 16, class: 'psub' }, svg, opts.axis);
+    for (let t = Math.ceil(d0 / step) * step; t <= d1 + 1e-9; t += step) {
+      const tv = Math.round(t * 1e6) / 1e6;
+      svgEl('line', { x1: sx(tv), x2: sx(tv), y1: padT - 6, y2: H - padB + 4, class: tv === 0 ? 'zero' : 'grid' }, svg);
+      svgEl('text', { x: sx(tv), y: H - padB + 19, class: 'ax', 'text-anchor': 'middle' }, svg, tv === 0 ? '0' : signed(tv, 0));
+    }
+    rows.forEach((r, i) => {
+      if (r.head) {
+        if (i) svgEl('line', { x1: 0, x2: W, y1: r.y + 5, y2: r.y + 5, class: 'sep' }, svg);
+        svgEl('text', { x: 0, y: r.y + 24, class: 'dsl' }, svg, r.head);
+        return;
+      }
+      const cy = r.y + rowH / 2;
+      svgEl('text', { x: 10, y: cy + 4.5, class: 'lbl' }, svg, r.label);
+      const wash = svgEl('rect', { x: labelW - 6, y: r.y + 1, width: pw + 12, height: rowH - 2, rx: 4, class: 'wash' }, svg);
+      svgEl('line', { x1: sx(r.lo), x2: sx(r.hi), y1: cy, y2: cy, class: 'ci-line' }, svg);
+      svgEl('circle', { cx: sx(r.d), cy, r: 6.5, class: 'ring' }, svg);
+      if (isSig(r.p)) svgEl('circle', { cx: sx(r.d), cy, r: 4.5, class: 'dot' }, svg); else svgEl('circle', { cx: sx(r.d), cy, r: 3.5, class: 'dot-hollow' }, svg);
+      if (r.labelValue) {
+        let lx = sx(r.hi) + 8, anchor = 'start';
+        if (lx + 40 > W) { lx = sx(r.lo) - 8; anchor = 'end'; }
+        svgEl('text', { x: lx, y: cy + 4, class: 'dlab', 'text-anchor': anchor }, svg, signed(r.d, 1));
+      }
+      const hit = svgEl('rect', { x: labelW - 6, y: r.y, width: pw + 12, height: rowH, class: 'hit', tabindex: 0, 'aria-label': `${r.group}, ${r.label}: ${signed(r.d, 2)} points, 95% interval ${signed(r.lo, 2)} to ${signed(r.hi, 2)}, Holm p ${fmtP(r.p)}` }, svg);
+      bindTip(hit, box => {
+        const top = htmlEl('div', { class: 'tv' }, box); htmlEl('span', {}, top, `${signed(r.d, 2)} pp`);
+        htmlEl('div', { class: 'tl' }, box, `${r.label} · ${r.group}`);
+        htmlEl('div', { class: 'tl' }, box, `95% interval ${signed(r.lo, 2)} to ${signed(r.hi, 2)}`);
+        htmlEl('div', { class: 'tl' }, box, `Holm p ${fmtP(r.p)}`);
+      }, [wash]);
+    });
+  }
+  const C_LABELS = {
+    'Linear IMF k_max=4 - full': 'Linear IMF, k_max 4 vs full', 'Linear IMF k_max=8 - full': 'Linear IMF, k_max 8 vs full', 'Linear IMF k_max=12 - full': 'Linear IMF, k_max 12 vs full',
+    'IRMF k_max=4 - full': 'IRMF, k_max 4 vs full', 'IRMF k_max=8 - full': 'IRMF, k_max 8 vs full', 'IRMF k_max=12 - full': 'IRMF, k_max 12 vs full',
+    'GD60 k_max=8 - GD60 full': 'pimf defaults vs all stages', 'GD60 k_max=8 - EMD K=8': 'pimf defaults vs EMD default',
+  };
+  const familyCGroups = () => DS_ORDER.map(ds => ({
+    label: DS[ds][0],
+    rows: DATA.components.familyC.filter(r => r.dataset === ds).map(r => ({ ...r, group: DS[ds][0], label: C_LABELS[r.contrast] || r.contrast, labelValue: r.contrast.startsWith('GD60') })),
+  }));
+  function renderFamilyC() {
+    renderForest(document.getElementById('family-c'), familyCGroups(), { axis: 'Δ balanced accuracy, pp; left of 0 means the cut-off or pimf default does worse', aria: 'Effect of truncating the recursive IMF with k_max. The table view lists every value.' });
+    const rows = []; for (const g of familyCGroups()) for (const r of g.rows) rows.push([g.label, r.label, { text: signed(r.d, 2), strong: isSig(r.p) }, `${signed(r.lo, 2)} to ${signed(r.hi, 2)}`, fmtP(r.p)]);
+    tableFrom(document.getElementById('family-c-table'), [['Dataset'], ['Comparison'], ['Δ BA, pp', 'num'], ['95% interval', 'num'], ['Holm p', 'num']], rows);
+  }
+
+  // ---------- Padding ----------
+  (function padding() {
+    const rows = DS_ORDER.map(ds => [DS[ds][0], ...[5, 6, 7, 8].map(k => pct(100 * DATA.components.padding[ds][k], 1))]);
+    tableFrom(document.getElementById('padding'), [['Dataset'], ['K = 5', 'num'], ['K = 6', 'num'], ['K = 7', 'num'], ['K = 8 (EMD default)', 'num']], rows);
+  })();
+
+  // ---------- pimf 0.5.0 and 0.5.1 ----------
+  (function release() {
+    const R = DATA.release;
+    const host = document.getElementById('release-tiles');
+    for (const t of R.tiles) {
+      const d = htmlEl('div', { class: 'tile' }, host);
+      htmlEl('div', { class: 'tile-label' }, d, t.label);
+      const v = htmlEl('div', { class: 'tile-value' }, d, t.value); if (t.unit) htmlEl('span', { class: 'unit' }, v, t.unit);
+      htmlEl('div', { class: 'tile-sub' }, d, t.sub);
+      if (t.meta) htmlEl('div', { class: 'tile-meta' }, d, t.meta);
+    }
+    tableFrom(document.getElementById('release-full'),
+      [['Dataset'], ['Channels', 'num'], ['Differ > 1e-6', 'num'], ['Differ > 1e-3', 'num'], ['Largest relative difference', 'num'], ['Frames with changed features', 'num'], ['All converged']],
+      R.full.map(r => [DS[r.dataset][0], r.channels.toLocaleString('en'), r.gt6.toLocaleString('en'), r.gt3.toLocaleString('en'), r.relmax < 1e-4 ? fmtSci(r.relmax) : pct(100 * r.relmax, 1), r.frames_changed.toLocaleString('en'), r.converged ? 'yes' : 'no']));
+    document.getElementById('release-class-note').textContent = R.classNote;
+    tableFrom(document.getElementById('release-class'),
+      [['Dataset'], ['Model'], ['Release − prototype', 'num'], ['IRMF − EMD, release', 'num'], ['IRMF − EMD, prototype', 'num'], ['IRMF − linear IMF, release', 'num'], ['IRMF − linear IMF, prototype', 'num']],
+      R.classMain.map(r => [DS[r.dataset][0], r.model, ...r.cells.map(c => c ? { text: signed(c.d, 2), sub: `${signed(c.lo, 2)} to ${signed(c.hi, 2)}`, p: `p ${fmtP(c.p)}`, strong: isSig(c.p) } : { text: r.missing || 'running' })]));
+    tableFrom(document.getElementById('release-class-all'),
+      [['Dataset'], ['Model'], ['Features'], ['Contrast'], ['Δ BA, pp', 'num'], ['95% interval', 'num'], ['Holm p', 'num']],
+      R.classAll.map(r => [DS[r.dataset][0], r.model, r.fs, r.contrast, { text: signed(r.d, 2), strong: isSig(r.p) }, `${signed(r.lo, 2)} to ${signed(r.hi, 2)}`, fmtP(r.p)]));
+    const N = R.next;
+    document.getElementById('next-note').textContent = N.note;
+    const nextFull = document.getElementById('next-full');
+    if (N.full.length) {
+      tableFrom(nextFull,
+        [['Dataset'], ['Channels', 'num'], [`Feature table identical to ${N.base}`], ['Solver diagnostics identical'], ['All converged']],
+        N.full.map(r => [DS[r.dataset][0], r.channels.toLocaleString('en'), r.features ? 'yes, byte for byte' : 'no', r.diagnostics ? 'yes' : 'no', r.converged ? 'yes' : 'no']));
+    } else nextFull.hidden = true;
+    const speedNote = document.getElementById('release-speed-note');
+    if (N.speed.length) {
+      speedNote.textContent = `Median CPU seconds per frame on the same 40-frame sample per dataset, one thread. The three Newton solvers ran in turn, three rounds each, so they shared the same machine load; other experiments were running throughout. Gradient descent comes from a separate pass under ${N.version} and is rougher.`;
+      tableFrom(document.getElementById('release-speed'),
+        [['Dataset'], ['Our Numba prototype', 'num'], [`pimf ${N.base} Newton`, 'num'], [`pimf ${N.version} Newton`, 'num'], [`${N.version} vs ${N.base}`, 'num'], [`${N.version} ÷ prototype`, 'num'], ['pimf gradient descent (60 steps)', 'num']],
+        N.speed.map(r => [DS[r.dataset][0], r.proto.toFixed(3), r.old.toFixed(3), r.new.toFixed(3), { text: `${r.speedup.toFixed(1)}× faster`, strong: true }, `${r.slowdown.toFixed(1)}× slower`, r.gd == null ? '' : r.gd.toFixed(3)]));
+    } else {
+      speedNote.textContent = 'Median CPU seconds per frame on a 40-frame sample per dataset. Other experiments were running at the same time, so treat these as rough.';
+      tableFrom(document.getElementById('release-speed'),
+        [['Dataset'], ['pimf 0.5.0 Newton', 'num'], ['Our Numba prototype', 'num'], ['pimf gradient descent (60 steps)', 'num'], ['Newton: release ÷ prototype', 'num']],
+        R.speed.map(r => [DS[r.dataset][0], r.newton.toFixed(3), r.proto.toFixed(3), r.gd.toFixed(3), `${(r.newton / r.proto).toFixed(1)}×`]));
+    }
+  })();
+
+  // ---------- Robustness ----------
+  const ROB = DATA.robustness;
+  const KINDS = [['impulse1', 'One-sided spikes'], ['impulse2', 'Two-sided spikes'], ['gauss', 'Gaussian noise, same power']];
+  const LEVELS = [['clean', 'clean'], ['0.002', '0.2%'], ['0.01', '1%'], ['0.04', '4%']];
+  const condKey = (kind, level) => level === 'clean' ? 'clean' : `${kind}_${level}`;
+  const robHosts = [];
+  (function robustness() {
+    document.getElementById('rob-status').textContent = ROB.status;
+    if (ROB.didNote) document.getElementById('rob-did-note').textContent = ROB.didNote;
+    const body = document.getElementById('rob-body');
+    for (const para of ROB.paragraphs) htmlEl('p', {}, body, para);
+    if (ROB.list) { const ul = htmlEl('ul', {}, body); for (const item of ROB.list) htmlEl('li', {}, ul, item); }
+    if (!ROB.datasets || !ROB.datasets.length) return;
+    document.getElementById('rob-results').hidden = false;
+
+    const tiles = document.getElementById('rob-tiles');
+    for (const d of ROB.datasets) {
+      const r = d.reading;
+      const t = htmlEl('div', { class: 'tile' }, tiles);
+      htmlEl('div', { class: 'tile-label' }, t, `${DS[d.dataset][0]} · spikes in 4% of samples${d.tag === 'interim' ? ' · interim' : ''}`);
+      const v = htmlEl('div', { class: 'tile-value' }, t, signed(r.impulse2, 1)); htmlEl('span', { class: 'unit' }, v, ' pp');
+      htmlEl('div', { class: 'tile-sub' }, t, 'change in the IRMF − linear IMF gap, two-sided spikes');
+      htmlEl('div', { class: 'tile-sig' }, t, `One-sided ${signed(r.impulse1, 1)} pp · Gaussian ${signed(r.gauss, 1)} pp`);
+      htmlEl('div', { class: 'tile-meta' }, t, r.text);
+    }
+
+    const legend = document.getElementById('rob-legend');
+    for (const s of SERIES) { const span = htmlEl('span', {}, legend); legendShape(span, s); span.appendChild(document.createTextNode(s.label)); }
+    const grid = document.getElementById('rob-curves');
+    for (const d of ROB.datasets) {
+      const block = htmlEl('div', { style: 'grid-column: 1 / -1' }, grid);
+      const h = htmlEl('h3', {}, block, DS[d.dataset][0]);
+      htmlEl('span', { class: 'dst' }, h, `${d.classifier}${d.tag === 'interim' ? ', interim' : ''}`);
+      const row = htmlEl('div', { class: 'multiples', style: 'grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px 22px' }, block);
+      for (const [kind, label] of KINDS) {
+        const cell = htmlEl('div', {}, row);
+        htmlEl('div', { class: 'note', style: 'margin:0 0 2px' }, cell, label);
+        robHosts.push([htmlEl('div', { class: 'chart' }, cell), d, kind, label]);
+      }
+    }
+    const rows = [];
+    for (const d of ROB.datasets) for (const [kind, label] of KINDS) for (const [lv, lvl] of LEVELS) {
+      if (lv === 'clean' && kind !== 'impulse1') continue;
+      const c = condKey(kind, lv);
+      rows.push([DS[d.dataset][0], lv === 'clean' ? 'Clean' : `${label}, ${lvl}`, ...['irmf', 'linear', 'emd', 'raw'].map(m => pct(d.curves[m][c], 1))]);
+    }
+    tableFrom(document.getElementById('rob-curves-table'), [['Dataset'], ['Test data'], ['IRMF', 'num'], ['Linear IMF', 'num'], ['EMD', 'num'], ['Raw', 'num']], rows);
+
+    const didHost = document.getElementById('rob-did');
+    const t = htmlEl('table', {}, didHost);
+    const hr = htmlEl('tr', {}, htmlEl('thead', {}, t));
+    for (const [txt, cls] of [['Dataset'], ['Contamination'], ['IRMF − linear IMF gap change', 'num'], ['IRMF − EMD gap change', 'num']]) htmlEl('th', cls ? { class: cls } : {}, hr, txt);
+    const tb = htmlEl('tbody', {}, t);
+    for (const d of ROB.datasets) {
+      let first = true;
+      for (const [kind, label] of KINDS) for (const [lv, lvl] of LEVELS.slice(1)) {
+        const tr = htmlEl('tr', {}, tb);
+        const head = htmlEl('td', { class: 'rowhead' }, tr, first ? DS[d.dataset][0] : '');
+        if (first) htmlEl('span', { class: 'ci' }, head, d.final ? 'Holm within synthetic' : (d.tag === 'interim' ? 'interim, uncorrected p' : (ROB.status === 'final' ? 'Holm within the report\'s families' : 'spike rows Holm across real datasets')));
+        first = false;
+        htmlEl('td', {}, tr, `${label}, ${lvl}`);
+        for (const comp of ['imf_linear_a1.41', 'emd']) {
+          const r = d.tests.find(x => x.condition === `${kind}_${lv}` && x.comparator === comp);
+          if (!r) { htmlEl('td', { class: 'num' }, tr, 'not tested'); continue; }
+          const td = htmlEl('td', { class: isSig(r.p) ? 'num strong' : 'num' }, tr, signed(r.d, 1));
+          htmlEl('span', { class: 'ci' }, td, `${signed(r.lo, 1)} to ${signed(r.hi, 1)}`);
+          htmlEl('span', { class: 'p' }, td, `p ${fmtP(r.p)}`);
+        }
+      }
+    }
+
+    const driftRows = [];
+    const order = ['raw', 'emd', 'linear', 'irmf'];
+    for (const d of ROB.datasets) {
+      if (!d.stability.length) continue;
+      for (const [kind, label] of KINDS) for (const [lv, lvl] of LEVELS.slice(1)) {
+        const c = `${kind}_${lv}`;
+        const vals = order.map(m => d.stability.find(s => s.condition === c && s.method === m));
+        const best = Math.min(...vals.map(v => v.median));
+        driftRows.push([DS[d.dataset][0], `${label}, ${lvl}`, ...vals.map(v => ({ text: v.median.toFixed(2), sub: `p95 ${v.p95.toFixed(2)}`, strong: v.median === best }))]);
+      }
+    }
+    tableFrom(document.getElementById('rob-drift'), [['Dataset'], ['Contamination'], ['Raw', 'num'], ['EMD', 'num'], ['Linear IMF', 'num'], ['IRMF', 'num']], driftRows);
+    htmlEl('p', { class: 'note', style: 'margin:10px 0 0' }, document.getElementById('rob-drift'), 'Bold marks the smallest median drift in each row.');
+  })();
+
+  function renderRobCurve(host, d, kind, label) {
+    const W = host.clientWidth; if (!W) return; host.replaceChildren();
+    const padL = 36, padR = 10, padT = 10, padB = 28, H = 200;
+    const pw = W - padL - padR, ph = H - padT - padB;
+    const all = SERIES.flatMap(s => Object.values(d.curves[s.key]));
+    let lo = Math.min(d.chance, ...all), hi = Math.max(...all); const pad = (hi - lo) * 0.08; lo = Math.max(0, lo - pad); hi += pad;
+    const step = niceStep(hi - lo, 4);
+    const sx = i => padL + (i + 0.5) / LEVELS.length * pw;
+    const sy = v => padT + (1 - (v - lo) / (hi - lo)) * ph;
+    const svg = svgEl('svg', { width: W, height: H, viewBox: `0 0 ${W} ${H}`, role: 'img', 'aria-label': `${DS[d.dataset][0]}, ${label}: balanced accuracy from clean to 4%. The table view lists every value.` }, host);
+    for (let t = Math.ceil(lo / step) * step; t <= hi + 1e-9; t += step) {
+      svgEl('line', { x1: padL, x2: W - padR, y1: sy(t), y2: sy(t), class: 'grid' }, svg);
+      svgEl('text', { x: padL - 6, y: sy(t) + 4, class: 'ax', 'text-anchor': 'end' }, svg, `${+t.toFixed(1)}`);
+    }
+    svgEl('line', { x1: padL, x2: W - padR, y1: sy(d.chance), y2: sy(d.chance), class: 'chance', style: 'stroke: var(--text-muted)' }, svg);
+    svgEl('text', { x: padL + 4, y: sy(d.chance) - 4, class: 'ax' }, svg, 'chance');
+    LEVELS.forEach(([, lvl], i) => svgEl('text', { x: sx(i), y: H - padB + 16, class: 'ax', 'text-anchor': 'middle' }, svg, lvl));
+    const cross = svgEl('line', { x1: 0, x2: 0, y1: padT, y2: H - padB, class: 'cross' }, svg);
+    for (const s of SERIES) {
+      const g = svgEl('g', { class: s.cls }, svg);
+      const pts = LEVELS.map(([lv], i) => [sx(i), sy(d.curves[s.key][condKey(kind, lv)])]);
+      svgEl('path', { d: pts.map((p, i) => `${i ? 'L' : 'M'}${p[0]},${p[1]}`).join(''), class: 'line' }, g);
+      for (const [x, y] of pts) shapeEl(g, s.shape, x, y, 4, 'mark');
+    }
+    const overlay = svgEl('rect', { x: padL, y: padT, width: pw, height: ph, class: 'hit', tabindex: 0, 'aria-label': `${DS[d.dataset][0]}, ${label}; use arrow keys to step through levels` }, svg);
+    let current = LEVELS.length - 1;
+    const showAt = (i, cx, cy) => {
+      current = i; cross.setAttribute('x1', sx(i)); cross.setAttribute('x2', sx(i)); cross.classList.add('on');
+      tip.replaceChildren();
+      htmlEl('div', { class: 'tl' }, tip, `${DS[d.dataset][0]} · ${i === 0 ? 'clean' : `${label}, ${LEVELS[i][1]}`}`);
+      for (const s of SERIES) {
+        const row = htmlEl('div', { class: `row ${s.cls}` }, tip);
+        htmlEl('i', { class: 'key' }, row); htmlEl('b', {}, row, pct(d.curves[s.key][condKey(kind, LEVELS[i][0])], 1));
+        htmlEl('span', { class: 'tl' }, row, s.label);
+      }
+      htmlEl('div', { class: 'tl' }, tip, `Chance ${pct(d.chance, 1)}`);
+      placeTip(cx, cy);
+    };
+    const nearest = x => { let best = 0; LEVELS.forEach((_, i) => { if (Math.abs(sx(i) - x) < Math.abs(sx(best) - x)) best = i; }); return best; };
+    overlay.addEventListener('pointermove', e => { const r = svg.getBoundingClientRect(); showAt(nearest(e.clientX - r.left), e.clientX, e.clientY); });
+    overlay.addEventListener('pointerleave', () => { cross.classList.remove('on'); hideTip(); });
+    overlay.addEventListener('focus', () => { const r = svg.getBoundingClientRect(); showAt(current, r.left + sx(current), r.top + padT + ph / 2); });
+    overlay.addEventListener('blur', () => { cross.classList.remove('on'); hideTip(); });
+    overlay.addEventListener('keydown', e => {
+      if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+      e.preventDefault(); const i = Math.max(0, Math.min(LEVELS.length - 1, current + (e.key === 'ArrowRight' ? 1 : -1)));
+      const r = svg.getBoundingClientRect(); showAt(i, r.left + sx(i), r.top + padT + ph / 2);
+    });
+  }
+
+  // ---------- View toggles and resizing ----------
+  document.querySelectorAll('figure[data-view]').forEach(fig => {
+    const btn = fig.querySelector('.view-toggle');
+    const chart = fig.querySelector('.chart, .multiples');
+    const table = fig.querySelector('.table-wrap');
+    const ctrl = fig.querySelector('.controls');
+    btn.addEventListener('click', () => {
+      const showTable = btn.getAttribute('aria-pressed') !== 'true';
+      btn.setAttribute('aria-pressed', String(showTable)); btn.textContent = showTable ? 'Chart view' : 'Table view';
+      chart.hidden = showTable; table.hidden = !showTable; hideTip();
+      if (ctrl) ctrl.hidden = false;
+    });
+  });
+  renderCurves();
+  renderFamilyC();
+  robHosts.forEach(([h, d, k, l]) => renderRobCurve(h, d, k, l));
+  const widths = new WeakMap();
+  const ro = new ResizeObserver(entries => {
+    for (const en of entries) {
+      const w = Math.round(en.contentRect.width);
+      if (!w || widths.get(en.target) === w) continue;
+      widths.set(en.target, w);
+      if (en.target.id === 'family-c') renderFamilyC();
+      else {
+        const hit = curveHosts.find(([h]) => h === en.target); if (hit) renderCurve(hit[0], hit[1]);
+        const rob = robHosts.find(([h]) => h === en.target); if (rob) renderRobCurve(...rob);
+      }
+    }
+  });
+  [document.getElementById('family-c'), ...curveHosts.map(([h]) => h), ...robHosts.map(([h]) => h)].forEach(h => ro.observe(h));
+  window.addEventListener('scroll', hideTip, { passive: true });
+})();
+</script>
+</body>
+</html>
