@@ -1,0 +1,102 @@
+{
+  "start": {
+    "utc": "2026-10-21T05:10:45.968434+00:00",
+    "pimf": {
+      "version": "0.4.0",
+      "files": {
+        "__init__.py": "fc7c0a84b39b1a4787a7973ded0eff50a882ee05b8f1d68a995941c1667c3391",
+        "_erf.py": "01ffbc30bd9e50752980716d5c8c01d6be94ba2e724b253d5ccdc48117ab465e",
+        "contrasts.py": "38556222cc9645c21285faaa8d388b3b53bd2c87758a79f03c64e9f000013c2f",
+        "decompose.py": "f71fe8ba5e08f2f5ce7f3572c762346543ac124712760f74411f2253d3551688",
+        "kernels.py": "fb65d469cb7fb594734e768bc8cde8a6926214c985c5f044e9f4517d3a220c11"
+      }
+    }
+  },
+  "final": {
+    "utc": "2026-10-22T13:36:15.051479+00:00",
+    "pimf": {
+      "version": "0.4.0",
+      "files": {
+        "__init__.py": "fc7c0a84b39b1a4787a7973ded0eff50a882ee05b8f1d68a995941c1667c3391",
+        "_erf.py": "01ffbc30bd9e50752980716d5c8c01d6be94ba2e724b253d5ccdc48117ab465e",
+        "contrasts.py": "38556222cc9645c21285faaa8d388b3b53bd2c87758a79f03c64e9f000013c2f",
+        "decompose.py": "f71fe8ba5e08f2f5ce7f3572c762346543ac124712760f74411f2253d3551688",
+        "kernels.py": "fb65d469cb7fb594734e768bc8cde8a6926214c985c5f044e9f4517d3a220c11"
+      }
+    }
+  },
+  "unchanged": true,
+  "versions": {
+    "python": "3.12.13",
+    "numpy": "2.3.5",
+    "scipy": "1.17.1",
+    "pandas": "3.0.6",
+    "scikit-learn": "1.9.1",
+    "lightgbm": "4.7.0",
+    "EMD-signal": "1.10.0",
+    "numba": "0.63.1",
+    "pimf": "0.4.0"
+  },
+  "runs": [
+    {
+      "started_utc": "2026-10-22T10:42:40.096417+00:00",
+      "finished_utc": "2026-10-22T10:44:08.280015+00:00",
+      "wall_seconds": 88.18318316689692,
+      "workers": 14,
+      "datasets": [
+        "synthetic"
+      ],
+      "stages": {
+        "synthetic": {
+          "clean_seconds_from_start": 11.176038458012044,
+          "features_seconds_from_start": 60.58212433301378
+        }
+      },
+      "pimf": {
+        "version": "0.4.0",
+        "files": {
+          "__init__.py": "fc7c0a84b39b1a4787a7973ded0eff50a882ee05b8f1d68a995941c1667c3391",
+          "_erf.py": "01ffbc30bd9e50752980716d5c8c01d6be94ba2e724b253d5ccdc48117ab465e",
+          "contrasts.py": "38556222cc9645c21285faaa8d388b3b53bd2c87758a79f03c64e9f000013c2f",
+          "decompose.py": "f71fe8ba5e08f2f5ce7f3572c762346543ac124712760f74411f2253d3551688",
+          "kernels.py": "fb65d469cb7fb594734e768bc8cde8a6926214c985c5f044e9f4517d3a220c11"
+        }
+      }
+    },
+    {
+      "started_utc": "2026-10-22T10:46:15.264933+00:00",
+      "finished_utc": "2026-10-22T13:33:30.608670+00:00",
+      "wall_seconds": 10035.480208375026,
+      "workers": 14,
+      "datasets": [
+        "dronerf",
+        "birdclef2023",
+        "esc50_animals"
+      ],
+      "stages": {
+        "dronerf": {
+          "clean_seconds_from_start": 399.5128910000203,
+          "features_seconds_from_start": 2829.9532275409438
+        },
+        "birdclef2023": {
+          "clean_seconds_from_start": 603.1925223330036,
+          "features_seconds_from_start": 3926.9388612080365
+        },
+        "esc50_animals": {
+          "clean_seconds_from_start": 699.8722303329268,
+          "features_seconds_from_start": 4448.858191916021
+        }
+      },
+      "pimf": {
+        "version": "0.4.0",
+        "files": {
+          "__init__.py": "fc7c0a84b39b1a4787a7973ded0eff50a882ee05b8f1d68a995941c1667c3391",
+          "_erf.py": "01ffbc30bd9e50752980716d5c8c01d6be94ba2e724b253d5ccdc48117ab465e",
+          "contrasts.py": "38556222cc9645c21285faaa8d388b3b53bd2c87758a79f03c64e9f000013c2f",
+          "decompose.py": "f71fe8ba5e08f2f5ce7f3572c762346543ac124712760f74411f2253d3551688",
+          "kernels.py": "fb65d469cb7fb594734e768bc8cde8a6926214c985c5f044e9f4517d3a220c11"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,101 @@
+{
+  "datasets": [
+    {
+      "dataset": "synthetic",
+      "predictions_recomputed": 688800,
+      "clean_exact_checks": 100,
+      "clean_checks": 100,
+      "clean_max_absolute_error": 0.0,
+      "pilot_exclusions": 100,
+      "grouped_splits_verified": 15,
+      "feature_manifest_sha256": "ad4a5c66e4a2f39775893dbece60862ad23d0e1762c03b61e9150036ca9bcab7",
+      "classification_manifest_sha256": "7c8a71e27e5a9ae89368eb8a13175fc723c91eb2c53345d9e97cf42bb0f2f8c6",
+      "inputs_verified": 5,
+      "fixed_h_recalibrated": true,
+      "matrices_recomputed": true,
+      "k_selection_recomputed": true
+    },
+    {
+      "dataset": "dronerf",
+      "predictions_recomputed": 5854800,
+      "clean_exact_checks": 100,
+      "clean_checks": 100,
+      "clean_max_absolute_error": 0.0,
+      "pilot_exclusions": 100,
+      "grouped_splits_verified": 15,
+      "feature_manifest_sha256": "3f0613625a2d3f29c1c169498c194ff7e91d9dba447dc28dcf44e98f28b35d9e",
+      "classification_manifest_sha256": "bc38a81692d0fd602975e6b7dd350ee11a94bfa1573d41d9025ca09d4ca96b42",
+      "inputs_verified": 5,
+      "fixed_h_recalibrated": true,
+      "matrices_recomputed": true,
+      "k_selection_recomputed": true
+    },
+    {
+      "dataset": "birdclef2023",
+      "predictions_recomputed": 5854800,
+      "clean_exact_checks": 100,
+      "clean_checks": 100,
+      "clean_max_absolute_error": 0.0,
+      "pilot_exclusions": 100,
+      "grouped_splits_verified": 15,
+      "feature_manifest_sha256": "62e4923db2f82413c34101e50bfd56d7d8446c3d05c5ce139ed2d0aac95badfe",
+      "classification_manifest_sha256": "646aeb957e123ea5a8b283a87a41bc21b6d2a82bcf077b7281739dd0339a0ed3",
+      "inputs_verified": 5,
+      "fixed_h_recalibrated": true,
+      "matrices_recomputed": true,
+      "k_selection_recomputed": true
+    },
+    {
+      "dataset": "esc50_animals",
+      "predictions_recomputed": 2460000,
+      "clean_exact_checks": 100,
+      "clean_checks": 100,
+      "clean_max_absolute_error": 0.0,
+      "pilot_exclusions": 100,
+      "grouped_splits_verified": 15,
+      "feature_manifest_sha256": "74254306e5ba6d27a719eafb255e474f976a185def9074917ef9e53ee2157336",
+      "classification_manifest_sha256": "e6e156e901b4a63a191392431ce96b4c6ac2f5865ae8cb4229333172da60a8d5",
+      "inputs_verified": 5,
+      "fixed_h_recalibrated": true,
+      "matrices_recomputed": true,
+      "k_selection_recomputed": true
+    }
+  ],
+  "families": {
+    "Primary": 12,
+    "S1": 12,
+    "S3": 24,
+    "S5": 6,
+    "synthetic": 18
+  },
+  "expected_families": {
+    "Primary": 12,
+    "S1": 12,
+    "S3": 24,
+    "S5": 6,
+    "synthetic": 18
+  },
+  "all_prediction_metrics_recomputed": true,
+  "shift_classical_selection": [
+    {
+      "dataset": "birdclef2023",
+      "selection": "grid_search",
+      "fits": 540
+    },
+    {
+      "dataset": "dronerf",
+      "selection": "grid_search",
+      "fits": 540
+    },
+    {
+      "dataset": "esc50_animals",
+      "selection": "grid_search",
+      "fits": 540
+    },
+    {
+      "dataset": "synthetic",
+      "selection": "grid_search",
+      "fits": 540
+    }
+  ]
+}
