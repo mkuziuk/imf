@@ -1,0 +1,138 @@
+{
+  "dataset": "esc50_animals",
+  "task": "bird",
+  "classifiers": [
+    "lda",
+    "logreg",
+    "linsvm"
+  ],
+  "workers": 4,
+  "start": "2026-10-20T22:38:41.988221+00:00",
+  "phase2": {
+    "dataset": "esc50_animals",
+    "task": "bird",
+    "methods": [
+      "raw",
+      "emd",
+      "imf_linear_a1.41",
+      "irmf_h2_a1.41"
+    ],
+    "n_frames": 5100,
+    "n_groups": 157,
+    "n_classes": 2,
+    "n_splits": 15,
+    "n_seeds": 3,
+    "workers": 3,
+    "seconds": 404.76276412501466,
+    "breakdown": null,
+    "classifiers": [
+      "lda",
+      "qda",
+      "gnb",
+      "logreg",
+      "knn",
+      "linsvm"
+    ],
+    "feature_sets": [
+      "comp",
+      "comp+log_scale"
+    ],
+    "pairs": [
+      [
+        "irmf_h2_a1.41",
+        "emd"
+      ],
+      [
+        "irmf_h2_a1.41",
+        "imf_linear_a1.41"
+      ],
+      [
+        "imf_linear_a1.41",
+        "emd"
+      ],
+      [
+        "irmf_h2_a1.41",
+        "raw"
+      ],
+      [
+        "imf_linear_a1.41",
+        "raw"
+      ],
+      [
+        "emd",
+        "raw"
+      ]
+    ],
+    "quick": false
+  },
+  "reuse": {
+    "fold_file": "/Users/mikhail/.t3/worktrees/imf/t3-44ed3594/output/classification-emd-irmf/esc50_animals/classical/results_folds_bird.csv",
+    "fold_sha256": "ebdc481e4b6925b4af6bd22f561050cbec0632cc3896bae3700318ea58530522",
+    "prediction_file": "/Users/mikhail/Datasets/imf-classification/esc50_animals/results/phase2_main/classical_bird_predictions.parquet",
+    "verified_fits": 360,
+    "split_sha256": "ec4a5fa1ef3e015e4ca2557dcd535c18446638a3410fcad1b5c8e79ece4f8a6a",
+    "driver_sha256": "b2b94bc8c49251adba0ece318f892330f01c1c04bb1d4d256226f97f251e1386"
+  },
+  "caches": [
+    {
+      "tag": "irmf_h2_a1.41_conv",
+      "ready": true,
+      "slots": 18,
+      "cpu_seconds_per_frame": 0.06440303921568627,
+      "features_sha256": "b5a6948179bac21f7403f6791ba39b617cb7be77052fa26c1106568e0416c135",
+      "decomposition_sha256": "93b14d9e8d7e4451d3db49671679a678ccfd0df26d2ba795ae135e510422500f"
+    },
+    {
+      "tag": "irmf_h1_a1.41_conv",
+      "ready": true,
+      "slots": 18,
+      "cpu_seconds_per_frame": 0.07127583274509816,
+      "features_sha256": "d6ae61e99355700f48354ff2eacc82c3286f4bee2894dbe33650a7739ffaa7b8",
+      "decomposition_sha256": "c7196727f0f2e1e25432ba2f2d4e793f264931d2b901d60958c69b7e227a3fd0"
+    },
+    {
+      "tag": "irmf_h4_a1.41_conv",
+      "ready": true,
+      "slots": 18,
+      "cpu_seconds_per_frame": 0.058354170980392174,
+      "features_sha256": "9c85107a1b337d5aaf4900b3f2cef557cfaa7be84fca1885947c2b7ea4e9bc42",
+      "decomposition_sha256": "58149e700ad56642249e140b920b50644564d8d830f53516428fddc6384ebbec"
+    },
+    {
+      "tag": "irmf_h2_a2_conv",
+      "ready": true,
+      "slots": 10,
+      "cpu_seconds_per_frame": 0.037256458823529515,
+      "features_sha256": "5072039013ece7d96f4e13f83f661ccd4f7460284e7106e9d73caedcbe54ea00",
+      "decomposition_sha256": "d15a9785cccfa697d799b63e98b5315b07255e6ecea7e98ef5aae33641f1e550"
+    },
+    {
+      "tag": "imf_linear_a2",
+      "ready": true,
+      "slots": 10,
+      "cpu_seconds_per_frame": 0.004102307058823511,
+      "features_sha256": "c8c5d2f28e9a9dbd1eebba30eacd156c7865a0569b413928a5575611173f26c6",
+      "decomposition_sha256": "3f4d8987b5f908bd91b915649f0424df50478d761bba3795fd53600742b43e84"
+    },
+    {
+      "tag": "irmf_h2_a2",
+      "ready": true,
+      "slots": 10,
+      "cpu_seconds_per_frame": 0.7860425245098019,
+      "features_sha256": "16efabebbfffc73965b72eaa79459f277661307bad4aab9d377738757546003f",
+      "decomposition_sha256": "be41c984f5baa0dac82b89085a169f6753df907cf87406079a67913c2d29d0e2",
+      "skipped": true,
+      "reason": "optional GD60 a2 excluded to reserve the primary-tag budget"
+    }
+  ],
+  "estimator_signatures": {
+    "lda": "{'memory': None, 'steps': [('impute', SimpleImputer(strategy='median')), ('constant', VarianceThreshold()), ('scale', StandardScaler()), ('clf', LinearDiscriminantAnalysis(shrinkage='auto', solver='lsqr'))], 'transform_input': None, 'verbose': False, 'impute': SimpleImputer(strategy='median'), 'constant': VarianceThreshold(), 'scale': StandardScaler(), 'clf': LinearDiscriminantAnalysis(shrinkage='auto', solver='lsqr'), 'impute__add_indicator': False, 'impute__copy': True, 'impute__fill_value': None, 'impute__keep_empty_features': False, 'impute__missing_values': nan, 'impute__strategy': 'median', 'constant__threshold': 0.0, 'scale__copy': True, 'scale__with_mean': True, 'scale__with_std': True, 'clf__covariance_estimator': None, 'clf__n_components': None, 'clf__priors': None, 'clf__shrinkage': 'auto', 'clf__solver': 'lsqr', 'clf__store_covariance': False, 'clf__tol': 0.0001}",
+    "logreg": "{'cv': StratifiedGroupKFold(n_splits=3, random_state=0, shuffle=True), 'error_score': 0.0, 'estimator__memory': None, 'estimator__steps': [('impute', SimpleImputer(strategy='median')), ('constant', VarianceThreshold()), ('scale', StandardScaler()), ('clf', LogisticRegression(max_iter=3000))], 'estimator__transform_input': None, 'estimator__verbose': False, 'estimator__impute': SimpleImputer(strategy='median'), 'estimator__constant': VarianceThreshold(), 'estimator__scale': StandardScaler(), 'estimator__clf': LogisticRegression(max_iter=3000), 'estimator__impute__add_indicator': False, 'estimator__impute__copy': True, 'estimator__impute__fill_value': None, 'estimator__impute__keep_empty_features': False, 'estimator__impute__missing_values': nan, 'estimator__impute__strategy': 'median', 'estimator__constant__threshold': 0.0, 'estimator__scale__copy': True, 'estimator__scale__with_mean': True, 'estimator__scale__with_std': True, 'estimator__clf__C': 1.0, 'estimator__clf__class_weight': None, 'estimator__clf__dual': False, 'estimator__clf__fit_intercept': True, 'estimator__clf__intercept_scaling': 1, 'estimator__clf__l1_ratio': 0.0, 'estimator__clf__max_iter': 3000, 'estimator__clf__n_jobs': None, 'estimator__clf__penalty': 'deprecated', 'estimator__clf__random_state': None, 'estimator__clf__solver': 'lbfgs', 'estimator__clf__tol': 0.0001, 'estimator__clf__verbose': 0, 'estimator__clf__warm_start': False, 'estimator': Pipeline(steps=[('impute', SimpleImputer(strategy='median')),\n                ('constant', VarianceThreshold()), ('scale', StandardScaler()),\n                ('clf', LogisticRegression(max_iter=3000))]), 'n_jobs': 1, 'param_grid': {'clf__C': [0.001, 0.01, 0.1, 1.0, 10.0]}, 'pre_dispatch': '2*n_jobs', 'refit': True, 'return_train_score': False, 'scoring': 'balanced_accuracy', 'verbose': 0}",
+    "linsvm": "{'cv': StratifiedGroupKFold(n_splits=3, random_state=0, shuffle=True), 'error_score': 0.0, 'estimator__memory': None, 'estimator__steps': [('impute', SimpleImputer(strategy='median')), ('constant', VarianceThreshold()), ('scale', StandardScaler()), ('clf', LinearSVC(max_iter=5000))], 'estimator__transform_input': None, 'estimator__verbose': False, 'estimator__impute': SimpleImputer(strategy='median'), 'estimator__constant': VarianceThreshold(), 'estimator__scale': StandardScaler(), 'estimator__clf': LinearSVC(max_iter=5000), 'estimator__impute__add_indicator': False, 'estimator__impute__copy': True, 'estimator__impute__fill_value': None, 'estimator__impute__keep_empty_features': False, 'estimator__impute__missing_values': nan, 'estimator__impute__strategy': 'median', 'estimator__constant__threshold': 0.0, 'estimator__scale__copy': True, 'estimator__scale__with_mean': True, 'estimator__scale__with_std': True, 'estimator__clf__C': 1.0, 'estimator__clf__class_weight': None, 'estimator__clf__dual': 'auto', 'estimator__clf__fit_intercept': True, 'estimator__clf__intercept_scaling': 1, 'estimator__clf__loss': 'squared_hinge', 'estimator__clf__max_iter': 5000, 'estimator__clf__multi_class': 'ovr', 'estimator__clf__penalty': 'l2', 'estimator__clf__random_state': None, 'estimator__clf__tol': 0.0001, 'estimator__clf__verbose': 0, 'estimator': Pipeline(steps=[('impute', SimpleImputer(strategy='median')),\n                ('constant', VarianceThreshold()), ('scale', StandardScaler()),\n                ('clf', LinearSVC(max_iter=5000))]), 'n_jobs': 1, 'param_grid': {'clf__C': [0.001, 0.01, 0.1, 1.0]}, 'pre_dispatch': '2*n_jobs', 'refit': True, 'return_train_score': False, 'scoring': 'balanced_accuracy', 'verbose': 0}"
+  },
+  "job_count": 450,
+  "n_splits": 15,
+  "protocol": "same nested grouped CV; no retuning on test folds",
+  "seconds": 592.3425618750043,
+  "finished": "2026-10-20T22:48:32.422701+00:00"
+}

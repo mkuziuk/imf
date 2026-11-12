@@ -1,0 +1,29 @@
+{
+  "dataset": "dronerf",
+  "task": "10class",
+  "methods": [
+    "irmf_h2_a1.41_conv"
+  ],
+  "n_frames": 12000,
+  "n_groups": 227,
+  "n_classes": 10,
+  "n_splits": 15,
+  "n_seeds": 3,
+  "workers": 3,
+  "seconds": 26849.613678500056,
+  "breakdown": null,
+  "classifiers": [
+    "lda",
+    "logreg",
+    "linsvm"
+  ],
+  "feature_sets": [
+    "comp",
+    "comp+log_scale"
+  ],
+  "pairs": [],
+  "quick": false,
+  "results_tag": "prototype",
+  "save_probabilities": false,
+  "predictions": "/Users/mikhail/Datasets/imf-classification-prototype-conv/dronerf/results/prototype/classical_10class_predictions.parquet"
+}

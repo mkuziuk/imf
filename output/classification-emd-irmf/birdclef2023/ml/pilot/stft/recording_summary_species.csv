@@ -1,0 +1,5 @@
+,balanced_accuracy,balanced_accuracy,macro_f1,macro_f1,accuracy,accuracy
+,mean,std,mean,std,mean,std
+feature_set,,,,,,
+comp,0.6157015931372549,,0.6077450956108178,,0.6147859922178989,
+comp+log_scale,0.5841299019607844,,0.5685236811799312,,0.5836575875486382,

@@ -1,0 +1,5 @@
+dataset,survives_matched_counts,positive_and_holm_significant,required_contrasts
+synthetic,True,4,4
+dronerf,True,4,4
+birdclef2023,False,0,4
+esc50_animals,False,3,4

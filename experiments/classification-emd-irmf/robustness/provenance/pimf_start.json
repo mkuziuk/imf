@@ -1,0 +1,13 @@
+{
+  "utc": "2026-10-21T05:10:45.968434+00:00",
+  "pimf": {
+    "version": "0.4.0",
+    "files": {
+      "__init__.py": "fc7c0a84b39b1a4787a7973ded0eff50a882ee05b8f1d68a995941c1667c3391",
+      "_erf.py": "01ffbc30bd9e50752980716d5c8c01d6be94ba2e724b253d5ccdc48117ab465e",
+      "contrasts.py": "38556222cc9645c21285faaa8d388b3b53bd2c87758a79f03c64e9f000013c2f",
+      "decompose.py": "f71fe8ba5e08f2f5ce7f3572c762346543ac124712760f74411f2253d3551688",
+      "kernels.py": "fb65d469cb7fb594734e768bc8cde8a6926214c985c5f044e9f4517d3a220c11"
+    }
+  }
+}

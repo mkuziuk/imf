@@ -1,0 +1,8 @@
+{
+  "status": "passed",
+  "fits": 120,
+  "frame_predictions": 288000,
+  "recording_predictions": 30720,
+  "complete_seed_cells": 24,
+  "recordings_per_seed": 1280
+}

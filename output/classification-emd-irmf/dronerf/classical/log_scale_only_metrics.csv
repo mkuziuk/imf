@@ -1,0 +1,2 @@
+task,classifier,balanced_accuracy,macro_f1,accuracy
+10class,linsvm,0.19566382032073854,0.11286957609561395,0.19440082687796062

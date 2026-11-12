@@ -1,0 +1,20 @@
+                                              balanced_accuracy  macro_f1  accuracy
+method                        feature_set                                          
+emd                           comp                     0.504866  0.504980  0.504872
+                              comp+log_scale           0.500824  0.501288  0.500848
+imf_linear_a1.41              comp                     0.527962  0.528055  0.528002
+                              comp+log_scale           0.524325  0.524596  0.524338
+irmf_h2_a1.41                 comp                     0.529260  0.529371  0.529233
+                              comp+log_scale           0.527786  0.527996  0.527765
+irmf_h2_a1.41_conv            comp                     0.530521  0.530268  0.530483
+                              comp+log_scale           0.530030  0.529827  0.529981
+irmf_h2_a1.41_conv_emd_fusion comp                     0.532833  0.532635  0.532811
+                              comp+log_scale           0.531244  0.531441  0.531231
+irmf_h2_a1.41_conv_matched9   comp                     0.526522  0.526865  0.526539
+                              comp+log_scale           0.523695  0.524007  0.523652
+irmf_h2_a1.41_emd_fusion      comp                     0.531468  0.531736  0.531477
+                              comp+log_scale           0.528604  0.529014  0.528617
+irmf_h2_a1.41_matched9        comp                     0.526604  0.527098  0.526594
+                              comp+log_scale           0.523378  0.523549  0.523374
+raw                           comp                     0.468343  0.468501  0.468286
+                              comp+log_scale           0.459873  0.460268  0.459792

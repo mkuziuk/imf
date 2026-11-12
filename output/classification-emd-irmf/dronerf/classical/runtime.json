@@ -1,0 +1,16 @@
+{
+  "seconds": 10296.300743541098,
+  "hours": 2.860083539872527,
+  "max_fit_workers": 3,
+  "phases_seconds": {
+    "main_2class": 3279.1994277919875,
+    "main_4class": 1902.1550712500466,
+    "main_10class": 2878.7002137920354,
+    "discarded_grid_phase": 328,
+    "retained_resumed_phase": 1396,
+    "solver_probe": 89.80668191600125,
+    "band_controls": 393.5693011250114,
+    "analysis": 28.870047666016035
+  },
+  "scope": "Classification, controls, numerical analysis, both interrupted phases and solver probe; excludes cached decomposition and preparation, idle review and reporting time."
+}

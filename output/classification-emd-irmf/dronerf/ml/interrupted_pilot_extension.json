@@ -1,0 +1,6 @@
+{
+  "reason": "Cost-based CNN revision from 12 to 8 epochs before a main evaluation fit completed. Two-epoch pilot retained.",
+  "discarded_seconds": 53.647271394729614,
+  "discarded_predictions": 0,
+  "measurement": "initial console birth time to replacement console truncation"
+}

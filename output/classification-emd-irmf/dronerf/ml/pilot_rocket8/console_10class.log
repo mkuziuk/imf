@@ -1,0 +1,5 @@
+raw comp minirocket split=0: BA=0.473, fit=12.51s, predict=1.09s
+raw comp+log_scale minirocket split=0: BA=0.485, fit=12.50s, predict=1.09s
+irmf_h2_a1.41_conv comp minirocket split=0: BA=0.484, fit=40.20s, predict=4.70s
+irmf_h2_a1.41_conv comp+log_scale minirocket split=0: BA=0.514, fit=40.20s, predict=4.70s
+wrote /Users/mikhail/.t3/worktrees/imf/t3-44ed3594/output/classification-emd-irmf/dronerf/ml/pilot_rocket8, total 67.6s

@@ -1,0 +1,11 @@
+raw comp xgboost split=0: BA=0.796, fit=0.96s, predict=0.00s
+raw comp+log_scale xgboost split=0: BA=0.789, fit=0.85s, predict=0.00s
+emd comp xgboost split=0: BA=0.812, fit=4.52s, predict=0.01s
+emd comp+log_scale xgboost split=0: BA=0.805, fit=3.79s, predict=0.01s
+imf_linear_a1.41 comp xgboost split=0: BA=0.840, fit=9.38s, predict=0.01s
+imf_linear_a1.41 comp+log_scale xgboost split=0: BA=0.837, fit=7.17s, predict=0.01s
+irmf_h2_a1.41 comp xgboost split=0: BA=0.835, fit=8.35s, predict=0.01s
+irmf_h2_a1.41 comp+log_scale xgboost split=0: BA=0.834, fit=6.47s, predict=0.01s
+irmf_h2_a1.41_conv comp xgboost split=0: BA=0.835, fit=8.61s, predict=0.01s
+irmf_h2_a1.41_conv comp+log_scale xgboost split=0: BA=0.836, fit=7.61s, predict=0.01s
+wrote /Users/mikhail/.t3/worktrees/imf/t3-44ed3594/output/classification-emd-irmf/birdclef2023/ml/pilot/xgboost_passerine, total 58.3s

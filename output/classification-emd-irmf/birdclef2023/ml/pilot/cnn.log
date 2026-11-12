@@ -1,0 +1,11 @@
+raw comp compact_resnet split=0: BA=0.481, fit=14.84s, predict=0.26s
+raw comp+log_scale compact_resnet split=0: BA=0.480, fit=15.09s, predict=0.27s
+emd comp compact_resnet split=0: BA=0.466, fit=8.71s, predict=0.14s
+emd comp+log_scale compact_resnet split=0: BA=0.482, fit=9.36s, predict=0.14s
+imf_linear_a1.41 comp compact_resnet split=0: BA=0.492, fit=10.83s, predict=0.21s
+imf_linear_a1.41 comp+log_scale compact_resnet split=0: BA=0.479, fit=11.69s, predict=0.20s
+irmf_h2_a1.41 comp compact_resnet split=0: BA=0.494, fit=10.63s, predict=0.21s
+irmf_h2_a1.41 comp+log_scale compact_resnet split=0: BA=0.471, fit=11.51s, predict=0.21s
+irmf_h2_a1.41_conv comp compact_resnet split=0: BA=0.512, fit=13.08s, predict=0.20s
+irmf_h2_a1.41_conv comp+log_scale compact_resnet split=0: BA=0.474, fit=11.35s, predict=0.18s
+wrote /Users/mikhail/.t3/worktrees/imf/t3-44ed3594/output/classification-emd-irmf/birdclef2023/ml/pilot/cnn, total 119.9s

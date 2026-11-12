@@ -1,0 +1,117 @@
+[
+  {
+    "runner": "cnn_passerine_fold0",
+    "n_fit_rows": 10,
+    "n_predictions": 24130,
+    "n_recording_predictions": 2590,
+    "n_methods": 5,
+    "split_ids": [
+      0
+    ],
+    "checks": "passed"
+  },
+  {
+    "runner": "cnn_passerine_remaining",
+    "n_fit_rows": 40,
+    "n_predictions": 95870,
+    "n_recording_predictions": 10210,
+    "n_methods": 5,
+    "split_ids": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "checks": "passed"
+  },
+  {
+    "runner": "rocket_mini",
+    "n_fit_rows": 50,
+    "n_predictions": 120000,
+    "n_recording_predictions": 12800,
+    "n_methods": 5,
+    "split_ids": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "checks": "passed"
+  },
+  {
+    "runner": "trees_extratrees",
+    "n_fit_rows": 150,
+    "n_predictions": 360000,
+    "n_recording_predictions": 38400,
+    "n_methods": 5,
+    "split_ids": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14
+    ],
+    "checks": "passed"
+  },
+  {
+    "runner": "trees_lightgbm",
+    "n_fit_rows": 150,
+    "n_predictions": 360000,
+    "n_recording_predictions": 38400,
+    "n_methods": 5,
+    "split_ids": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14
+    ],
+    "checks": "passed"
+  },
+  {
+    "runner": "trees_xgboost",
+    "n_fit_rows": 150,
+    "n_predictions": 360000,
+    "n_recording_predictions": 38400,
+    "n_methods": 5,
+    "split_ids": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14
+    ],
+    "checks": "passed"
+  }
+]

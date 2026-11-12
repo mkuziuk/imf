@@ -1,0 +1,126 @@
+  task             method    feature_set     classifier  balanced_accuracy_mean  balanced_accuracy_std  macro_f1_mean  macro_f1_std  accuracy_mean  accuracy_std
+animal                emd           comp compact_resnet                0.514631               0.031079       0.513549      0.036996       0.520723      0.034859
+animal                emd           comp     extratrees                0.562162               0.042522       0.551141      0.041689       0.561178      0.043664
+animal                emd           comp       lightgbm                0.594567               0.040055       0.587534      0.039936       0.594871      0.041102
+animal                emd           comp     minirocket                0.572752               0.036525       0.562765      0.036522       0.573433      0.038640
+animal                emd           comp    multirocket                0.542676               0.039121       0.527297      0.041504       0.542031      0.040692
+animal                emd           comp        xgboost                0.572405               0.037274       0.564910      0.037115       0.573723      0.040809
+animal                emd comp+log_scale compact_resnet                0.543390               0.029195       0.538457      0.033563       0.547790      0.035393
+animal                emd comp+log_scale     extratrees                0.570853               0.037488       0.559413      0.037364       0.569768      0.038032
+animal                emd comp+log_scale       lightgbm                0.596963               0.028595       0.590491      0.027680       0.598057      0.029616
+animal                emd comp+log_scale     minirocket                0.579517               0.043080       0.569798      0.045052       0.581110      0.045291
+animal                emd comp+log_scale    multirocket                0.549270               0.039569       0.534213      0.044122       0.550571      0.038826
+animal                emd comp+log_scale        xgboost                0.573315               0.028278       0.565984      0.026792       0.575047      0.030611
+animal   imf_linear_a1.41           comp compact_resnet                0.524907               0.036659       0.506834      0.035414       0.518370      0.044528
+animal   imf_linear_a1.41           comp     extratrees                0.657891               0.036653       0.649380      0.040138       0.658078      0.037834
+animal   imf_linear_a1.41           comp       lightgbm                0.671761               0.032329       0.667471      0.032686       0.674026      0.034318
+animal   imf_linear_a1.41           comp     minirocket                0.608098               0.037606       0.595113      0.036974       0.606011      0.040628
+animal   imf_linear_a1.41           comp    multirocket                0.596323               0.046996       0.582819      0.049122       0.596217      0.047017
+animal   imf_linear_a1.41           comp        xgboost                0.657690               0.033216       0.651687      0.034782       0.659439      0.034664
+animal   imf_linear_a1.41 comp+log_scale compact_resnet                0.530491               0.035113       0.515586      0.036967       0.524770      0.043144
+animal   imf_linear_a1.41 comp+log_scale     extratrees                0.658064               0.035229       0.649472      0.038678       0.658823      0.036667
+animal   imf_linear_a1.41 comp+log_scale       lightgbm                0.674838               0.026961       0.670732      0.028222       0.679243      0.029524
+animal   imf_linear_a1.41 comp+log_scale     minirocket                0.607343               0.039821       0.595521      0.039260       0.606863      0.041736
+animal   imf_linear_a1.41 comp+log_scale    multirocket                0.604232               0.045383       0.592932      0.046566       0.605375      0.044965
+animal   imf_linear_a1.41 comp+log_scale        xgboost                0.660749               0.029481       0.655017      0.031602       0.664303      0.029607
+animal      irmf_h2_a1.41           comp compact_resnet                0.508385               0.033578       0.490391      0.035440       0.504042      0.037176
+animal      irmf_h2_a1.41           comp     extratrees                0.649371               0.036401       0.640335      0.040942       0.650858      0.036460
+animal      irmf_h2_a1.41           comp       lightgbm                0.663178               0.030525       0.657249      0.031156       0.666805      0.031940
+animal      irmf_h2_a1.41           comp     minirocket                0.589264               0.037033       0.577162      0.035013       0.587893      0.040096
+animal      irmf_h2_a1.41           comp    multirocket                0.589222               0.041805       0.577804      0.043299       0.588809      0.042239
+animal      irmf_h2_a1.41           comp        xgboost                0.640834               0.032147       0.635512      0.032335       0.645158      0.034610
+animal      irmf_h2_a1.41 comp+log_scale compact_resnet                0.559572               0.033650       0.553272      0.035601       0.559803      0.039672
+animal      irmf_h2_a1.41 comp+log_scale     extratrees                0.649335               0.034189       0.639975      0.038467       0.650632      0.033675
+animal      irmf_h2_a1.41 comp+log_scale       lightgbm                0.670831               0.031439       0.665391      0.033115       0.675913      0.033220
+animal      irmf_h2_a1.41 comp+log_scale     minirocket                0.593153               0.035199       0.580573      0.033685       0.592788      0.037465
+animal      irmf_h2_a1.41 comp+log_scale    multirocket                0.600057               0.039517       0.588950      0.040668       0.601669      0.036194
+animal      irmf_h2_a1.41 comp+log_scale        xgboost                0.648754               0.029974       0.643607      0.030246       0.653704      0.030983
+animal irmf_h2_a1.41_conv           comp compact_resnet                0.510263               0.030485       0.497868      0.028846       0.507888      0.030223
+animal irmf_h2_a1.41_conv           comp     extratrees                0.650311               0.039737       0.641177      0.043524       0.651519      0.039657
+animal irmf_h2_a1.41_conv           comp       lightgbm                0.658855               0.031208       0.652777      0.031931       0.662032      0.032855
+animal irmf_h2_a1.41_conv           comp     minirocket                0.592495               0.033318       0.580390      0.032610       0.590479      0.037006
+animal irmf_h2_a1.41_conv           comp    multirocket                0.582237               0.045472       0.568961      0.047626       0.582049      0.047702
+animal irmf_h2_a1.41_conv           comp        xgboost                0.640534               0.025542       0.635061      0.025760       0.644688      0.027918
+animal irmf_h2_a1.41_conv comp+log_scale compact_resnet                0.543147               0.056244       0.525617      0.056897       0.538639      0.056803
+animal irmf_h2_a1.41_conv comp+log_scale     extratrees                0.651229               0.038136       0.641966      0.042407       0.653148      0.037970
+animal irmf_h2_a1.41_conv comp+log_scale       lightgbm                0.663964               0.030909       0.658908      0.033068       0.669074      0.032731
+animal irmf_h2_a1.41_conv comp+log_scale     minirocket                0.594711               0.034459       0.583779      0.033298       0.593617      0.038208
+animal irmf_h2_a1.41_conv comp+log_scale    multirocket                0.592386               0.036875       0.579821      0.038869       0.593991      0.035837
+animal irmf_h2_a1.41_conv comp+log_scale        xgboost                0.644515               0.024546       0.638771      0.025604       0.649538      0.024388
+animal                raw           comp compact_resnet                0.525948               0.038949       0.518554      0.035597       0.526928      0.036347
+animal                raw           comp     extratrees                0.521397               0.018884       0.512883      0.018117       0.524211      0.018758
+animal                raw           comp       lightgbm                0.523693               0.031249       0.518427      0.029583       0.528790      0.030540
+animal                raw           comp log_stft_cnn2d                0.539345               0.036901       0.531011      0.038440       0.545608      0.038750
+animal                raw           comp     minirocket                0.564866               0.035512       0.550082      0.034030       0.565236      0.039276
+animal                raw           comp    multirocket                0.558699               0.025943       0.542481      0.026445       0.557979      0.019816
+animal                raw           comp        xgboost                0.502796               0.022161       0.498140      0.021841       0.507354      0.022724
+animal                raw comp+log_scale compact_resnet                0.538258               0.046899       0.530407      0.047213       0.538320      0.046505
+animal                raw comp+log_scale     extratrees                0.531621               0.026529       0.523018      0.027311       0.534238      0.025135
+animal                raw comp+log_scale       lightgbm                0.535812               0.037872       0.531683      0.035549       0.542991      0.034464
+animal                raw comp+log_scale log_stft_cnn2d                0.554698               0.020777       0.547539      0.017605       0.559188      0.017498
+animal                raw comp+log_scale     minirocket                0.571925               0.035048       0.558283      0.033670       0.573479      0.036218
+animal                raw comp+log_scale    multirocket                0.579217               0.034609       0.566392      0.034130       0.579957      0.027482
+animal                raw comp+log_scale        xgboost                0.515136               0.031289       0.510807      0.030596       0.521814      0.028067
+  bird                emd           comp compact_resnet                0.719818               0.056791       0.705248      0.047163       0.741218      0.036001
+  bird                emd           comp     extratrees                0.719797               0.046007       0.722575      0.046525       0.771105      0.039125
+  bird                emd           comp       lightgbm                0.758055               0.041841       0.737992      0.042114       0.764788      0.040461
+  bird                emd           comp     minirocket                0.749311               0.041401       0.704948      0.038486       0.720824      0.037835
+  bird                emd           comp    multirocket                0.737310               0.051594       0.676221      0.049099       0.685024      0.049576
+  bird                emd           comp        xgboost                0.751610               0.043259       0.726181      0.043144       0.750520      0.042110
+  bird                emd comp+log_scale compact_resnet                0.744325               0.058279       0.696527      0.037514       0.713154      0.024251
+  bird                emd comp+log_scale     extratrees                0.722495               0.050442       0.726130      0.051629       0.775014      0.042939
+  bird                emd comp+log_scale       lightgbm                0.754547               0.041246       0.736924      0.043506       0.765017      0.042798
+  bird                emd comp+log_scale     minirocket                0.744991               0.054394       0.701099      0.047291       0.717706      0.043231
+  bird                emd comp+log_scale    multirocket                0.733865               0.044707       0.675183      0.034113       0.685370      0.030659
+  bird                emd comp+log_scale        xgboost                0.750717               0.046267       0.725432      0.046630       0.749886      0.045641
+  bird   imf_linear_a1.41           comp compact_resnet                0.739228               0.047225       0.713111      0.034751       0.742296      0.036830
+  bird   imf_linear_a1.41           comp     extratrees                0.746824               0.042477       0.748927      0.040098       0.792493      0.031173
+  bird   imf_linear_a1.41           comp       lightgbm                0.782078               0.043629       0.767533      0.038467       0.796558      0.032757
+  bird   imf_linear_a1.41           comp     minirocket                0.761480               0.044017       0.717701      0.041210       0.733773      0.040173
+  bird   imf_linear_a1.41           comp    multirocket                0.749710               0.031295       0.686764      0.023804       0.695521      0.022059
+  bird   imf_linear_a1.41           comp        xgboost                0.772800               0.054542       0.751585      0.047640       0.778939      0.039427
+  bird   imf_linear_a1.41 comp+log_scale compact_resnet                0.722001               0.054049       0.699457      0.040298       0.732460      0.037193
+  bird   imf_linear_a1.41 comp+log_scale     extratrees                0.752051               0.041606       0.754113      0.039268       0.796635      0.030462
+  bird   imf_linear_a1.41 comp+log_scale       lightgbm                0.783536               0.045120       0.768200      0.041067       0.796602      0.036098
+  bird   imf_linear_a1.41 comp+log_scale     minirocket                0.761720               0.050645       0.718846      0.047356       0.735402      0.045476
+  bird   imf_linear_a1.41 comp+log_scale    multirocket                0.748177               0.039850       0.685607      0.035484       0.694450      0.034993
+  bird   imf_linear_a1.41 comp+log_scale        xgboost                0.774591               0.056145       0.753167      0.049919       0.779967      0.041992
+  bird      irmf_h2_a1.41           comp compact_resnet                0.759069               0.053238       0.724989      0.034609       0.747645      0.023860
+  bird      irmf_h2_a1.41           comp     extratrees                0.753045               0.035031       0.754431      0.033852       0.795644      0.028528
+  bird      irmf_h2_a1.41           comp       lightgbm                0.780655               0.034601       0.765276      0.032178       0.793498      0.029946
+  bird      irmf_h2_a1.41           comp     minirocket                0.754670               0.039839       0.711861      0.040843       0.727955      0.041368
+  bird      irmf_h2_a1.41           comp    multirocket                0.748071               0.044014       0.681551      0.045639       0.688913      0.047160
+  bird      irmf_h2_a1.41           comp        xgboost                0.774685               0.033808       0.751628      0.031776       0.776561      0.030123
+  bird      irmf_h2_a1.41 comp+log_scale compact_resnet                0.749301               0.056067       0.716460      0.040462       0.739755      0.029840
+  bird      irmf_h2_a1.41 comp+log_scale     extratrees                0.751258               0.038049       0.752908      0.036537       0.794973      0.029181
+  bird      irmf_h2_a1.41 comp+log_scale       lightgbm                0.776466               0.040135       0.760986      0.037101       0.789674      0.033081
+  bird      irmf_h2_a1.41 comp+log_scale     minirocket                0.748876               0.045249       0.705709      0.046198       0.721434      0.046519
+  bird      irmf_h2_a1.41 comp+log_scale    multirocket                0.741038               0.057334       0.677777      0.055707       0.685947      0.056547
+  bird      irmf_h2_a1.41 comp+log_scale        xgboost                0.770376               0.037758       0.747870      0.033911       0.773612      0.030699
+  bird irmf_h2_a1.41_conv           comp compact_resnet                0.749306               0.070209       0.714181      0.049803       0.740584      0.032917
+  bird irmf_h2_a1.41_conv           comp     extratrees                0.752747               0.039048       0.754172      0.037680       0.795940      0.029979
+  bird irmf_h2_a1.41_conv           comp       lightgbm                0.778750               0.035119       0.763309      0.033291       0.791516      0.030667
+  bird irmf_h2_a1.41_conv           comp     minirocket                0.753380               0.038221       0.708394      0.039815       0.723506      0.040813
+  bird irmf_h2_a1.41_conv           comp    multirocket                0.748185               0.044700       0.685554      0.037333       0.694494      0.035608
+  bird irmf_h2_a1.41_conv           comp        xgboost                0.774303               0.034210       0.750937      0.031587       0.775890      0.029535
+  bird irmf_h2_a1.41_conv comp+log_scale compact_resnet                0.731851               0.058469       0.714104      0.037961       0.749982      0.026765
+  bird irmf_h2_a1.41_conv comp+log_scale     extratrees                0.754015               0.038966       0.755758      0.037559       0.797249      0.030207
+  bird irmf_h2_a1.41_conv comp+log_scale       lightgbm                0.776163               0.036900       0.759918      0.033775       0.788304      0.030363
+  bird irmf_h2_a1.41_conv comp+log_scale     minirocket                0.747445               0.051128       0.704221      0.047876       0.720778      0.045928
+  bird irmf_h2_a1.41_conv comp+log_scale    multirocket                0.736244               0.058764       0.672087      0.055436       0.679826      0.055826
+  bird irmf_h2_a1.41_conv comp+log_scale        xgboost                0.770768               0.036092       0.747489      0.033775       0.772678      0.031671
+  bird                raw           comp compact_resnet                0.730396               0.046280       0.714518      0.036794       0.748797      0.032727
+  bird                raw           comp     extratrees                0.726627               0.052141       0.719014      0.049648       0.759054      0.043936
+  bird                raw           comp       lightgbm                0.738617               0.048920       0.713291      0.047245       0.738440      0.045567
+  bird                raw           comp log_stft_cnn2d                0.681273               0.067814       0.637388      0.072998       0.655033      0.076746
+  bird                raw           comp     minirocket                0.754581               0.034690       0.705051      0.036893       0.718429      0.038437
+  bird                raw           comp    multirocket                0.749801               0.032777       0.681923      0.032410       0.689026      0.033105
+  bird                raw           comp        xgboost                0.730288               0.053129       0.697253      0.048967       0.718614      0.046460
+  bird                raw comp+log_scale compact_resnet                0.725314               0.063749       0.699840      0.039326       0.732696      0.026958
+  bird                raw comp+log_scale     extratrees                0.734258               0.052057       0.728102      0.050087       0.767690      0.044075
+  bird                raw comp+log_scale       lightgbm                0.731857               0.046105       0.709604      0.046218       0.736565      0.044804
+  bird                raw comp+log_scale log_stft_cnn2d                0.658491               0.067017       0.630909      0.055277       0.660876      0.047209
+  bird                raw comp+log_scale     minirocket                0.752519               0.035548       0.702836      0.038369       0.716247      0.040152
+  bird                raw comp+log_scale    multirocket                0.741546               0.032579       0.670774      0.035499       0.676896      0.037062
+  bird                raw comp+log_scale        xgboost                0.731881               0.057740       0.699041      0.054455       0.720282      0.052052
+All prediction, metric, split and probability checks passed.

@@ -1,0 +1,6 @@
+method,seconds_per_frame,n_slots,wall_seconds_per_frame,n_failed,solver
+raw,0.0,1,,,
+emd,0.013993894705882356,9,0.014040184084408205,0.0,PyEMD.EMD
+imf_linear_a1.41,0.0062374811764705895,18,0.006287858463143565,0.0,pimf.IMF
+irmf_h2_a1.41,1.758576347450982,18,1.78889009299615,0.0,pimf.IMF
+irmf_h2_a1.41_conv,0.06440303921568627,18,0.06441519644960542,0.0,emdirmf.irmf_newton.NewtonSmoothAbs

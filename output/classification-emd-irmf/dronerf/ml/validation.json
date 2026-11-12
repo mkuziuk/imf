@@ -1,0 +1,451 @@
+{
+  "checks": [
+    {
+      "runner": "trees",
+      "task": "10class",
+      "fits": 210,
+      "prediction_rows": 504000,
+      "probability_tied_argmax_labels": 0,
+      "split_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14
+      ],
+      "job": "trees_lgbm"
+    },
+    {
+      "runner": "trees",
+      "task": "10class",
+      "fits": 210,
+      "prediction_rows": 504000,
+      "probability_tied_argmax_labels": 0,
+      "split_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14
+      ],
+      "job": "trees_et"
+    },
+    {
+      "runner": "trees",
+      "task": "10class",
+      "fits": 210,
+      "prediction_rows": 504000,
+      "probability_tied_argmax_labels": 0,
+      "split_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14
+      ],
+      "job": "trees_xgb"
+    },
+    {
+      "runner": "rocket",
+      "task": "10class",
+      "fits": 70,
+      "prediction_rows": 168000,
+      "probability_tied_argmax_labels": 39738,
+      "split_ids": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "job": "rocket"
+    },
+    {
+      "runner": "cnn",
+      "task": "10class",
+      "fits": 70,
+      "prediction_rows": 168000,
+      "probability_tied_argmax_labels": 0,
+      "split_ids": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "job": "cnn"
+    },
+    {
+      "runner": "trees",
+      "task": "4class",
+      "fits": 210,
+      "prediction_rows": 504000,
+      "probability_tied_argmax_labels": 0,
+      "split_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14
+      ],
+      "job": "trees_lgbm"
+    },
+    {
+      "runner": "trees",
+      "task": "4class",
+      "fits": 210,
+      "prediction_rows": 504000,
+      "probability_tied_argmax_labels": 0,
+      "split_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14
+      ],
+      "job": "trees_et"
+    },
+    {
+      "runner": "trees",
+      "task": "4class",
+      "fits": 210,
+      "prediction_rows": 504000,
+      "probability_tied_argmax_labels": 0,
+      "split_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14
+      ],
+      "job": "trees_xgb"
+    },
+    {
+      "runner": "rocket",
+      "task": "4class",
+      "fits": 70,
+      "prediction_rows": 168000,
+      "probability_tied_argmax_labels": 18935,
+      "split_ids": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "job": "rocket"
+    },
+    {
+      "runner": "cnn",
+      "task": "4class",
+      "fits": 70,
+      "prediction_rows": 168000,
+      "probability_tied_argmax_labels": 0,
+      "split_ids": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "job": "cnn"
+    },
+    {
+      "runner": "trees",
+      "task": "2class",
+      "fits": 210,
+      "prediction_rows": 504000,
+      "probability_tied_argmax_labels": 0,
+      "split_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14
+      ],
+      "job": "trees_lgbm"
+    },
+    {
+      "runner": "trees",
+      "task": "2class",
+      "fits": 210,
+      "prediction_rows": 504000,
+      "probability_tied_argmax_labels": 0,
+      "split_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14
+      ],
+      "job": "trees_et"
+    },
+    {
+      "runner": "trees",
+      "task": "2class",
+      "fits": 210,
+      "prediction_rows": 504000,
+      "probability_tied_argmax_labels": 0,
+      "split_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14
+      ],
+      "job": "trees_xgb"
+    },
+    {
+      "runner": "rocket",
+      "task": "2class",
+      "fits": 70,
+      "prediction_rows": 168000,
+      "probability_tied_argmax_labels": 0,
+      "split_ids": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "job": "rocket"
+    },
+    {
+      "runner": "cnn",
+      "task": "2class",
+      "fits": 70,
+      "prediction_rows": 168000,
+      "probability_tied_argmax_labels": 0,
+      "split_ids": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "job": "cnn"
+    },
+    {
+      "runner": "trees",
+      "task": "10class",
+      "fits": 150,
+      "prediction_rows": 360000,
+      "probability_tied_argmax_labels": 0,
+      "split_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14
+      ],
+      "job": "trees_lonly"
+    },
+    {
+      "runner": "trees",
+      "task": "10class",
+      "fits": 30,
+      "prediction_rows": 72000,
+      "probability_tied_argmax_labels": 0,
+      "split_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14
+      ],
+      "job": "trees_h1"
+    },
+    {
+      "runner": "trees",
+      "task": "10class",
+      "fits": 30,
+      "prediction_rows": 72000,
+      "probability_tied_argmax_labels": 0,
+      "split_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14
+      ],
+      "job": "trees_h4"
+    },
+    {
+      "runner": "cnn",
+      "task": "10class",
+      "fits": 10,
+      "prediction_rows": 24000,
+      "probability_tied_argmax_labels": 0,
+      "split_ids": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "job": "spectrogram"
+    },
+    {
+      "runner": "cnn",
+      "task": "10class",
+      "fits": 140,
+      "prediction_rows": 336000,
+      "probability_tied_argmax_labels": 0,
+      "split_ids": [
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14
+      ],
+      "job": "cnn_extra"
+    },
+    {
+      "runner": "rocket",
+      "task": "10class",
+      "fits": 70,
+      "prediction_rows": 168000,
+      "probability_tied_argmax_labels": 34341,
+      "split_ids": [
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "job": "rocket_extra"
+    }
+  ],
+  "all_checks_passed": true,
+  "completed_jobs": 21,
+  "pending_jobs": 0,
+  "shared_log_scales_identical": true,
+  "input_and_shared_model_sources_unchanged_since": "2026-10-20T22:10:44.225135+00:00",
+  "inference": "Nadeau-Bengio primary; Wilcoxon secondary; Holm per task/metric/family across model and scale variants",
+  "segment": "mean native OOF probabilities within each held-out segment; pool 227 segments per seed"
+}

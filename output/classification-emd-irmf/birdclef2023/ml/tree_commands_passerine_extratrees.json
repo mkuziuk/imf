@@ -1,0 +1,28 @@
+[
+  [
+    "/Users/mikhail/.t3/worktrees/imf/t3-44ed3594/.venv/bin/python",
+    "-u",
+    "/Users/mikhail/.t3/worktrees/imf/t3-44ed3594/experiments/classification-emd-irmf/datasets/birdclef2023/run_phase3.py",
+    "trees",
+    "--run-name",
+    "trees_extratrees",
+    "--dataset",
+    "birdclef2023",
+    "--task",
+    "passerine",
+    "--methods",
+    "raw",
+    "emd",
+    "imf_linear_a1.41",
+    "irmf_h2_a1.41",
+    "irmf_h2_a1.41_conv",
+    "--classifiers",
+    "extratrees",
+    "--folds",
+    "15",
+    "--workers",
+    "2",
+    "--out",
+    "/Users/mikhail/.t3/worktrees/imf/t3-44ed3594/output/classification-emd-irmf/birdclef2023/ml/trees_extratrees"
+  ]
+]

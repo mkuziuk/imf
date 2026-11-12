@@ -2,6 +2,7 @@
 
 \usepackage[a4paper,margin=30mm]{geometry}
 \usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage[hidelinks]{hyperref}
 
 \newcommand{\E}{\mathbb{E}}
 \newcommand{\Pp}{\mathbb{P}}
@@ -28,9 +29,11 @@
 
 \newtheorem{proposition}{Proposition}[section]
 \newtheorem{lemma}[proposition]{Lemma}
+\newtheorem{corollary}[proposition]{Corollary}
 \newtheorem*{remark}{Remark}
 
-\title{Proof of Lemma 4.2 and completion of Proposition 4.1}
+\title{The first smooth-absolute IRMF component:\\
+concentration, a scalar expansion, and Gaussian error bounds}
 \author{}
 \date{}
 
@@ -40,8 +43,59 @@
 \setcounter{section}{3}
 \section{Theoretical guarantees}
 
-Let \(\mathcal T_n\subset[0,1]\) be the finite set of points at which the filter is
-evaluated and put \(m=|\mathcal T_n|\).  For \(t\in\mathcal T_n\), write
+The first IRMF component fits a local constant to noisy observations using
+Gaussian-smoothed absolute loss.  This note separates its error into a
+population bias, a leading random term, and a remainder.  The general expansion
+needs independent errors with finite first moments.  Gaussian noise is needed
+only for the explicit curvature and bias formulas in the later results.
+
+\subsection*{Main result and reading guide}
+Write \(\widetilde S_t\) for the fit to observed data, \(S_t\) for the
+minimizer of the expected noisy loss, and \(X_t\) for the clean signal value.
+The expansion is
+\[
+  \boxed{\widetilde S_t-X_t
+    =\underbrace{S_t-X_t}_{\text{population bias}}
+     +\underbrace{F_t^{-1}\nabla_t}_{\text{leading random term}}
+     +\underbrace{R_t}_{\text{remainder}}.}
+\]
+Here \(F_t\) is the population curvature at \(S_t\), and \(\nabla_t\) is the
+centered empirical score there.  The identity defines \(R_t\);
+Proposition~\ref{prop:main} bounds it.  In particular, the target of the
+stochastic expansion is \(S_t\), which generally differs from \(X_t\).
+Subtracting \(F_t^{-1}\nabla_t\) is an oracle correction, since it requires
+unknown population quantities.
+
+For orientation, let \(n\) be the number of observations, \(m\) the number of
+evaluation points, \(h\) the window radius, and \(H\) the loss smoothing
+scale.  Put \(z_x=x+\log(4m)\), where \(x\geq0\) sets the failure probability
+\(e^{-x}\).  Under independent Gaussian noise, fixed \(H>0\) and noise scale,
+regular symmetric windows, bounded first and second signal derivatives, and
+normalized population curvature bounded away from zero, the bounds below give
+\[
+  \max_t|\widetilde S_t-X_t|
+  \lesssim
+  \underbrace{h^2}_{\text{bias}}
+  +\underbrace{\sqrt{z_x/(nh)}}_{\text{leading random term}}
+  +\underbrace{z_x/(nh)}_{\text{remainder}}
+\]
+with probability at least \(1-e^{-x}\), once the stated local sample-size
+conditions hold.  The symbol \(\lesssim\) hides constants fixed by these
+assumptions.  This rate summary is made explicit in
+Corollaries~\ref{cor:gaussian}--\ref{cor:sample-size} and
+Proposition~\ref{prop:bias}.
+
+The main text gives definitions, assumptions, and results.  All proofs are in
+Appendix~\ref{sec:proofs}.  Proposition~\ref{prop:main} and
+Lemma~\ref{lem:local} retain the numbering of the original IMF draft.
+
+\clearpage
+\subsection{Model and general expansion}\label{sec:model}
+
+Let \(u\) range over \(n\) deterministic observation locations in \([0,1]\).
+Let \(\mathcal T_n\subset[0,1]\) be a nonempty finite set of evaluation points
+and put \(m=|\mathcal T_n|\).  The signal, design, bandwidth, and weights are
+deterministic.  For \(t\in\mathcal T_n\), write
 \begin{equation}
   w_{u,t}\eqdef \Kern_h(t-u),\qquad
   W_t\eqdef\sum_u w_{u,t},\qquad
@@ -49,18 +103,19 @@ evaluated and put \(m=|\mathcal T_n|\).  For \(t\in\mathcal T_n\), write
   k_t\eqdef\max_u w_{u,t}.
   \label{eq:weights}
 \end{equation}
-We assume \(w_{u,t}\geq0\), as for the Epanechnikov kernel used in
-\texttt{IMF.tex}.  Suppose that \(\Data_u=\Signal_u+\varepsilon_u\), where the
-\(\varepsilon_u\) are independent, and let
+Assume \(w_{u,t}\geq0\) and \(W_t>0\).  Suppose that
+\(\Data_u=\Signal_u+\varepsilon_u\), where the errors are independent and
+identically distributed with \(\E|\varepsilon_u|<\infty\), and let
 \begin{equation}
   \rhohum(z)\eqdef\E\rhohu(z+\varepsilon).
   \label{eq:phi}
 \end{equation}
-The argument below also allows independent, non-identically distributed errors if
-\(\rhohum(\Signal_u-x)\) in each summand is replaced by
+The argument below also allows independent, non-identically distributed errors
+with finite first moments if \(\rhohum(\Signal_u-x)\) in each summand is replaced by
 \(\E\rhohu(\Data_u-x)\).
 
-Assume that \(\rhohu\in C^3(\R)\) is convex and, for finite constants
+Assume that \(\rhohu\in C^3(\R)\) is convex and coercive, meaning
+\(\rhohu(z)\to\infty\) as \(|z|\to\infty\), and, for finite constants
 \(L_1,L_2,L_3\),
 \begin{equation}
   |\rhohu'(z)|\leq L_1,\qquad
@@ -69,8 +124,15 @@ Assume that \(\rhohu\in C^3(\R)\) is convex and, for finite constants
   \qquad z\in\R.
   \label{eq:derivative-bounds}
 \end{equation}
-For the Gaussian-smoothed absolute-value contrast \(\rhohu_H\) in
-\texttt{IMF.tex}, one may take
+For the Gaussian-smoothed absolute-value contrast, with a deterministic \(H>0\),
+\begin{align}
+  \rho_H(r)&\eqdef\E_Z|r+HZ|,\qquad Z\sim N(0,1),\notag\\
+  \rho_H'(r)&=\operatorname{erf}\!\left(\frac{r}{\sqrt2H}\right),\qquad
+  \rho_H''(r)=\frac{\sqrt{2/\pi}}{H}e^{-r^2/(2H^2)},\notag\\
+  \rho_H'''(r)&=-\frac{\sqrt{2/\pi}\,r}{H^3}e^{-r^2/(2H^2)}.
+  \label{eq:smooth-abs}
+\end{align}
+One may take the conservative constants
 \begin{equation}
   L_1=1,\qquad
   L_2=\frac{2}{H\sqrt{2\pi}},\qquad
@@ -78,7 +140,13 @@ For the Gaussian-smoothed absolute-value contrast \(\rhohu_H\) in
   \label{eq:rhoH-constants}
 \end{equation}
 
-Define, with the notation of \texttt{IMF.tex},
+The Lipschitz bound \(|\rho'|\leq L_1\) and the finite first noise moment make
+the expected objectives finite.  The inequality
+\(\E\rho(Y_u-z)\geq\rho(-z)-L_1\E|Y_u|\) also makes each population
+objective coercive.  Thus both empirical and population minimizers exist.
+Define the empirical fit \(\widetilde S_t\), its population target
+\(S_t\), the population curvature \(F_t\), and the centered score
+\(\nabla_t\) by
 \begin{align}
   \IMFt_t
   &\eqdef \arginf_{z\in\R}\sum_u\rhohu(\Data_u-z)w_{u,t},
@@ -99,10 +167,20 @@ Define, with the notation of \texttt{IMF.tex},
      \right\}w_{u,t}.
   \label{eq:nabla}
 \end{align}
-We require \(\IF_t>0\) for every \(t\in\mathcal T_n\).  This holds for
-\(\rhohu_H\) whenever at least one \(w_{u,t}\) is positive.
+Require \(\IF_t>0\) for every \(t\in\mathcal T_n\); convexity then makes the
+population minimizer unique.  For \(\rho_H\), both objectives are strictly
+convex and \(\IF_t>0\) whenever \(W_t>0\).  They need not be globally strongly
+convex: their curvatures tend to zero in the tails.  The proof uses positive
+curvature near \(S_t\), not a uniform curvature lower bound on \(\R\).
 
-For \(\xx\geq0\) and \(z_{\xx}\eqdef\xx+\log(4m)\), set
+The target \(S_t\) minimizes the expected noisy loss.  It generally differs
+from \(X_t\) and from the minimizer of \(\sum_u w_{u,t}\rho_H(X_u-z)\).
+
+The constants below separate three controls: \(C_1\) bounds the centered
+score, \(C_2\) bounds the curvature fluctuation, and \(C_3\) bounds the third
+derivative.  The scale \(D_t=\sqrt{F_t}\) expresses the first two bounds in
+local curvature units.  For \(\xx\geq0\) and
+\(z_{\xx}\eqdef\xx+\log(4m)\), set
 \begin{align}
   C_1
   &\eqdef
@@ -128,12 +206,12 @@ For \(\xx\geq0\) and \(z_{\xx}\eqdef\xx+\log(4m)\), set
   \label{eq:C3-delta}
 \end{align}
 
-The following statement supplies the missing right-hand side in Proposition~4.1.
+The parameter \(\delta\) bounds the relative curvature error.  The two
+conditions below keep the empirical curvature positive near \(S_t\) and
+make the scalar Taylor expansion valid at the empirical minimizer.
 
 \begin{proposition}\label{prop:main}
-Suppose that the conditions above hold, that each empirical objective in
-\eqref{eq:estimators} is strongly convex in the sense required by
-Theorem~A.9 of \texttt{IRMF.tex}, and that
+Suppose that the conditions above hold and that
 \begin{equation}
   \delta<1,
   \qquad
@@ -152,10 +230,16 @@ Then there is a random set \(\Omega(\xx)\) with
   \leq
   \frac{1}{\DFN_{\min}}
   \left\{
-    \frac{3C_1^2C_3}{4(1-\delta)^3}
+    \frac{9C_1^2C_3}{8(1-\delta)^3}
     +\frac{C_1C_2}{1-\delta}
   \right\}.
   \label{eq:proposition-bound}
+\end{equation}
+On the same event, every empirical minimizer is unique and
+\begin{equation}
+  \sup_{t\in\mathcal T_n}
+  D_t|\widetilde S_t-S_t|\leq\frac{3C_1}{2(1-\delta)}.
+  \label{eq:raw-localization}
 \end{equation}
 Consequently, the oracle-corrected estimator
 \begin{equation}
@@ -174,14 +258,19 @@ With \(\nabla_t\) defined by \eqref{eq:nabla}, the minus sign in
 \(f_\circ'(\IMFs_t)=-\nabla_t\).  Thus
 \(\IMFt_t-\IMFs_t\) has first-order term \(\IF_t^{-1}\nabla_t\), and one
 subtracts that term to correct \(\IMFt_t\).  The plus sign in the unfinished
-display in \texttt{IMF.tex} would be correct only if \(\nabla_t\) were defined
+display in the original IMF draft would be correct only if \(\nabla_t\) were defined
 with the opposite sign.
 \end{remark}
 
-\subsection{Perturbation theory in action}
+\subsection{Score and curvature bounds}\label{sec:derivatives}
+
+The next lemma supplies the probabilistic input to
+Proposition~\ref{prop:main}.  Its score and curvature bounds use Bernstein's
+inequality and a union bound over the finite evaluation grid.  The third
+derivative bounds are deterministic.
 
 Fix \(t\in\mathcal T_n\).  All quantities in this subsection may depend on
-\(t\).  Define
+\(t\).  For the proof, abbreviate the population and empirical objectives as
 \begin{equation}
   \fs(z)\eqdef\sum_u\rhohum(\Signal_u-z)w_{u,t},
   \qquad
@@ -206,8 +295,10 @@ For \(r>0\), let
 \(U_t(r)\eqdef\{z\in\R:|\DFN(z-\xs)|\leq r\}\).
 
 \begin{lemma}\label{lem:local}
-On \(\Omega(\xx)\), simultaneously for every \(t\in\mathcal T_n\),
+There is an event \(\Omega(\xx)\) of probability at least \(1-e^{-\xx}\)
+on which, simultaneously for every \(t\in\mathcal T_n\),
 \begin{enumerate}
+\renewcommand{\labelenumi}{(\roman{enumi})}
 \item
 \begin{align}
   \frac{1}{\DFN}
@@ -255,7 +346,288 @@ On \(\Omega(\xx)\), simultaneously for every \(t\in\mathcal T_n\),
 \end{enumerate}
 \end{lemma}
 
-\begin{proof}
+
+The deterministic argument in Appendix~\ref{sec:scalar-proof} also applies
+to any other constants
+\(C_1,C_2,C_3\) satisfying the bounds of Lemma~\ref{lem:local} on a specified
+event.  In particular, sharper variance bounds can be used for Gaussian noise.
+
+
+\subsection{Gaussian noise and normalized weights}\label{sec:gaussian}
+
+Multiplying all weights in a window by a positive constant changes neither
+minimizer nor \(F_t^{-1}\nabla_t\).  Define
+\begin{equation}
+  a_{u,t}\eqdef\frac{w_{u,t}}{W_t},\qquad
+  N\eqdef\min_t\frac{1}{\sum_u a_{u,t}^2},\qquad
+  \alpha\eqdef\max_{t,u}a_{u,t}.
+  \label{eq:normalized-weights}
+\end{equation}
+Here \(N\) is the smallest effective sample size across windows.  The population
+curvature and score for the normalized objective are
+\(\bar F_t=F_t/W_t\) and \(\bar\nabla_t=\nabla_t/W_t\).
+Their ratio is still \(F_t^{-1}\nabla_t\).
+
+Assume now \(\varepsilon_u\sim N(0,\sigma^2)\) independently, with
+\(\sigma\geq0\), and \(\rho=\rho_H\).  Put
+\begin{equation}
+  c\eqdef\sqrt{2/\pi},\qquad B\eqdef\sqrt{H^2+\sigma^2}.
+  \label{eq:gaussian-scale}
+\end{equation}
+Independence of the Gaussian variables in the two expectations gives the exact
+identity
+\begin{equation}
+  \phi(r)=\E_\varepsilon\rho_H(r+\varepsilon)=\rho_B(r).
+  \label{eq:gaussian-convolution}
+\end{equation}
+Thus the population target is the clean-data fit at scale \(B\), and
+\begin{equation}
+  \sum_u a_{u,t}\operatorname{erf}\!\left(\frac{X_u-S_t}{\sqrt2B}\right)=0,
+  \qquad
+  \bar F_t=\frac cB\sum_u a_{u,t}e^{-(X_u-S_t)^2/(2B^2)}.
+  \label{eq:gaussian-target}
+\end{equation}
+The weighted score is positive below all active signal values and negative
+above them.  Its unique zero \(S_t\) therefore lies between the smallest and
+largest \(X_u\) having positive weight.  If
+\begin{equation}
+  A\geq\max_t\max_{u,v:\,a_{u,t}a_{v,t}>0}|X_u-X_v|,
+  \qquad
+  \lambda\eqdef\frac cB e^{-A^2/(2B^2)},
+  \label{eq:curvature-lower-bound}
+\end{equation}
+then \(\bar F_t\geq\lambda>0\) at every evaluation point.  More generally,
+any known positive lower bound \(\lambda\leq\min_t\bar F_t\) can be used below.
+
+The bounds \(s_1\) and \(s_2\) below control the normalized score and
+curvature fluctuations.  Dividing \(s_2\) by the curvature lower bound
+\(\lambda\) gives the relative perturbation \(d\).  For
+\(L_2=c/H\) and \(L_3=c/H^2\), define
+\begin{align}
+  v_1&\eqdef\min\{1,\sigma L_2\},&
+  v_2&\eqdef\min\{L_2,\sigma L_3\},\notag\\
+  s_1&\eqdef v_1\sqrt{\frac{2z_x}{N}}+\frac{2\alpha z_x}{3},&
+  s_2&\eqdef v_2\sqrt{\frac{2z_x}{N}}+\frac{L_2\alpha z_x}{3},\notag\\
+  d&\eqdef\frac{s_2}{\lambda},&
+  z_x&=x+\log(4m).
+  \label{eq:gaussian-tail-constants}
+\end{align}
+
+\begin{corollary}[Explicit Gaussian bounds]\label{cor:gaussian}
+Under the Gaussian model and the deterministic design conditions above, suppose
+\begin{equation}
+  d<1,\qquad
+  \frac{s_1L_3}{\lambda^2(1-d)^2}<\frac49.
+  \label{eq:gaussian-smallness}
+\end{equation}
+With probability at least \(1-e^{-x}\), simultaneously for all \(t\),
+\begin{align}
+  |\widetilde S_t-S_t|
+    &\leq\frac{3s_1}{2\lambda(1-d)},
+      \label{eq:gaussian-raw}\\
+  |F_t^{-1}\nabla_t|&\leq\frac{s_1}{\lambda},
+      \label{eq:gaussian-leading}\\
+  |R_t|&\leq\mathcal R_x
+     \eqdef\frac{9L_3s_1^2}{8\lambda^3(1-d)^3}
+            +\frac{s_1s_2}{\lambda^2(1-d)},
+      \label{eq:gaussian-remainder}\\
+  R_t&\eqdef\widetilde S_t-S_t-F_t^{-1}\nabla_t.
+      \notag
+\end{align}
+In particular, \(|\widetilde S_t^{\mathrm{corr}}-S_t|\leq\mathcal R_x\).
+All quantities in these bounds are specified by the weights, \(x\), \(H\),
+\(\sigma\), and a curvature lower bound such as \eqref{eq:curvature-lower-bound}.
+\end{corollary}
+
+
+\begin{remark}[Dependence on the noise and loss scales]
+The noise scale enters through \(B=\sqrt{H^2+\sigma^2}\), the lower bound
+\(\lambda\), and the variance bounds \(v_1,v_2\).  These are sufficient,
+conservative constants.  At \(\sigma=0\), the empirical and population
+objectives coincide exactly, so both the estimation error and \(R_t\) vanish;
+the Bernstein linear terms need not vanish.  If \(H\) varies with sample size,
+the explicit conditions must be checked again: \(L_2\) and \(L_3\) grow as
+\(H^{-1}\) and \(H^{-2}\) when \(H\) decreases.
+\end{remark}
+
+\subsection{Bandwidth and sample-size conditions}\label{sec:bandwidth}
+
+Suppose that, for a known constant \(C_K>0\),
+\begin{equation}
+  N\geq\frac{nh}{C_K},\qquad \alpha\leq\frac{C_K}{nh}.
+  \label{eq:kernel-mass}
+\end{equation}
+These assumptions say that the effective sample size is at least a constant
+times \(nh\), and no individual observation has disproportionate weight.
+They can be checked directly from the normalized weights.
+
+For an equally spaced design, the calculation is clearest in terms of the
+actual grid spacing \(\Delta\).  Use untruncated interior windows, or a
+periodic grid with each observation counted once, and take \(0<h<1/2\).
+Let \(w_{u,t}=K((t-u)/h)\), using local offsets in the periodic case, with
+\(K\) supported on \([-1,1]\), \(0\leq K\leq K_{\max}\), and
+\(K(v)\geq k_0>0\) on \(|v|\leq\eta\), where \(0<\eta<1\).
+If \(\eta h\geq\Delta\), the central interval has length \(2\eta h\) and
+contains at least
+\[
+  \left\lfloor\frac{2\eta h}{\Delta}\right\rfloor
+  \geq\frac{\eta h}{\Delta}
+\]
+grid points.  Consequently,
+\[
+  W_t\geq\frac{k_0\eta h}{\Delta},\qquad
+  \max_u a_{u,t}\leq\frac{K_{\max}\Delta}{k_0\eta h},\qquad
+  \sum_u a_{u,t}^2\leq\max_u a_{u,t}.
+\]
+For the usual unit-interval grids, \(\Delta=1/n\) when the right endpoint is
+excluded, and \(\Delta=1/(n-1)\) when both endpoints are included.  For
+\(n\geq2\), both satisfy \(\Delta\leq2/n\).  Thus the single choice
+\[
+  C_K=\frac{2K_{\max}}{k_0\eta}
+\]
+establishes \eqref{eq:kernel-mass} for either convention, provided
+\(\eta h\geq\Delta\).  The condition \(nh\geq2/\eta\) is sufficient.
+If the spacing is exactly \(1/n\), the sharper constant
+\(C_K=K_{\max}/(k_0\eta)\) and condition \(nh\geq1/\eta\) suffice.
+A periodic grid has \(n\) distinct locations per period; it does not count
+both endpoints as separate locations.  There are at most \(2h/\Delta+1\)
+active observations, which also bounds the effective sample size from above.
+Both grid conventions therefore give effective sample size of order \(nh\).
+
+Set
+\begin{equation}
+  q_n\eqdef\sqrt{\frac{C_Kz_x}{nh}},\qquad
+  A_1\eqdef\sqrt2v_1+\frac23,\qquad
+  A_2\eqdef\sqrt2v_2+\frac{L_2}{3}.
+  \label{eq:rate-constants}
+\end{equation}
+
+\begin{corollary}[A sufficient local sample size]\label{cor:sample-size}
+Under the Gaussian model, the curvature lower bound, and
+\eqref{eq:kernel-mass}, the following condition implies
+\eqref{eq:gaussian-smallness}:
+\begin{equation}
+  nh>C_Kz_x\max\left\{
+       1,\frac{4A_2^2}{\lambda^2},
+       \frac{81A_1^2L_3^2}{\lambda^4}\right\}.
+  \label{eq:sample-size-condition}
+\end{equation}
+With probability at least \(1-e^{-x}\),
+\begin{align}
+  \max_t|\widetilde S_t-S_t|
+    &\leq\frac{3A_1}{\lambda}q_n,
+      \label{eq:raw-rate}\\
+  \max_t|R_t|
+    &\leq\left\{\frac{9L_3A_1^2}{\lambda^3}
+                 +\frac{2A_1A_2}{\lambda^2}\right\}q_n^2.
+      \label{eq:remainder-rate}
+\end{align}
+\end{corollary}
+
+
+For fixed \(H>0\), fixed \(\sigma\), bounded local signal oscillation, and
+fixed kernel constants, \(\lambda\) stays bounded away from zero.  The two
+bounds then have orders \(\sqrt{(x+\log(4m))/(nh)}\) and
+\((x+\log(4m))/(nh)\), respectively.  The smallness conditions hold eventually
+if \((x+\log(4m))/(nh)\to0\).  These are upper bounds on sampling error;
+they do not assert equality of the remainder and the squared realized error.
+
+\subsection{Population bias and recovery of a smooth signal}\label{sec:bias}
+
+The preceding results control sampling error around \(S_t\).  To recover
+\(X_t\), we must also bound \(S_t-X_t\).  Exact window symmetry cancels the
+linear part of the signal locally, leaving a bias controlled by its second
+derivative.
+
+Assume \(X_u=X(u)\), and write \(X_t=X(t)\).  In each window use offsets
+\(d_{u,t}=u-t\), unwrapped locally for a periodic design.  Suppose active
+offsets satisfy \(|d_{u,t}|\leq h\).  Exact window symmetry means that the
+weighted discrete measure \(\sum_u a_{u,t}\delta_{d_{u,t}}\) is invariant under
+\(d\mapsto-d\).  This holds at equally spaced design points with an even
+kernel and an untruncated interior or periodic window.  It need not hold at
+arbitrary off-grid evaluation points or at truncated boundaries.
+
+\begin{proposition}[Bias for symmetric windows]\label{prop:bias}
+Under the Gaussian model, suppose the windows have this exact symmetry and
+\(X\) is twice continuously differentiable on their neighborhoods, with
+\(|X'|\leq M_1\) and \(|X''|\leq M_2\).  Set
+\begin{equation}
+  \mu_2(t)\eqdef\sum_u a_{u,t}d_{u,t}^2\leq h^2,\qquad
+  \lambda_h\eqdef\frac cB e^{-2M_1^2h^2/B^2}.
+  \label{eq:bias-constants}
+\end{equation}
+Then
+\begin{equation}
+  |S_t-X_t|
+  \leq\frac{M_2\mu_2(t)}2 e^{2M_1^2h^2/B^2}
+  \leq\frac{M_2h^2}{2}e^{2M_1^2h^2/B^2}.
+  \label{eq:population-bias}
+\end{equation}
+If the smallness conditions of Corollary~\ref{cor:gaussian} hold with
+\(\lambda=\lambda_h\), its event also gives
+\begin{align}
+  \max_t|\widetilde S_t-X_t|
+    &\leq\frac{M_2h^2}{2}e^{2M_1^2h^2/B^2}
+            +\frac{s_1}{\lambda_h}+\mathcal R_x,
+      \label{eq:signal-recovery}\\
+  \max_t|\widetilde S_t^{\mathrm{corr}}-X_t|
+    &\leq\frac{M_2h^2}{2}e^{2M_1^2h^2/B^2}+\mathcal R_x.
+      \label{eq:corrected-signal-recovery}
+\end{align}
+\end{proposition}
+
+
+With fixed \(H,\sigma,M_1,M_2\) and regular symmetric windows, the resulting
+recovery bound has order
+\[
+  h^2+\sqrt{\frac{x+\log(4m)}{nh}}
+       +\frac{x+\log(4m)}{nh}.
+\]
+For \(z_x/n\to0\), balancing the first two terms with
+\(h\asymp(z_x/n)^{1/5}\) gives order \((z_x/n)^{2/5}\), with the stated
+high probability and for sufficiently large \(n\) to meet the sample-size
+condition.  This is an upper bound for a fixed loss scale, not a claim of an
+optimal joint choice of \(h\) and \(H\).  Without exact symmetry, the range
+argument still gives \(|S_t-X_t|\leq M_1h\), but the displayed \(h^2\) bound
+does not follow from that argument.
+
+\subsection{Scope of the conclusions}
+
+All uniform probability statements concern the finite evaluation grid.  A
+supremum over the continuum \([0,1]\) requires an additional argument for
+regularity and the size of that family of weighted processes.  Adaptive choices
+of bandwidth or loss scale also require simultaneous control over the choices.
+
+The correction uses the unknown population target, noise law, and curvature,
+so it is an oracle expansion, not an estimator computable from the observations
+alone.  The accompanying notebook
+\texttt{experiments/proposition-4-1/} tests its sampling-rate prediction under
+Gaussian noise.  Numerical rate checks do not prove the probability bound.
+
+The general proposition allows independent non-Gaussian errors with a finite
+first moment.  The explicit curvature and bias formulas in the Gaussian
+corollaries do not cover asymmetric contamination.  Later IRMF components use
+estimated residuals that share observations; their errors are dependent and
+require a separate argument.
+
+Throughout, \(F_t\) is evaluated at \(S_t\).  It cannot be replaced by a
+curvature evaluated at \(X_t\) without bounding their difference.
+
+
+\clearpage
+\appendix
+\section{Proofs}\label{sec:proofs}
+
+The argument has two stages.  Lemma~\ref{lem:local} controls the random score
+and curvature at the population target.  Conditional on that event, the proof
+of Proposition~\ref{prop:main} is deterministic: localize the empirical
+minimizer, apply scalar Taylor expansion, and replace empirical curvature by
+population curvature.  The remaining proofs specialize these bounds and
+control the population bias.
+
+\subsection{Score and curvature concentration}
+
+\begin{proof}[Proof of Lemma~\ref{lem:local}]
 Differentiating \eqref{eq:objectives} gives
 \begin{align*}
   \fs'(z)&=-\sum_u\rhohum'(\Signal_u-z)w_{u,t},
@@ -340,6 +712,8 @@ Finally, \(|\rhohum'''|\leq L_3\).  The mean value theorem and
 which proves part~(iii).
 \end{proof}
 
+\subsection{Scalar localization and the remainder}\label{sec:scalar-proof}
+
 \begin{proof}[Proof of Proposition~\ref{prop:main}]
 Fix \(t\in\mathcal T_n\).  Since \(\fs'(\xs)=0\),
 \begin{equation}
@@ -369,31 +743,59 @@ the score bound and \eqref{eq:F-comparison} imply
   \label{eq:bcirc-bound}
 \end{equation}
 
-Lemma~\ref{lem:local}(ii) gives the third-derivative parameter
-\(\tau_3=C_3/\DFN\) in the local metric \(\DFN\).  Also,
-\eqref{eq:F-comparison} permits
-\(\kappa^2=(1-\delta)^{-1}\) in the comparison
-\(\DFN^2\leq\kappa^2\IFP\).  Thus the second condition in
-\eqref{eq:smallness} implies
+Use the scaled coordinate \(v=D(z-x^*)\), and put
 \begin{equation}
-  \kappa^2\tau_3 b_{\circ}
-  \leq\frac{C_1C_3}{\DFN(1-\delta)^2}<\frac49.
+  g(v)\eqdef f_\circ(x^*+v/D),\qquad
+  a\eqdef g''(0)=F_\circ/D^2,\qquad
+  \tau\eqdef C_3/D.
+  \label{eq:scaled-objective}
 \end{equation}
-The generic perturbation bound, Theorem~A.9 in \texttt{IRMF.tex}, now gives
+Then \(a\geq1-\delta\), \(|g'''(v)|\leq\tau\), and
+\(b_\circ=|g'(0)|/a\).  Consequently,
 \begin{equation}
-  \left|\DFN^{-1}\IFP
-    \left(\xp-\xs+\IFP^{-1}\fp'(\xs)\right)\right|
-  \leq\frac{3C_3}{4\DFN}b_{\circ}^2.
-  \label{eq:generic-bound}
+  \frac{\tau b_\circ}{a}
+  \leq\frac{C_1C_3}{D(1-\delta)^2}<\frac49.
+  \label{eq:scaled-smallness}
 \end{equation}
-The third-derivative bound is global, so its neighborhood condition may be
-satisfied with any radius at least \(3b_{\circ}/2\).  Combining
-\eqref{eq:F-comparison}, \eqref{eq:bcirc-bound}, and
-\eqref{eq:generic-bound} yields
+If \(b_\circ=0\), convexity and \(g''(0)>0\) imply that \(0\) is the unique
+minimizer, and the claimed bounds are immediate.  Otherwise set
+\(r=3b_\circ/2\).  Taylor expansion of \(g'\) at zero yields
+\[
+  |g'(v)-g'(0)-av|\leq\frac{\tau}{2}v^2.
+\]
+Since \(|g'(0)|=ab_\circ\),
+\begin{align*}
+  g'(r)&\geq-ab_\circ+ar-\frac{\tau r^2}{2}
+       =\frac{ab_\circ}{2}-\frac{9\tau b_\circ^2}{8}>0,\\
+  g'(-r)&\leq ab_\circ-ar+\frac{\tau r^2}{2}
+       =-\frac{ab_\circ}{2}+\frac{9\tau b_\circ^2}{8}<0.
+\end{align*}
+Moreover, for \(|v|\leq r\),
+\[
+  g''(v)\geq a-\tau r>\frac a3>0.
+\]
+There is therefore a unique zero \(v_\circ\in(-r,r)\) of \(g'\).
+Convexity on \(\R\) makes it the unique global minimizer: the derivative is
+negative to the left of this interval and positive to its right.  This proves
+\begin{equation}
+  |v_\circ|=D|x_\circ-x^*|\leq\frac32b_\circ
+  \leq\frac{3C_1}{2(1-\delta)}.
+  \label{eq:scalar-localization}
+\end{equation}
+At the zero of \(g'\), the same Taylor expansion gives
+\begin{equation}
+  \left|a\left(v_\circ+\frac{g'(0)}a\right)\right|
+  \leq\frac{\tau}{2}v_\circ^2
+  \leq\frac{9\tau}{8}b_\circ^2.
+  \label{eq:scalar-remainder}
+\end{equation}
+Equivalently, the left-hand side is
+\(D^{-1}F_\circ|x_\circ-x^*+F_\circ^{-1}f_\circ'(x^*)|\).
+Using \eqref{eq:F-comparison} and \eqref{eq:bcirc-bound}, we obtain
 \begin{equation}
   \left|\xp-\xs+\IFP^{-1}\fp'(\xs)\right|
   \leq
-  \frac{3C_1^2C_3}{4\DFN^2(1-\delta)^3}.
+  \frac{9C_1^2C_3}{8\DFN^2(1-\delta)^3}.
   \label{eq:Fcirc-remainder}
 \end{equation}
 
@@ -416,7 +818,7 @@ The triangle inequality applied to \eqref{eq:Fcirc-remainder} and
   \leq
   \frac{1}{\DFN}
   \left\{
-    \frac{3C_1^2C_3}{4(1-\delta)^3}
+    \frac{9C_1^2C_3}{8(1-\delta)^3}
     +\frac{C_1C_2}{1-\delta}
   \right\}.
   \label{eq:pointwise-final}
@@ -425,16 +827,121 @@ Taking the supremum over \(t\in\mathcal T_n\) and using
 \(\DFN_t\geq\DFN_{\min}\) gives \eqref{eq:proposition-bound}.
 \end{proof}
 
-\begin{remark}[What the source files do not establish]
-The union bound above proves the result on the finite IMF evaluation grid.  A
-literal supremum over every \(t\in[0,1]\) needs a covering-number argument and
-regularity bounds in \(t\) for \(\IMFs_t\), \(\IF_t\), and the kernel-weighted
-process.  Those assumptions are not present in \texttt{IMF.tex} or
-\texttt{IRMF.tex}.  They also do not state the uniform positive-curvature and
-smallness assumptions in \eqref{eq:smallness}, which Theorem~A.9 needs.  Finally,
-the source files define \(N_t=N_t(\Signal_t)\), whereas
-\(\IF_t=N_t(\IMFs_t)\).  Hence the sentence ``\(\IF=N_t\)'' is valid only if
-\(N_t\) is redefined at \(\IMFs_t\), or if \(\Signal_t=\IMFs_t\).
+\begin{remark}[The remainder coefficient]
+The coefficient \(9/8\) is \(\tfrac12(\tfrac32)^2\), from Taylor's theorem
+and localization.  The earlier completion used \(3/4\) from Theorem~A.9 of
+the IMF draft.  That generic coefficient fails even in one dimension.  On
+\((-1,0.9)\), let
+\[
+  q(v)=-0.4v+\frac{v^2}{2}-\frac{v^3}{6}.
+\]
+This function is strongly convex, \(q''(0)=1\), \(|q'''|=1\), and its Newton
+step from zero is \(b=0.4<4/9\).  The ball of radius \(3b/2=0.6\) lies inside
+the domain.  The minimizer is \(v_*=1-\sqrt{0.2}\), but
+\[
+  |v_*-b|\approx0.152786>\tfrac34 b^2=0.12.
+\]
+For a globally strongly convex example on \(\R\), retain \(q''(v)=1-v\) for
+\(v\leq0.7\), and set
+\(q''(v)=0.2+0.1e^{-10(v-0.7)}\) for \(v>0.7\), integrating with the same
+\(q(0)\) and \(q'(0)\).  This is a \(C^3\) extension with \(q''\geq0.2\)
+and \(|q'''|\leq1\); it has the same minimizer and remainder.  The present
+proof does not invoke the appendix theorem.
 \end{remark}
+
+\subsection{Gaussian constants}
+
+\begin{proof}[Proof of Corollary~\ref{cor:gaussian}]
+The identity \eqref{eq:gaussian-convolution} follows because
+\(\varepsilon+HZ\sim N(0,B^2)\); the target and curvature formulas follow by
+differentiation.  For a Lipschitz function \(G\) and an independent copy
+\(\varepsilon'\) of \(\varepsilon\),
+\[
+  \operatorname{Var}\{G(X_u+\varepsilon)\}
+  =\tfrac12\E\{G(X_u+\varepsilon)-G(X_u+\varepsilon')\}^2
+  \leq\operatorname{Lip}(G)^2\sigma^2.
+\]
+Apply this with \(G(y)=\rho_H'(y-S_t)\) and
+\(G(y)=\rho_H''(y-S_t)\).  Their Lipschitz constants are at most \(L_2\)
+and \(L_3\).  Combining this estimate with the boundedness estimates from
+Lemma~\ref{lem:local} gives variance bounds \(v_1^2\) and \(v_2^2\).
+Bernstein's inequality and the same union bound therefore give an event of
+probability at least \(1-e^{-x}\) on which
+\[
+  \max_t|\bar\nabla_t|\leq s_1,\qquad
+  \max_t|\bar F_{\circ,t}-\bar F_t|\leq s_2,
+  \qquad
+  \bar F_{\circ,t}=\sum_u a_{u,t}\rho_H''(Y_u-S_t).
+\]
+For the normalized objectives, the deterministic proof of
+Proposition~\ref{prop:main} applies with the bounds
+\[
+  C_1=\frac{s_1}{\sqrt\lambda},\qquad
+  C_2=\frac{s_2}{\sqrt\lambda},\qquad
+  C_3=\frac{L_3}{\lambda},\qquad
+  D_{\min}\geq\sqrt\lambda,\qquad\delta\leq d.
+\]
+Condition \eqref{eq:gaussian-smallness} is sufficient for
+\eqref{eq:smallness}.  Substitution in \eqref{eq:raw-localization} and
+\eqref{eq:pointwise-final}, followed by division by \(D_t\geq\sqrt\lambda\),
+proves the raw and remainder bounds.  The score bound and
+\(\bar F_t\geq\lambda\) give \eqref{eq:gaussian-leading}.
+\end{proof}
+
+\subsection{Sufficient local sample size}
+
+\begin{proof}[Proof of Corollary~\ref{cor:sample-size}]
+The mass bounds imply
+\[
+  s_1\leq\sqrt2v_1q_n+\tfrac23q_n^2,\qquad
+  s_2\leq\sqrt2v_2q_n+\tfrac{L_2}{3}q_n^2.
+\]
+Condition \eqref{eq:sample-size-condition} implies
+\[
+  q_n<\min\left\{1,\frac{\lambda}{2A_2},
+                    \frac{\lambda^2}{9A_1L_3}\right\}.
+\]
+Therefore \(s_1\leq A_1q_n\), \(s_2\leq A_2q_n\), \(d<1/2\), and
+\[
+  \frac{s_1L_3}{\lambda^2(1-d)^2}
+  \leq\frac{4A_1q_nL_3}{\lambda^2}<\frac49.
+\]
+Apply Corollary~\ref{cor:gaussian} and use
+\((1-d)^{-1}\leq2\) and \((1-d)^{-3}\leq8\).
+\end{proof}
+
+\subsection{Bias for symmetric windows}
+
+\begin{proof}[Proof of Proposition~\ref{prop:bias}]
+Write \(\psi_B=\rho_B'\) and
+\(G_t(z)=\sum_u a_{u,t}\psi_B(X_u-z)\), so \(G_t(S_t)=0\).
+Oddness of \(\psi_B\) and exact symmetry give
+\[
+  \sum_u a_{u,t}\psi_B(X'(t)d_{u,t})=0.
+\]
+Taylor's theorem for the signal and \(\sup_r\psi_B'(r)=c/B\) imply
+\begin{align*}
+  |G_t(X_t)|
+  &\leq\frac cB\sum_u a_{u,t}
+      |X(u)-X(t)-X'(t)d_{u,t}|\\
+  &\leq\frac{cM_2}{2B}\mu_2(t).
+\end{align*}
+Since \(S_t\) lies in the range of the active signal values,
+\(|S_t-X_t|\leq M_1h\).  For any \(z\) between \(S_t\) and \(X_t\),
+\(|X_u-z|\leq2M_1h\) for every active \(u\).  It follows that
+\[
+  -G_t'(z)=\frac cB\sum_u a_{u,t}e^{-(X_u-z)^2/(2B^2)}
+           \geq\lambda_h.
+\]
+The mean value theorem now gives
+\(|S_t-X_t|\leq|G_t(X_t)|/\lambda_h\), which proves
+\eqref{eq:population-bias}.  The same derivative bound at \(S_t\) proves
+\(\bar F_t\geq\lambda_h\).  Finally, use the exact decomposition
+\[
+  \widetilde S_t-X_t=(S_t-X_t)+F_t^{-1}\nabla_t+R_t
+\]
+and Corollary~\ref{cor:gaussian}.  Subtracting the leading term gives the
+oracle-corrected bound.
+\end{proof}
 
 \end{document}

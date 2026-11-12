@@ -1,0 +1,137 @@
+dataset,task,classifier,feature_set,contrast,method_a,method_b,mean_diff_pp,ci_low_pp,ci_high_pp,p_nb_holm,n_splits,holm_family_size,source
+dronerf,10class,linsvm,comp,IRMF - EMD,irmf_h2_a1.41,emd,10.8000659248,9.90889225975,11.6912395898,2.01263284322e-11,15,72,dronerf/classical/paired_all_metrics.csv
+dronerf,10class,linsvm,comp+log_scale,IRMF - EMD,irmf_h2_a1.41,emd,10.6674675934,9.80165162825,11.5332835586,1.62808001173e-11,15,72,dronerf/classical/paired_all_metrics.csv
+dronerf,10class,linsvm,comp,IRMF - linear IMF,irmf_h2_a1.41,imf_linear_a1.41,-7.94076343238,-9.1663443564,-6.71518250836,5.84909443857e-08,15,72,dronerf/classical/paired_all_metrics.csv
+dronerf,10class,linsvm,comp+log_scale,IRMF - linear IMF,irmf_h2_a1.41,imf_linear_a1.41,-5.904289176,-7.01048495869,-4.7980933933,6.32073040028e-07,15,72,dronerf/classical/paired_all_metrics.csv
+dronerf,10class,lightgbm,comp,IRMF - EMD,irmf_h2_a1.41,emd,7.84420950128,6.73326027713,8.95515872543,4.30560913723e-08,15,100,dronerf/ml/paired_requested.csv
+dronerf,10class,lightgbm,comp+log_scale,IRMF - EMD,irmf_h2_a1.41,emd,5.17812948185,3.53646960085,6.81978936286,0.000536591571277,15,100,dronerf/ml/paired_requested.csv
+dronerf,10class,lightgbm,comp,IRMF - linear IMF,irmf_h2_a1.41,imf_linear_a1.41,-5.17397795985,-6.26813845613,-4.07981746356,5.88098894266e-06,15,100,dronerf/ml/paired_requested.csv
+dronerf,10class,lightgbm,comp+log_scale,IRMF - linear IMF,irmf_h2_a1.41,imf_linear_a1.41,-2.46685482484,-3.27470554571,-1.65900410397,0.000749624808457,15,100,dronerf/ml/paired_requested.csv
+dronerf,10class,xgboost,comp,IRMF - EMD,irmf_h2_a1.41,emd,6.45583310389,5.40883453308,7.50283167469,2.31499707533e-07,15,100,dronerf/ml/paired_requested.csv
+dronerf,10class,xgboost,comp+log_scale,IRMF - EMD,irmf_h2_a1.41,emd,4.46500403647,2.87875010746,6.05125796548,0.00155732785673,15,100,dronerf/ml/paired_requested.csv
+dronerf,10class,xgboost,comp,IRMF - linear IMF,irmf_h2_a1.41,imf_linear_a1.41,-5.86913880381,-7.23913249127,-4.49914511636,1.87242345647e-05,15,100,dronerf/ml/paired_requested.csv
+dronerf,10class,xgboost,comp+log_scale,IRMF - linear IMF,irmf_h2_a1.41,imf_linear_a1.41,-3.63695353054,-5.02934092026,-2.24456614082,0.00312983239929,15,100,dronerf/ml/paired_requested.csv
+dronerf,10class,extratrees,comp,IRMF - EMD,irmf_h2_a1.41,emd,13.5076947812,11.6696471973,15.345742365,2.55858664132e-08,15,100,dronerf/ml/paired_requested.csv
+dronerf,10class,extratrees,comp+log_scale,IRMF - EMD,irmf_h2_a1.41,emd,9.33160676913,7.75448180825,10.90873173,3.86503032897e-07,15,100,dronerf/ml/paired_requested.csv
+dronerf,10class,extratrees,comp,IRMF - linear IMF,irmf_h2_a1.41,imf_linear_a1.41,-5.31082651914,-6.36143129906,-4.26022173921,2.68734300319e-06,15,100,dronerf/ml/paired_requested.csv
+dronerf,10class,extratrees,comp+log_scale,IRMF - linear IMF,irmf_h2_a1.41,imf_linear_a1.41,-4.69023213245,-5.98898078328,-3.39148348163,0.000135382815451,15,100,dronerf/ml/paired_requested.csv
+dronerf,10class,minirocket,comp,IRMF - EMD,irmf_h2_a1.41,emd,5.08367948807,3.57800353495,6.58935544119,0.00159781570304,10,100,dronerf/ml/paired_requested.csv
+dronerf,10class,minirocket,comp+log_scale,IRMF - EMD,irmf_h2_a1.41,emd,5.39518478424,4.16403884786,6.62633072062,0.000250051148815,10,100,dronerf/ml/paired_requested.csv
+dronerf,10class,minirocket,comp,IRMF - linear IMF,irmf_h2_a1.41,imf_linear_a1.41,-2.47395402665,-3.92514867664,-1.02275937667,0.162453350231,10,100,dronerf/ml/paired_requested.csv
+dronerf,10class,minirocket,comp+log_scale,IRMF - linear IMF,irmf_h2_a1.41,imf_linear_a1.41,-1.18178855538,-2.69385955292,0.330282442157,1,10,100,dronerf/ml/paired_requested.csv
+dronerf,10class,compact_resnet,comp,IRMF - EMD,irmf_h2_a1.41,emd,1.93604272304,-1.58563022955,5.45771567563,1,15,100,dronerf/ml/paired_requested.csv
+dronerf,10class,compact_resnet,comp+log_scale,IRMF - EMD,irmf_h2_a1.41,emd,2.39725533438,-0.952275240151,5.7467859089,1,15,100,dronerf/ml/paired_requested.csv
+dronerf,10class,compact_resnet,comp,IRMF - linear IMF,irmf_h2_a1.41,imf_linear_a1.41,-0.159319621194,-2.41718364365,2.09854440127,1,15,100,dronerf/ml/paired_requested.csv
+dronerf,10class,compact_resnet,comp+log_scale,IRMF - linear IMF,irmf_h2_a1.41,imf_linear_a1.41,-0.493877973775,-3.2705092384,2.28275329085,1,15,100,dronerf/ml/paired_requested.csv
+birdclef2023,species,logreg,comp,IRMF - EMD,irmf_h2_a1.41,emd,6.0525540852,4.71889048524,7.38621768517,6.64878584909e-06,15,72,birdclef2023/classical/paired_all_metrics.csv
+birdclef2023,species,logreg,comp+log_scale,IRMF - EMD,irmf_h2_a1.41,emd,6.04838915295,4.49399564344,7.60278266247,3.8366387841e-05,15,72,birdclef2023/classical/paired_all_metrics.csv
+birdclef2023,species,logreg,comp,IRMF - linear IMF,irmf_h2_a1.41,imf_linear_a1.41,0.646910512457,-0.59941063538,1.89323166029,1,15,72,birdclef2023/classical/paired_all_metrics.csv
+birdclef2023,species,logreg,comp+log_scale,IRMF - linear IMF,irmf_h2_a1.41,imf_linear_a1.41,0.819128270138,-0.411455742277,2.04971228255,1,15,72,birdclef2023/classical/paired_all_metrics.csv
+birdclef2023,species,lightgbm,comp,IRMF - EMD,irmf_h2_a1.41,emd,2.4394573603,0.819581706744,4.05933301385,0.50208748295,15,120,birdclef2023/ml/paired_all_metrics_species.csv
+birdclef2023,species,lightgbm,comp+log_scale,IRMF - EMD,irmf_h2_a1.41,emd,2.69625291262,1.69923275693,3.6932730683,0.00487797193055,15,120,birdclef2023/ml/paired_all_metrics_species.csv
+birdclef2023,species,lightgbm,comp,IRMF - linear IMF,irmf_h2_a1.41,imf_linear_a1.41,0.129796742635,-0.997244894626,1.2568383799,1,15,120,birdclef2023/ml/paired_all_metrics_species.csv
+birdclef2023,species,lightgbm,comp+log_scale,IRMF - linear IMF,irmf_h2_a1.41,imf_linear_a1.41,0.346153343082,-0.842275562923,1.53458224909,1,15,120,birdclef2023/ml/paired_all_metrics_species.csv
+birdclef2023,species,xgboost,comp,IRMF - EMD,irmf_h2_a1.41,emd,2.5991038423,1.41472483525,3.78348284935,0.0326784662628,15,120,birdclef2023/ml/paired_all_metrics_species.csv
+birdclef2023,species,xgboost,comp+log_scale,IRMF - EMD,irmf_h2_a1.41,emd,2.49871178171,1.07039995929,3.92702360413,0.186559366522,15,120,birdclef2023/ml/paired_all_metrics_species.csv
+birdclef2023,species,xgboost,comp,IRMF - linear IMF,irmf_h2_a1.41,imf_linear_a1.41,0.0952906497885,-0.755697983683,0.94627928326,1,15,120,birdclef2023/ml/paired_all_metrics_species.csv
+birdclef2023,species,xgboost,comp+log_scale,IRMF - linear IMF,irmf_h2_a1.41,imf_linear_a1.41,0.00265517339343,-0.894285131334,0.89959547812,1,15,120,birdclef2023/ml/paired_all_metrics_species.csv
+birdclef2023,species,extratrees,comp,IRMF - EMD,irmf_h2_a1.41,emd,3.00508590077,0.883965092,5.12620670954,0.690099348823,15,120,birdclef2023/ml/paired_all_metrics_species.csv
+birdclef2023,species,extratrees,comp+log_scale,IRMF - EMD,irmf_h2_a1.41,emd,3.17901663129,0.911847711782,5.44618555079,0.719894716369,15,120,birdclef2023/ml/paired_all_metrics_species.csv
+birdclef2023,species,extratrees,comp,IRMF - linear IMF,irmf_h2_a1.41,imf_linear_a1.41,0.497324573756,-0.810076936365,1.80472608388,1,15,120,birdclef2023/ml/paired_all_metrics_species.csv
+birdclef2023,species,extratrees,comp+log_scale,IRMF - linear IMF,irmf_h2_a1.41,imf_linear_a1.41,0.274883574659,-0.690356004854,1.24012315417,1,15,120,birdclef2023/ml/paired_all_metrics_species.csv
+birdclef2023,species,minirocket,comp,IRMF - EMD,irmf_h2_a1.41,emd,1.3054445043,-0.197087088414,2.80797609701,1,5,120,birdclef2023/ml/paired_all_metrics_species.csv
+birdclef2023,species,minirocket,comp+log_scale,IRMF - EMD,irmf_h2_a1.41,emd,1.52648633732,0.125161085692,2.92781158894,1,5,120,birdclef2023/ml/paired_all_metrics_species.csv
+birdclef2023,species,minirocket,comp,IRMF - linear IMF,irmf_h2_a1.41,imf_linear_a1.41,0.100356801907,-1.48120400518,1.68191760899,1,5,120,birdclef2023/ml/paired_all_metrics_species.csv
+birdclef2023,species,minirocket,comp+log_scale,IRMF - linear IMF,irmf_h2_a1.41,imf_linear_a1.41,0.344025975165,-1.29303551709,1.98108746742,1,5,120,birdclef2023/ml/paired_all_metrics_species.csv
+birdclef2023,species,multirocket,comp,IRMF - EMD,irmf_h2_a1.41,emd,2.8761281823,0.961499435381,4.79075692923,0.995621496297,5,120,birdclef2023/ml/paired_all_metrics_species.csv
+birdclef2023,species,multirocket,comp+log_scale,IRMF - EMD,irmf_h2_a1.41,emd,3.09119993905,1.30117197087,4.88122790722,0.685881634842,5,120,birdclef2023/ml/paired_all_metrics_species.csv
+birdclef2023,species,multirocket,comp,IRMF - linear IMF,irmf_h2_a1.41,imf_linear_a1.41,0.552044926985,-0.976042787593,2.08013264156,1,5,120,birdclef2023/ml/paired_all_metrics_species.csv
+birdclef2023,species,multirocket,comp+log_scale,IRMF - linear IMF,irmf_h2_a1.41,imf_linear_a1.41,0.789781227786,-1.41457349627,2.99413595184,1,5,120,birdclef2023/ml/paired_all_metrics_species.csv
+birdclef2023,species,compact_resnet,comp,IRMF - EMD,irmf_h2_a1.41,emd,1.37780638748,-1.69401216588,4.44962494084,1,15,120,birdclef2023/ml/paired_all_metrics_species.csv
+birdclef2023,species,compact_resnet,comp+log_scale,IRMF - EMD,irmf_h2_a1.41,emd,1.99697015965,-1.08240009991,5.07634041921,1,15,120,birdclef2023/ml/paired_all_metrics_species.csv
+birdclef2023,species,compact_resnet,comp,IRMF - linear IMF,irmf_h2_a1.41,imf_linear_a1.41,-0.0455732618215,-1.85513419392,1.76398767028,1,15,120,birdclef2023/ml/paired_all_metrics_species.csv
+birdclef2023,species,compact_resnet,comp+log_scale,IRMF - linear IMF,irmf_h2_a1.41,imf_linear_a1.41,0.296401876174,-2.95900190333,3.55180565568,1,15,120,birdclef2023/ml/paired_all_metrics_species.csv
+esc50_animals,animal,linsvm,comp,IRMF - EMD,irmf_h2_a1.41,emd,10.9666705215,7.74564565823,14.1876953847,0.000218131811787,15,72,esc50_animals/classical/paired_all_metrics.csv
+esc50_animals,animal,linsvm,comp+log_scale,IRMF - EMD,irmf_h2_a1.41,emd,9.89140526775,6.43738306466,13.3454274708,0.00114877856782,15,72,esc50_animals/classical/paired_all_metrics.csv
+esc50_animals,animal,linsvm,comp,IRMF - linear IMF,irmf_h2_a1.41,imf_linear_a1.41,0.0168523527103,-3.20538885633,3.23909356175,1,15,72,esc50_animals/classical/paired_all_metrics.csv
+esc50_animals,animal,linsvm,comp+log_scale,IRMF - linear IMF,irmf_h2_a1.41,imf_linear_a1.41,-0.995546649668,-3.65718607691,1.66609277757,1,15,72,esc50_animals/classical/paired_all_metrics.csv
+esc50_animals,animal,lightgbm,comp,IRMF - EMD,irmf_h2_a1.41,emd,6.86110206176,3.30300524355,10.41919888,0.0666007415527,15,100,esc50_animals/ml/paired_requested.csv
+esc50_animals,animal,lightgbm,comp+log_scale,IRMF - EMD,irmf_h2_a1.41,emd,7.3868222787,4.62556104419,10.1480835132,0.00421015530741,15,100,esc50_animals/ml/paired_requested.csv
+esc50_animals,animal,lightgbm,comp,IRMF - linear IMF,irmf_h2_a1.41,imf_linear_a1.41,-0.858257328184,-2.06070702088,0.344192364517,1,15,100,esc50_animals/ml/paired_requested.csv
+esc50_animals,animal,lightgbm,comp+log_scale,IRMF - linear IMF,irmf_h2_a1.41,imf_linear_a1.41,-0.400722052763,-1.74074551313,0.939301407603,1,15,100,esc50_animals/ml/paired_requested.csv
+esc50_animals,animal,xgboost,comp,IRMF - EMD,irmf_h2_a1.41,emd,6.84288985334,3.29185418665,10.39392552,0.0666007415527,15,100,esc50_animals/ml/paired_requested.csv
+esc50_animals,animal,xgboost,comp+log_scale,IRMF - EMD,irmf_h2_a1.41,emd,7.5439583907,3.98276892607,11.1051478553,0.0321567454353,15,100,esc50_animals/ml/paired_requested.csv
+esc50_animals,animal,xgboost,comp,IRMF - linear IMF,irmf_h2_a1.41,imf_linear_a1.41,-1.68563710423,-3.01613611045,-0.35513809801,1,15,100,esc50_animals/ml/paired_requested.csv
+esc50_animals,animal,xgboost,comp+log_scale,IRMF - linear IMF,irmf_h2_a1.41,imf_linear_a1.41,-1.19952733815,-2.89511599937,0.496061323072,1,15,100,esc50_animals/ml/paired_requested.csv
+esc50_animals,animal,extratrees,comp,IRMF - EMD,irmf_h2_a1.41,emd,8.72085861574,4.34379735869,13.0979198728,0.0517572789981,15,100,esc50_animals/ml/paired_requested.csv
+esc50_animals,animal,extratrees,comp+log_scale,IRMF - EMD,irmf_h2_a1.41,emd,7.84818310449,4.2079819191,11.4883842899,0.0287608408326,15,100,esc50_animals/ml/paired_requested.csv
+esc50_animals,animal,extratrees,comp,IRMF - linear IMF,irmf_h2_a1.41,imf_linear_a1.41,-0.851987822144,-3.05307458861,1.34909894432,1,15,100,esc50_animals/ml/paired_requested.csv
+esc50_animals,animal,extratrees,comp+log_scale,IRMF - linear IMF,irmf_h2_a1.41,imf_linear_a1.41,-0.87288674161,-3.31792052504,1.57214704182,1,15,100,esc50_animals/ml/paired_requested.csv
+esc50_animals,animal,minirocket,comp,IRMF - EMD,irmf_h2_a1.41,emd,1.6511582598,-1.16980727209,4.47212379169,1,15,100,esc50_animals/ml/paired_requested.csv
+esc50_animals,animal,minirocket,comp+log_scale,IRMF - EMD,irmf_h2_a1.41,emd,1.36362715741,-2.01435715821,4.74161147302,1,15,100,esc50_animals/ml/paired_requested.csv
+esc50_animals,animal,minirocket,comp,IRMF - linear IMF,irmf_h2_a1.41,imf_linear_a1.41,-1.88339871047,-3.96763956366,0.200842142714,1,15,100,esc50_animals/ml/paired_requested.csv
+esc50_animals,animal,minirocket,comp+log_scale,IRMF - linear IMF,irmf_h2_a1.41,imf_linear_a1.41,-1.41895438359,-4.12164734482,1.28373857765,1,15,100,esc50_animals/ml/paired_requested.csv
+esc50_animals,animal,multirocket,comp,IRMF - EMD,irmf_h2_a1.41,emd,4.65461676523,-3.82404286075,13.1332763912,1,5,20,esc50_animals/ml/paired_requested.csv
+esc50_animals,animal,multirocket,comp+log_scale,IRMF - EMD,irmf_h2_a1.41,emd,5.0787303491,-2.98934909409,13.1468097923,1,5,20,esc50_animals/ml/paired_requested.csv
+esc50_animals,animal,multirocket,comp,IRMF - linear IMF,irmf_h2_a1.41,imf_linear_a1.41,-0.710050733199,-1.99258618258,0.572484716185,1,5,20,esc50_animals/ml/paired_requested.csv
+esc50_animals,animal,multirocket,comp+log_scale,IRMF - linear IMF,irmf_h2_a1.41,imf_linear_a1.41,-0.41751409324,-4.23662335816,3.40159517168,1,5,20,esc50_animals/ml/paired_requested.csv
+esc50_animals,animal,compact_resnet,comp,IRMF - EMD,irmf_h2_a1.41,emd,-0.624591753949,-6.06955758144,4.82037407354,1,5,100,esc50_animals/ml/paired_requested.csv
+esc50_animals,animal,compact_resnet,comp+log_scale,IRMF - EMD,irmf_h2_a1.41,emd,1.61817439313,-5.94344555567,9.17979434192,1,5,100,esc50_animals/ml/paired_requested.csv
+esc50_animals,animal,compact_resnet,comp,IRMF - linear IMF,irmf_h2_a1.41,imf_linear_a1.41,-1.652228685,-4.05931928048,0.754861910485,1,5,100,esc50_animals/ml/paired_requested.csv
+esc50_animals,animal,compact_resnet,comp+log_scale,IRMF - linear IMF,irmf_h2_a1.41,imf_linear_a1.41,2.90801125872,-2.38588753789,8.20191005534,1,5,100,esc50_animals/ml/paired_requested.csv
+uas_birds_60ghz,bird_drone,lda,comp,IRMF - EMD,irmf_h2_a1.41,emd,1.75,-0.380283912617,3.88028391262,1,15,12,uas_birds_60ghz/classical/paired_frame_lda_bird_drone.csv
+uas_birds_60ghz,bird_drone,lda,comp+log_scale,IRMF - EMD,irmf_h2_a1.41,emd,1.22569444444,-0.365950186294,2.81733907518,1,15,12,uas_birds_60ghz/classical/paired_frame_lda_bird_drone.csv
+uas_birds_60ghz,bird_drone,lda,comp,IRMF - linear IMF,irmf_h2_a1.41,imf_linear_a1.41,0.833333333333,-0.632552874329,2.299219541,1,15,12,uas_birds_60ghz/classical/paired_frame_lda_bird_drone.csv
+uas_birds_60ghz,bird_drone,lda,comp+log_scale,IRMF - linear IMF,irmf_h2_a1.41,imf_linear_a1.41,0.909722222222,-0.518872333469,2.33831677791,1,15,12,uas_birds_60ghz/classical/paired_frame_lda_bird_drone.csv
+uas_birds_60ghz,bird_drone,lightgbm,comp,IRMF - EMD,irmf_h2_a1.41,emd,2.75347222222,0.396996535233,5.10994790921,1,15,120,uas_birds_60ghz/ml/paired_requested.csv
+uas_birds_60ghz,bird_drone,lightgbm,comp+log_scale,IRMF - EMD,irmf_h2_a1.41,emd,1.75347222222,-0.453743933761,3.9606883782,1,15,120,uas_birds_60ghz/ml/paired_requested.csv
+uas_birds_60ghz,bird_drone,lightgbm,comp,IRMF - linear IMF,irmf_h2_a1.41,imf_linear_a1.41,1.09027777778,-0.418279084289,2.59883463984,1,15,120,uas_birds_60ghz/ml/paired_requested.csv
+uas_birds_60ghz,bird_drone,lightgbm,comp+log_scale,IRMF - linear IMF,irmf_h2_a1.41,imf_linear_a1.41,0.96875,-0.203375851391,2.14087585139,1,15,120,uas_birds_60ghz/ml/paired_requested.csv
+uas_birds_60ghz,bird_drone,xgboost,comp,IRMF - EMD,irmf_h2_a1.41,emd,2.07291666667,-0.393751232414,4.53958456575,1,15,120,uas_birds_60ghz/ml/paired_requested.csv
+uas_birds_60ghz,bird_drone,xgboost,comp+log_scale,IRMF - EMD,irmf_h2_a1.41,emd,1.39930555556,-0.507480229324,3.30609134044,1,15,120,uas_birds_60ghz/ml/paired_requested.csv
+uas_birds_60ghz,bird_drone,xgboost,comp,IRMF - linear IMF,irmf_h2_a1.41,imf_linear_a1.41,0.875,-0.428275768862,2.17827576886,1,15,120,uas_birds_60ghz/ml/paired_requested.csv
+uas_birds_60ghz,bird_drone,xgboost,comp+log_scale,IRMF - linear IMF,irmf_h2_a1.41,imf_linear_a1.41,0.899305555556,-0.405978020847,2.20458913196,1,15,120,uas_birds_60ghz/ml/paired_requested.csv
+uas_birds_60ghz,bird_drone,extratrees,comp,IRMF - EMD,irmf_h2_a1.41,emd,2.81597222222,-0.185138536424,5.81708298087,1,15,120,uas_birds_60ghz/ml/paired_requested.csv
+uas_birds_60ghz,bird_drone,extratrees,comp+log_scale,IRMF - EMD,irmf_h2_a1.41,emd,2.34027777778,-0.573786740087,5.25434229564,1,15,120,uas_birds_60ghz/ml/paired_requested.csv
+uas_birds_60ghz,bird_drone,extratrees,comp,IRMF - linear IMF,irmf_h2_a1.41,imf_linear_a1.41,1.14236111111,-0.310271433208,2.59499365543,1,15,120,uas_birds_60ghz/ml/paired_requested.csv
+uas_birds_60ghz,bird_drone,extratrees,comp+log_scale,IRMF - linear IMF,irmf_h2_a1.41,imf_linear_a1.41,0.892361111111,-0.282670397439,2.06739261966,1,15,120,uas_birds_60ghz/ml/paired_requested.csv
+uas_birds_60ghz,bird_drone,minirocket,comp,IRMF - EMD,irmf_h2_a1.41,emd,0.534722222222,-1.87612340896,2.94556785341,1,15,120,uas_birds_60ghz/ml/paired_requested.csv
+uas_birds_60ghz,bird_drone,minirocket,comp+log_scale,IRMF - EMD,irmf_h2_a1.41,emd,0.704861111111,-1.44675386677,2.85647608899,1,15,120,uas_birds_60ghz/ml/paired_requested.csv
+uas_birds_60ghz,bird_drone,minirocket,comp,IRMF - linear IMF,irmf_h2_a1.41,imf_linear_a1.41,-0.114583333333,-1.96011457391,1.73094790724,1,15,120,uas_birds_60ghz/ml/paired_requested.csv
+uas_birds_60ghz,bird_drone,minirocket,comp+log_scale,IRMF - linear IMF,irmf_h2_a1.41,imf_linear_a1.41,-0.204861111111,-1.43662831996,1.02690609774,1,15,120,uas_birds_60ghz/ml/paired_requested.csv
+uas_birds_60ghz,bird_drone,multirocket,comp,IRMF - EMD,irmf_h2_a1.41,emd,-0.170138888889,-2.9530479046,2.61277012682,1,15,120,uas_birds_60ghz/ml/paired_requested.csv
+uas_birds_60ghz,bird_drone,multirocket,comp+log_scale,IRMF - EMD,irmf_h2_a1.41,emd,-0.538194444444,-2.55808633066,1.48169744177,1,15,120,uas_birds_60ghz/ml/paired_requested.csv
+uas_birds_60ghz,bird_drone,multirocket,comp,IRMF - linear IMF,irmf_h2_a1.41,imf_linear_a1.41,-0.204861111111,-2.73802842307,2.32830620085,1,15,120,uas_birds_60ghz/ml/paired_requested.csv
+uas_birds_60ghz,bird_drone,multirocket,comp+log_scale,IRMF - linear IMF,irmf_h2_a1.41,imf_linear_a1.41,-0.354166666667,-2.49093250248,1.78259916914,1,15,120,uas_birds_60ghz/ml/paired_requested.csv
+uas_birds_60ghz,bird_drone,compact_resnet,comp,IRMF - EMD,irmf_h2_a1.41,emd,0.0277777777778,-2.8871981842,2.94275373975,1,15,120,uas_birds_60ghz/ml/paired_requested.csv
+uas_birds_60ghz,bird_drone,compact_resnet,comp+log_scale,IRMF - EMD,irmf_h2_a1.41,emd,0.736111111111,-3.01593266493,4.48815488716,1,15,120,uas_birds_60ghz/ml/paired_requested.csv
+uas_birds_60ghz,bird_drone,compact_resnet,comp,IRMF - linear IMF,irmf_h2_a1.41,imf_linear_a1.41,-0.229166666667,-3.07635766479,2.61802433146,1,15,120,uas_birds_60ghz/ml/paired_requested.csv
+uas_birds_60ghz,bird_drone,compact_resnet,comp+log_scale,IRMF - linear IMF,irmf_h2_a1.41,imf_linear_a1.41,-1.40972222222,-5.16753096257,2.34808651813,1,15,120,uas_birds_60ghz/ml/paired_requested.csv
+synthetic,signal,logreg,comp,IRMF - EMD,irmf_h2_a1.41,emd,34.4222222222,29.7268744666,39.1175699778,1.87968403497e-08,15,72,synthetic/classical/comparisons_signal.csv
+synthetic,signal,logreg,comp+log_scale,IRMF - EMD,irmf_h2_a1.41,emd,34.6222222222,30.4140685593,38.8303758851,4.09323135265e-09,15,72,synthetic/classical/comparisons_signal.csv
+synthetic,signal,logreg,comp,IRMF - linear IMF,irmf_h2_a1.41,imf_linear_a1.41,11.8222222222,8.3451758403,15.2992686041,0.000142397430153,15,72,synthetic/classical/comparisons_signal.csv
+synthetic,signal,logreg,comp+log_scale,IRMF - linear IMF,irmf_h2_a1.41,imf_linear_a1.41,11.6888888889,7.57071010583,15.807067672,0.000812227343741,15,72,synthetic/classical/comparisons_signal.csv
+synthetic,signal,lightgbm,comp,IRMF - EMD,irmf_h2_a1.41,emd,44.4,30.2061456828,58.5938543172,0.0241859538961,5,36,synthetic/ml/trees/comparisons_signal.csv
+synthetic,signal,lightgbm,comp+log_scale,IRMF - EMD,irmf_h2_a1.41,emd,46,28.8623377678,63.1376622322,0.0309588734997,5,36,synthetic/ml/trees/comparisons_signal.csv
+synthetic,signal,lightgbm,comp,IRMF - linear IMF,irmf_h2_a1.41,imf_linear_a1.41,14.9333333333,3.0934957765,26.7731708902,0.243154415418,5,36,synthetic/ml/trees/comparisons_signal.csv
+synthetic,signal,lightgbm,comp+log_scale,IRMF - linear IMF,irmf_h2_a1.41,imf_linear_a1.41,15.8666666667,0.808450838643,30.9248824947,0.301043398658,5,36,synthetic/ml/trees/comparisons_signal.csv
+synthetic,signal,xgboost,comp,IRMF - EMD,irmf_h2_a1.41,emd,44.2666666667,31.2188515883,57.314481745,0.0198266850936,5,36,synthetic/ml/trees/comparisons_signal.csv
+synthetic,signal,xgboost,comp+log_scale,IRMF - EMD,irmf_h2_a1.41,emd,46.5333333333,30.774714209,62.2919524577,0.0272039654792,5,36,synthetic/ml/trees/comparisons_signal.csv
+synthetic,signal,xgboost,comp,IRMF - linear IMF,irmf_h2_a1.41,imf_linear_a1.41,13.8666666667,2.9481396422,24.7851936911,0.243154415418,5,36,synthetic/ml/trees/comparisons_signal.csv
+synthetic,signal,xgboost,comp+log_scale,IRMF - linear IMF,irmf_h2_a1.41,imf_linear_a1.41,15.8666666667,3.04081246551,28.6925208678,0.243154415418,5,36,synthetic/ml/trees/comparisons_signal.csv
+synthetic,signal,extratrees,comp,IRMF - EMD,irmf_h2_a1.41,emd,41.4666666667,30.1154534424,52.8178798909,0.015428792556,5,36,synthetic/ml/trees/comparisons_signal.csv
+synthetic,signal,extratrees,comp+log_scale,IRMF - EMD,irmf_h2_a1.41,emd,40.9333333333,26.4040074833,55.4626591834,0.0288402782814,5,36,synthetic/ml/trees/comparisons_signal.csv
+synthetic,signal,extratrees,comp,IRMF - linear IMF,irmf_h2_a1.41,imf_linear_a1.41,13.9333333333,8.20281520506,19.6638514616,0.0348001791423,5,36,synthetic/ml/trees/comparisons_signal.csv
+synthetic,signal,extratrees,comp+log_scale,IRMF - linear IMF,irmf_h2_a1.41,imf_linear_a1.41,12.8,4.10170278453,21.4982972155,0.165310077883,5,36,synthetic/ml/trees/comparisons_signal.csv
+synthetic,signal,minirocket,comp,IRMF - EMD,irmf_h2_a1.41,emd,16.4,11.1798401713,21.6201598287,0.0228370132323,5,24,synthetic/ml/rocket/comparisons_signal.csv
+synthetic,signal,minirocket,comp+log_scale,IRMF - EMD,irmf_h2_a1.41,emd,16.9333333333,7.20190314135,26.6647635253,0.135262673702,5,24,synthetic/ml/rocket/comparisons_signal.csv
+synthetic,signal,minirocket,comp,IRMF - linear IMF,irmf_h2_a1.41,imf_linear_a1.41,3.73333333333,0.586015119759,6.88065154691,0.391548193685,5,24,synthetic/ml/rocket/comparisons_signal.csv
+synthetic,signal,minirocket,comp+log_scale,IRMF - linear IMF,irmf_h2_a1.41,imf_linear_a1.41,3.66666666667,-1.28055028485,8.61388361819,0.543628127289,5,24,synthetic/ml/rocket/comparisons_signal.csv
+synthetic,signal,multirocket,comp,IRMF - EMD,irmf_h2_a1.41,emd,20.2,10.1164956737,30.2835043263,0.0921016723449,5,24,synthetic/ml/rocket/comparisons_signal.csv
+synthetic,signal,multirocket,comp+log_scale,IRMF - EMD,irmf_h2_a1.41,emd,18.9333333333,9.32145841973,28.5452082469,0.0924435732438,5,24,synthetic/ml/rocket/comparisons_signal.csv
+synthetic,signal,multirocket,comp,IRMF - linear IMF,irmf_h2_a1.41,imf_linear_a1.41,9,1.38372979393,16.6162702061,0.391548193685,5,24,synthetic/ml/rocket/comparisons_signal.csv
+synthetic,signal,multirocket,comp+log_scale,IRMF - linear IMF,irmf_h2_a1.41,imf_linear_a1.41,11,2.27515654616,19.7248434538,0.348403633446,5,24,synthetic/ml/rocket/comparisons_signal.csv
+synthetic,signal,compact_resnet,comp,IRMF - EMD,irmf_h2_a1.41,emd,27.6,-14.10309275,69.30309275,0.840012352591,5,12,synthetic/ml/cnn/comparisons_signal.csv
+synthetic,signal,compact_resnet,comp+log_scale,IRMF - EMD,irmf_h2_a1.41,emd,28.9333333333,-0.134601645691,58.0012683124,0.45144328239,5,12,synthetic/ml/cnn/comparisons_signal.csv
+synthetic,signal,compact_resnet,comp,IRMF - linear IMF,irmf_h2_a1.41,imf_linear_a1.41,-5.66666666667,-11.3397260695,0.00639273612369,0.45144328239,5,12,synthetic/ml/cnn/comparisons_signal.csv
+synthetic,signal,compact_resnet,comp+log_scale,IRMF - linear IMF,irmf_h2_a1.41,imf_linear_a1.41,-5.6,-43.1369833506,31.9369833506,1,5,12,synthetic/ml/cnn/comparisons_signal.csv

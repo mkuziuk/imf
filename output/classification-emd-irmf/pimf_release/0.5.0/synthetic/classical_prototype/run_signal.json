@@ -1,0 +1,29 @@
+{
+  "dataset": "synthetic",
+  "task": "signal",
+  "methods": [
+    "irmf_h2_a1.41_conv"
+  ],
+  "n_frames": 1500,
+  "n_groups": 150,
+  "n_classes": 5,
+  "n_splits": 15,
+  "n_seeds": 3,
+  "workers": 4,
+  "seconds": 38.320310042006895,
+  "breakdown": null,
+  "classifiers": [
+    "lda",
+    "logreg",
+    "linsvm"
+  ],
+  "feature_sets": [
+    "comp",
+    "comp+log_scale"
+  ],
+  "pairs": [],
+  "quick": false,
+  "results_tag": "prototype",
+  "save_probabilities": false,
+  "predictions": "/Users/mikhail/Datasets/imf-classification-prototype-conv/synthetic/results/prototype/classical_signal_predictions.parquet"
+}

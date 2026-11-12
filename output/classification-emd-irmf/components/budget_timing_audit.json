@@ -1,0 +1,36 @@
+{
+  "reason": "Historical LightGBM wall times used two threads for synthetic and BirdCLEF; multiply by declared threads for a conservative CPU-equivalent estimate.",
+  "historical_runs": [
+    {
+      "dataset": "synthetic",
+      "source": "/Users/mikhail/.t3/worktrees/imf/t3-44ed3594/output/classification-emd-irmf/synthetic/ml/trees/run_signal.json",
+      "source_sha256": "fa94a98aeb667c1340e9a64c00803c77e142237719d7ccd549d1eab21a799bc7",
+      "historical_threads": 2,
+      "mean_fit_wall_seconds": 1.9362314072466689
+    },
+    {
+      "dataset": "dronerf",
+      "source": "/Users/mikhail/.t3/worktrees/imf/t3-44ed3594/output/classification-emd-irmf/dronerf/ml/trees_lgbm/run_10class.json",
+      "source_sha256": "2e952d5259478d09784ac8e5302383087ec6d99b6bd5874d3c0335e85336ff88",
+      "historical_threads": 1,
+      "mean_fit_wall_seconds": 17.56226586487333
+    },
+    {
+      "dataset": "birdclef2023",
+      "source": "/Users/mikhail/.t3/worktrees/imf/t3-44ed3594/output/classification-emd-irmf/birdclef2023/ml/trees_lightgbm_remaining/run_species.json",
+      "source_sha256": "de45198adb200d5e66cc31508c71486e01c427855263bbd6766ed34fef9b5b79",
+      "historical_threads": 2,
+      "mean_fit_wall_seconds": 10.541062048520793
+    },
+    {
+      "dataset": "esc50_animals",
+      "source": "/Users/mikhail/.t3/worktrees/imf/t3-44ed3594/output/classification-emd-irmf/esc50_animals/ml/trees/run_animal.json",
+      "source_sha256": "e1e88efe84275cf4a9d17062dd7da47fc8b7a9409c71575610e565188556f690",
+      "historical_threads": 1,
+      "mean_fit_wall_seconds": 6.4399961183390895
+    }
+  ],
+  "revised_lightgbm_cpu_equivalent_seconds": 42592.45853843019,
+  "revised_wall_projection_hours": 10.533948614070255,
+  "budget_cuts": []
+}

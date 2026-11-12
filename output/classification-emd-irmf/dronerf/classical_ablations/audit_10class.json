@@ -1,0 +1,172 @@
+{
+  "dataset": "dronerf",
+  "task": "10class",
+  "classifiers": [
+    "lda",
+    "logreg",
+    "linsvm"
+  ],
+  "workers": 4,
+  "start": "2026-10-20T21:50:35.640673+00:00",
+  "phase2": {
+    "dataset": "dronerf",
+    "task": "10class",
+    "methods": [
+      "raw",
+      "emd",
+      "imf_linear_a1.41",
+      "irmf_h2_a1.41"
+    ],
+    "n_frames": 12000,
+    "n_groups": 227,
+    "n_classes": 10,
+    "n_splits": 15,
+    "n_seeds": 3,
+    "workers": 3,
+    "seconds": 2878.7002137920354,
+    "breakdown": null,
+    "classifiers": [
+      "lda",
+      "qda",
+      "gnb",
+      "logreg",
+      "knn",
+      "linsvm"
+    ],
+    "feature_sets": [
+      "comp",
+      "comp+log_scale"
+    ],
+    "pairs": [
+      [
+        "irmf_h2_a1.41",
+        "emd"
+      ],
+      [
+        "irmf_h2_a1.41",
+        "imf_linear_a1.41"
+      ],
+      [
+        "imf_linear_a1.41",
+        "emd"
+      ],
+      [
+        "irmf_h2_a1.41",
+        "raw"
+      ],
+      [
+        "imf_linear_a1.41",
+        "raw"
+      ],
+      [
+        "emd",
+        "raw"
+      ]
+    ],
+    "quick": false,
+    "reduced": true,
+    "grids": {
+      "lda": null,
+      "qda": {
+        "clf__shrinkage": [
+          "auto",
+          0.2,
+          0.8
+        ]
+      },
+      "gnb": null,
+      "logreg": {
+        "clf__C": [
+          0.01,
+          0.1,
+          1.0
+        ]
+      },
+      "knn": {
+        "clf__n_neighbors": [
+          1,
+          15
+        ]
+      },
+      "linsvm": {
+        "clf__C": [
+          0.1
+        ]
+      }
+    },
+    "fixed_parameters": {
+      "linsvm": {
+        "clf__C": 0.1
+      }
+    },
+    "skipped_single_candidate_cv": [
+      "linsvm"
+    ],
+    "joblib_batch_size": 1
+  },
+  "reuse": {
+    "fold_file": "/Users/mikhail/Datasets/imf-classification/dronerf/features/irmf_h2_a1.41.parquet",
+    "fold_sha256": "30f94cf7a4e2b7fa69c5f06968c3c06b463df63a6a4f6c54b9e1306ae6a49c6c",
+    "prediction_file": "/Users/mikhail/Datasets/imf-classification/dronerf/results/classical_10class_predictions.parquet",
+    "verified_fits": 360,
+    "split_sha256": "4e61cf0e9a356911cc7907053e2699e19b3aec1a7b59f889eda65216dee82379",
+    "driver_sha256": "b2b94bc8c49251adba0ece318f892330f01c1c04bb1d4d256226f97f251e1386"
+  },
+  "caches": [
+    {
+      "tag": "irmf_h2_a1.41_conv",
+      "ready": true,
+      "slots": 18,
+      "cpu_seconds_per_frame": 0.10760770241666696,
+      "features_sha256": "5c7fcccb03c1c8e6f7abd1acd10661806890fd0a1d13c6c2d76c5843d744a233",
+      "decomposition_sha256": "e93554f337de74822f230586e0c36a5dc78678d6fd624f9301f7656f7bdb6e65"
+    },
+    {
+      "tag": "irmf_h1_a1.41_conv",
+      "ready": true,
+      "slots": 18,
+      "cpu_seconds_per_frame": 0.1111165780833333,
+      "features_sha256": "ad8b0131505c96ce2c5234eb74b1da29b48114d24169a6e63ec947b7ca069349",
+      "decomposition_sha256": "4287e85d4e353ebe91527553fb664b72441bef4b636894ae4db0f8076953adb5"
+    },
+    {
+      "tag": "irmf_h4_a1.41_conv",
+      "ready": true,
+      "slots": 18,
+      "cpu_seconds_per_frame": 0.10395052100000059,
+      "features_sha256": "5471bc1b592b06595f5760a344b119fd248fc22e1e85bf6f1ae0dbe9444fb1fe",
+      "decomposition_sha256": "2a6451ff4777b03d16a51a491fd3e2647248f035feabeb1a9d8984fb0724d6c5"
+    },
+    {
+      "tag": "irmf_h2_a2_conv",
+      "ready": true,
+      "slots": 10,
+      "cpu_seconds_per_frame": 0.06224682250000026,
+      "features_sha256": "eb5caf9c6ba7983a1011f7ab75e9e3beb269bd713c5eeaa9309131ed8d3d6ea2",
+      "decomposition_sha256": "85926e38a9946849dcbd83422850a14c807267665c056418119d149cadbc87f9"
+    },
+    {
+      "tag": "imf_linear_a2",
+      "ready": true,
+      "slots": 10,
+      "cpu_seconds_per_frame": 0.008542336416666678,
+      "features_sha256": "9b83d231f2d78433f810d71210ed59ebebf434add603bd48754d47a5655ac60e",
+      "decomposition_sha256": "fed6642b560b8e616d4d4fbd84d131e0cc64b9574f52ead31e9e8c6de8030002"
+    },
+    {
+      "tag": "irmf_h2_a2",
+      "ready": false,
+      "reason": "missing JSON or features"
+    }
+  ],
+  "estimator_signatures": {
+    "lda": "{'memory': None, 'steps': [('impute', SimpleImputer(strategy='median')), ('constant', VarianceThreshold()), ('scale', StandardScaler()), ('clf', LinearDiscriminantAnalysis(shrinkage='auto', solver='lsqr'))], 'transform_input': None, 'verbose': False, 'impute': SimpleImputer(strategy='median'), 'constant': VarianceThreshold(), 'scale': StandardScaler(), 'clf': LinearDiscriminantAnalysis(shrinkage='auto', solver='lsqr'), 'impute__add_indicator': False, 'impute__copy': True, 'impute__fill_value': None, 'impute__keep_empty_features': False, 'impute__missing_values': nan, 'impute__strategy': 'median', 'constant__threshold': 0.0, 'scale__copy': True, 'scale__with_mean': True, 'scale__with_std': True, 'clf__covariance_estimator': None, 'clf__n_components': None, 'clf__priors': None, 'clf__shrinkage': 'auto', 'clf__solver': 'lsqr', 'clf__store_covariance': False, 'clf__tol': 0.0001}",
+    "logreg": "{'cv': StratifiedGroupKFold(n_splits=3, random_state=0, shuffle=True), 'error_score': 0.0, 'estimator__memory': None, 'estimator__steps': [('impute', SimpleImputer(strategy='median')), ('constant', VarianceThreshold()), ('scale', StandardScaler()), ('clf', LogisticRegression(max_iter=3000))], 'estimator__transform_input': None, 'estimator__verbose': False, 'estimator__impute': SimpleImputer(strategy='median'), 'estimator__constant': VarianceThreshold(), 'estimator__scale': StandardScaler(), 'estimator__clf': LogisticRegression(max_iter=3000), 'estimator__impute__add_indicator': False, 'estimator__impute__copy': True, 'estimator__impute__fill_value': None, 'estimator__impute__keep_empty_features': False, 'estimator__impute__missing_values': nan, 'estimator__impute__strategy': 'median', 'estimator__constant__threshold': 0.0, 'estimator__scale__copy': True, 'estimator__scale__with_mean': True, 'estimator__scale__with_std': True, 'estimator__clf__C': 1.0, 'estimator__clf__class_weight': None, 'estimator__clf__dual': False, 'estimator__clf__fit_intercept': True, 'estimator__clf__intercept_scaling': 1, 'estimator__clf__l1_ratio': 0.0, 'estimator__clf__max_iter': 3000, 'estimator__clf__n_jobs': None, 'estimator__clf__penalty': 'deprecated', 'estimator__clf__random_state': None, 'estimator__clf__solver': 'lbfgs', 'estimator__clf__tol': 0.0001, 'estimator__clf__verbose': 0, 'estimator__clf__warm_start': False, 'estimator': Pipeline(steps=[('impute', SimpleImputer(strategy='median')),\n                ('constant', VarianceThreshold()), ('scale', StandardScaler()),\n                ('clf', LogisticRegression(max_iter=3000))]), 'n_jobs': 1, 'param_grid': {'clf__C': [0.01, 0.1, 1.0]}, 'pre_dispatch': '2*n_jobs', 'refit': True, 'return_train_score': False, 'scoring': 'balanced_accuracy', 'verbose': 0}",
+    "linsvm": "{'memory': None, 'steps': [('impute', SimpleImputer(strategy='median')), ('constant', VarianceThreshold()), ('scale', StandardScaler()), ('clf', LinearSVC(C=0.1, max_iter=5000))], 'transform_input': None, 'verbose': False, 'impute': SimpleImputer(strategy='median'), 'constant': VarianceThreshold(), 'scale': StandardScaler(), 'clf': LinearSVC(C=0.1, max_iter=5000), 'impute__add_indicator': False, 'impute__copy': True, 'impute__fill_value': None, 'impute__keep_empty_features': False, 'impute__missing_values': nan, 'impute__strategy': 'median', 'constant__threshold': 0.0, 'scale__copy': True, 'scale__with_mean': True, 'scale__with_std': True, 'clf__C': 0.1, 'clf__class_weight': None, 'clf__dual': 'auto', 'clf__fit_intercept': True, 'clf__intercept_scaling': 1, 'clf__loss': 'squared_hinge', 'clf__max_iter': 5000, 'clf__multi_class': 'ovr', 'clf__penalty': 'l2', 'clf__random_state': None, 'clf__tol': 0.0001, 'clf__verbose': 0}"
+  },
+  "job_count": 450,
+  "n_splits": 15,
+  "protocol": "same nested grouped CV; no retuning on test folds",
+  "seconds": 2797.3541080419673,
+  "finished": "2026-10-20T22:37:09.598229+00:00"
+}

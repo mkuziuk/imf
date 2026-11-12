@@ -1,0 +1,333 @@
+{
+  "captured_utc": "2026-10-20T22:10:44.225135+00:00",
+  "note": "Large npy caches use size and mtime; decomposition JSONs retain their prepared-frame fingerprints. Other listed inputs and shared modeling sources use SHA-256.",
+  "files": [
+    {
+      "path": "/Users/mikhail/Datasets/imf-classification/dronerf/prepared/frames.npy",
+      "bytes": 196608128,
+      "mtime_ns": 1792510148560094260
+    },
+    {
+      "path": "/Users/mikhail/Datasets/imf-classification/dronerf/prepared/meta.parquet",
+      "bytes": 762122,
+      "mtime_ns": 1792510148856406005,
+      "sha256": "59b0a8b6fe8b7f5746df9c6ec8fba177f9855383b9400efa5683f21b2037410b"
+    },
+    {
+      "path": "/Users/mikhail/Datasets/imf-classification/dronerf/prepared/dataset.json",
+      "bytes": 14985,
+      "mtime_ns": 1792510149552754488,
+      "sha256": "93e7468ffac092453dfba12428dde9229a6839287d9d42e86633ffa16b606720"
+    },
+    {
+      "path": "/Users/mikhail/Datasets/imf-classification/dronerf/splits_10class.json",
+      "bytes": 222963,
+      "mtime_ns": 1792528900662078232,
+      "sha256": "4e61cf0e9a356911cc7907053e2699e19b3aec1a7b59f889eda65216dee82379"
+    },
+    {
+      "path": "/Users/mikhail/Datasets/imf-classification/dronerf/splits_4class.json",
+      "bytes": 221764,
+      "mtime_ns": 1792525026004100683,
+      "sha256": "a33050d917959a65ebb175859b992f38b29fa14a5fb6c8db932e2673acb2619d"
+    },
+    {
+      "path": "/Users/mikhail/Datasets/imf-classification/dronerf/splits_2class.json",
+      "bytes": 221371,
+      "mtime_ns": 1792521741230173044,
+      "sha256": "202e048c43c4a03187956e044695c1722a7954ce6c864bfe050d55d88b96df18"
+    },
+    {
+      "path": "/Users/mikhail/Datasets/imf-classification/dronerf/features/raw.parquet",
+      "bytes": 2368033,
+      "mtime_ns": 1792513595888160281,
+      "sha256": "8fe632524c4dd31bc91d906934ace54ac36fb3bd1adf7cf8eb58a5365eeee27e"
+    },
+    {
+      "path": "/Users/mikhail/Datasets/imf-classification/dronerf/features/raw.json",
+      "bytes": 709,
+      "mtime_ns": 1792513595889631710,
+      "sha256": "ea30680cc418279080b63f5f508c35c22e7e94e243423a33a2f3a2721cbc2195"
+    },
+    {
+      "path": "/Users/mikhail/Datasets/imf-classification/dronerf/features/emd.parquet",
+      "bytes": 21837103,
+      "mtime_ns": 1792513603572064906,
+      "sha256": "447f37cb46bef12fe34e084012905b30f6fb31bae642564d81a946ce994d679a"
+    },
+    {
+      "path": "/Users/mikhail/Datasets/imf-classification/dronerf/features/emd.json",
+      "bytes": 967,
+      "mtime_ns": 1792513603577989499,
+      "sha256": "6c1ca53c9350485127409b1d426461cdd3ee5c1903e86c60aa7555de606ebac5"
+    },
+    {
+      "path": "/Users/mikhail/Datasets/imf-classification/dronerf/decomp/emd.npy",
+      "bytes": 1769472128,
+      "mtime_ns": 1792510931364054622
+    },
+    {
+      "path": "/Users/mikhail/Datasets/imf-classification/dronerf/decomp/emd.json",
+      "bytes": 1486,
+      "mtime_ns": 1792510932211134213,
+      "sha256": "3f68dcde1c7296ed3045f215b5f228445e5b3487c258f57c0f70f54cad66bee5"
+    },
+    {
+      "path": "/Users/mikhail/Datasets/imf-classification/dronerf/decomp/emd.meta.parquet",
+      "bytes": 534461,
+      "mtime_ns": 1792510931940939253,
+      "sha256": "aa108a6451d4d6d27d3770401ec25a0e538e1f1addc1278ce323a1f3de0d863d"
+    },
+    {
+      "path": "/Users/mikhail/Datasets/imf-classification/dronerf/features/imf_linear_a1.41.parquet",
+      "bytes": 44340043,
+      "mtime_ns": 1792513617477998474,
+      "sha256": "5e18254f117290598708e464e46191fc175593ffb0f633c1f323f659506bacdb"
+    },
+    {
+      "path": "/Users/mikhail/Datasets/imf-classification/dronerf/features/imf_linear_a1.41.json",
+      "bytes": 1090,
+      "mtime_ns": 1792513617495234583,
+      "sha256": "f7ff05cf393af19661c461fbef493df28de9a895fedfe153ad0d1348f96992cd"
+    },
+    {
+      "path": "/Users/mikhail/Datasets/imf-classification/dronerf/decomp/imf_linear_a1.41.npy",
+      "bytes": 3538944128,
+      "mtime_ns": 1792510965235636359
+    },
+    {
+      "path": "/Users/mikhail/Datasets/imf-classification/dronerf/decomp/imf_linear_a1.41.json",
+      "bytes": 2645,
+      "mtime_ns": 1792510965771619452,
+      "sha256": "94e0cce3fbf59a3784899ca96cdce342148c703431cb78f953bf93705c36aa4b"
+    },
+    {
+      "path": "/Users/mikhail/Datasets/imf-classification/dronerf/decomp/imf_linear_a1.41.meta.parquet",
+      "bytes": 350774,
+      "mtime_ns": 1792510965757879092,
+      "sha256": "2d5a302fd24c3882c841bbdd52ce3964d0036a796bf1908179bde47ba56a17e2"
+    },
+    {
+      "path": "/Users/mikhail/Datasets/imf-classification/dronerf/features/irmf_h2_a1.41.parquet",
+      "bytes": 44359672,
+      "mtime_ns": 1792513631517779998,
+      "sha256": "30f94cf7a4e2b7fa69c5f06968c3c06b463df63a6a4f6c54b9e1306ae6a49c6c"
+    },
+    {
+      "path": "/Users/mikhail/Datasets/imf-classification/dronerf/features/irmf_h2_a1.41.json",
+      "bytes": 1084,
+      "mtime_ns": 1792513631526381948,
+      "sha256": "b35a8537ccc759fde59a742a39a0d3eae91adf079ef21f08ab6d7fded65d20c8"
+    },
+    {
+      "path": "/Users/mikhail/Datasets/imf-classification/dronerf/decomp/irmf_h2_a1.41.npy",
+      "bytes": 3538944128,
+      "mtime_ns": 1792513591488350531
+    },
+    {
+      "path": "/Users/mikhail/Datasets/imf-classification/dronerf/decomp/irmf_h2_a1.41.json",
+      "bytes": 3573,
+      "mtime_ns": 1792513592024074902,
+      "sha256": "65b76c7adb2949ddf8243d36bf86b8253898ba576a60e01d4048ecea1812cec6"
+    },
+    {
+      "path": "/Users/mikhail/Datasets/imf-classification/dronerf/decomp/irmf_h2_a1.41.meta.parquet",
+      "bytes": 4298731,
+      "mtime_ns": 1792513591998023716,
+      "sha256": "d61cc822d8af97ae642a0d6e801c92fe7348f9a01802cb21a48f8455457a31c6"
+    },
+    {
+      "path": "/Users/mikhail/Datasets/imf-classification/dronerf/features/irmf_h2_a1.41_conv.parquet",
+      "bytes": 44355014,
+      "mtime_ns": 1792524680127256537,
+      "sha256": "5c7fcccb03c1c8e6f7abd1acd10661806890fd0a1d13c6c2d76c5843d744a233"
+    },
+    {
+      "path": "/Users/mikhail/Datasets/imf-classification/dronerf/features/irmf_h2_a1.41_conv.json",
+      "bytes": 1094,
+      "mtime_ns": 1792524680142536466,
+      "sha256": "84a179dbd04c9d76a86c7acb540849618b56e1e9bf695d689f6fed11c9a20814"
+    },
+    {
+      "path": "/Users/mikhail/Datasets/imf-classification/dronerf/decomp/irmf_h2_a1.41_conv.npy",
+      "bytes": 3538944128,
+      "mtime_ns": 1792524651487908646
+    },
+    {
+      "path": "/Users/mikhail/Datasets/imf-classification/dronerf/decomp/irmf_h2_a1.41_conv.json",
+      "bytes": 4816,
+      "mtime_ns": 1792524652237987918,
+      "sha256": "e93554f337de74822f230586e0c36a5dc78678d6fd624f9301f7656f7bdb6e65"
+    },
+    {
+      "path": "/Users/mikhail/Datasets/imf-classification/dronerf/decomp/irmf_h2_a1.41_conv.meta.parquet",
+      "bytes": 4034283,
+      "mtime_ns": 1792524651959056791,
+      "sha256": "32bf0006029838118986bd2e0fa7a0e48d8a5a9239583080948535b2a6897b40"
+    },
+    {
+      "path": "/Users/mikhail/Datasets/imf-classification/dronerf/features/irmf_h2_a2_conv.parquet",
+      "bytes": 24679409,
+      "mtime_ns": 1792527948539182610,
+      "sha256": "eb5caf9c6ba7983a1011f7ab75e9e3beb269bd713c5eeaa9309131ed8d3d6ea2"
+    },
+    {
+      "path": "/Users/mikhail/Datasets/imf-classification/dronerf/features/irmf_h2_a2_conv.json",
+      "bytes": 998,
+      "mtime_ns": 1792527948548800688,
+      "sha256": "294935e2078498efd1b4589cb5fd4779916c9d3929ad8f7a96813cc3c4f8b3b0"
+    },
+    {
+      "path": "/Users/mikhail/Datasets/imf-classification/dronerf/decomp/irmf_h2_a2_conv.npy",
+      "bytes": 1966080128,
+      "mtime_ns": 1792527929792141800
+    },
+    {
+      "path": "/Users/mikhail/Datasets/imf-classification/dronerf/decomp/irmf_h2_a2_conv.json",
+      "bytes": 3548,
+      "mtime_ns": 1792527930597279763,
+      "sha256": "85926e38a9946849dcbd83422850a14c807267665c056418119d149cadbc87f9"
+    },
+    {
+      "path": "/Users/mikhail/Datasets/imf-classification/dronerf/decomp/irmf_h2_a2_conv.meta.parquet",
+      "bytes": 2370302,
+      "mtime_ns": 1792527930301361508,
+      "sha256": "0967effaa43284f9f565872421d63dbbb1259f8924dd1abedc61bef0727b3b96"
+    },
+    {
+      "path": "/Users/mikhail/Datasets/imf-classification/dronerf/features/imf_linear_a2.parquet",
+      "bytes": 24669280,
+      "mtime_ns": 1792527983840585445,
+      "sha256": "9b83d231f2d78433f810d71210ed59ebebf434add603bd48754d47a5655ac60e"
+    },
+    {
+      "path": "/Users/mikhail/Datasets/imf-classification/dronerf/features/imf_linear_a2.json",
+      "bytes": 993,
+      "mtime_ns": 1792527983850089314,
+      "sha256": "c1efdb86fa3ca6087ccbd7ff50dc3dbb1460a099aedc00e3501da1d1d2e3d15e"
+    },
+    {
+      "path": "/Users/mikhail/Datasets/imf-classification/dronerf/decomp/imf_linear_a2.npy",
+      "bytes": 1966080128,
+      "mtime_ns": 1792513652077902115
+    },
+    {
+      "path": "/Users/mikhail/Datasets/imf-classification/dronerf/decomp/imf_linear_a2.json",
+      "bytes": 1998,
+      "mtime_ns": 1792513652771124577,
+      "sha256": "fed6642b560b8e616d4d4fbd84d131e0cc64b9574f52ead31e9e8c6de8030002"
+    },
+    {
+      "path": "/Users/mikhail/Datasets/imf-classification/dronerf/decomp/imf_linear_a2.meta.parquet",
+      "bytes": 361932,
+      "mtime_ns": 1792513652486135321,
+      "sha256": "2b58ebf40669b68e1ca5fdde8ee944b4747c3aaf57826f2b3d0d166e2b080234"
+    },
+    {
+      "path": "/Users/mikhail/Datasets/imf-classification/dronerf/features/irmf_h1_a1.41_conv.parquet",
+      "bytes": 44343220,
+      "mtime_ns": 1792526007288606674,
+      "sha256": "ad8b0131505c96ce2c5234eb74b1da29b48114d24169a6e63ec947b7ca069349"
+    },
+    {
+      "path": "/Users/mikhail/Datasets/imf-classification/dronerf/features/irmf_h1_a1.41_conv.json",
+      "bytes": 1093,
+      "mtime_ns": 1792526007305485591,
+      "sha256": "161f6cb293c1e7c416d15766e31fd0667ba1b4e2942c8d7e9bc9c9bbb7e4a386"
+    },
+    {
+      "path": "/Users/mikhail/Datasets/imf-classification/dronerf/decomp/irmf_h1_a1.41_conv.npy",
+      "bytes": 3538944128,
+      "mtime_ns": 1792525975779649357
+    },
+    {
+      "path": "/Users/mikhail/Datasets/imf-classification/dronerf/decomp/irmf_h1_a1.41_conv.json",
+      "bytes": 4815,
+      "mtime_ns": 1792525976778077897,
+      "sha256": "4287e85d4e353ebe91527553fb664b72441bef4b636894ae4db0f8076953adb5"
+    },
+    {
+      "path": "/Users/mikhail/Datasets/imf-classification/dronerf/decomp/irmf_h1_a1.41_conv.meta.parquet",
+      "bytes": 4027489,
+      "mtime_ns": 1792525976466380676,
+      "sha256": "c8b3a52467b7523a925ffe827a66729d5dab6d5ab45d14084e5852e82b8046a4"
+    },
+    {
+      "path": "/Users/mikhail/Datasets/imf-classification/dronerf/features/irmf_h4_a1.41_conv.parquet",
+      "bytes": 44369308,
+      "mtime_ns": 1792527207234227698,
+      "sha256": "5471bc1b592b06595f5760a344b119fd248fc22e1e85bf6f1ae0dbe9444fb1fe"
+    },
+    {
+      "path": "/Users/mikhail/Datasets/imf-classification/dronerf/features/irmf_h4_a1.41_conv.json",
+      "bytes": 1093,
+      "mtime_ns": 1792527207250101696,
+      "sha256": "201be81c8b2334fc15cf04367333f36d0d547b33f1a0670c24dbe30d87d591de"
+    },
+    {
+      "path": "/Users/mikhail/Datasets/imf-classification/dronerf/decomp/irmf_h4_a1.41_conv.npy",
+      "bytes": 3538944128,
+      "mtime_ns": 1792527176369299321
+    },
+    {
+      "path": "/Users/mikhail/Datasets/imf-classification/dronerf/decomp/irmf_h4_a1.41_conv.json",
+      "bytes": 4804,
+      "mtime_ns": 1792527177285889312,
+      "sha256": "2a6451ff4777b03d16a51a491fd3e2647248f035feabeb1a9d8984fb0724d6c5"
+    },
+    {
+      "path": "/Users/mikhail/Datasets/imf-classification/dronerf/decomp/irmf_h4_a1.41_conv.meta.parquet",
+      "bytes": 4044624,
+      "mtime_ns": 1792527177000493483,
+      "sha256": "677aedd018dcba5b2d800b5d9933d1fb44887cfe786834726715ac28f58836a6"
+    },
+    {
+      "path": "/Users/mikhail/.t3/worktrees/imf/t3-44ed3594/experiments/classification-emd-irmf/ml/common.py",
+      "bytes": 10465,
+      "mtime_ns": 1792511798542506656,
+      "sha256": "2f3341d87dff0c99bce74b700fb1483902607c17224f60cd0385cadee5624786"
+    },
+    {
+      "path": "/Users/mikhail/.t3/worktrees/imf/t3-44ed3594/experiments/classification-emd-irmf/ml/run_trees.py",
+      "bytes": 8997,
+      "mtime_ns": 1792511798543242454,
+      "sha256": "80bc913ee10ce73f66a49d0a42d8701e900f07c89c41c5fd9f1a0dca9709b713"
+    },
+    {
+      "path": "/Users/mikhail/.t3/worktrees/imf/t3-44ed3594/experiments/classification-emd-irmf/ml/run_rocket.py",
+      "bytes": 10313,
+      "mtime_ns": 1792512235886945872,
+      "sha256": "97d4514bd7bf42c983dae8e5b8747c2f7c639d6b654a88048b732b9858c8cff0"
+    },
+    {
+      "path": "/Users/mikhail/.t3/worktrees/imf/t3-44ed3594/experiments/classification-emd-irmf/ml/run_cnn.py",
+      "bytes": 12429,
+      "mtime_ns": 1792511798544558841,
+      "sha256": "c6ec7f35855be49931fbe890d4315dc1c0b2bcd42cb7a0db7dacb95f40ffa970"
+    },
+    {
+      "path": "/Users/mikhail/.t3/worktrees/imf/t3-44ed3594/experiments/classification-emd-irmf/emdirmf/stacks.py",
+      "bytes": 3854,
+      "mtime_ns": 1792511654318424945,
+      "sha256": "f489d18a7c6a49bd61962c5a28b06b8f1e5d4ce95bc5dd7178957c4376b925df"
+    },
+    {
+      "path": "/Users/mikhail/.t3/worktrees/imf/t3-44ed3594/experiments/classification-emd-irmf/emdirmf/stats.py",
+      "bytes": 6022,
+      "mtime_ns": 1792509754402562207,
+      "sha256": "ef8dd69ff984748afdb59338f46a897f43369db939275e353461baf6678f9f09"
+    },
+    {
+      "path": "/Users/mikhail/.t3/worktrees/imf/t3-44ed3594/experiments/classification-emd-irmf/emdirmf/decompose.py",
+      "bytes": 15059,
+      "mtime_ns": 1792523302357188719,
+      "sha256": "7fd13b017f033060a43e512ab157cdad0c834640fc5cb2199f65218629f6a2ed"
+    },
+    {
+      "path": "/Users/mikhail/.t3/worktrees/imf/t3-44ed3594/experiments/classification-emd-irmf/emdirmf/features.py",
+      "bytes": 8056,
+      "mtime_ns": 1792509650138264146,
+      "sha256": "07a496f3f9813b668349e17ee2187e7c81769b6d05aa41776439e276efb8665e"
+    }
+  ]
+}

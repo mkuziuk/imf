@@ -1,0 +1,67 @@
+{
+  "checks": [
+    {
+      "task": "2class",
+      "prediction_rows": 1728000,
+      "n_classifiers": 6,
+      "n_outer_rows": 720,
+      "recomputed_metric_rows": 120,
+      "seed_frame_coverage_complete": true,
+      "groups_disjoint": true
+    },
+    {
+      "task": "4class",
+      "prediction_rows": 1728000,
+      "n_classifiers": 6,
+      "n_outer_rows": 720,
+      "recomputed_metric_rows": 120,
+      "seed_frame_coverage_complete": true,
+      "groups_disjoint": true
+    },
+    {
+      "task": "10class",
+      "prediction_rows": 1728000,
+      "n_classifiers": 6,
+      "n_outer_rows": 720,
+      "recomputed_metric_rows": 120,
+      "seed_frame_coverage_complete": true,
+      "groups_disjoint": true
+    }
+  ],
+  "band_checks": [
+    {
+      "task": "10class",
+      "prediction_rows": 324000,
+      "recomputed_metric_rows": 135,
+      "seed_frame_coverage_complete": true
+    }
+  ],
+  "python": "3.12.13",
+  "shared_log_scale_identical_across_methods": true,
+  "versions": {
+    "numpy": "2.3.5",
+    "scipy": "1.17.1",
+    "pandas": "3.0.6",
+    "scikit-learn": "1.9.1",
+    "joblib": "1.6.0",
+    "pimf": "0.4.0",
+    "EMD-signal": "1.10.0"
+  },
+  "sha256": {
+    "/Users/mikhail/.t3/worktrees/imf/t3-44ed3594/experiments/classification-emd-irmf/datasets/dronerf/analyze_classical.py": "47c156c5af90a5273677f4abd91c86b92c07d6ba0218a6c64de78c55d652346c",
+    "/Users/mikhail/.t3/worktrees/imf/t3-44ed3594/experiments/classification-emd-irmf/baselines/run_classical.py": "b2b94bc8c49251adba0ece318f892330f01c1c04bb1d4d256226f97f251e1386",
+    "/Users/mikhail/.t3/worktrees/imf/t3-44ed3594/experiments/classification-emd-irmf/datasets/dronerf/run_classical_logged.py": "a43f729f3c112f1f9b6722bcd5954642a844b79dcb3eebff364ac90af9c165d2",
+    "/Users/mikhail/.t3/worktrees/imf/t3-44ed3594/experiments/classification-emd-irmf/datasets/dronerf/benchmark_svm_solver.py": "18d3da795552c276a7bb48956a247986411e15f8cccc2467a1a0c0028c57174e",
+    "/Users/mikhail/Datasets/imf-classification/dronerf/prepared/meta.parquet": "59b0a8b6fe8b7f5746df9c6ec8fba177f9855383b9400efa5683f21b2037410b",
+    "/Users/mikhail/Datasets/imf-classification/dronerf/prepared/dataset.json": "93e7468ffac092453dfba12428dde9229a6839287d9d42e86633ffa16b606720",
+    "/Users/mikhail/Datasets/imf-classification/dronerf/features/raw.parquet": "8fe632524c4dd31bc91d906934ace54ac36fb3bd1adf7cf8eb58a5365eeee27e",
+    "/Users/mikhail/Datasets/imf-classification/dronerf/features/emd.parquet": "447f37cb46bef12fe34e084012905b30f6fb31bae642564d81a946ce994d679a",
+    "/Users/mikhail/Datasets/imf-classification/dronerf/features/imf_linear_a1.41.parquet": "5e18254f117290598708e464e46191fc175593ffb0f633c1f323f659506bacdb",
+    "/Users/mikhail/Datasets/imf-classification/dronerf/features/irmf_h2_a1.41.parquet": "30f94cf7a4e2b7fa69c5f06968c3c06b463df63a6a4f6c54b9e1306ae6a49c6c"
+  },
+  "selection": {
+    "2class": "linsvm",
+    "4class": "linsvm",
+    "10class": "linsvm"
+  }
+}

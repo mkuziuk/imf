@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body{font-family:var(--font-sans,system-ui);color:var(--foreground,#222);margin:0}
+nav{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 12px}
+button{font:inherit;padding:8px 12px;border:1px solid var(--border,#ccc);border-radius:var(--radius,8px);background:var(--secondary,#eee);color:var(--foreground,#222);cursor:pointer}
+button[aria-selected="true"]{background:var(--primary,#222);color:var(--primary-foreground,#fff)}
+figure{margin:0}img{display:block;width:100%;height:auto;border-radius:6px}
+figcaption{font-size:13px;line-height:1.5;color:var(--muted-foreground,#666);margin:10px 0}
+[hidden]{display:none!important}
+</style></head><body>
+<nav role="tablist" aria-label="Study figures">
+<button role="tab" id="performance-tab" aria-selected="true" aria-controls="performance" onclick="showFigure('performance')">Grouped classification</button>
+<button role="tab" id="scales-tab" aria-selected="false" aria-controls="scales" onclick="showFigure('scales')">Component scales and convergence</button>
+</nav>
+<figure id="performance" role="tabpanel" aria-labelledby="performance-tab">
+<img src="/Users/mikhail/.t3/worktrees/imf/t3-44ed3594/output/classification-emd-irmf/uas_birds_60ghz/classical/grouped_balanced_accuracy.png" alt="Four panels compare fixed LDA balanced accuracy for raw, EMD, linear IMF and IRMF, on two grouped tasks with and without log_scale.">
+<figcaption>Fixed LDA on the same grouped splits. Markers compare cell frames with recording votes. Bars show fold SD, not confidence intervals. The paired tests and all-classifier results are in the report.</figcaption>
+</figure>
+<figure id="scales" role="tabpanel" aria-labelledby="scales-tab" hidden>
+<img src="/Users/mikhail/.t3/worktrees/imf/t3-44ed3594/output/classification-emd-irmf/uas_birds_60ghz/classical/component_scales_and_convergence.png" alt="Group-level feature separation over normalized spectral scale and per-window IRMF nonconvergence.">
+<figcaption>Scale separation is descriptive and uses 45 pose-group medians. Frequencies are cycles/sample because PRF is unknown. Convergence uses the primary package defaults.</figcaption>
+</figure>
+<script>
+function showFigure(name){
+for(const id of ['performance','scales']){
+document.getElementById(id).hidden=id!==name;
+document.getElementById(id+'-tab').setAttribute('aria-selected',String(id===name));
+}
+}
+console.log('Figure panels:',document.querySelectorAll('[role="tabpanel"]').length);
+</script></body></html>

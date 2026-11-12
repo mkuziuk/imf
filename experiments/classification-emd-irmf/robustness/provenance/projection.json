@@ -1,0 +1,29 @@
+{
+  "decomp_cpu_seconds": 49566.043894499955,
+  "classical_one_clean_batch_worker_seconds": 85303.478278,
+  "trees_one_clean_batch_worker_seconds": 3881.8860270000005,
+  "projections": [
+    {
+      "cut": "none",
+      "projected_cpu_seconds": 918128.3707825,
+      "projected_wall_seconds": 153021.39513041667
+    },
+    {
+      "cut": "matched LightGBM seed 0",
+      "projected_cpu_seconds": 910364.5987285001,
+      "projected_wall_seconds": 151727.4331214167
+    },
+    {
+      "cut": "drop matched LightGBM",
+      "projected_cpu_seconds": 906482.7127015,
+      "projected_wall_seconds": 151080.45211691668
+    },
+    {
+      "cut": "matched classical high p only",
+      "projected_cpu_seconds": 394661.8430334999,
+      "projected_wall_seconds": 65776.97383891665
+    }
+  ],
+  "selected_cut": "matched classical high p only",
+  "caveat": "Historical fit wall seconds are used as single-worker cost proxies; grid multiplier 13 for DroneRF. This is a planning estimate, not measured CPU. Lower C, smaller inner partitions, contention and contamination alter cost."
+}

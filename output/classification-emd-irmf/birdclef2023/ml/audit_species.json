@@ -1,0 +1,152 @@
+[
+  {
+    "runner": "cnn",
+    "n_fit_rows": 50,
+    "n_predictions": 120000,
+    "n_recording_predictions": 12800,
+    "n_methods": 5,
+    "split_ids": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "checks": "passed"
+  },
+  {
+    "runner": "cnn_remaining",
+    "n_fit_rows": 100,
+    "n_predictions": 240000,
+    "n_recording_predictions": 25600,
+    "n_methods": 5,
+    "split_ids": [
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14
+    ],
+    "checks": "passed"
+  },
+  {
+    "runner": "rocket_mini",
+    "n_fit_rows": 50,
+    "n_predictions": 120000,
+    "n_recording_predictions": 12800,
+    "n_methods": 5,
+    "split_ids": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "checks": "passed"
+  },
+  {
+    "runner": "rocket_multi",
+    "n_fit_rows": 50,
+    "n_predictions": 120000,
+    "n_recording_predictions": 12800,
+    "n_methods": 5,
+    "split_ids": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "checks": "passed"
+  },
+  {
+    "runner": "trees_extratrees",
+    "n_fit_rows": 150,
+    "n_predictions": 360000,
+    "n_recording_predictions": 38400,
+    "n_methods": 5,
+    "split_ids": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14
+    ],
+    "checks": "passed"
+  },
+  {
+    "runner": "trees_lightgbm_fold0",
+    "n_fit_rows": 10,
+    "n_predictions": 24060,
+    "n_recording_predictions": 2570,
+    "n_methods": 5,
+    "split_ids": [
+      0
+    ],
+    "checks": "passed"
+  },
+  {
+    "runner": "trees_lightgbm_remaining",
+    "n_fit_rows": 140,
+    "n_predictions": 335940,
+    "n_recording_predictions": 35830,
+    "n_methods": 5,
+    "split_ids": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14
+    ],
+    "checks": "passed"
+  },
+  {
+    "runner": "trees_xgboost",
+    "n_fit_rows": 150,
+    "n_predictions": 360000,
+    "n_recording_predictions": 38400,
+    "n_methods": 5,
+    "split_ids": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14
+    ],
+    "checks": "passed"
+  }
+]

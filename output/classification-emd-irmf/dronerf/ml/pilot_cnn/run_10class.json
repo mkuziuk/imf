@@ -1,0 +1,400 @@
+{
+  "dataset": "dronerf",
+  "task": "10class",
+  "runner": "dronerf_pilot_cnn",
+  "methods": [
+    "raw",
+    "irmf_h2_a1.41_conv"
+  ],
+  "n_frames": 12000,
+  "n_groups": 227,
+  "n_classes": 10,
+  "split_ids": [
+    0
+  ],
+  "workers": 1,
+  "created": "2026-10-20T21:41:25.142874+00:00",
+  "params": {
+    "dataset": "dronerf",
+    "task": "10class",
+    "methods": [
+      "raw",
+      "irmf_h2_a1.41_conv"
+    ],
+    "quick": false,
+    "workers": 1,
+    "folds": "1",
+    "device": "mps",
+    "log_scale": "both",
+    "out": "/Users/mikhail/.t3/worktrees/imf/t3-44ed3594/output/classification-emd-irmf/dronerf/ml/pilot_cnn",
+    "epochs": 2,
+    "patience": 2,
+    "batch_size": 64,
+    "width": 8,
+    "learning_rate": 0.001,
+    "downsample": 2
+  },
+  "inner_validation": "first class-complete StratifiedGroupKFold(3) split of outer train",
+  "versions": {
+    "python": "3.12.13",
+    "platform": "macOS-26.6.2-arm64-arm-64bit",
+    "numpy": "2.3.5",
+    "scipy": "1.17.1",
+    "pandas": "3.0.6",
+    "scikit-learn": "1.9.1",
+    "lightgbm": "4.7.0",
+    "xgboost": "3.4.1",
+    "torch": "2.14.1",
+    "aeon": "1.6.0"
+  },
+  "local_budget": {
+    "run_name": "dronerf_pilot_cnn",
+    "lightgbm_rounds": null,
+    "cheap_extra_trees": false,
+    "l_only": false,
+    "slots": null,
+    "worker_plan": "/Users/mikhail/.t3/worktrees/imf/t3-44ed3594/output/classification-emd-irmf/dronerf/ml/worker_plan.json"
+  },
+  "seconds": 106.8245110840071,
+  "predictions": "/Users/mikhail/Datasets/imf-classification/dronerf/results/dronerf_pilot_cnn_10class_predictions.parquet",
+  "fold_timings": [
+    {
+      "dataset": "dronerf",
+      "task": "10class",
+      "method": "raw",
+      "feature_set": "comp",
+      "classifier": "compact_resnet",
+      "split_id": 0,
+      "seed": 0,
+      "fold": 0,
+      "n_train": 9565,
+      "n_test": 2435,
+      "fit_seconds": 20.004647208028473,
+      "predict_seconds": 1.249910291051492
+    },
+    {
+      "dataset": "dronerf",
+      "task": "10class",
+      "method": "raw",
+      "feature_set": "comp+log_scale",
+      "classifier": "compact_resnet",
+      "split_id": 0,
+      "seed": 0,
+      "fold": 0,
+      "n_train": 9565,
+      "n_test": 2435,
+      "fit_seconds": 18.22527741699014,
+      "predict_seconds": 0.8730510829482228
+    },
+    {
+      "dataset": "dronerf",
+      "task": "10class",
+      "method": "irmf_h2_a1.41_conv",
+      "feature_set": "comp",
+      "classifier": "compact_resnet",
+      "split_id": 0,
+      "seed": 0,
+      "fold": 0,
+      "n_train": 9565,
+      "n_test": 2435,
+      "fit_seconds": 31.983237374923192,
+      "predict_seconds": 2.518848041072488
+    },
+    {
+      "dataset": "dronerf",
+      "task": "10class",
+      "method": "irmf_h2_a1.41_conv",
+      "feature_set": "comp+log_scale",
+      "classifier": "compact_resnet",
+      "split_id": 0,
+      "seed": 0,
+      "fold": 0,
+      "n_train": 9565,
+      "n_test": 2435,
+      "fit_seconds": 30.003266499959864,
+      "predict_seconds": 1.585911708069034
+    }
+  ],
+  "fold_parameters": [
+    {
+      "dataset": "dronerf",
+      "task": "10class",
+      "method": "raw",
+      "feature_set": "comp",
+      "classifier": "compact_resnet",
+      "split_id": 0,
+      "seed": 0,
+      "fold": 0,
+      "n_train": 9565,
+      "n_test": 2435,
+      "best_params": "{\"epochs\": 2, \"seed\": 0}",
+      "best_epoch": 2,
+      "n_parameters": 15978
+    },
+    {
+      "dataset": "dronerf",
+      "task": "10class",
+      "method": "raw",
+      "feature_set": "comp+log_scale",
+      "classifier": "compact_resnet",
+      "split_id": 0,
+      "seed": 0,
+      "fold": 0,
+      "n_train": 9565,
+      "n_test": 2435,
+      "best_params": "{\"epochs\": 2, \"seed\": 0}",
+      "best_epoch": 2,
+      "n_parameters": 15998
+    },
+    {
+      "dataset": "dronerf",
+      "task": "10class",
+      "method": "irmf_h2_a1.41_conv",
+      "feature_set": "comp",
+      "classifier": "compact_resnet",
+      "split_id": 0,
+      "seed": 0,
+      "fold": 0,
+      "n_train": 9565,
+      "n_test": 2435,
+      "best_params": "{\"epochs\": 2, \"seed\": 0}",
+      "best_epoch": 2,
+      "n_parameters": 17882
+    },
+    {
+      "dataset": "dronerf",
+      "task": "10class",
+      "method": "irmf_h2_a1.41_conv",
+      "feature_set": "comp+log_scale",
+      "classifier": "compact_resnet",
+      "split_id": 0,
+      "seed": 0,
+      "fold": 0,
+      "n_train": 9565,
+      "n_test": 2435,
+      "best_params": "{\"epochs\": 2, \"seed\": 0}",
+      "best_epoch": 2,
+      "n_parameters": 17902
+    }
+  ],
+  "notes": [
+    "Compact residual CNN: width 16 by default, three residual blocks, kernels 7, GroupNorm, temporal mean/max pooling, AdamW, gradient norm cap 5, weighted cross entropy. Architecture is identical across methods apart from the input channel count; optional standardized log_scale joins the pooled head.",
+    "Grouped inner-validation loss selects the epoch count with patience. A fresh model then trains on all outer training samples for that many epochs. Test samples never select epochs or scale statistics.",
+    "Read-only stacks are loaded one frame at a time with DataLoader num_workers=0. CPU threads are capped by --workers. Fixed CPU/MPS seeds and deterministic algorithms are enabled; numerical results may vary across devices or library versions. Training curves include selection and refit stages."
+  ],
+  "decomposition_costs": [
+    {
+      "method": "irmf_h2_a1.41_conv",
+      "seconds_per_frame": {
+        "wall_mean": 0.10763235513925125,
+        "wall_median": 0.1060402289731428,
+        "cpu_mean": 0.10760770241666696,
+        "cpu_median": 0.10602999999999518,
+        "cpu_total": 1291.2924290000035
+      },
+      "n_failed": 0,
+      "irmf": {
+        "channels_all_converged": 24000,
+        "unconverged_fraction_per_slot": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "mean_iterations_per_slot": [
+          4.37,
+          5.37,
+          6.04,
+          5.33,
+          7.25,
+          5.31,
+          5.77,
+          5.13,
+          5.19,
+          4.92,
+          4.8,
+          4.62,
+          4.44,
+          4.25,
+          4.07,
+          3.86,
+          3.72
+        ],
+        "sigma_source_counts": {
+          "0": 24000
+        },
+        "H_quantiles": {
+          "0.0": 0.91507,
+          "0.05": 1.41419,
+          "0.5": 2.05701,
+          "0.95": 2.35699,
+          "1.0": 4.94968
+        },
+        "max_iterations_per_slot": [
+          26,
+          34,
+          71,
+          34,
+          75,
+          67,
+          72,
+          34,
+          70,
+          34,
+          70,
+          36,
+          65,
+          35,
+          35,
+          34,
+          34
+        ],
+        "bisection_fallbacks_per_slot": [
+          3149344,
+          4041777,
+          3416088,
+          3765677,
+          4268540,
+          3308718,
+          2965917,
+          2547665,
+          2137556,
+          1743860,
+          1362831,
+          1036383,
+          744035,
+          518501,
+          355234,
+          252230,
+          193578
+        ],
+        "max_score_residual_per_slot": [
+          6.261657858885883e-14,
+          4.1147640850169864e-15,
+          1.3912482277333993e-14,
+          9.053088140253962e-15,
+          3.599551212651875e-15,
+          1.4266880862465192e-15,
+          1.038232000372119e-15,
+          9.974727749502421e-16,
+          5.181520766920841e-16,
+          3.8057804419022474e-16,
+          3.1357445580973897e-16,
+          2.894978089818315e-16,
+          2.100985816325487e-16,
+          1.7609071093769444e-16,
+          1.7879661472438648e-16,
+          2.25895814657897e-16,
+          1.095418464796411e-15
+        ]
+      }
+    }
+  ],
+  "device": "mps",
+  "stacks": {
+    "raw": {
+      "shape": [
+        12000,
+        2,
+        1024
+      ],
+      "storage_slots_in_scale_order": [
+        0
+      ],
+      "slot_labels_in_scale_order": [
+        "frame"
+      ],
+      "channel_order": "input channel, then fine-to-coarse component",
+      "downsample": 2,
+      "resampling": "scipy.signal.resample_poly"
+    },
+    "irmf_h2_a1.41_conv": {
+      "shape": [
+        12000,
+        36,
+        1024
+      ],
+      "storage_slots_in_scale_order": [
+        17,
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16
+      ],
+      "slot_labels_in_scale_order": [
+        "residual_fine",
+        "w5",
+        "w7",
+        "w9",
+        "w13",
+        "w17",
+        "w25",
+        "w33",
+        "w47",
+        "w65",
+        "w93",
+        "w129",
+        "w183",
+        "w257",
+        "w365",
+        "w513",
+        "w727",
+        "w1025"
+      ],
+      "channel_order": "input channel, then fine-to-coarse component",
+      "downsample": 2,
+      "resampling": "scipy.signal.resample_poly"
+    }
+  },
+  "feature_sets": [
+    "comp",
+    "comp+log_scale"
+  ],
+  "architecture": {
+    "name": "CompactResNet",
+    "widths": [
+      8,
+      16,
+      32
+    ],
+    "kernel_size": 7,
+    "normalization": "GroupNorm(4)",
+    "pooling": [
+      "mean",
+      "max"
+    ]
+  },
+  "optimizer": {
+    "name": "AdamW",
+    "learning_rate": 0.001,
+    "weight_decay": 0.001,
+    "gradient_norm_cap": 5.0,
+    "loss": "balanced cross entropy"
+  }
+}

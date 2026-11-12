@@ -1,0 +1,35 @@
+{
+  "decided_utc": "2026-10-21T00:10:17.755403+00:00",
+  "calibration_seconds": 67.62692420789972,
+  "component_time_ratios": {
+    "irmf_h2_a1.41_conv": {
+      "tf": 0.23179146985185933,
+      "tp": 0.22789889043161699,
+      "head": 0.8339167709270622
+    },
+    "raw": {
+      "tf": 0.1886753443356308,
+      "tp": 0.1879755958397091,
+      "head": 0.8228021160326202
+    }
+  },
+  "head_ratio_used": 0.8339167709270622,
+  "overhead_seconds": 7.480037129484117,
+  "predicted_extra_five_seconds": 1376.530492292658,
+  "safety_factor": 1.15,
+  "buffered_five_seconds": 1583.0100661365566,
+  "buffered_ten_seconds": 3166.020132273113,
+  "available_before_model_cutoff_seconds": 1602.244597,
+  "model_cutoff_utc": "2026-10-21T00:37:00+00:00",
+  "reserved_audit_seconds": 180,
+  "criterion": "Largest complete remaining shared seed block fitting timing forecast; model scores and p-values are not criteria",
+  "selected_split_ids": [
+    5,
+    6,
+    7,
+    8,
+    9
+  ],
+  "selected_methods": 7,
+  "launch_utc": "2026-10-21T00:10:25.055605+00:00"
+}

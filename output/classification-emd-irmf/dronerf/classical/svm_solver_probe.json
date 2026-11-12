@@ -1,0 +1,71 @@
+{
+  "seconds": 89.80668191600125,
+  "max_workers": 3,
+  "results": [
+    {
+      "variant": "primal_default",
+      "method": "imf_linear_a1.41",
+      "feature_set": "comp",
+      "split_id": 0,
+      "C": 0.1,
+      "fit_seconds": 14.307326499954797,
+      "n_iter": 51,
+      "prediction_agreement": 1.0,
+      "n_prediction_differences": 0,
+      "objective": 895.4290491929619,
+      "reference_balanced_accuracy": 0.8657538720042273,
+      "balanced_accuracy": 0.8657538720042273,
+      "macro_f1": 0.8626735344545361,
+      "accuracy": 0.8189655172413793,
+      "recall_ar": 0.7774451097804391,
+      "recall_background": 0.9658119658119658,
+      "recall_bebop": 0.7934426229508197,
+      "recall_phantom": 0.9263157894736842,
+      "warnings": []
+    },
+    {
+      "variant": "dual",
+      "method": "imf_linear_a1.41",
+      "feature_set": "comp",
+      "split_id": 0,
+      "C": 0.1,
+      "fit_seconds": 88.53803529206198,
+      "n_iter": 5000,
+      "prediction_agreement": 0.9971264367816092,
+      "n_prediction_differences": 7,
+      "objective": 896.6764316037043,
+      "reference_balanced_accuracy": 0.8657538720042273,
+      "balanced_accuracy": 0.8662291509545235,
+      "macro_f1": 0.8624387448080836,
+      "accuracy": 0.8197865353037767,
+      "recall_ar": 0.780439121756487,
+      "recall_background": 0.9658119658119658,
+      "recall_bebop": 0.7923497267759563,
+      "recall_phantom": 0.9263157894736842,
+      "warnings": [
+        "Liblinear failed to converge, increase the number of iterations."
+      ]
+    },
+    {
+      "variant": "primal_relaxed",
+      "method": "imf_linear_a1.41",
+      "feature_set": "comp",
+      "split_id": 0,
+      "C": 0.1,
+      "fit_seconds": 11.960955417016521,
+      "n_iter": 49,
+      "prediction_agreement": 1.0,
+      "n_prediction_differences": 0,
+      "objective": 895.4550129213451,
+      "reference_balanced_accuracy": 0.8657538720042273,
+      "balanced_accuracy": 0.8657538720042273,
+      "macro_f1": 0.8626735344545361,
+      "accuracy": 0.8189655172413793,
+      "recall_ar": 0.7774451097804391,
+      "recall_background": 0.9658119658119658,
+      "recall_bebop": 0.7934426229508197,
+      "recall_phantom": 0.9263157894736842,
+      "warnings": []
+    }
+  ]
+}

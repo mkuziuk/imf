@@ -1,0 +1,13 @@
+method,cpu_seconds_per_frame,source_slots,fusion_cost_is_sum
+emd,0.013993894705882356,9,False
+emd__irmf_h2_a1.41,1.7725702421568643,27,True
+emd__irmf_h2_a1.41_conv,0.07839693392156863,27,True
+imf_linear_a1.41,0.0062374811764705895,18,False
+imf_linear_a2,0.004102307058823511,10,False
+irmf_h1_a1.41_conv,0.07127583274509816,18,False
+irmf_h2_a1.41,1.758576347450982,18,False
+irmf_h2_a1.41_conv,0.06440303921568627,18,False
+irmf_h2_a2,0.7860425245098019,10,False
+irmf_h2_a2_conv,0.037256458823529515,10,False
+irmf_h4_a1.41_conv,0.058354170980392174,18,False
+raw,0.0,1,False

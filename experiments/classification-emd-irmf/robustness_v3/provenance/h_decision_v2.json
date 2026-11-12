@@ -1,0 +1,12 @@
+{
+  "estimator": "E1",
+  "report_sha256": "9bb6f2c66f6da7a54090be2bf0c5cbe2aedf70f6adb12574a01eb86b07eb4e8b",
+  "lower_l2_cells": 8,
+  "no_worse_scale_cells": 4,
+  "total_cells": 12,
+  "amendment_date": "2026-10-22",
+  "mode": "fixed dataset H in normalized units",
+  "calibration": "2 * median E1 over all channels of 100 excluded clean normalized pilot frames",
+  "report_copy": "sigma_pilot_REPORT_v2.md",
+  "first_decision_sha256": "b465861b799cb7ac79f7a767fb3a68aad0aa6a6f95312b0f457fd1a883bed193"
+}

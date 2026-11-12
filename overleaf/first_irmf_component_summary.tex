@@ -1,0 +1,161 @@
+\documentclass[11pt]{article}
+\usepackage[a4paper,margin=24mm]{geometry}
+\usepackage{amsmath,amssymb}
+
+\newcommand{\E}{\mathbb E}
+\newcommand{\argmin}{\operatorname*{arg\,min}}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{5pt}
+\setlength{\abovedisplayskip}{8pt}
+\setlength{\belowdisplayskip}{8pt}
+
+\begin{document}
+\begin{center}
+  {\Large\bfseries The first IRMF component}\par\vspace{4pt}
+  {\large Notation and main results for smooth absolute loss}
+\end{center}
+
+At each location, the first IRMF component fits one value to nearby noisy
+observations.  The theory compares that fitted value with an ideal population
+fit and with the underlying clean signal.  This summary omits the proofs.
+
+{\small
+\renewcommand{\arraystretch}{1.12}
+\begin{tabular}{@{}p{27mm}p{\dimexpr\linewidth-27mm-2\tabcolsep\relax}@{}}
+\textbf{Symbol} & \textbf{Meaning} \\
+\hline
+\(u,\ t\) & \(u\) is an observation location; \(t\) is the location where we
+compute the component.  Locations lie on the time axis \([0,1]\). \\
+\(n,\ m\) & \(n\) is the number of observations; \(m\) is the number of
+locations where we compute the component.  Often \(m=n\). \\
+\(X(\cdot),X_u,X_t\) & \(X\) is the unknown clean signal.  \(X_u=X(u)\) and
+\(X_t=X(t)\) are its values at the observation and fitting locations. \\
+\(Y_u\) & The observed noisy value at location \(u\). \\
+\(\varepsilon_u,\sigma\) & \(\varepsilon_u=Y_u-X_u\) is observation noise;
+\(\sigma\) is its standard deviation, in signal-amplitude units. \\
+\(h>0\) & Window radius, in time units.  Only observations with
+\(|u-t|\leq h\) contribute to the fit at \(t\). \\
+\(H>0\) & Smoothing scale of the loss, in signal-amplitude units.  It
+controls how closely the loss follows the absolute value. \\
+\(a_{u,t}\) & The weight of observation \(u\) in the fit at \(t\).
+Weights are nonnegative, fixed before seeing the noise, and sum to one. \\
+\(\widetilde S_t\) & The component fitted to the observed data.  It changes
+when the noise realization changes. \\
+\(S_t\) & The population component: the minimizer of the loss averaged over
+repeated noise realizations, for fixed signal, weights, loss scale, and noise law. \\
+\end{tabular}}
+
+The observation model is
+\(Y_u=X_u+\varepsilon_u\), with independent Gaussian errors
+\(\varepsilon_u\sim N(0,\sigma^2)\), meaning mean zero and variance
+\(\sigma^2\).  For example, \(t=0.40\) and \(h=0.05\) use observations in
+\([0.35,0.45]\).
+
+The loss \(\rho_H\) penalizes an amplitude residual \(r\).
+Its derivative \(\psi_H\), called the score, measures an observation's
+contribution to the fitting equation:
+\[
+  \rho_H(r)=\E_Z|r+HZ|,\qquad \psi_H(r)=\rho_H'(r),\qquad |\psi_H(r)|\leq1.
+\]
+Here \(Z\sim N(0,1)\) is an auxiliary standard Gaussian variable, independent
+of the observation noise.  \(\E\) means expectation, or averaging over the
+specified random variable.  Primes mean derivatives with respect to the
+residual.  The bounded score limits each observation's contribution.
+
+In the definitions below, \(z\) is a candidate fitted amplitude, so
+\(Y_u-z\) is a residual.  The notation \(\argmin_z\) means the value of
+\(z\) that minimizes the displayed sum, and \(\sum_u\) sums over observations:
+\begin{align*}
+  \widetilde S_t&=\argmin_z\sum_u a_{u,t}\rho_H(Y_u-z),
+  & S_t&=\argmin_z\sum_u a_{u,t}\E\rho_H(Y_u-z).
+\end{align*}
+The expectation defining \(S_t\) is over observation noise.  For Gaussian
+noise, let \(B\) denote the effective loss scale after that averaging:
+\[
+  B=\sqrt{H^2+\sigma^2},\qquad
+  S_t=\argmin_z\sum_u a_{u,t}\rho_B(X_u-z).
+\]
+Here \(\rho_B\) is the same loss with \(H\) replaced by \(B\).  Thus
+\(X_t\) is the clean signal value, \(S_t\) is an ideal local fit, and
+\(\widetilde S_t\) is the fit computed from noisy data.  They generally differ.
+
+\newpage
+
+Three more quantities describe the estimation error at \(t\):
+
+{\small
+\renewcommand{\arraystretch}{1.1}
+\begin{tabular}{@{}p{27mm}p{\dimexpr\linewidth-27mm-2\tabcolsep\relax}@{}}
+\(F_t>0\) & Population curvature: how strongly the expected loss bends upward
+near its minimum \(S_t\).  It is a scalar measuring local stability. \\
+\(\nabla_t\) & Score fluctuation caused by the observed noise, after
+subtracting its expectation.  Despite the symbol, it is a scalar here. \\
+\(R_t\) & The remainder left after subtracting the leading random error
+\(\nabla_t/F_t\) from \(\widetilde S_t-S_t\). \\
+\end{tabular}}
+
+Their definitions and the main expansion are
+\begin{align*}
+  F_t&=\sum_u a_{u,t}\E\rho_H''(Y_u-S_t)>0,\\
+  \nabla_t&=\sum_u a_{u,t}
+    \bigl\{\psi_H(Y_u-S_t)-\E\psi_H(Y_u-S_t)\bigr\}.
+\end{align*}
+\[
+  \boxed{\widetilde S_t-S_t=\frac{\nabla_t}{F_t}+R_t.}
+\]
+Proposition 4.1 bounds \(R_t\).  Lemma 4.2 controls the score and curvature
+fluctuations used in that bound.  The corrected value
+\(\widetilde S_t^{\mathrm{corr}}=\widetilde S_t-\nabla_t/F_t\) has error
+\(R_t\) relative to \(S_t\).  The superscript ``corr'' labels this correction.
+It is an \emph{oracle} correction because it uses the unknown \(S_t\) and
+population quantities.
+
+The effective sample size is \(n_{\mathrm{eff}}(t)=1/\sum_u a_{u,t}^2\).
+For regular weights and enough grid points per window, it is of order
+\(h/\Delta\), where \(\Delta\) is the grid spacing.  On \([0,1]\), the
+usual grids have \(\Delta=1/n\) or \(1/(n-1)\), both giving order \(nh\).
+Each individual weight is then at most a constant times \(1/(nh)\).
+
+Choose a failure probability \(0<\beta<1\), and define the logarithmic factor
+\(\ell=\log(4m/\beta)\), using the natural logarithm.  For a 95\% guarantee,
+take \(\beta=0.05\).  Keep \(H\), \(\sigma\), and the weight profile fixed;
+assume the population curvatures \(F_t\) stay above a common positive constant.
+For sufficiently large \(nh/\ell\), with probability at least \(1-\beta\),
+\[
+  \boxed{\begin{aligned}
+    \max_t|\widetilde S_t-S_t|
+      &\lesssim\sqrt{\frac{\ell}{nh}},\\[3pt]
+    \max_t|R_t|&\lesssim\frac{\ell}{nh}.
+  \end{aligned}}
+\]
+Here \(\max_t\) means the largest error across the \(m\) fitting locations.
+The symbol \(\lesssim\) means ``at most a constant times''; the constants
+depend on \(H\), \(\sigma\), the weight profile, and the curvature lower
+bound.  These are upper bounds on the uncorrected and oracle-corrected errors.
+
+The population bias is \(S_t-X_t\).  If the signal has bounded first and
+second derivatives and equal weights at equal distances on opposite sides of
+\(t\), Proposition 4.5 gives \(\max_t|S_t-X_t|\lesssim h^2\).
+Thus \(h^2\) bounds the bias magnitude; it is not the bias itself.
+Under these conditions, the same probability guarantee gives
+\[
+  \max_t|\widetilde S_t-X_t|
+  \lesssim
+  \underbrace{h^2}_{\text{bias bound}}
+  +\underbrace{\sqrt{\ell/(nh)}}_{\text{random error}}
+  +\underbrace{\ell/(nh)}_{\text{remainder}}.
+\]
+Smaller \(h\) tightens the bias bound but raises the random-error bound.
+Balancing them with \(h\) proportional to \((\ell/n)^{1/5}\) gives a bound
+of order \((\ell/n)^{2/5}\), as \(\ell/n\to0\).
+
+The results concern the first component on a finite grid with enough local
+data.  Boundary truncation can break symmetry.  Asymmetric contamination,
+later recursive components, and choices of \(H\) that change with sample
+size need additional checks.
+
+{\small See \texttt{proposition\_4\_1\_lemma\_4\_2.tex} for the constants
+and sample-size conditions, with proofs in Appendix A.  This summary uses
+normalized weights; \(x=\log(1/\beta)\) and \(z_x=\ell\) in the full note.}
+
+\end{document}

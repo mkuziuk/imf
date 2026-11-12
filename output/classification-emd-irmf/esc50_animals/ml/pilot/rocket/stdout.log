@@ -1,0 +1,5 @@
+raw comp minirocket split=0: BA=0.558, fit=6.71s, predict=0.64s
+raw comp+log_scale minirocket split=0: BA=0.568, fit=6.68s, predict=0.64s
+irmf_h2_a1.41 comp minirocket split=0: BA=0.612, fit=50.96s, predict=6.68s
+irmf_h2_a1.41 comp+log_scale minirocket split=0: BA=0.616, fit=50.97s, predict=6.68s
+wrote /Users/mikhail/.t3/worktrees/imf/t3-44ed3594/output/classification-emd-irmf/esc50_animals/ml/pilot/rocket, total 69.0s

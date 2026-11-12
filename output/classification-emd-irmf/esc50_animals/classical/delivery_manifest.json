@@ -1,0 +1,32 @@
+{
+  "report_words": 497,
+  "csv_files": 35,
+  "figures": [
+    {
+      "path": "output/classification-emd-irmf/esc50_animals/classical/figures/balanced_accuracy.png",
+      "sha256": "f7fc073c486da3282faa3051a10390bf2c07b399fba4f75c0c0f1644e57c630a",
+      "bytes": 211338
+    },
+    {
+      "path": "output/classification-emd-irmf/esc50_animals/classical/figures/discriminability_scales.png",
+      "sha256": "d405d141d83039a09410920df3f49d51e33a7f485a57f8eb1f45dd470f50c799",
+      "bytes": 262489
+    },
+    {
+      "path": "output/classification-emd-irmf/esc50_animals/classical/figures/irmf_emd_paired.png",
+      "sha256": "233f77e8e21553e59a6b025e4649c5eebb8bdde1afecf066237dec4a87a0df92",
+      "bytes": 84301
+    }
+  ],
+  "scripts": [
+    {
+      "path": "experiments/classification-emd-irmf/datasets/esc50_animals/analyse_classical.py",
+      "sha256": "4c50e495414a7f332a173332a578224e323d1c1d37fb4d9f22dbd348b0ae7f54"
+    },
+    {
+      "path": "experiments/classification-emd-irmf/datasets/esc50_animals/run_phase2.py",
+      "sha256": "acbb40b3ebdfaeaafbc6256329f40fe4498e7a937fb074dc35a964e0e3203a82"
+    }
+  ],
+  "validation": "8 numeric table rows verified against CSVs; all links resolve; full runs verified; no repository data caches."
+}

@@ -1,0 +1,221 @@
+{
+  "utc": "2026-10-22T10:47:10.497231+00:00",
+  "tests": "23 passed",
+  "synthetic_validation": {
+    "datasets": [
+      {
+        "dataset": "synthetic",
+        "predictions_recomputed": 688800,
+        "clean_exact_checks": 100,
+        "clean_checks": 100,
+        "clean_max_absolute_error": 0.0,
+        "pilot_exclusions": 100,
+        "grouped_splits_verified": 15,
+        "feature_manifest_sha256": "ad4a5c66e4a2f39775893dbece60862ad23d0e1762c03b61e9150036ca9bcab7",
+        "classification_manifest_sha256": "7c8a71e27e5a9ae89368eb8a13175fc723c91eb2c53345d9e97cf42bb0f2f8c6",
+        "inputs_verified": 5,
+        "fixed_h_recalibrated": true,
+        "matrices_recomputed": true,
+        "k_selection_recomputed": true
+      }
+    ],
+    "families": {
+      "synthetic": 18
+    },
+    "expected_families": {
+      "Primary": 12,
+      "S1": 12,
+      "S3": 24,
+      "S5": 6,
+      "synthetic": 18
+    },
+    "all_prediction_metrics_recomputed": true,
+    "shift_classical_selection": [
+      {
+        "dataset": "synthetic",
+        "selection": "grid_search",
+        "fits": 540
+      }
+    ]
+  },
+  "synthetic_preview": "/tmp/robustness_v3_preview/REPORT.md",
+  "launch": {
+    "pid": 80987,
+    "utc": "2026-10-22T10:46:14.191751+00:00",
+    "command": [
+      "/Users/mikhail/.t3/worktrees/imf/t3-44ed3594/.venv/bin/python",
+      "-m",
+      "robustness_v3.run",
+      "--workers",
+      "14",
+      "--datasets",
+      "dronerf",
+      "birdclef2023",
+      "esc50_animals"
+    ],
+    "cwd": "/Users/mikhail/.t3/worktrees/imf/t3-44ed3594/experiments/classification-emd-irmf",
+    "log": "/Users/mikhail/Datasets/imf-classification/robustness_v3_runs/20261022T104614188721Z.log"
+  },
+  "workers": [
+    80989,
+    80990,
+    80991,
+    80992,
+    80993,
+    80994,
+    80995,
+    80996,
+    80997,
+    80998,
+    80999,
+    81000,
+    81001,
+    81002
+  ],
+  "worker_environment": {
+    "80989": {
+      "OMP_NUM_THREADS": "1",
+      "OPENBLAS_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "VECLIB_MAXIMUM_THREADS": "1",
+      "NUMEXPR_NUM_THREADS": "1",
+      "NUMBA_NUM_THREADS": "1"
+    },
+    "80990": {
+      "OMP_NUM_THREADS": "1",
+      "OPENBLAS_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "VECLIB_MAXIMUM_THREADS": "1",
+      "NUMEXPR_NUM_THREADS": "1",
+      "NUMBA_NUM_THREADS": "1"
+    },
+    "80991": {
+      "OMP_NUM_THREADS": "1",
+      "OPENBLAS_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "VECLIB_MAXIMUM_THREADS": "1",
+      "NUMEXPR_NUM_THREADS": "1",
+      "NUMBA_NUM_THREADS": "1"
+    },
+    "80992": {
+      "OMP_NUM_THREADS": "1",
+      "OPENBLAS_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "VECLIB_MAXIMUM_THREADS": "1",
+      "NUMEXPR_NUM_THREADS": "1",
+      "NUMBA_NUM_THREADS": "1"
+    },
+    "80993": {
+      "OMP_NUM_THREADS": "1",
+      "OPENBLAS_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "VECLIB_MAXIMUM_THREADS": "1",
+      "NUMEXPR_NUM_THREADS": "1",
+      "NUMBA_NUM_THREADS": "1"
+    },
+    "80994": {
+      "OMP_NUM_THREADS": "1",
+      "OPENBLAS_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "VECLIB_MAXIMUM_THREADS": "1",
+      "NUMEXPR_NUM_THREADS": "1",
+      "NUMBA_NUM_THREADS": "1"
+    },
+    "80995": {
+      "OMP_NUM_THREADS": "1",
+      "OPENBLAS_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "VECLIB_MAXIMUM_THREADS": "1",
+      "NUMEXPR_NUM_THREADS": "1",
+      "NUMBA_NUM_THREADS": "1"
+    },
+    "80996": {
+      "OMP_NUM_THREADS": "1",
+      "OPENBLAS_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "VECLIB_MAXIMUM_THREADS": "1",
+      "NUMEXPR_NUM_THREADS": "1",
+      "NUMBA_NUM_THREADS": "1"
+    },
+    "80997": {
+      "OMP_NUM_THREADS": "1",
+      "OPENBLAS_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "VECLIB_MAXIMUM_THREADS": "1",
+      "NUMEXPR_NUM_THREADS": "1",
+      "NUMBA_NUM_THREADS": "1"
+    },
+    "80998": {
+      "OMP_NUM_THREADS": "1",
+      "OPENBLAS_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "VECLIB_MAXIMUM_THREADS": "1",
+      "NUMEXPR_NUM_THREADS": "1",
+      "NUMBA_NUM_THREADS": "1"
+    },
+    "80999": {
+      "OMP_NUM_THREADS": "1",
+      "OPENBLAS_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "VECLIB_MAXIMUM_THREADS": "1",
+      "NUMEXPR_NUM_THREADS": "1",
+      "NUMBA_NUM_THREADS": "1"
+    },
+    "81000": {
+      "OMP_NUM_THREADS": "1",
+      "OPENBLAS_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "VECLIB_MAXIMUM_THREADS": "1",
+      "NUMEXPR_NUM_THREADS": "1",
+      "NUMBA_NUM_THREADS": "1"
+    },
+    "81001": {
+      "OMP_NUM_THREADS": "1",
+      "OPENBLAS_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "VECLIB_MAXIMUM_THREADS": "1",
+      "NUMEXPR_NUM_THREADS": "1",
+      "NUMBA_NUM_THREADS": "1"
+    },
+    "81002": {
+      "OMP_NUM_THREADS": "1",
+      "OPENBLAS_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "VECLIB_MAXIMUM_THREADS": "1",
+      "NUMEXPR_NUM_THREADS": "1",
+      "NUMBA_NUM_THREADS": "1"
+    }
+  },
+  "source_hashes_unchanged": true,
+  "datasets": {
+    "synthetic": {
+      "manifest_sha256": "ad4a5c66e4a2f39775893dbece60862ad23d0e1762c03b61e9150036ca9bcab7",
+      "fixed_h": 1.1853056416210017,
+      "verification_sha256": "069a5a3f9accf24009d2f88487d39cf5fa83b96a2e2572e6be3e6c295b097654",
+      "first_verification_sha256": "0d2ed404fcb815d0d802f659361fe6012de8d76865991453da1f8d9550f28a56",
+      "clean_chunks": 94
+    },
+    "dronerf": {
+      "manifest_sha256": "3f0613625a2d3f29c1c169498c194ff7e91d9dba447dc28dcf44e98f28b35d9e",
+      "fixed_h": 2.0941664007285286,
+      "verification_sha256": "47064b8d9a9842652f5448bbdfb829d6199631c1831af7d46f9c7f247941f437",
+      "first_verification_sha256": "f0632ca3965f4d86f9472099992d320ad9ebf25d31a8c125666b5e2351608776",
+      "clean_chunks": 98
+    },
+    "birdclef2023": {
+      "manifest_sha256": "62e4923db2f82413c34101e50bfd56d7d8446c3d05c5ce139ed2d0aac95badfe",
+      "fixed_h": 1.0833148940020392,
+      "verification_sha256": "57391d81aafd603bf98d7aae9d0002ac831eda789dc5b4e7e049c624fd4a2cb6",
+      "first_verification_sha256": "3eff21e4d95232bd3b9debe75e688b4b2334bb19500ff9af3bb4d3712403919b",
+      "clean_chunks": 0
+    },
+    "esc50_animals": {
+      "manifest_sha256": "74254306e5ba6d27a719eafb255e474f976a185def9074917ef9e53ee2157336",
+      "fixed_h": 0.47263983379285046,
+      "verification_sha256": "add02ce65810ff506cb64f771d04dd2114a593276dbe5e3bba6f83b79157068f",
+      "first_verification_sha256": "9ad782d6fe6e1a601fa8b052967c8fa7344c9e3afc57e4450c30f1f914fb75bf",
+      "clean_chunks": 0
+    }
+  },
+  "healthy": true
+}

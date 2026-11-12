@@ -1,0 +1,3 @@
+raw comp compact_resnet split=0: BA=0.813, fit=39.35s, predict=0.53s
+raw comp+log_scale compact_resnet split=0: BA=0.821, fit=45.10s, predict=0.70s
+wrote /Users/mikhail/.t3/worktrees/imf/t3-44ed3594/output/classification-emd-irmf/birdclef2023/ml/pilot/stft_passerine, total 85.9s

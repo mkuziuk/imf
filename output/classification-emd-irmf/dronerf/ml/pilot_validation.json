@@ -1,0 +1,77 @@
+{
+  "prediction_audits": [
+    {
+      "runner": "trees",
+      "task": "10class",
+      "fits": 12,
+      "prediction_rows": 29220,
+      "probability_tied_argmax_labels": 0,
+      "split_ids": [
+        0
+      ]
+    },
+    {
+      "runner": "rocket",
+      "task": "10class",
+      "fits": 4,
+      "prediction_rows": 9740,
+      "probability_tied_argmax_labels": 2660,
+      "split_ids": [
+        0
+      ]
+    },
+    {
+      "runner": "cnn",
+      "task": "10class",
+      "fits": 4,
+      "prediction_rows": 9740,
+      "probability_tied_argmax_labels": 0,
+      "split_ids": [
+        0
+      ]
+    }
+  ],
+  "reconstruction": [
+    {
+      "method": "emd",
+      "sampled_frames": 32,
+      "max_absolute_error": 2.4031915245359414e-05
+    },
+    {
+      "method": "imf_linear_a1.41",
+      "sampled_frames": 32,
+      "max_absolute_error": 1.3477527090799413e-05
+    },
+    {
+      "method": "irmf_h2_a1.41",
+      "sampled_frames": 32,
+      "max_absolute_error": 2.5595449642423773e-05
+    },
+    {
+      "method": "irmf_h2_a1.41_conv",
+      "sampled_frames": 32,
+      "max_absolute_error": 2.683224602151313e-05
+    },
+    {
+      "method": "irmf_h2_a2_conv",
+      "sampled_frames": 32,
+      "max_absolute_error": 2.6311748001717206e-05
+    },
+    {
+      "method": "imf_linear_a2",
+      "sampled_frames": 32,
+      "max_absolute_error": 1.5123053742627235e-05
+    }
+  ],
+  "passed": true,
+  "spectrogram": {
+    "runner": "cnn",
+    "task": "10class",
+    "fits": 2,
+    "prediction_rows": 4870,
+    "probability_tied_argmax_labels": 0,
+    "split_ids": [
+      0
+    ]
+  }
+}

@@ -1,0 +1,377 @@
+[
+  {
+    "task": "bird_drone",
+    "split_id": 0,
+    "train_groups": 37,
+    "test_groups": 8,
+    "test_recordings": 10,
+    "test_class_counts": {
+      "uas": 96,
+      "bird": 64
+    },
+    "missing_test_classes": []
+  },
+  {
+    "task": "bird_drone",
+    "split_id": 1,
+    "train_groups": 36,
+    "test_groups": 9,
+    "test_recordings": 10,
+    "test_class_counts": {
+      "uas": 96,
+      "bird": 64
+    },
+    "missing_test_classes": []
+  },
+  {
+    "task": "bird_drone",
+    "split_id": 2,
+    "train_groups": 36,
+    "test_groups": 9,
+    "test_recordings": 10,
+    "test_class_counts": {
+      "uas": 96,
+      "bird": 64
+    },
+    "missing_test_classes": []
+  },
+  {
+    "task": "bird_drone",
+    "split_id": 3,
+    "train_groups": 35,
+    "test_groups": 10,
+    "test_recordings": 10,
+    "test_class_counts": {
+      "uas": 96,
+      "bird": 64
+    },
+    "missing_test_classes": []
+  },
+  {
+    "task": "bird_drone",
+    "split_id": 4,
+    "train_groups": 36,
+    "test_groups": 9,
+    "test_recordings": 9,
+    "test_class_counts": {
+      "uas": 80,
+      "bird": 64
+    },
+    "missing_test_classes": []
+  },
+  {
+    "task": "bird_drone",
+    "split_id": 5,
+    "train_groups": 37,
+    "test_groups": 8,
+    "test_recordings": 10,
+    "test_class_counts": {
+      "uas": 96,
+      "bird": 64
+    },
+    "missing_test_classes": []
+  },
+  {
+    "task": "bird_drone",
+    "split_id": 6,
+    "train_groups": 36,
+    "test_groups": 9,
+    "test_recordings": 10,
+    "test_class_counts": {
+      "uas": 96,
+      "bird": 64
+    },
+    "missing_test_classes": []
+  },
+  {
+    "task": "bird_drone",
+    "split_id": 7,
+    "train_groups": 36,
+    "test_groups": 9,
+    "test_recordings": 10,
+    "test_class_counts": {
+      "uas": 96,
+      "bird": 64
+    },
+    "missing_test_classes": []
+  },
+  {
+    "task": "bird_drone",
+    "split_id": 8,
+    "train_groups": 36,
+    "test_groups": 9,
+    "test_recordings": 9,
+    "test_class_counts": {
+      "uas": 80,
+      "bird": 64
+    },
+    "missing_test_classes": []
+  },
+  {
+    "task": "bird_drone",
+    "split_id": 9,
+    "train_groups": 35,
+    "test_groups": 10,
+    "test_recordings": 10,
+    "test_class_counts": {
+      "uas": 96,
+      "bird": 64
+    },
+    "missing_test_classes": []
+  },
+  {
+    "task": "bird_drone",
+    "split_id": 10,
+    "train_groups": 37,
+    "test_groups": 8,
+    "test_recordings": 10,
+    "test_class_counts": {
+      "uas": 96,
+      "bird": 64
+    },
+    "missing_test_classes": []
+  },
+  {
+    "task": "bird_drone",
+    "split_id": 11,
+    "train_groups": 36,
+    "test_groups": 9,
+    "test_recordings": 10,
+    "test_class_counts": {
+      "uas": 96,
+      "bird": 64
+    },
+    "missing_test_classes": []
+  },
+  {
+    "task": "bird_drone",
+    "split_id": 12,
+    "train_groups": 36,
+    "test_groups": 9,
+    "test_recordings": 10,
+    "test_class_counts": {
+      "uas": 96,
+      "bird": 64
+    },
+    "missing_test_classes": []
+  },
+  {
+    "task": "bird_drone",
+    "split_id": 13,
+    "train_groups": 36,
+    "test_groups": 9,
+    "test_recordings": 9,
+    "test_class_counts": {
+      "uas": 80,
+      "bird": 64
+    },
+    "missing_test_classes": []
+  },
+  {
+    "task": "bird_drone",
+    "split_id": 14,
+    "train_groups": 35,
+    "test_groups": 10,
+    "test_recordings": 10,
+    "test_class_counts": {
+      "uas": 96,
+      "bird": 64
+    },
+    "missing_test_classes": []
+  },
+  {
+    "task": "target3",
+    "split_id": 0,
+    "train_groups": 37,
+    "test_groups": 8,
+    "test_recordings": 10,
+    "test_class_counts": {
+      "bird": 64,
+      "mavic": 64,
+      "p3p": 32
+    },
+    "missing_test_classes": []
+  },
+  {
+    "task": "target3",
+    "split_id": 1,
+    "train_groups": 36,
+    "test_groups": 9,
+    "test_recordings": 10,
+    "test_class_counts": {
+      "bird": 64,
+      "mavic": 64,
+      "p3p": 32
+    },
+    "missing_test_classes": []
+  },
+  {
+    "task": "target3",
+    "split_id": 2,
+    "train_groups": 36,
+    "test_groups": 9,
+    "test_recordings": 10,
+    "test_class_counts": {
+      "bird": 64,
+      "mavic": 64,
+      "p3p": 32
+    },
+    "missing_test_classes": []
+  },
+  {
+    "task": "target3",
+    "split_id": 3,
+    "train_groups": 35,
+    "test_groups": 10,
+    "test_recordings": 10,
+    "test_class_counts": {
+      "bird": 64,
+      "mavic": 64,
+      "p3p": 32
+    },
+    "missing_test_classes": []
+  },
+  {
+    "task": "target3",
+    "split_id": 4,
+    "train_groups": 36,
+    "test_groups": 9,
+    "test_recordings": 9,
+    "test_class_counts": {
+      "bird": 64,
+      "mavic": 64,
+      "p3p": 16
+    },
+    "missing_test_classes": []
+  },
+  {
+    "task": "target3",
+    "split_id": 5,
+    "train_groups": 37,
+    "test_groups": 8,
+    "test_recordings": 10,
+    "test_class_counts": {
+      "bird": 64,
+      "mavic": 64,
+      "p3p": 32
+    },
+    "missing_test_classes": []
+  },
+  {
+    "task": "target3",
+    "split_id": 6,
+    "train_groups": 36,
+    "test_groups": 9,
+    "test_recordings": 10,
+    "test_class_counts": {
+      "bird": 64,
+      "mavic": 64,
+      "p3p": 32
+    },
+    "missing_test_classes": []
+  },
+  {
+    "task": "target3",
+    "split_id": 7,
+    "train_groups": 37,
+    "test_groups": 8,
+    "test_recordings": 9,
+    "test_class_counts": {
+      "bird": 64,
+      "mavic": 64,
+      "p3p": 16
+    },
+    "missing_test_classes": []
+  },
+  {
+    "task": "target3",
+    "split_id": 8,
+    "train_groups": 35,
+    "test_groups": 10,
+    "test_recordings": 10,
+    "test_class_counts": {
+      "bird": 64,
+      "mavic": 64,
+      "p3p": 32
+    },
+    "missing_test_classes": []
+  },
+  {
+    "task": "target3",
+    "split_id": 9,
+    "train_groups": 35,
+    "test_groups": 10,
+    "test_recordings": 10,
+    "test_class_counts": {
+      "bird": 64,
+      "mavic": 64,
+      "p3p": 32
+    },
+    "missing_test_classes": []
+  },
+  {
+    "task": "target3",
+    "split_id": 10,
+    "train_groups": 37,
+    "test_groups": 8,
+    "test_recordings": 10,
+    "test_class_counts": {
+      "bird": 64,
+      "mavic": 64,
+      "p3p": 32
+    },
+    "missing_test_classes": []
+  },
+  {
+    "task": "target3",
+    "split_id": 11,
+    "train_groups": 36,
+    "test_groups": 9,
+    "test_recordings": 10,
+    "test_class_counts": {
+      "bird": 64,
+      "mavic": 64,
+      "p3p": 32
+    },
+    "missing_test_classes": []
+  },
+  {
+    "task": "target3",
+    "split_id": 12,
+    "train_groups": 36,
+    "test_groups": 9,
+    "test_recordings": 10,
+    "test_class_counts": {
+      "bird": 64,
+      "mavic": 64,
+      "p3p": 32
+    },
+    "missing_test_classes": []
+  },
+  {
+    "task": "target3",
+    "split_id": 13,
+    "train_groups": 35,
+    "test_groups": 10,
+    "test_recordings": 10,
+    "test_class_counts": {
+      "bird": 64,
+      "mavic": 64,
+      "p3p": 32
+    },
+    "missing_test_classes": []
+  },
+  {
+    "task": "target3",
+    "split_id": 14,
+    "train_groups": 36,
+    "test_groups": 9,
+    "test_recordings": 9,
+    "test_class_counts": {
+      "bird": 64,
+      "mavic": 64,
+      "p3p": 16
+    },
+    "missing_test_classes": []
+  }
+]

@@ -1,0 +1,24 @@
+{
+  "first_task_seconds": 3279.1994277919875,
+  "threshold_seconds": 600,
+  "remaining_tasks_reduced": true,
+  "reason": "The full first task exceeded ten minutes on three workers; keep every outer split and classifier while narrowing inner tuning identically across methods.",
+  "revision": "grid_revision.json",
+  "final_svm_grid_by_task": {
+    "2class": [
+      0.001,
+      0.01,
+      0.1,
+      1.0
+    ],
+    "4class": [
+      0.01,
+      0.1
+    ],
+    "10class": [
+      0.1
+    ]
+  },
+  "primary_single_candidate_cv_skipped": true,
+  "primary_decision": "primary_svm_grid.json"
+}

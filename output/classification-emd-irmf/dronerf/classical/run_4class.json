@@ -1,0 +1,89 @@
+{
+  "dataset": "dronerf",
+  "task": "4class",
+  "methods": [
+    "raw",
+    "emd",
+    "imf_linear_a1.41",
+    "irmf_h2_a1.41"
+  ],
+  "n_frames": 12000,
+  "n_groups": 227,
+  "n_classes": 4,
+  "n_splits": 15,
+  "n_seeds": 3,
+  "workers": 3,
+  "seconds": 1902.1550712500466,
+  "breakdown": null,
+  "classifiers": [
+    "lda",
+    "qda",
+    "gnb",
+    "logreg",
+    "knn",
+    "linsvm"
+  ],
+  "feature_sets": [
+    "comp",
+    "comp+log_scale"
+  ],
+  "pairs": [
+    [
+      "irmf_h2_a1.41",
+      "emd"
+    ],
+    [
+      "irmf_h2_a1.41",
+      "imf_linear_a1.41"
+    ],
+    [
+      "imf_linear_a1.41",
+      "emd"
+    ],
+    [
+      "irmf_h2_a1.41",
+      "raw"
+    ],
+    [
+      "imf_linear_a1.41",
+      "raw"
+    ],
+    [
+      "emd",
+      "raw"
+    ]
+  ],
+  "quick": false,
+  "reduced": true,
+  "grids": {
+    "lda": null,
+    "qda": {
+      "clf__shrinkage": [
+        "auto",
+        0.2,
+        0.8
+      ]
+    },
+    "gnb": null,
+    "logreg": {
+      "clf__C": [
+        0.01,
+        0.1,
+        1.0
+      ]
+    },
+    "knn": {
+      "clf__n_neighbors": [
+        1,
+        15
+      ]
+    },
+    "linsvm": {
+      "clf__C": [
+        0.01,
+        0.1
+      ]
+    }
+  },
+  "joblib_batch_size": 1
+}

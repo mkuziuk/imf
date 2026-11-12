@@ -1,0 +1,7 @@
+{
+  "source_hash_before": "7189fc97cf29e9b1770b154e4af803d4f70324d715cf89ec1bd410b141d2b21f",
+  "source_hash_after": "1dc98fe886a53c5badea90da5d55e0da8788f6dcd5b326096cad0de468adcd85",
+  "change": "One fit per joblib batch; no estimator, grid, data, split, or metric changes.",
+  "all_other_input_and_source_hashes_verified": true,
+  "retained_fits": 562
+}

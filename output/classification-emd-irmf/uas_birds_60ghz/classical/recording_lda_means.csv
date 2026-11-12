@@ -1,0 +1,17 @@
+task,feature_set,method,balanced_accuracy,macro_f1,accuracy
+bird_drone,comp,emd,1.0,1.0,1.0
+bird_drone,comp,imf_linear_a1.41,1.0,1.0,1.0
+bird_drone,comp,irmf_h2_a1.41,1.0,1.0,1.0
+bird_drone,comp,raw,0.9833333333333333,0.9844155844155844,0.9851851851851853
+bird_drone,comp+log_scale,emd,1.0,1.0,1.0
+bird_drone,comp+log_scale,imf_linear_a1.41,1.0,1.0,1.0
+bird_drone,comp+log_scale,irmf_h2_a1.41,1.0,1.0,1.0
+bird_drone,comp+log_scale,raw,1.0,1.0,1.0
+target3,comp,emd,1.0,1.0,1.0
+target3,comp,imf_linear_a1.41,1.0,1.0,1.0
+target3,comp,irmf_h2_a1.41,1.0,1.0,1.0
+target3,comp,raw,0.9777777777777777,0.9635978835978836,0.9718518518518519
+target3,comp+log_scale,emd,1.0,1.0,1.0
+target3,comp+log_scale,imf_linear_a1.41,1.0,1.0,1.0
+target3,comp+log_scale,irmf_h2_a1.41,1.0,1.0,1.0
+target3,comp+log_scale,raw,0.9888888888888889,0.9817989417989419,0.985925925925926

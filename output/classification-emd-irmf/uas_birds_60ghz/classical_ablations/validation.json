@@ -1,0 +1,58 @@
+[
+  {
+    "dataset": "birdclef2023",
+    "task": "passerine",
+    "new_fits": 450,
+    "probability_fits": 300,
+    "corrected_intervals": 78,
+    "passed": true
+  },
+  {
+    "dataset": "birdclef2023",
+    "task": "species",
+    "new_fits": 450,
+    "probability_fits": 300,
+    "corrected_intervals": 78,
+    "passed": true
+  },
+  {
+    "dataset": "dronerf",
+    "task": "10class",
+    "new_fits": 450,
+    "probability_fits": 300,
+    "corrected_intervals": 78,
+    "passed": true
+  },
+  {
+    "dataset": "esc50_animals",
+    "task": "animal",
+    "new_fits": 450,
+    "probability_fits": 300,
+    "corrected_intervals": 78,
+    "passed": true
+  },
+  {
+    "dataset": "esc50_animals",
+    "task": "bird",
+    "new_fits": 450,
+    "probability_fits": 300,
+    "corrected_intervals": 78,
+    "passed": true
+  },
+  {
+    "dataset": "uas_birds_60ghz",
+    "task": "bird_drone",
+    "new_fits": 450,
+    "probability_fits": 300,
+    "corrected_intervals": 78,
+    "passed": true
+  },
+  {
+    "dataset": "uas_birds_60ghz",
+    "task": "target3",
+    "new_fits": 450,
+    "probability_fits": 300,
+    "corrected_intervals": 78,
+    "passed": true
+  }
+]

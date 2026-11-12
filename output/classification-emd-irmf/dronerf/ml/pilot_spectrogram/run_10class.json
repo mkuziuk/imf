@@ -1,0 +1,170 @@
+{
+  "dataset": "dronerf",
+  "task": "10class",
+  "runner": "dronerf_pilot_spectrogram",
+  "methods": [
+    "raw"
+  ],
+  "n_frames": 12000,
+  "n_groups": 227,
+  "n_classes": 10,
+  "split_ids": [
+    0
+  ],
+  "workers": 2,
+  "created": "2026-10-20T22:57:51.255286+00:00",
+  "params": {
+    "dataset": "dronerf",
+    "task": "10class",
+    "methods": [
+      "raw"
+    ],
+    "quick": false,
+    "workers": 2,
+    "folds": "1",
+    "device": "cpu",
+    "log_scale": "both",
+    "out": "/Users/mikhail/.t3/worktrees/imf/t3-44ed3594/output/classification-emd-irmf/dronerf/ml/pilot_spectrogram",
+    "epochs": 2,
+    "patience": 2,
+    "batch_size": 64,
+    "width": 8,
+    "learning_rate": 0.001,
+    "downsample": 1
+  },
+  "inner_validation": "first class-complete StratifiedGroupKFold(3) split of outer train",
+  "versions": {
+    "python": "3.12.13",
+    "platform": "macOS-26.6.2-arm64-arm-64bit",
+    "numpy": "2.3.5",
+    "scipy": "1.17.1",
+    "pandas": "3.0.6",
+    "scikit-learn": "1.9.1",
+    "lightgbm": "4.7.0",
+    "xgboost": "3.4.1",
+    "torch": "2.14.1",
+    "aeon": "1.6.0"
+  },
+  "local_budget": {
+    "run_name": "dronerf_pilot_spectrogram",
+    "lightgbm_rounds": null,
+    "cheap_extra_trees": false,
+    "l_only": false,
+    "slots": null,
+    "worker_plan": "/Users/mikhail/.t3/worktrees/imf/t3-44ed3594/output/classification-emd-irmf/dronerf/ml/worker_plan.json"
+  },
+  "seconds": 30.241672333911993,
+  "predictions": "/Users/mikhail/Datasets/imf-classification/dronerf/results/dronerf_pilot_spectrogram_10class_predictions.parquet",
+  "fold_timings": [
+    {
+      "dataset": "dronerf",
+      "task": "10class",
+      "method": "raw",
+      "feature_set": "comp",
+      "classifier": "log_stft_cnn2d",
+      "split_id": 0,
+      "seed": 0,
+      "fold": 0,
+      "n_train": 9565,
+      "n_test": 2435,
+      "fit_seconds": 14.127147875027731,
+      "predict_seconds": 0.42065099999308586
+    },
+    {
+      "dataset": "dronerf",
+      "task": "10class",
+      "method": "raw",
+      "feature_set": "comp+log_scale",
+      "classifier": "log_stft_cnn2d",
+      "split_id": 0,
+      "seed": 0,
+      "fold": 0,
+      "n_train": 9565,
+      "n_test": 2435,
+      "fit_seconds": 15.183739374973811,
+      "predict_seconds": 0.4138025420252234
+    }
+  ],
+  "fold_parameters": [
+    {
+      "dataset": "dronerf",
+      "task": "10class",
+      "method": "raw",
+      "feature_set": "comp",
+      "classifier": "log_stft_cnn2d",
+      "split_id": 0,
+      "seed": 0,
+      "fold": 0,
+      "n_train": 9565,
+      "n_test": 2435,
+      "best_params": "{\"epochs\": 2, \"seed\": 0}",
+      "best_epoch": 2,
+      "n_parameters": 6666
+    },
+    {
+      "dataset": "dronerf",
+      "task": "10class",
+      "method": "raw",
+      "feature_set": "comp+log_scale",
+      "classifier": "log_stft_cnn2d",
+      "split_id": 0,
+      "seed": 0,
+      "fold": 0,
+      "n_train": 9565,
+      "n_test": 2435,
+      "best_params": "{\"epochs\": 2, \"seed\": 0}",
+      "best_epoch": 2,
+      "n_parameters": 6686
+    }
+  ],
+  "notes": [
+    "Raw log-STFT reference, deterministic per-frame transform with no train/test-fitted moments.",
+    "Three Conv2d/GroupNorm/ReLU/MaxPool2d blocks, global mean/max pooling, optional train-standardized log_scale.",
+    "Same grouped inner validation, balanced cross entropy, AdamW, epoch selection and fresh outer refit as 1-D CNN.",
+    "Different architecture and representation: an exploratory time-frequency reference, not a decomposition pair."
+  ],
+  "decomposition_costs": [],
+  "device": "cpu",
+  "stacks": {
+    "raw": {
+      "shape": [
+        12000,
+        2,
+        129,
+        33
+      ],
+      "representation": "log1p squared STFT magnitude",
+      "normalization": "shared median/MAD per raw frame",
+      "n_fft": 256,
+      "hop": 64,
+      "window": "hann",
+      "boundary": "zeros",
+      "padding": true,
+      "cross_frame_preprocessing": false,
+      "fs": 40000000,
+      "cache": "/Users/mikhail/Datasets/imf-classification/dronerf/results/representations/raw_log_stft_256_64_bcf02b3a53525208.npy"
+    }
+  },
+  "feature_sets": [
+    "comp",
+    "comp+log_scale"
+  ],
+  "architecture": {
+    "name": "SmallSpectrogramCNN",
+    "widths": [
+      8,
+      16,
+      32
+    ],
+    "kernel_size": 3,
+    "normalization": "GroupNorm(4)",
+    "pooling": "three MaxPool2d(2), then global mean/max"
+  },
+  "optimizer": {
+    "name": "AdamW",
+    "learning_rate": 0.001,
+    "weight_decay": 0.001,
+    "gradient_norm_cap": 5.0,
+    "loss": "balanced cross entropy"
+  }
+}

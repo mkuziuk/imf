@@ -1,0 +1,50 @@
+[
+  {
+    "runner": "trees",
+    "wall_seconds": 141.6517825840274,
+    "fits": 12,
+    "source": "/Users/mikhail/.t3/worktrees/imf/t3-44ed3594/output/classification-emd-irmf/dronerf/ml/pilot_trees/run_10class.json",
+    "n_frames": 12000,
+    "workers": 1
+  },
+  {
+    "runner": "rocket",
+    "wall_seconds": 249.49684433394577,
+    "fits": 4,
+    "source": "/Users/mikhail/.t3/worktrees/imf/t3-44ed3594/output/classification-emd-irmf/dronerf/ml/pilot_rocket/run_10class.json",
+    "n_frames": 12000,
+    "workers": 1
+  },
+  {
+    "runner": "cnn",
+    "wall_seconds": 106.8245110840071,
+    "fits": 4,
+    "source": "/Users/mikhail/.t3/worktrees/imf/t3-44ed3594/output/classification-emd-irmf/dronerf/ml/pilot_cnn/run_10class.json",
+    "n_frames": 12000,
+    "workers": 1
+  },
+  {
+    "runner": "spectrogram",
+    "wall_seconds": 30.241672333911993,
+    "fits": 2,
+    "workers": 2,
+    "device": "cpu",
+    "epochs": 2,
+    "source": "/Users/mikhail/.t3/worktrees/imf/t3-44ed3594/output/classification-emd-irmf/dronerf/ml/pilot_spectrogram/run_10class.json"
+  },
+  {
+    "runner": "cnn_exact_reader_cache",
+    "wall_seconds": 52.44619962491561,
+    "fits": 4,
+    "workers": 1,
+    "epochs": 8,
+    "source": "/Users/mikhail/.t3/worktrees/imf/t3-44ed3594/output/classification-emd-irmf/dronerf/ml/pilot_cached_cnn/run_10class.json"
+  },
+  {
+    "runner": "rocket_eight_threads",
+    "wall_seconds": 67.62692420789972,
+    "fits": 4,
+    "workers": 8,
+    "source": "/Users/mikhail/.t3/worktrees/imf/t3-44ed3594/output/classification-emd-irmf/dronerf/ml/pilot_rocket8/run_10class.json"
+  }
+]

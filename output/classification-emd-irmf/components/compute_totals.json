@@ -1,0 +1,111 @@
+{
+  "measured_cpu_seconds": 107674.29120100001,
+  "runner_wall_seconds": 19020.346989083104,
+  "classification_cpu_seconds": 99519.31745,
+  "decomposition_and_folding_cpu_seconds": 7194.223616000001,
+  "feature_cpu_seconds": 919.4727849999989,
+  "native_timing_pilot_cpu_seconds": 41.27734999999987,
+  "elapsed_since_first_pilot_seconds": 19492.800286,
+  "first_pilot_utc": "2026-10-21T05:23:35.842616+00:00",
+  "analysis_time_utc": "2026-10-21T10:48:28.642902+00:00",
+  "new_data_bytes": 39627331470,
+  "pilot_wall_seconds": 182.04723087500315,
+  "native_irmf_channel_decompositions": 255600,
+  "pilot_cap_hit_attempts": 0,
+  "sessions": [
+    {
+      "dataset": "synthetic",
+      "file": "classification_completed_defaults_1792561963567821000.json",
+      "phase": "defaults",
+      "wall_seconds": 49.887725333101116,
+      "workers": 6,
+      "fits": 300
+    },
+    {
+      "dataset": "synthetic",
+      "file": "classification_completed_experiment_1792567290923191000.json",
+      "phase": "experiment",
+      "wall_seconds": 178.04875662503764,
+      "workers": 6,
+      "fits": 1440,
+      "budget_level": 0
+    },
+    {
+      "dataset": "synthetic",
+      "file": "processing_completed_1792560473311565000.json",
+      "wall_seconds": 19.994514958001673,
+      "workers": 6
+    },
+    {
+      "dataset": "dronerf",
+      "file": "classification_completed_defaults_1792564535111413000.json",
+      "phase": "defaults",
+      "wall_seconds": 2571.1595659999875,
+      "workers": 6,
+      "fits": 300
+    },
+    {
+      "dataset": "dronerf",
+      "file": "classification_completed_experiment_1792573633217058000.json",
+      "phase": "experiment",
+      "wall_seconds": 6341.406666875002,
+      "workers": 6,
+      "fits": 1440,
+      "budget_level": 0
+    },
+    {
+      "dataset": "dronerf",
+      "file": "processing_completed_1792561256620024000.json",
+      "wall_seconds": 783.2772021669662,
+      "workers": 6
+    },
+    {
+      "dataset": "birdclef2023",
+      "file": "classification_completed_defaults_1792565325332474000.json",
+      "phase": "defaults",
+      "wall_seconds": 789.9704996249638,
+      "workers": 6,
+      "fits": 300
+    },
+    {
+      "dataset": "birdclef2023",
+      "file": "classification_completed_experiment_1792576458615954000.json",
+      "phase": "experiment",
+      "wall_seconds": 2824.6270714580314,
+      "workers": 6,
+      "fits": 1440,
+      "budget_level": 0
+    },
+    {
+      "dataset": "birdclef2023",
+      "file": "processing_completed_1792561689779446000.json",
+      "wall_seconds": 432.9889253330184,
+      "workers": 6
+    },
+    {
+      "dataset": "esc50_animals",
+      "file": "classification_completed_defaults_1792567018896794000.json",
+      "phase": "defaults",
+      "wall_seconds": 1693.4435809169663,
+      "workers": 6,
+      "fits": 300
+    },
+    {
+      "dataset": "esc50_animals",
+      "file": "classification_completed_experiment_1792579410773839000.json",
+      "phase": "experiment",
+      "wall_seconds": 2951.709199792007,
+      "workers": 6,
+      "fits": 1440,
+      "budget_level": 0
+    },
+    {
+      "dataset": "esc50_animals",
+      "file": "processing_completed_1792561891751699000.json",
+      "wall_seconds": 201.7860491250176,
+      "workers": 6
+    }
+  ],
+  "wall_scope": "timed processing and classification sections plus the pilot; classification timers begin after input-array preparation",
+  "cpu_scope": "fit CPU, block decomposition and feature CPU, and native timing pilot; excludes normalization, input-array preparation, direct pilot verification, JIT/startup, tests and orchestration"
+}

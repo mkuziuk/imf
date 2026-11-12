@@ -1,0 +1,43 @@
+{
+  "n_multispecies_recordists": 175,
+  "species_median_rms_dbfs": {
+    "barswa": -27.711292266845703,
+    "blakit1": -26.754985809326172,
+    "cohmar1": -27.065391540527344,
+    "combul2": -22.515182495117188,
+    "combuz1": -26.999122619628906,
+    "comsan": -29.53396987915039,
+    "eaywag1": -25.406526565551758,
+    "egygoo": -22.054677963256836,
+    "eubeat1": -26.616260528564453,
+    "grecor": -24.70085334777832,
+    "greegr": -26.443321228027344,
+    "hoopoe": -25.160442352294922,
+    "litegr": -27.820127487182617,
+    "thrnig1": -20.576053619384766,
+    "wlwwar": -23.51293182373047,
+    "woosan": -27.12688446044922
+  },
+  "holm_families": "72 comparisons per task and metric, spanning 2 feature sets, 6 classifiers, 6 method pairs; all 1152 species recall comparisons form one family",
+  "recording_aggregation": "Mean native predict_proba within recording in each outer fold, evaluated per fold and pooled per seed; linear SVM has no native probabilities and is excluded from this auxiliary table",
+  "frequency_mapping": "Observed median Hann-periodogram spectral centroid, with 10th/90th percentiles across nonzero components; not fixed filter passbands. IMF fs/window is a nominal scale only.",
+  "versions": {
+    "numpy": "2.3.5",
+    "scipy": "1.17.1",
+    "pandas": "3.0.6",
+    "scikit-learn": "1.9.1",
+    "pimf": "0.4.0",
+    "EMD-signal": "1.10.0",
+    "matplotlib": "3.11.2",
+    "joblib": "1.6.0"
+  },
+  "source_sha256": {
+    "experiments/classification-emd-irmf/baselines/run_classical.py": "b2b94bc8c49251adba0ece318f892330f01c1c04bb1d4d256226f97f251e1386",
+    "experiments/classification-emd-irmf/datasets/birdclef2023/analyse_classical_phase2.py": "d0c46b7e46a4a56a33dc09d674e3d8c9638c6b8093a1c559eae7c6b6a186637f",
+    "experiments/classification-emd-irmf/datasets/birdclef2023/run_classical_phase2.py": "6a7d845a73c449fbac5b3447ee2566b0e4cf0ac3cc49e8baffe3677693a99626",
+    "experiments/classification-emd-irmf/emdirmf/cv.py": "2f82c07441a38b34f53e270ea6a79d794ae31a954ab5efadd443e013da50ee46",
+    "experiments/classification-emd-irmf/emdirmf/stats.py": "ef8dd69ff984748afdb59338f46a897f43369db939275e353461baf6678f9f09",
+    "experiments/classification-emd-irmf/emdirmf/features.py": "07a496f3f9813b668349e17ee2187e7c81769b6d05aa41776439e276efb8665e",
+    "experiments/classification-emd-irmf/emdirmf/decompose.py": "7fd13b017f033060a43e512ab157cdad0c834640fc5cb2199f65218629f6a2ed"
+  }
+}

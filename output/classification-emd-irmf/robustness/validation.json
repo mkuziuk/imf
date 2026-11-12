@@ -1,0 +1,63 @@
+{
+  "datasets": [
+    {
+      "dataset": "synthetic",
+      "predictions_recomputed": 772800,
+      "clean_exact_checks": 200,
+      "clean_checks": 200,
+      "clean_max_absolute_error": 0.0,
+      "retained_stack_frames_per_condition_method": 100,
+      "pilot_exclusions": 100,
+      "grouped_splits_verified": 15,
+      "feature_manifest_sha256": "40e57306284c12ab55ebca7f35e82cded4f151c29d028e689a68dac72e0817e3",
+      "classification_manifest_sha256": "f7b439ba29d6784fb188ace5d58938cc6d5538bd4840d61bf8910cca59a1cbb3"
+    },
+    {
+      "dataset": "dronerf",
+      "predictions_recomputed": 6568800,
+      "clean_exact_checks": 200,
+      "clean_checks": 200,
+      "clean_max_absolute_error": 0.0,
+      "retained_stack_frames_per_condition_method": 100,
+      "pilot_exclusions": 100,
+      "grouped_splits_verified": 15,
+      "feature_manifest_sha256": "d14569075d9c3c4c058facc97e1155e63607e8dce0c5919f17050605a2070fd2",
+      "classification_manifest_sha256": "a48a50f45a02ed40c4cfd7ec0c6cf01aae4a7d1a03788f43c4ede0dbd441d34d"
+    },
+    {
+      "dataset": "birdclef2023",
+      "predictions_recomputed": 6568800,
+      "clean_exact_checks": 200,
+      "clean_checks": 200,
+      "clean_max_absolute_error": 0.0,
+      "retained_stack_frames_per_condition_method": 100,
+      "pilot_exclusions": 100,
+      "grouped_splits_verified": 15,
+      "feature_manifest_sha256": "46fe47d8c67a23fcb41c916289c69641bf3142f6407e39876ef385659c0eccb7",
+      "classification_manifest_sha256": "7f5b1f44a646b2c207d86c2dbbd1f5188ba7633c44bc1bade1a8e3e4a04b0501"
+    },
+    {
+      "dataset": "esc50_animals",
+      "predictions_recomputed": 2760000,
+      "clean_exact_checks": 200,
+      "clean_checks": 200,
+      "clean_max_absolute_error": 0.0,
+      "retained_stack_frames_per_condition_method": 100,
+      "pilot_exclusions": 100,
+      "grouped_splits_verified": 15,
+      "feature_manifest_sha256": "d4b18240933144f6dad66a5b0d477ffc4f5bd329f06f3c0648f6f378a3b5faba",
+      "classification_manifest_sha256": "c826e063f1d859f86ec6314ebbdba7fd810516af8c60e1d60226e30144ed64f0"
+    }
+  ],
+  "real_families": {
+    "Primary": 18,
+    "S1": 18,
+    "S2": 27,
+    "S3": 54,
+    "S4": 108,
+    "S5": 36
+  },
+  "synthetic_separate_family": 87,
+  "all_prediction_metrics_recomputed": true,
+  "source_shared_modules_modified": false
+}

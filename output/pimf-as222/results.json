@@ -1,0 +1,346 @@
+{
+  "created_utc": "2026-10-13T13:03:53.621767+00:00",
+  "question": "Does pip-installed pimf preserve the supplied fixed-bandwidth comparison with the AS222-style adaptation?",
+  "settings": {
+    "n": 1000,
+    "replicates": 20,
+    "seed": 20261004,
+    "rng": "numpy.random.default_rng / PCG64",
+    "validation_draws_before_pilot": 1,
+    "sigma": 0.2,
+    "H": 1.0,
+    "frequencies": [
+      1,
+      3,
+      8,
+      20,
+      50
+    ],
+    "amplitudes": [
+      0.3,
+      0.25,
+      0.2,
+      0.15,
+      0.1
+    ],
+    "bandwidths": [
+      0.1,
+      0.0829,
+      0.0303,
+      0.0128,
+      0.00757
+    ],
+    "kernel": "classical Epanechnikov",
+    "boundary": "wrap",
+    "lookup": true,
+    "workers": 1,
+    "max_iter": 60,
+    "tol": 1e-06
+  },
+  "gate": {
+    "minimum_correlation": 0.995,
+    "maximum_relative_rms": 0.05,
+    "requirement": "all 20 x 5 individual pairs"
+  },
+  "validation": {
+    "reconstruction_max_abs": 2.220446049250313e-16,
+    "root_checks": 25,
+    "root_max_abs_error": 1.2768392043064486e-07,
+    "exact_score_max_abs": 1.4407580758990512e-07,
+    "kernel_max_abs_difference": 2.0816681711721685e-17,
+    "fft_spatial_max_abs_difference": 2.220446049250313e-16,
+    "default_vs_tight_direct_max_abs": 1.6850470863083444e-07,
+    "cached_vs_uncached_bit_identical": true,
+    "linear_pimf_vs_fft_max_abs": 4.996003610813204e-16,
+    "linear_one_step_identity_max_abs": 3.469446951953614e-16,
+    "linear_direct_vs_one_step_rms": 0.04189977032316202,
+    "stages": [
+      {
+        "stage": 1,
+        "window_size": 201,
+        "iterations": 6,
+        "final_max_delta": 1.024087998971468e-06,
+        "bandwidth": 0.1,
+        "converged": true
+      },
+      {
+        "stage": 1,
+        "window_size": 167,
+        "iterations": 6,
+        "final_max_delta": 6.33322587498264e-07,
+        "bandwidth": 0.0829,
+        "converged": true
+      },
+      {
+        "stage": 1,
+        "window_size": 63,
+        "iterations": 6,
+        "final_max_delta": 5.480215535813571e-07,
+        "bandwidth": 0.0303,
+        "converged": true
+      },
+      {
+        "stage": 1,
+        "window_size": 27,
+        "iterations": 6,
+        "final_max_delta": 6.985222304328742e-07,
+        "bandwidth": 0.0128,
+        "converged": true
+      },
+      {
+        "stage": 1,
+        "window_size": 17,
+        "iterations": 6,
+        "final_max_delta": 8.474969887400929e-07,
+        "bandwidth": 0.00757,
+        "converged": true
+      }
+    ]
+  },
+  "pilot": {
+    "replicates": 20,
+    "agreement_passed": false,
+    "paired_component_passes": 0,
+    "paired_component_count": 100,
+    "reconstruction_max_abs": 4.440892098500626e-16,
+    "smoothing_seconds": {
+      "pimf": 0.2621047929569613,
+      "fft": 0.004231709986925125
+    },
+    "summary": [
+      {
+        "component": 1,
+        "frequency": 1,
+        "pimf_fft_correlation": 0.9936548400227838,
+        "pimf_fft_correlation_se": 5.436204216023692e-05,
+        "difference_rms": 0.04001392378926087,
+        "difference_rms_se": 0.0003343231608444262,
+        "relative_difference": 0.1682985884472448,
+        "relative_difference_se": 0.0013585493775541235,
+        "difference_max_abs": 0.07800395744046659,
+        "difference_max_abs_se": 0.0008410636562988916,
+        "pimf_true_correlation": 0.856177763146668,
+        "pimf_true_correlation_se": 0.0028061459690112193,
+        "fft_true_correlation": 0.7947252599311431,
+        "fft_true_correlation_se": 0.003562170460380195,
+        "pimf_true_rmse": 0.12326654666309458,
+        "pimf_true_rmse_se": 0.0011308635475996232,
+        "fft_true_rmse": 0.16153886862350147,
+        "fft_true_rmse_se": 0.001460858573088336,
+        "agreement_passes": 0
+      },
+      {
+        "component": 2,
+        "frequency": 3,
+        "pimf_fft_correlation": 0.8005970637571981,
+        "pimf_fft_correlation_se": 0.002529133892777965,
+        "difference_rms": 0.028956798633518077,
+        "difference_rms_se": 0.0002246848125817325,
+        "relative_difference": 0.6486116210745977,
+        "relative_difference_se": 0.0007985788049100064,
+        "difference_max_abs": 0.058690436253391286,
+        "difference_max_abs_se": 0.0005275560605381908,
+        "pimf_true_correlation": 0.9580936170529242,
+        "pimf_true_correlation_se": 0.000972752419510584,
+        "fft_true_correlation": 0.6656931527258582,
+        "fft_true_correlation_se": 0.005268357483504159,
+        "pimf_true_rmse": 0.1346012391931939,
+        "pimf_true_rmse_se": 0.000388612864863884,
+        "fft_true_rmse": 0.16139627728682931,
+        "fft_true_rmse_se": 0.0001486079568492401,
+        "agreement_passes": 0
+      },
+      {
+        "component": 3,
+        "frequency": 8,
+        "pimf_fft_correlation": 0.992110800644807,
+        "pimf_fft_correlation_se": 0.00018102075815570274,
+        "difference_rms": 0.031048590652947648,
+        "difference_rms_se": 0.0002661754189258752,
+        "relative_difference": 0.269760976452586,
+        "relative_difference_se": 0.0010863953247678016,
+        "difference_max_abs": 0.07570416664735102,
+        "difference_max_abs_se": 0.00126884813221085,
+        "pimf_true_correlation": 0.972668457241979,
+        "pimf_true_correlation_se": 0.0008614480622474286,
+        "fft_true_correlation": 0.964288948034447,
+        "fft_true_correlation_se": 0.001184380253106583,
+        "pimf_true_rmse": 0.039979588989862945,
+        "pimf_true_rmse_se": 0.0007224021296316697,
+        "fft_true_rmse": 0.038273121008366544,
+        "fft_true_rmse_se": 0.0006981600110581148,
+        "agreement_passes": 0
+      },
+      {
+        "component": 4,
+        "frequency": 20,
+        "pimf_fft_correlation": 0.9463982890179701,
+        "pimf_fft_correlation_se": 0.0014151515165203808,
+        "difference_rms": 0.027411927635821443,
+        "difference_rms_se": 0.00023109514680687689,
+        "relative_difference": 0.34005361548416074,
+        "relative_difference_se": 0.003801532492242981,
+        "difference_max_abs": 0.07018489625766289,
+        "difference_max_abs_se": 0.0015375775641906608,
+        "pimf_true_correlation": 0.8631129249468881,
+        "pimf_true_correlation_se": 0.003164026357309308,
+        "fft_true_correlation": 0.8889940463134163,
+        "fft_true_correlation_se": 0.003152604333337354,
+        "pimf_true_rmse": 0.054630901391315656,
+        "pimf_true_rmse_se": 0.0005781602457966027,
+        "fft_true_rmse": 0.04949039148719952,
+        "fft_true_rmse_se": 0.0006099861685849546,
+        "agreement_passes": 0
+      },
+      {
+        "component": 5,
+        "frequency": 50,
+        "pimf_fft_correlation": 0.9129369948985442,
+        "pimf_fft_correlation_se": 0.0029657096180287,
+        "difference_rms": 0.02330167698258283,
+        "difference_rms_se": 0.0001615020272935513,
+        "relative_difference": 0.4916056216633319,
+        "relative_difference_se": 0.00409967866185241,
+        "difference_max_abs": 0.0658999123679171,
+        "difference_max_abs_se": 0.0007638740975514532,
+        "pimf_true_correlation": 0.6996580092261449,
+        "pimf_true_correlation_se": 0.010222490190916547,
+        "fft_true_correlation": 0.7704088542384837,
+        "fft_true_correlation_se": 0.008425300069457782,
+        "pimf_true_rmse": 0.05042648533982088,
+        "pimf_true_rmse_se": 0.0006894549850301406,
+        "fft_true_rmse": 0.04508475878081324,
+        "fft_true_rmse_se": 0.0007110646165554444,
+        "agreement_passes": 0
+      }
+    ],
+    "max_solver_iterations": 7,
+    "all_stages_converged": true
+  },
+  "extended": null,
+  "timing": [
+    {
+      "n": 250,
+      "pimf_median_ms": 1.5412500069942325,
+      "pimf_min_ms": 1.5038750134408474,
+      "pimf_max_ms": 1.7484580166637897,
+      "fft_median_ms": 0.12199999764561653,
+      "fft_min_ms": 0.11837499914690852,
+      "fft_max_ms": 0.13749999925494194,
+      "speedup": 12.63319702243953
+    },
+    {
+      "n": 500,
+      "pimf_median_ms": 3.87595800566487,
+      "pimf_min_ms": 3.831624984741211,
+      "pimf_max_ms": 3.9016669907141477,
+      "fft_median_ms": 0.14316602027975023,
+      "fft_min_ms": 0.14195902622304857,
+      "fft_max_ms": 0.14558297698386014,
+      "speedup": 27.073170002848055
+    },
+    {
+      "n": 1000,
+      "pimf_median_ms": 12.76308301021345,
+      "pimf_min_ms": 12.698333011940122,
+      "pimf_max_ms": 13.012124982196838,
+      "fft_median_ms": 0.19712498760782182,
+      "fft_min_ms": 0.19208298181183636,
+      "fft_max_ms": 0.20483302068896592,
+      "speedup": 64.74614489567135
+    },
+    {
+      "n": 2000,
+      "pimf_median_ms": 47.74795801495202,
+      "pimf_min_ms": 47.65100000076927,
+      "pimf_max_ms": 47.81812499277294,
+      "fft_median_ms": 0.3343749849591404,
+      "fft_min_ms": 0.30074999085627496,
+      "fft_max_ms": 0.3420000139158219,
+      "speedup": 142.79763786991023
+    },
+    {
+      "n": 4000,
+      "pimf_median_ms": 187.81841700547375,
+      "pimf_min_ms": 187.7997500123456,
+      "pimf_max_ms": 188.5350410011597,
+      "fft_median_ms": 0.5857920041307807,
+      "fft_min_ms": 0.5357919726520777,
+      "fft_max_ms": 0.59029198018834,
+      "speedup": 320.6230465439102
+    },
+    {
+      "n": 8000,
+      "pimf_median_ms": 759.2710420140065,
+      "pimf_min_ms": 758.1301250029355,
+      "pimf_max_ms": 769.4505410036072,
+      "fft_median_ms": 1.0442079801578075,
+      "fft_min_ms": 0.9932919929269701,
+      "fft_max_ms": 1.0683330183383077,
+      "speedup": 727.1262587930621
+    }
+  ],
+  "source_reconciliation": {
+    "all_25_entries_within_source_rounding": true,
+    "maximum_abs_metric_difference": 0.00039437833666811084
+  },
+  "timing_protocol": {
+    "repeats": 5,
+    "warmups_per_method_per_size": 1,
+    "order": "randomized method order within each repetition",
+    "kernel_setup": "excluded for both methods",
+    "pimf_weights": "cached unmodified Epanechnikov.weights outputs",
+    "includes": "five public one-stage decompose calls or five FFT stages, and their residual updates",
+    "excludes": "imports, simulation, lookup-table and kernel setup, output verification, metrics, plotting",
+    "input_rng_seed": 20261005,
+    "order_rng_seed": 20261006
+  },
+  "environment": {
+    "python": "3.14.6 (main, Jun 10 2026, 10:03:53) [Clang 21.0.0 (clang-2100.0.123.102)]",
+    "platform": "macOS-26.6.2-arm64-arm-64bit-Mach-O",
+    "machine": "arm64",
+    "cpu": "Apple M4 Max",
+    "packages": {
+      "pimf": "0.4.0",
+      "numpy": "2.5.4",
+      "scipy": "1.18.1",
+      "matplotlib": "3.11.2"
+    },
+    "thread_limits": {
+      "OMP_NUM_THREADS": "1",
+      "OPENBLAS_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "VECLIB_MAXIMUM_THREADS": "1",
+      "NUMEXPR_NUM_THREADS": "1"
+    }
+  },
+  "provenance": {
+    "benchmark_sha256": "9e2b0957da21f766d92889b3a9454e1c23ceb72bb4a1bfa7b424a92e12de72ed",
+    "pimf_source_hashes": {
+      "__init__.py": "fc7c0a84b39b1a4787a7973ded0eff50a882ee05b8f1d68a995941c1667c3391",
+      "_erf.py": "01ffbc30bd9e50752980716d5c8c01d6be94ba2e724b253d5ccdc48117ab465e",
+      "contrasts.py": "38556222cc9645c21285faaa8d388b3b53bd2c87758a79f03c64e9f000013c2f",
+      "decompose.py": "f71fe8ba5e08f2f5ce7f3572c762346543ac124712760f74411f2253d3551688",
+      "kernels.py": "fb65d469cb7fb594734e768bc8cde8a6926214c985c5f044e9f4517d3a220c11"
+    },
+    "source_documents": [
+      {
+        "name": "20261008 AS222_vs_IRMF_10_page_report.pdf",
+        "sha256": "8faa9d42a53264f2b4f3bf5b71fc1e9d90f9cc3f5ec45f460b49e6f48fffb1f7"
+      },
+      {
+        "name": "five_sine_IRMF_benchmark.pdf",
+        "sha256": "072946ecd878b6c60cbb39d163cd67ebfab221f8a9b006b4d23a8de5cc607d1d"
+      },
+      {
+        "name": "hardle_1987_as222.pdf",
+        "sha256": "5517ae90a953e1135644105299c53359c8e03978ad232fc1178688e3fd3ce808"
+      },
+      {
+        "name": "dusoir_1988_as_r73.pdf",
+        "sha256": "a6bfa920e2c3f55c5bc423286a3a0439a2c0848f0b9a5ab5c0ee7a8150bf2d22"
+      }
+    ],
+    "source_pdf_code_and_arrays_available": false
+  }
+}

@@ -1,0 +1,13 @@
+raw comp lightgbm split=0: BA=0.493, fit=0.46s, predict=0.01s
+raw comp xgboost split=0: BA=0.484, fit=0.64s, predict=0.00s
+raw comp extratrees split=0: BA=0.504, fit=0.35s, predict=0.01s
+raw comp+log_scale lightgbm split=0: BA=0.490, fit=0.58s, predict=0.02s
+raw comp+log_scale xgboost split=0: BA=0.498, fit=0.69s, predict=0.00s
+raw comp+log_scale extratrees split=0: BA=0.508, fit=0.36s, predict=0.01s
+irmf_h2_a1.41 comp lightgbm split=0: BA=0.658, fit=7.93s, predict=0.02s
+irmf_h2_a1.41 comp xgboost split=0: BA=0.636, fit=12.30s, predict=0.00s
+irmf_h2_a1.41 comp extratrees split=0: BA=0.611, fit=0.96s, predict=0.01s
+irmf_h2_a1.41 comp+log_scale lightgbm split=0: BA=0.678, fit=8.03s, predict=0.02s
+irmf_h2_a1.41 comp+log_scale xgboost split=0: BA=0.649, fit=12.33s, predict=0.00s
+irmf_h2_a1.41 comp+log_scale extratrees split=0: BA=0.612, fit=0.97s, predict=0.01s
+wrote /Users/mikhail/.t3/worktrees/imf/t3-44ed3594/output/classification-emd-irmf/esc50_animals/ml/pilot/trees, total 45.9s

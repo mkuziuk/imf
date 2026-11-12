@@ -1,0 +1,9 @@
+{
+  "n_frames": 12000,
+  "n_all_converged": 7888,
+  "n_any_unconverged": 4112,
+  "unconverged_stage_fraction": 0.14049019607843138,
+  "mean_unconverged_stages": 2.388333333333333,
+  "mean_total_iterations": 448.62708333333336,
+  "n_failed": 0
+}

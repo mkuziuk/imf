@@ -1,0 +1,97 @@
+{
+  "dataset": "birdclef2023",
+  "task": "passerine",
+  "methods": [
+    "raw",
+    "emd",
+    "imf_linear_a1.41",
+    "irmf_h2_a1.41"
+  ],
+  "n_frames": 12000,
+  "n_groups": 451,
+  "n_classes": 2,
+  "n_splits": 15,
+  "n_seeds": 3,
+  "workers": 3,
+  "seconds": 496.41796458302997,
+  "breakdown": null,
+  "classifiers": [
+    "lda",
+    "qda",
+    "gnb",
+    "logreg",
+    "knn",
+    "linsvm"
+  ],
+  "feature_sets": [
+    "comp",
+    "comp+log_scale"
+  ],
+  "pairs": [
+    [
+      "irmf_h2_a1.41",
+      "emd"
+    ],
+    [
+      "irmf_h2_a1.41",
+      "imf_linear_a1.41"
+    ],
+    [
+      "imf_linear_a1.41",
+      "emd"
+    ],
+    [
+      "irmf_h2_a1.41",
+      "raw"
+    ],
+    [
+      "imf_linear_a1.41",
+      "raw"
+    ],
+    [
+      "emd",
+      "raw"
+    ]
+  ],
+  "quick": false,
+  "profile": "narrow",
+  "probability_cache": "/Users/mikhail/Datasets/imf-classification/birdclef2023/results/classical_phase2/narrow/passerine",
+  "grids": {
+    "lda": null,
+    "qda": {
+      "clf__shrinkage": [
+        "auto",
+        0.05,
+        0.2,
+        0.5,
+        0.8
+      ]
+    },
+    "gnb": null,
+    "logreg": {
+      "clf__C": [
+        0.001,
+        0.01,
+        0.1,
+        1.0,
+        10.0
+      ]
+    },
+    "knn": {
+      "clf__n_neighbors": [
+        1,
+        5,
+        15,
+        35
+      ]
+    },
+    "linsvm": {
+      "clf__C": [
+        0.001,
+        0.01
+      ]
+    }
+  },
+  "pilot_reuse_enabled": true,
+  "eligible_pilot_checkpoints": 0
+}

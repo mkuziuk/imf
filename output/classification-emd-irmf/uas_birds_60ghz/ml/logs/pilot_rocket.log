@@ -1,0 +1,9 @@
+raw comp minirocket split=0: BA=0.987, fit=1.70s, predict=0.19s
+raw comp+log_scale minirocket split=0: BA=0.987, fit=1.71s, predict=0.19s
+raw comp multirocket split=0: BA=0.930, fit=0.87s, predict=0.09s
+raw comp+log_scale multirocket split=0: BA=0.977, fit=0.86s, predict=0.09s
+irmf_h2_a1.41 comp minirocket split=0: BA=0.995, fit=5.18s, predict=0.65s
+irmf_h2_a1.41 comp+log_scale minirocket split=0: BA=0.995, fit=5.18s, predict=0.65s
+irmf_h2_a1.41 comp multirocket split=0: BA=0.953, fit=1.55s, predict=0.19s
+irmf_h2_a1.41 comp+log_scale multirocket split=0: BA=0.961, fit=1.55s, predict=0.19s
+wrote output/classification-emd-irmf/uas_birds_60ghz/ml/pilot_rocket, total 10.9s

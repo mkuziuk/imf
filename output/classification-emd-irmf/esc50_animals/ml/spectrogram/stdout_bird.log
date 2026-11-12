@@ -1,0 +1,11 @@
+raw comp compact_resnet split=0: BA=0.569, fit=4.43s, predict=0.08s
+raw comp compact_resnet split=1: BA=0.713, fit=4.08s, predict=0.08s
+raw comp compact_resnet split=2: BA=0.743, fit=4.11s, predict=0.32s
+raw comp compact_resnet split=3: BA=0.712, fit=2.92s, predict=0.14s
+raw comp compact_resnet split=4: BA=0.669, fit=2.90s, predict=0.08s
+raw comp+log_scale compact_resnet split=0: BA=0.545, fit=3.43s, predict=0.09s
+raw comp+log_scale compact_resnet split=1: BA=0.656, fit=3.32s, predict=0.11s
+raw comp+log_scale compact_resnet split=2: BA=0.693, fit=3.00s, predict=0.21s
+raw comp+log_scale compact_resnet split=3: BA=0.716, fit=4.12s, predict=0.11s
+raw comp+log_scale compact_resnet split=4: BA=0.682, fit=4.94s, predict=0.09s
+wrote /Users/mikhail/.t3/worktrees/imf/t3-44ed3594/output/classification-emd-irmf/esc50_animals/ml/spectrogram, total 39.6s
