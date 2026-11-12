@@ -22,6 +22,11 @@ one-dimensional signals with Gaussian noise and one-sided exponential contaminat
 - [`overleaf/`](overleaf/): publication-ready TeX sources and their figures.
 - [`research/first-imf-recursive-error/`](research/first-imf-recursive-error/): audit
   of the first recursive IMF error, including its companion notebook and diagnostics.
+- [Recursive component bounds](research/recursive-component-bounds/): proof audit
+  and an all-components theorem under explicit curvature-dispersion, sample-size,
+  and moment conditions, with diagnostics checking their applicability, an
+  [concise visual guide](overleaf/irmf_intuitive_guide/irmf_intuitive_guide.pdf), and a
+  [detailed visual proof guide](overleaf/irmf_all_components_guide/irmf_all_components_guide.pdf).
 - [`output/`](output/): generated tables and figures. Source notebooks do not live here.
 - [`IMF.pdf`](IMF.pdf): reference note for intrinsic robust multiscale filtering.
 - `requirements.txt`: Python dependencies needed to run the notebooks.

@@ -1,0 +1,325 @@
+\documentclass[11pt]{article}
+\usepackage[a4paper,margin=25mm]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools,booktabs,hyperref}
+\hypersetup{hidelinks}
+\emergencystretch=2em
+\newcommand{\E}{\mathbb E}
+\newcommand{\Prob}{\mathbb P}
+\newcommand{\R}{\mathbb R}
+\newcommand{\norm}[1]{\lVert #1\rVert}
+\newcommand{\dd}{\mathop{\mathrm d}}
+\newtheorem{proposition}{Proposition}
+\newtheorem{lemma}[proposition]{Lemma}
+\newtheorem{corollary}[proposition]{Corollary}
+\theoremstyle{remark}
+\newtheorem*{remark}{Remark}
+\title{Recursive IRMF component bounds: verified partial results}
+\author{}
+\date{31 October 2026}
+\begin{document}
+\maketitle
+
+\noindent\textbf{Scope.}
+This note checks and develops the valid parts of the submitted contraction
+draft. It proves an exact decomposition,
+conditional deterministic operator bounds, concentration of the leading term,
+and a single-pass remainder bound. The final component bound assumes a
+simultaneous propagation-remainder estimate. That estimate, and comparison
+with the population targets in Section 3.2 of \texttt{IMF.pdf}, remain open.
+The accompanying audit is in
+\path{research/recursive-component-bounds/README.md}.
+
+\section{Definitions and target}
+Let \(Y=X+\varepsilon\in\R^n\), with deterministic \(X\) and independent,
+identically distributed noise coordinates. Take the smoothed absolute loss
+\(\rho_H\), with \(H>0\), and set
+\[
+ |\rho_H'|\le1,\qquad 0<\rho_H''\le L_2,\qquad
+ |\rho_H'''|\le L_3.
+\]
+Assume \(\E|\varepsilon_u|<\infty\), so
+\(\phi(c)=\E\rho_H(c+\varepsilon_u)\) is finite. Alternatively, define
+\(\phi(c)=\E[\rho_H(c+\varepsilon_u)-\rho_H(\varepsilon_u)]\);
+the difference is bounded by \(|c|\), and the same derivatives and minimizers
+apply without a moment assumption. All minimizers below are finite and
+unique. For the anchored definition this follows from strict convexity and
+the score limits at \(\pm\infty\).
+
+For stages \(1\le k\le K\), let \(a^{(k)}_{tu}\ge0\) be deterministic weights
+with \(\sum_u a^{(k)}_{tu}=1\), and write
+\(\alpha_k=\max_{t,u}a^{(k)}_{tu}\). Define
+\[
+ \mathcal M_k(y)_t=\arg\min_s\sum_u a^{(k)}_{tu}\rho_H(y_u-s),\qquad
+ Y^{(1)}=Y,\quad \widetilde S^{(k)}=\mathcal M_k(Y^{(k)}),\quad
+ Y^{(k+1)}=Y^{(k)}-\widetilde S^{(k)}.
+\]
+The deterministic reference uses the same \(\phi\) at every stage:
+\[
+ X_\phi^{(1)}=X,\qquad
+ S_{\phi,t}^{(k)}=\arg\min_s\sum_u a^{(k)}_{tu}\phi(X_{\phi,u}^{(k)}-s),
+ \qquad X_\phi^{(k+1)}=X_\phi^{(k)}-S_\phi^{(k)}.
+\]
+Set \(e_k=\widetilde S^{(k)}-S_\phi^{(k)}\) and
+\(E_k=\sum_{j<k}e_j\). Thus \(Y^{(k)}=X_\phi^{(k)}+\varepsilon-E_k\).
+All single passes below use the \emph{same} noise vector \(\varepsilon\).
+Independence is across observations, not stages.
+
+With \(c^{(k)}_{tu}=X_{\phi,u}^{(k)}-S_{\phi,t}^{(k)}\), define
+\begin{align*}
+ f_{kt}&=\sum_u a^{(k)}_{tu}\phi''(c^{(k)}_{tu}),&
+ q_{kt}&=\sum_u a^{(k)}_{tu}\rho_H'(c^{(k)}_{tu}+\varepsilon_u),&
+ b_{kt}&=q_{kt}/f_{kt},\\
+ V_k[t,u]&=a^{(k)}_{tu}\phi''(c^{(k)}_{tu})/f_{kt}.&&
+\end{align*}
+The population score equation implies \(\E q_{kt}=0\).
+The matrices \(V_k\) are deterministic and row stochastic. In the source's
+unnormalized notation, \(f_{kt}=F_t^{(k)}/N_k(t)\), \(b_k=F^{(k)-1}\nabla^{(k)}\),
+and \(V_k=W_\phi^{(k)}\).
+
+\section{Exact propagation identity}
+For any sequence \(V_k\), put
+\[
+ B_{m:l}=(I-V_m)\cdots(I-V_l),\quad B_{m:l}=I\ (m<l),\qquad
+ T_{kk}=I,\quad T_{kj}=-V_kB_{k-1:j+1}\ (j<k).
+\]
+The order matters because the population kernels need not commute. Define
+\begin{align*}
+ R_k&=\mathcal M_k(X_\phi^{(k)}+\varepsilon)-S_\phi^{(k)}-b_k,\\
+ \Phi_k&=\mathcal M_k(X_\phi^{(k)}+\varepsilon)
+            -\mathcal M_k(Y^{(k)})-V_kE_k.
+\end{align*}
+\begin{proposition}\label{prop:identity}
+For every realization,
+\[
+ e_k=L_k+Q_k,\qquad L_k=\sum_{j\le k}T_{kj}b_j,\qquad
+ Q_k=\sum_{j\le k}T_{kj}(R_j-\Phi_j).
+\]
+\end{proposition}
+\begin{proof}
+The definitions give \(e_k=b_k+R_k-\Phi_k-V_kE_k\). Hence
+\(E_{k+1}=(I-V_k)E_k+b_k+R_k-\Phi_k\), with \(E_1=0\).
+Unroll this recurrence and substitute it into the expression for \(e_k\).
+\end{proof}
+For quadratic loss, \(R_k=\Phi_k=0\) and
+\(L_k=W_k(I-W_{k-1})\cdots(I-W_1)\varepsilon\).
+For the robust loss, \(\E[\partial b_k/\partial\varepsilon]=V_k\), so
+\[
+ \E[\partial L_k/\partial\varepsilon]
+ =\sum_{j\le k}T_{kj}V_j=V_kB_{k-1:1}.
+\]
+This is an identity for an expected derivative. In general it does not
+represent \(L_k\) as one composite matrix applied to a common score vector.
+
+\section{Deterministic operator estimates}
+We use \(\norm{C}_\infty=\max_t\sum_u|C[t,u]|\).
+For linear periodic smoothers \(W_k\), let \(w_k(\omega)\) be the real Fourier
+multiplier of their convolution kernels on \(\mathbb Z\). Let
+\(r_k=nh_k\ge1\), \(r_{k+1}=r_k/a\), \(a>1\). Assume, for fixed \(c,C_-\),
+\begin{align}
+ |w_k(\omega)|&\le c\min\{1,(r_k|\omega|)^{-2}\},\label{eq:K1}\\
+ |w_k'(\omega)|&\le cr_k\min\{r_k|\omega|,(r_k|\omega|)^{-2}\},\label{eq:K2}\\
+ 0\le1-w_k(\omega)&\le c\min\{(r_k\omega)^2,1\},\label{eq:K3}\\
+ \prod_{k=1}^K(1+(w_k(\omega))_-)&\le C_- .\label{eq:K4}
+\end{align}
+Values at zero are interpreted by continuity. These are hypotheses on the
+actual discrete multipliers. A continuous-kernel formula or a finite
+frequency plot alone does not verify them uniformly over all designs.
+
+\begin{lemma}\label{lem:linear}
+Under \eqref{eq:K1}--\eqref{eq:K4}, there is \(C_*=C(c,C_-,a)\ge1\) such that,
+with \(A_{m:l}=(I-W_m)\cdots(I-W_l)\),
+\[
+ \norm{A_{m:l}}_2\le C_-,\qquad
+ \norm{A_{m:l}}_\infty\le C_P:=1+C_*,\qquad
+ \norm{W_kA_{k-1:l}}_\infty\le C_* .
+\]
+Empty products are included.
+\end{lemma}
+\begin{proof}
+Use \(\norm{g}_{L^2}^2=(2\pi)^{-1}\int_{-\pi}^{\pi}|g|^2\dd\omega\).
+Weighted Cauchy--Schwarz and Parseval give, for an impulse response \(v\),
+\[
+ \norm{v}_1\le(1+\pi r)^{1/2}
+  \bigl(\norm{\widehat v}_{L^2}^2+r^{-2}\norm{\widehat v'}_{L^2}^2\bigr)^{1/2},
+ \qquad r\ge1.
+\]
+Every subproduct \(\Pi\) of the factors \(1-w_i\) is at most \(C_-\).
+For any consecutive index range, the geometric scales imply
+\[
+ \sum_i|w_i'(\omega)|\le\frac{cG_a}{|\omega|},\qquad
+ G_a=\frac1{1-a^{-2}}+\frac1{1-a^{-1}}.
+\]
+Indeed, \(r_i\min(r_i|\omega|,(r_i|\omega|)^{-2})
+=|\omega|^{-1}\min((r_i|\omega|)^2,(r_i|\omega|)^{-1})\), and the
+terms below and above one are geometric series.
+
+For \(\widehat v=w_k\prod_{i=l}^{k-1}(1-w_i)\),
+\(\norm{\widehat v}_{L^2}^2\le C/r_k\) by \eqref{eq:K1}.
+In its derivative, the term containing \(w_k'\) has squared integral
+at most \(Cr_k\). The term differentiating \(w_{k-1}\) has squared integral
+at most \(Cr_{k-1}=Car_k\). All other differentiated terms retain
+\(1-w_{k-1}\). Their sum is bounded by
+\[
+ C\min\{1,(r_k|\omega|)^{-2}\}
+       \min\{a^2r_k^2|\omega|,|\omega|^{-1}\}.
+\]
+Split the integral at \(1/(ar_k)\) and \(1/r_k\) to bound its squared
+integral by \(C(a)r_k\). For an empty product only the \(w_k'\) term remains.
+The weighted inequality with \(r=r_k\) proves the component bound.
+
+For \(\widehat g=\prod_{i=l}^m(1-w_i)-1\), telescoping gives
+\(|\widehat g|\le C\min\{1,(r_m|\omega|)^{-2}\}\), hence a squared
+integral at most \(C/r_m\). In \(\widehat g'\), separate the \(i=m\) term.
+All others retain \(1-w_m\); their sum is at most
+\(C\min\{r_m^2|\omega|,|\omega|^{-1}\}\).
+The squared integral is at most \(Cr_m\). Thus \(\norm g_1\le C_*\) and
+\(\norm{I+g}_\infty\le1+C_*\). The spectral norm bound follows from
+\eqref{eq:K4}. Periodizing an impulse response cannot increase its
+\(\ell_1\) norm, so these bounds also hold on the finite periodic grid.
+\end{proof}
+
+\begin{lemma}\label{lem:perturb}
+Suppose all linear partial products, including empty ones, obey bounds
+\(C_P\ge1\) and \(C_*\ge1\) as above. Set
+\(\tau_k=\norm{V_k-W_k}_\infty\), \(\tau_\Sigma=\sum_k\tau_k\).
+If \(C_P\tau_\Sigma\le1/2\), then
+\[
+ \sup_{l\le m}\norm{B_{m:l}}_\infty\le2C_P,\qquad
+ \sup_{l\le k}\norm{V_kB_{k-1:l}}_\infty\le2C_*+1.
+\]
+Moreover \(\tau_k\le\norm{\phi'''}_\infty\omega_k/g_k\), where \(\omega_k\)
+is the largest clean-residual oscillation within a stage-\(k\) window and
+\(g_k>0\) is the smallest active curvature \(\phi''(c^{(k)}_{tu})\).
+\end{lemma}
+\begin{proof}
+Write \(\Delta_i=V_i-W_i\). The ordered telescoping formula is
+\[
+ B_{m:l}-A_{m:l}=-\sum_{i=l}^m A_{m:i+1}\Delta_iB_{i-1:l}.
+\]
+Taking the maximum over the finite collection of partial products yields
+\(M\le C_P+C_P\tau_\Sigma M\), so \(M\le2C_P\).
+Multiplying the corresponding expansion by \(W_k\), then adding
+\(\Delta_kB_{k-1:l}\), bounds the component by
+\(C_*+2C_*C_P\tau_\Sigma+2C_P\tau_k\le2C_*+1\).
+For one row let \(g_u=\phi''(c^{(k)}_{tu})\), \(\bar g=\sum_u a^{(k)}_{tu}g_u\).
+Then \(\sum_u a^{(k)}_{tu}|g_u/\bar g-1|
+\le(\max g_u-\min g_u)/\min g_u\le\norm{\phi'''}_\infty\omega_k/g_k\).
+\end{proof}
+
+\section{Probability bounds}
+Assume \(f_{kt}\ge\lambda>0\),
+\(\norm{T_{kj}}_\infty\le C_W\) with \(C_W\ge1\), and
+\[
+ \alpha_j\le C_\alpha\alpha_k a^{-(k-j)}\quad(j\le k),\qquad C_\alpha\ge1.
+\]
+The factor \(C_\alpha\) accommodates rounded window schedules. A rate uniform
+over a growing number of stages requires \(C_W,C_\alpha,\lambda^{-1}\)
+and the remainder constants below to remain bounded. Fix \(x>0\)
+and put \(z=x+\log(6nK)\).
+
+\begin{proposition}\label{prop:concentration}
+Except on an event of probability at most \(2nKe^{-z}\), simultaneously,
+\[
+ \norm{L_k}_\infty\le\ell_k:=
+ \frac{C_W}{\lambda}\left\{
+ \frac{\sqrt{2C_\alpha\alpha_k z}}{1-a^{-1/2}}
+ +\frac{2C_\alpha\alpha_k z}{3(1-a^{-1})}\right\}.
+\]
+\end{proposition}
+\begin{proof}
+For fixed \(k,t\), collect terms by observation to write
+\(L_{kt}=\sum_u\xi_u(\varepsilon_u)\), and define
+\[
+ d_j(u)=\lambda^{-1}\sum_v|T_{kj}[t,v]|a^{(j)}_{vu}.
+\]
+Then \(|\xi_u|\le\sum_jd_j(u)\), \(\norm{d_j}_1\le C_W/\lambda\), and
+\(\norm{d_j}_\infty\le C_W\alpha_j/\lambda\). Since \(\E L_{kt}=0\),
+\(L_{kt}=\sum_u(\xi_u-\E\xi_u)\). These summands are independent,
+their total variance is at most
+\((C_W/\lambda)^2(\sum_{j\le k}\sqrt{\alpha_j})^2\), and their magnitudes
+are at most \(2(C_W/\lambda)\sum_{j\le k}\alpha_j\).
+Bernstein's bound \(\sqrt{2vz}+bz/3\) for variance proxy \(v\) and
+summand bound \(b\), followed by geometric summation and a union bound,
+proves the claim. Individual \(\xi_u\) need not have mean zero.
+\end{proof}
+
+\begin{proposition}[Single-pass remainder]\label{prop:fisher}
+Put
+\[
+ u_k=\sqrt{2\alpha_kz}+\tfrac23\alpha_kz,\qquad
+ v_k=L_2\bigl(\sqrt{2\alpha_kz}+\tfrac13\alpha_kz\bigr).
+\]
+Assume \(v_k\le\lambda/4\) and \(u_k\le\lambda^2/(8L_3)\) for every
+stage. Except on an event of probability at most \(4nKe^{-z}\),
+\[
+ \norm{R_k}_\infty\le r_k^{\rm F}:=
+ \frac{2u_kv_k}{\lambda^2}+\frac{2L_3u_k^2}{\lambda^3},\qquad k\le K.
+\]
+If also \(z\alpha_k\le1\), this is at most \(A_Rz\alpha_k\), where
+\[
+ A_R=\frac{2L_2(\sqrt2+2/3)(\sqrt2+1/3)}{\lambda^2}
+       +\frac{2L_3(\sqrt2+2/3)^2}{\lambda^3}.
+\]
+\end{proposition}
+\begin{proof}
+For each single pass, Bernstein bounds the score at its population target
+by \(u_k\) and the difference between empirical and population curvature
+by \(v_k\). Use \(\sum_u(a^{(k)}_{tu})^2\le\alpha_k\), score bound one,
+and curvature in \([0,L_2]\), then union over \(nK\) pairs and two statistics.
+Throughout distance \(2u_k/\lambda\) from that target, empirical curvature
+is at least \(\lambda-v_k-2L_3u_k/\lambda\ge\lambda/2\).
+Consequently the empirical score has its zero within this interval.
+Write its displacement as \(d\), its score at the target as \(q\), and its
+curvature there as \(g\). Taylor's formula gives
+\(|q-gd|\le L_3d^2/2\), \(|d|\le2u_k/\lambda\), and \(|g-f_{kt}|\le v_k\).
+Therefore
+\[
+ |d-q/f_{kt}|\le\frac{v_k|d|+L_3d^2/2}{\lambda}
+ \le\frac{2u_kv_k}{\lambda^2}+\frac{2L_3u_k^2}{\lambda^3}.
+\]
+The last assertion follows by bounding \(\alpha_kz\) by
+\(\sqrt{\alpha_kz}\). No global strong-convexity assumption is used.
+\end{proof}
+
+\section{What follows if propagation is controlled}
+\begin{corollary}[Conditional component bound]\label{cor:conditional}
+Assume the preceding probability and smallness hypotheses, including
+\(z\alpha_k\le1\). Suppose an event \(\Omega_\Phi\), with
+\(\Prob(\Omega_\Phi)\ge1-\delta_\Phi\), satisfies
+\[
+ \Phi_1=0,\qquad \norm{\Phi_k}_\infty\le A_\Phi z\alpha_{k-1}\quad(2\le k\le K).
+\]
+Then, with probability at least \(1-e^{-x}-\delta_\Phi\), for all stages,
+\[
+ \norm{e_k}_\infty\le\ell_k+
+ \frac{C_WC_\alpha}{1-a^{-1}}(A_R+A_\Phi/a)z\alpha_k.
+\]
+\end{corollary}
+\begin{proof}
+The two preceding propositions hold jointly with failure probability at
+most \(6nKe^{-z}=e^{-x}\). Intersect with \(\Omega_\Phi\), without requiring
+independence. Proposition~\ref{prop:identity} bounds \(\norm{Q_k}_\infty\) by
+\(C_W\sum_{j\le k}(\norm{R_j}_\infty+\norm{\Phi_j}_\infty)\).
+Now \(\sum_{j\le k}\alpha_j\le C_\alpha\alpha_k/(1-a^{-1})\) and
+\(\sum_{j<k}\alpha_j\le C_\alpha\alpha_k/[a(1-a^{-1})]\).
+\end{proof}
+
+\noindent The source's propagation lemma does not yet provide this event.
+Its quadratic term needs a lower empirical curvature along the whole
+interpolation segment. Its fluctuation term needs explicit coefficient
+bounds for a degenerate, generally non-identically distributed quadratic
+statistic, including the diagonal terms. An induction must also track how
+its constants depend on previous remainder bounds and show that the
+resulting inequalities close uniformly in the number of stages.
+
+For the paper's targets \(S^{(k)}_{\rm pdf}\), the available statement is only
+\[
+ \norm{\widetilde S^{(k)}-S^{(k)}_{\rm pdf}}_\infty
+ \le\norm{e_k}_\infty+
+ \norm{S_\phi^{(k)}-S^{(k)}_{\rm pdf}}_\infty.
+\]
+The second term is zero at stage one. Its claimed second-order rate at
+later stages requires a separate proof. Small Monte Carlo differences
+do not establish that rate.
+
+\end{document}

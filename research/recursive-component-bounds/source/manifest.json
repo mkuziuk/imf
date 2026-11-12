@@ -1,0 +1,127 @@
+{
+  "archive": "Downloads/artifacts.zip",
+  "archive_sha256": "31c0e26ae9c96f6bab6e74981ba6229d296b17b311486c02b1ad5806a2bdb329",
+  "review_date": "2026-10-31",
+  "members": [
+    {
+      "name": "irmf_contraction_guide.tex",
+      "bytes": 18855,
+      "sha256": "ccdc197e11d8df3aebbac1c0bab730d0000a9c116484d0512c73ea677fa35987",
+      "source_copy": true
+    },
+    {
+      "name": "irmf_contraction_note.tex",
+      "bytes": 27136,
+      "sha256": "720cc9b06625ed6d869503d7ed52faf237aec704a6e1581d2b6254b6e5bd9f8f",
+      "source_copy": true
+    },
+    {
+      "name": "irmf_contraction_note.pdf",
+      "bytes": 150307,
+      "sha256": "d2bae5dfe569bfffd52a9fa74a651046617a8ef33a9e0cb2b10eb763181891c1",
+      "source_copy": false
+    },
+    {
+      "name": "T5_kernel_tilt.png",
+      "bytes": 162043,
+      "sha256": "8453d07c0a872767bf7026a7b2830ae6144c5a32b8e54b74ef0ac610b663aeee",
+      "source_copy": false
+    },
+    {
+      "name": "irmf_contraction_guide.pdf",
+      "bytes": 376680,
+      "sha256": "9c72b10a5c21bc3f7d7a7a1c5410079e0194eae76e0f498b8eb42a4b9ce8fa7e",
+      "source_copy": false
+    },
+    {
+      "name": "imf_pdf_target_vs_phi.npy",
+      "bytes": 560,
+      "sha256": "0eec028aaed2c6a4d23577cb185126386e9e1dfe87b2b33b5cd88cf0df1d6a93",
+      "source_copy": false
+    },
+    {
+      "name": "imf_pdf_target_check.py",
+      "bytes": 5984,
+      "sha256": "63a27a2905757baa18679c2925b5443bf62c62c66c889d9ea4395308556f742d",
+      "source_copy": true
+    },
+    {
+      "name": "T6_error_vs_leading.png",
+      "bytes": 135005,
+      "sha256": "9cd41ad5028af40ae400dd7926c5c67a7abb6c2d434420329f60d57f004c00b3",
+      "source_copy": false
+    },
+    {
+      "name": "T4_epanechnikov.png",
+      "bytes": 234038,
+      "sha256": "f5afca4575045a18631b29d18cd1c39e23f813f8467225aea0b9947a7dba5279",
+      "source_copy": false
+    },
+    {
+      "name": "leading_term_accuracy.pdf",
+      "bytes": 24950,
+      "sha256": "c18fffbbb1c943ad34a5a36d9cf42a2ba2d0b0f431dd45f11f0a30a47581159f",
+      "source_copy": false
+    },
+    {
+      "name": "T3_impulse_norms.png",
+      "bytes": 141123,
+      "sha256": "88a9e5ceadca832dcfea65299ccfd1f04dfb624ae8518d5cc8fab5436cc3bbd5",
+      "source_copy": false
+    },
+    {
+      "name": "T1_frequency.png",
+      "bytes": 217791,
+      "sha256": "21a0e11eac4c8fff26bada26f73da832fda8eb87ad31bcc7da10cc978ae16e89",
+      "source_copy": false
+    },
+    {
+      "name": "leading_term_mc_gauss_amp3.npz",
+      "bytes": 237900,
+      "sha256": "4d5f4a50d04ad36717c019a201ec731946dfccd9075e2859a23215a239e5a4c5",
+      "source_copy": false
+    },
+    {
+      "name": "leading_term_accuracy.png",
+      "bytes": 163489,
+      "sha256": "cd9de1c6f42f216fb9cae0d3951d4710b5c039f5bddf1c15887eadf938a479e5",
+      "source_copy": false
+    },
+    {
+      "name": "leading_term_mc_p0.2_s6.npz",
+      "bytes": 237900,
+      "sha256": "d4292aca3d62f505d9b1381b9ba17b9732f4d061dfda2640c4f321cd22c6ce35",
+      "source_copy": false
+    },
+    {
+      "name": "leading_term_mc_p0.2_s2.npz",
+      "bytes": 237900,
+      "sha256": "f9cd5052752ec915766302f7dafaa1fa72f291ac586e5b8a99635e1bb852d8e7",
+      "source_copy": false
+    },
+    {
+      "name": "leading_term_mc_gauss.npz",
+      "bytes": 353100,
+      "sha256": "1a3cdcefe99635c37cb740c24e27770189ac37c491ed66a725af0d1a924c3ca8",
+      "source_copy": false
+    },
+    {
+      "name": "irmf_leading_term_mc.py",
+      "bytes": 7501,
+      "sha256": "3235f86bc70040f64b64fbdb772c647532b22234cc2944eb42b5ec2b359e0ff4",
+      "source_copy": true
+    },
+    {
+      "name": "linear_contraction_check.csv",
+      "bytes": 853,
+      "sha256": "c0eeb3a6d75dc7c507040772c7a529af6ee8b457d10dac37e691eaf5ea49d181",
+      "source_copy": true
+    },
+    {
+      "name": "linear_contraction_check.py",
+      "bytes": 1229,
+      "sha256": "6edc101f9f5523a9e7b3e4849f5de06ad0d9bfc3a90741918df4a979de344d6e",
+      "source_copy": true
+    }
+  ]
+}

@@ -1,0 +1,641 @@
+\documentclass[11pt]{article}
+\usepackage[a4paper,margin=25mm]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools,hyperref}
+\hypersetup{hidelinks}
+\emergencystretch=2em
+\newcommand{\E}{\mathbb E}
+\newcommand{\Pp}{\mathbb P}
+\newcommand{\R}{\mathbb R}
+\newcommand{\norm}[1]{\lVert#1\rVert}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{remark}
+\newtheorem*{remark}{Remark}
+\title{Bounds for all recursive IRMF components\\
+under a curvature-dispersion condition}
+\author{}
+\date{31 October 2026}
+\begin{document}
+\maketitle
+
+\noindent This note proves the propagation remainder, closes the induction,
+and compares the fixed-noise reference with the paper's population targets.
+The proof adds an explicit curvature-dispersion condition to the assumptions
+in the submitted draft. It also states a quantitative finest-scale condition.
+The population-target comparison additionally uses a fourth noise moment.
+These are sufficient conditions, not claims that the original assumptions
+alone imply the result. No bound on the unknown propagation remainder is
+assumed.
+
+\section{Setting and assumptions}
+Let \(Y=X+\varepsilon\in\R^n\), where \(X\) is deterministic and the
+\(\varepsilon_u\) are independent with a common law. Use the
+Gaussian-smoothed absolute loss \(\rho=\rho_H\), \(H>0\), and constants
+\[
+ |\rho'|\le1,\qquad 0<\rho''\le L_2,\qquad |\rho'''|\le L_3,
+ \quad L_2=\frac{\sqrt{2/\pi}}H,\quad
+ L_3=\frac{\sqrt{2/\pi}e^{-1/2}}{H^2}.
+\]
+To allow laws without a first moment, define
+\(\phi(c)=\E[\rho(c+\varepsilon)-\rho(\varepsilon)]\).
+This is finite because the integrand is bounded by \(|c|\).
+When the expected loss is finite, its minimizers are unchanged.
+
+Let \(a_{tu}^{(k)}\ge0\), \(\sum_u a_{tu}^{(k)}=1\), be deterministic
+weights, \(1\le k\le K\), and let \(\alpha_k=\max_{t,u}a_{tu}^{(k)}\).
+Write
+\[
+ \mathcal M_k(y)_t=\arg\min_s\sum_u a_{tu}^{(k)}\rho(y_u-s),
+ \quad Y^{(1)}=Y,\quad
+ \widetilde S^{(k)}=\mathcal M_k(Y^{(k)}),\quad
+ Y^{(k+1)}=Y^{(k)}-\widetilde S^{(k)}.
+\]
+The deterministic reference is
+\[
+ X_\phi^{(1)}=X,\quad
+ S_{\phi,t}^{(k)}=\arg\min_s\sum_u a_{tu}^{(k)}\phi(X_{\phi,u}^{(k)}-s),
+ \quad X_\phi^{(k+1)}=X_\phi^{(k)}-S_\phi^{(k)}.
+\]
+These minimizers exist and are unique: the scores are strictly increasing
+in their argument and tend to \(\pm1\).
+For \(c_{tu}^{(k)}=X_{\phi,u}^{(k)}-S_{\phi,t}^{(k)}\), define
+\begin{align*}
+ g_{ktu}(\varepsilon_u)&=\rho''(c_{tu}^{(k)}+\varepsilon_u),&
+ f_{kt}&=\sum_u a_{tu}^{(k)}\E g_{ktu},\\
+ q_{kt}&=\sum_u a_{tu}^{(k)}\rho'(c_{tu}^{(k)}+\varepsilon_u),&
+ b_{kt}&=q_{kt}/f_{kt},&
+ V_k[t,u]&=a_{tu}^{(k)}\E g_{ktu}/f_{kt}.
+\end{align*}
+The population score equation gives \(\E q_{kt}=0\).
+Every \(V_k\) is deterministic and row stochastic. Throughout, assume
+\begin{align}
+ f_{kt}&\ge\lambda>0,\label{eq:curvature}\\
+ \alpha_j&\le C_\alpha\alpha_k a^{-(k-j)}
+       \quad(j\le k),\qquad a>1,\quad C_\alpha\ge1,\label{eq:schedule}\\
+ \norm{B_{m:l}}_\infty&\le C_B\quad
+       (1\le l\le m\le K),\qquad C_B\ge1,\label{eq:products}\\
+ B_{m:l}&=(I-V_m)\cdots(I-V_l),\qquad B_{m:l}=I\quad(m<l).\notag
+\end{align}
+Here the matrix norm is the maximum absolute row sum. The verified Fourier
+and perturbation lemmas in \texttt{irmf\_recursive\_component\_bounds.tex}
+give one route to \eqref{eq:products}; a separate deterministic bound on
+these actual population products is also sufficient.
+
+The additional assumption concerns the known, single-observation noise law:
+\begin{equation}
+ d:=\max_{k,t}\frac{\sum_u a_{tu}^{(k)}
+                \E|g_{ktu}-\E g_{ktu}|}{f_{kt}}
+       <\frac{a-1}{C_BC_\alpha}.
+ \label{eq:dispersion}
+\end{equation}
+This is a bound on relative curvature variation, not a bound on an unknown
+recursive error. It permits contamination if the resulting law satisfies it.
+The proof below does not cover all contamination laws at a fixed \(H\).
+
+\section{Exact decomposition}
+Set
+\[
+ e_k=\widetilde S^{(k)}-S_\phi^{(k)},\quad
+ E_k=\sum_{j<k}e_j,\quad
+ R_k=\mathcal M_k(X_\phi^{(k)}+\varepsilon)-S_\phi^{(k)}-b_k,
+\]
+and
+\[
+ \Phi_k=\mathcal M_k(X_\phi^{(k)}+\varepsilon)
+              -\mathcal M_k(Y^{(k)})-V_kE_k.
+\]
+Then \(Y^{(k)}=X_\phi^{(k)}+\varepsilon-E_k\) and
+\begin{equation}
+ E_{k+1}=(I-V_k)E_k+b_k+R_k-\Phi_k. \label{eq:recursion}
+\end{equation}
+Define deterministic-transfer leading terms and accumulated remainders by
+\begin{align}
+ \Lambda_1&=\Theta_1=0,&
+ \Lambda_{k+1}&=(I-V_k)\Lambda_k+b_k,&
+ \Theta_k&=E_k-\Lambda_k, \label{eq:lambda}\\
+ L_k&=b_k-V_k\Lambda_k,&
+ Q_k&=e_k-L_k=\Theta_{k+1}-\Theta_k. \notag
+\end{align}
+In particular,
+\begin{equation}
+ \Lambda_k=\sum_{j<k}B_{k-1:j+1}b_j,\qquad
+ \Theta_k=\sum_{j<k}B_{k-1:j+1}(R_j-\Phi_j).
+ \label{eq:unroll}
+\end{equation}
+All stages use the same original noise vector. Independence is used only
+across its coordinates.
+
+\section{A quadratic-statistic bound with a complete proof}
+\begin{lemma}\label{lem:chaos}
+Let \(Z_1,\ldots,Z_n\) be independent. For \(u\ne v\), suppose
+\(h_{uv}(Z_u,Z_v)\) is centered in each argument separately and
+\(|h_{uv}|\le H_{uv}\), with deterministic \(H_{uv}\).
+For every even integer \(p\ge2\),
+\[
+ \left\|\sum_{u\ne v}h_{uv}(Z_u,Z_v)\right\|_{L^p}
+       \le16p\left(\sum_{u\ne v}H_{uv}^2\right)^{1/2}.
+\]
+Consequently, for \(z\ge2\), outside a set of probability \(e^{-z}\),
+\[
+ \left|\sum_{u\ne v}h_{uv}(Z_u,Z_v)\right|
+       \le32\mathrm e\,z\left(\sum_{u\ne v}H_{uv}^2\right)^{1/2}.
+\]
+The kernels need not be symmetric or identical.
+\end{lemma}
+\begin{proof}
+Choose a random subset \(A\) by independent fair coins, independently of
+the \(Z_u\). Each ordered pair \(u\ne v\) belongs to \(A\times A^c\) with
+probability \(1/4\). Thus the full sum is four times the conditional
+average of its cross-partition sum. Jensen's inequality bounds its
+\(L^p\) norm by four times the largest \(L^p\) norm of such a sum.
+
+Fix a partition. Conditional on the variables in \(A\), symmetrize the
+independent centered contributions indexed by \(v\in A^c\). This costs
+a factor two and introduces independent Rademacher signs \(s_v\).
+Conditional on \(Z_{A^c}\) and these signs, symmetrize over \(u\in A\).
+Centering in the other argument justifies this second step, which costs
+another factor two and introduces signs \(r_u\).
+The usual symmetrization inequality follows directly by subtracting an
+independent copy, applying conditional Jensen, inserting signs into the
+symmetric differences, and applying the triangle inequality.
+
+For even \(p\), the Rademacher moment inequality
+\[
+ \left\|\sum_i r_i a_i\right\|_{L^p}
+       \le\sqrt p\left(\sum_i a_i^2\right)^{1/2}
+\]
+follows by expanding the moment and comparing even multiplicities with a
+Gaussian moment, bounded by \(p^{p/2}\).
+Apply it twice, with Minkowski's inequality in \(L^{p/2}\) between
+applications, to obtain
+\[
+ \left\|\sum_{u\in A,v\in A^c}r_us_v h_{uv}(Z_u,Z_v)
+        \right\|_{L^p(r,s)}
+ \le p\left(\sum_{u\in A,v\in A^c}|h_{uv}(Z_u,Z_v)|^2\right)^{1/2}.
+\]
+The envelope makes the right side deterministic. The factors are
+\(4\cdot2\cdot2=16\). Finally take \(p=2\lceil z/2\rceil\), so
+\(z\le p\le2z\), and apply Markov's inequality at
+\(\mathrm e\) times the \(L^p\) bound.
+\end{proof}
+
+\section{Constants and one simultaneous event}
+Define
+\begin{align*}
+ c_u&=\sqrt2+2/3,&c_v&=\sqrt2+1/3,&
+ s_1&=\frac{C_\alpha}{1-a^{-1}},&
+ s_2&=\frac{\sqrt{C_\alpha}}{1-a^{-1/2}},&
+ r&=\frac{C_\alpha}{a},\\
+ A_\Lambda&=\frac{C_B}{\lambda}(\sqrt2s_2+2s_1/3),&
+ G_\infty&=\frac{2C_Bs_1}{\lambda},&
+ G_2&=\frac{2C_Bs_2}{\lambda},&
+ b_0&=\frac{L_2}{\lambda},\\
+ A_R&=\frac{2L_2c_uc_v}{\lambda^2}
+              +\frac{2L_3c_u^2}{\lambda^3},&
+ C_{\rm loc}&=\frac{L_2c_v}{\lambda}+\frac{4L_3c_u}{\lambda^2}.&&
+\end{align*}
+For \(x>0\), let \(z_0=\log(10nK)\) and \(z=z_0+x\).
+The operator of centered curvature fluctuations is
+\[
+ Z_k[t,u]=\frac{a_{tu}^{(k)}}{f_{kt}}(g_{ktu}-\E g_{ktu}).
+\]
+This notation \(Z_k\) is a random matrix, not a fresh noise vector.
+
+\begin{lemma}\label{lem:event}
+If \(z\bar\alpha\le1\), where \(\bar\alpha=\max_k\alpha_k\), there is
+one event of probability at least \(1-e^{-x}\) on which all the following
+bounds hold simultaneously:
+\begin{align}
+ |q_{kt}|&\le c_u\sqrt{z\alpha_k},&
+ \left|\sum_u a_{tu}^{(k)}g_{ktu}-f_{kt}\right|
+       &\le L_2c_v\sqrt{z\alpha_k},\label{eq:score-hess}\\
+ \norm{Z_k}_\infty&\le d+b_0c_v\sqrt{z\alpha_k},\label{eq:Znorm}\\
+ \norm{\Lambda_k}_\infty&\le A_\Lambda\sqrt{z\alpha_{k-1}},
+       \quad k=2,\ldots,K+1,\label{eq:Lambda-bound}\\
+ \norm{L_k}_\infty&\le A_\Lambda\sqrt{z\alpha_k},\label{eq:L-bound}\\
+ \norm{Z_k\Lambda_k}_\infty
+   &\le b_0G_\infty\alpha_{k-1}
+          +32\mathrm e\,b_0G_2 z\sqrt{\alpha_k\alpha_{k-1}},
+          \quad k\ge2.\label{eq:ZLambda}
+\end{align}
+\end{lemma}
+\begin{proof}
+The score and curvature estimates follow from two-sided Bernstein bounds
+using \(\sum_u(a_{tu}^{(k)})^2\le\alpha_k\), centered summand bounds
+\(2a_{tu}^{(k)}\) and \(L_2a_{tu}^{(k)}\), and variance proxies
+\(\alpha_k\) and \(L_2^2\alpha_k\). Their union costs at most
+\(4nKe^{-z}\). For \eqref{eq:Znorm}, apply the one-sided bound to the
+independent variables \(|g_{ktu}-\E g_{ktu}|/f_{kt}\in[0,b_0]\).
+Their mean weighted sum is at most \(d\), and the union costs \(nKe^{-z}\).
+
+To bound \(\Lambda_k\), group its representation \eqref{eq:unroll} by
+observation. An uncentered envelope for the stage-\(j\) contribution in
+one row has \(\ell_1\) norm at most \(C_B/\lambda\), maximum at most
+\(C_B\alpha_j/\lambda\), and \(\ell_2\) norm at most
+\(C_B\sqrt{\alpha_j}/\lambda\).
+Thus its sum has variance proxy
+\((C_B/\lambda)^2(\sum_{j<k}\sqrt{\alpha_j})^2\) and centered increment
+bound \(2(C_B/\lambda)\sum_{j<k}\alpha_j\).
+Equation \eqref{eq:schedule} bounds these two sums by
+\(s_2\sqrt{\alpha_{k-1}}\) and \(s_1\alpha_{k-1}\).
+Bernstein and \(z\alpha_{k-1}\le1\) give \eqref{eq:Lambda-bound}.
+The union over \(k=2,\ldots,K+1\) costs \(2nKe^{-z}\).
+For \(L_k\), its transfer operators are \(I\) at \(j=k\) and
+\(-V_kB_{k-1:j+1}\) at \(j<k\). Their norms are at most \(C_B\)
+because \(\norm{V_k}_\infty=1\).
+The same argument, with sums through \(k\), gives \eqref{eq:L-bound}
+and costs another \(2nKe^{-z}\).
+
+For the last estimate, center each observation's score contribution:
+\[
+ \Lambda_k(u)=\sum_v\gamma_{uv}^{(k)}(\varepsilon_v),\qquad
+ \E\gamma_{uv}^{(k)}=0,\qquad
+ |\gamma_{uv}^{(k)}|\le\Gamma_{uv}^{(k)},
+\]
+where a valid deterministic envelope is
+\[
+ \Gamma_{uv}^{(k)}
+ =\frac2\lambda\sum_{j<k}\sum_s
+       |B_{k-1:j+1}[u,s]|a_{sv}^{(j)}.
+\]
+Minkowski's inequality and \eqref{eq:schedule} give
+\[
+ \max_{u,v}\Gamma_{uv}^{(k)}\le G_\infty\alpha_{k-1},\qquad
+ \max_u\left(\sum_v(\Gamma_{uv}^{(k)})^2\right)^{1/2}
+       \le G_2\sqrt{\alpha_{k-1}}.
+\]
+For fixed \(k,t\), expand \( (Z_k\Lambda_k)_t
+=\sum_{u,v}Z_k[t,u]\gamma_{uv}^{(k)}(\varepsilon_v)\).
+The diagonal is bounded in absolute value by
+\(b_0G_\infty\alpha_{k-1}\).
+Off the diagonal the terms are centered in each independent argument.
+Their envelopes \(b_0a_{tu}^{(k)}\Gamma_{uv}^{(k)}\) have squared sum at
+most \(b_0^2G_2^2\alpha_k\alpha_{k-1}\).
+Lemma~\ref{lem:chaos} and a union bound cost at most \(nKe^{-z}\).
+All event costs sum to \(10nKe^{-z}=e^{-x}\).
+\end{proof}
+
+\section{Propagation estimate}
+\begin{lemma}\label{lem:propagation}
+Suppose \eqref{eq:score-hess} holds and
+\[
+ L_2c_v\sqrt{z\alpha_k}\le\lambda/4,\qquad
+ c_u\sqrt{z\alpha_k}\le\lambda^2/(8L_3).
+\]
+Then \(\norm{R_k}_\infty\le A_Rz\alpha_k\). Furthermore, for every
+realized \(E_k\), with \(\Theta_k=E_k-\Lambda_k\),
+\begin{align}
+ \norm{\Phi_k}_\infty
+ \le {}&\frac{4L_3}{\lambda}\norm{E_k}_\infty^2
+       +C_{\rm loc}\sqrt{z\alpha_k}\norm{E_k}_\infty \notag\\
+      &+\norm{Z_k\Lambda_k}_\infty
+       +\norm{Z_k}_\infty\norm{\Theta_k}_\infty .
+ \label{eq:propagation}
+\end{align}
+No independence between \(E_k\) and the noise is assumed.
+\end{lemma}
+\begin{proof}
+Fix a row and let \(y=X_\phi^{(k)}+\varepsilon\).
+At the population target the empirical curvature differs from \(f_{kt}\)
+by at most \(v=L_2c_v\sqrt{z\alpha_k}\), and the score is at most
+\(u=c_u\sqrt{z\alpha_k}\).
+Within distance \(2u/\lambda\), the curvature is at least
+\(\lambda-v-2L_3u/\lambda\ge\lambda/2\).
+The empirical score therefore has its zero in this interval.
+If its displacement is \(h\), Taylor's formula yields
+\[
+ |h-q_{kt}/f_{kt}|
+ \le\frac{v|h|+L_3h^2/2}{\lambda}
+ \le\frac{2uv}{\lambda^2}+\frac{2L_3u^2}{\lambda^3}
+ \le A_Rz\alpha_k .
+\]
+
+The local fit is smooth, coordinatewise monotone, and translation
+equivariant. Hence it is 1-Lipschitz in the sup norm.
+Its Jacobian at an input \(w\) has row
+\[
+ J(w)[t,u]=
+ \frac{a_{tu}^{(k)}\rho''(w_u-\mathcal M_k(w)_t)}
+      {\sum_v a_{tv}^{(k)}\rho''(w_v-\mathcal M_k(w)_t)}.
+\]
+It is nonnegative with row sum one. For nonnegative vectors \(p,q\) of
+positive mass,
+\begin{equation}
+ \left\|\frac p{\sum p}-\frac q{\sum q}\right\|_1
+       \le\frac{2\|p-q\|_1}{\sum q}.
+ \label{eq:normalization}
+\end{equation}
+This follows by adding and subtracting \(p/\sum q\).
+
+The empirical curvature at the single-pass fit is at least \(\lambda/2\).
+Let \(J(s)=J(y-sE_k)\). The Lipschitz property gives
+\[
+ |(y_u-sE_k(u)-\mathcal M_k(y-sE_k)_t)
+       -(y_u-\mathcal M_k(y)_t)|
+       \le2s\norm{E_k}_\infty .
+\]
+Apply \eqref{eq:normalization}, using the curvature at \(s=0\) in its
+denominator, to get
+\(\norm{J(s)-J(0)}_\infty\le8L_3s\norm{E_k}_\infty/\lambda\).
+Thus the integrated quadratic error is at most
+\(4L_3\norm{E_k}_\infty^2/\lambda\).
+Only positivity, not a uniform lower curvature bound, is needed at
+the other points of the segment.
+
+Set \(\overline M[t,u]=a_{tu}^{(k)}g_{ktu}/f_{kt}=V_k[t,u]+Z_k[t,u]\).
+Adding and subtracting the fitted-curvature numerator divided by \(f_{kt}\)
+gives
+\[
+ \norm{J(0)-\overline M}_\infty
+ \le\frac{v+4L_3u/\lambda}{\lambda}
+ \le C_{\rm loc}\sqrt{z\alpha_k}.
+\]
+Finally, the exact integral identity is
+\[
+ \Phi_k=\int_0^1(J(s)-J(0))E_k\,ds
+          +(J(0)-\overline M)E_k+Z_k\Lambda_k+Z_k\Theta_k .
+\]
+Taking norms proves \eqref{eq:propagation}.
+\end{proof}
+
+\section{Closing the induction with explicit constants}
+Choose any fixed
+\[
+ d<\delta<\frac{a-1}{C_BC_\alpha},\qquad
+ q=\frac{C_BC_\alpha\delta}{a-1}<1,\qquad A=2A_\Lambda .
+\]
+The midpoint of the displayed interval is one possible choice of \(\delta\).
+Put
+\begin{align}
+ P(A)&=\frac{4L_3}{\lambda}A^2r+C_{\rm loc}A\sqrt r
+          +b_0G_\infty r+32\mathrm e\,b_0G_2\sqrt r,\label{eq:P}\\
+ D&=\frac{C_Bs_1\{A_R+P(A)\}}{1-q},\label{eq:D}\\
+ \eta&=\min\left\{1,\
+   \left(\frac{\lambda}{4L_2c_v}\right)^2,\
+   \left(\frac{\lambda^2}{8L_3c_u}\right)^2,\
+   \left(\frac{\delta-d}{b_0c_v}\right)^2,\
+   \left(\frac{A_\Lambda}{D}\right)^2\right\}.\label{eq:eta}
+\end{align}
+Every quantity here is deterministic and specified before the induction.
+
+\begin{theorem}[All components relative to the fixed-noise path]\label{thm:main}
+Under \eqref{eq:curvature}--\eqref{eq:dispersion}, let \(x>0\) satisfy
+\((x+\log(10nK))\bar\alpha\le\eta\).
+With probability at least \(1-e^{-x}\), simultaneously for every \(k\le K\),
+\begin{align}
+ \norm{\Theta_{k+1}}_\infty&\le Dz\alpha_k,&
+ \norm{E_{k+1}}_\infty&\le A\sqrt{z\alpha_k},\label{eq:closed}\\
+ \norm{\Phi_k}_\infty&\le\{P(A)+\delta Dr\}z\alpha_k,\label{eq:Phi-final}\\
+ \norm{\widetilde S^{(k)}-S_\phi^{(k)}-L_k}_\infty
+       &\le D(1+r)z\alpha_k,\label{eq:expansion}\\
+ \norm{\widetilde S^{(k)}-S_\phi^{(k)}}_\infty
+       &\le A_\Lambda\sqrt{z\alpha_k}+D(1+r)z\alpha_k.\label{eq:main}
+\end{align}
+Here \(\Phi_1=0\). The constants do not depend on \(k\); they remain uniform
+over \(K\) if the assumed parameters and the dispersion margin do.
+\end{theorem}
+\begin{proof}
+Work on the single event in Lemma~\ref{lem:event}.
+Equation \eqref{eq:eta} ensures the single-pass conditions and
+\(\norm{Z_j}_\infty\le\delta\).
+The base case is \(E_1=\Lambda_1=\Theta_1=0\).
+
+Suppose \(\norm{\Theta_j}_\infty\le Dz\alpha_{j-1}\) for all \(2\le j\le k\).
+Then \eqref{eq:Lambda-bound} and \(D\sqrt{z\bar\alpha}\le A_\Lambda\)
+give \(\norm{E_j}_\infty\le A\sqrt{z\alpha_{j-1}}\).
+Since \(\alpha_{j-1}\le r\alpha_j\) and \(z\ge1\), insert these bounds
+and \eqref{eq:ZLambda} into \eqref{eq:propagation} to obtain
+\[
+ \norm{\Phi_j}_\infty
+       \le P(A)z\alpha_j+\delta Dz\alpha_{j-1}.
+\]
+For \(j=1\) use \(\Phi_1=0\) and set \(\alpha_0=0\).
+Unrolling \(\Theta\), rather than multiplying one-step norm bounds, yields
+\begin{align*}
+ \norm{\Theta_{k+1}}_\infty
+ &\le C_Bz\left\{(A_R+P(A))\sum_{j=1}^k\alpha_j
+                   +\delta D\sum_{j=1}^{k-1}\alpha_j\right\}\\
+ &\le\left\{C_Bs_1(A_R+P(A))
+              +\frac{C_BC_\alpha\delta}{a-1}D\right\}z\alpha_k
+ =Dz\alpha_k .
+\end{align*}
+This closes the induction because \eqref{eq:D} solves the displayed
+inequality with \(q<1\), while \eqref{eq:eta} fixed \(A\) in advance.
+It also proves the \(E\) bound at the next stage.
+Finally \(Q_k=\Theta_{k+1}-\Theta_k\), so
+\(\norm{Q_k}_\infty\le D(1+r)z\alpha_k\); combine with
+\eqref{eq:L-bound}.
+\end{proof}
+
+\begin{remark}
+If adjacent weights also satisfy \(\alpha_k\le a_+\alpha_{k-1}\), then
+\eqref{eq:Phi-final} is a bound of order \(z\alpha_{k-1}\), as in the
+original draft. The theorem does not require this extra upper ratio.
+The quadratic-statistic constant and the use of sup norms are conservative;
+the theorem is not a numerical certificate for every small-window experiment.
+\end{remark}
+
+\section{Comparison with the paper's population targets}
+Assume now \(\mu_4=\E|\varepsilon|^4<\infty\), and define
+\[
+ S_{{\rm pdf},t}^{(k)}
+       =\arg\min_s\sum_u a_{tu}^{(k)}\E\rho(Y_u^{(k)}-s).
+\]
+Let \(m_\rho\) be the unique root of
+\(\E\rho'(\varepsilon-m_\rho)=0\).
+The paper's target at each stage depends only on the law of the actual
+residual \(Y^{(k)}\); its auxiliary clean recursion need not be substituted
+for \(X_\phi^{(k)}\).
+
+Suppose
+\[
+ x_*=\eta/\bar\alpha-z_0>0,\qquad
+ M_4=2^{K+1}\{\norm X_\infty+(n\mu_4)^{1/4}+|m_\rho|\}.
+\]
+For \(k\ge2\) set
+\begin{align}
+ U_k&=D\alpha_{k-1}(z_0+1)
+       +(M_4+C_BK/\lambda)e^{-x_*/2},\label{eq:U}\\
+ V_k^{\rm mom}&=A^2\alpha_{k-1}(z_0+1)+M_4^2e^{-x_*/2},\label{eq:Vmom}\\
+ \beta_k&=L_2G_\infty\alpha_{k-1}
+                  +L_2U_k+(L_3/2)V_k^{\rm mom}.\label{eq:beta}
+\end{align}
+The matrix \(V_k\) and scalar \(V_k^{\rm mom}\) are different quantities.
+
+\begin{proposition}[Deterministic target correction]\label{prop:targets}
+If, for \(2\le k\le K\),
+\begin{equation}
+ L_3\sqrt{V_k^{\rm mom}}\le\lambda/4,\qquad
+ \beta_k\le\lambda^2/(8L_3),\label{eq:target-smallness}
+\end{equation}
+then
+\[
+ \norm{S_{\rm pdf}^{(k)}-S_\phi^{(k)}}_\infty
+       \le2\beta_k/\lambda.
+\]
+At \(k=1\) the two targets coincide.
+\end{proposition}
+\begin{proof}
+First, the high-probability estimates imply
+\begin{equation}
+ \E\norm{\Theta_k}_\infty\le U_k,\qquad
+ \E\norm{E_k}_\infty^2\le V_k^{\rm mom}.
+ \label{eq:moments}
+\end{equation}
+Here are the needed tail details. An empirical fit lies between its
+smallest and largest input. A \(\phi\)-fit lies between
+\(\min_u x_u+m_\rho\) and \(\max_u x_u+m_\rho\).
+Consequently, for all relevant stages,
+\[
+ \norm{E_k}_\infty
+ \le2^{K+1}(\norm X_\infty+\norm\varepsilon_\infty+|m_\rho|),
+ \qquad \norm{\Lambda_k}_\infty\le C_BK/\lambda.
+\]
+Since \(\E\norm\varepsilon_\infty^4\le n\mu_4\), the \(L^4\) norm of
+the first bound is at most \(M_4\). Thus the \(L^2\) norm of
+\(\norm{\Theta_k}_\infty\) is at most \(M_4+C_BK/\lambda\).
+
+Integrate the tails from Theorem~\ref{thm:main} for \(0<x\le x_*\).
+For \(\Theta_k\), integration up to \(D\alpha_{k-1}(z_0+x_*)\)
+gives at most \(D\alpha_{k-1}(z_0+1)\). Beyond this threshold, the
+event is contained in the exceptional event at \(x_*\).
+Cauchy--Schwarz bounds its contribution by
+\((M_4+C_BK/\lambda)e^{-x_*/2}\).
+Apply the same argument to \(\norm{E_k}_\infty^2\), whose \(L^2\) norm
+is at most \(M_4^2\), to obtain \eqref{eq:moments}.
+
+At \(S_{\phi,t}^{(k)}\), the paper's population score equals
+\(\sum_u a_{tu}^{(k)}\E\rho'(c_{tu}^{(k)}+\varepsilon_u-E_k(u))\).
+Taylor expansion around \(c_{tu}^{(k)}+\varepsilon_u\) gives
+\[
+ \left|\text{population score}\right|
+ \le\left|\sum_u a_{tu}^{(k)}\E[g_{ktu}\Lambda_k(u)]\right|
+       +L_2\E\norm{\Theta_k}_\infty
+       +(L_3/2)\E\norm{E_k}_\infty^2 .
+\]
+In the representation \(\Lambda_k(u)=\sum_v\gamma_{uv}^{(k)}(\varepsilon_v)\),
+all \(v\ne u\) terms have zero expectation even after multiplication by
+\(g_{ktu}(\varepsilon_u)\). The remaining diagonal is bounded by
+\(L_2G_\infty\alpha_{k-1}\).
+This proves the score bound \(\beta_k\), including the required
+first-order cancellation.
+
+The actual population curvature at \(S_{\phi,t}^{(k)}\) is at least
+\(f_{kt}-L_3\E\norm{E_k}_\infty\ge3\lambda/4\) by
+\eqref{eq:target-smallness} and Jensen's inequality.
+Within distance \(2\beta_k/\lambda\) it is at least \(\lambda/2\).
+The population score therefore crosses zero in this interval, proving
+the target bound.
+\end{proof}
+
+\begin{corollary}[All components for the paper's targets]\label{cor:pdf}
+Under Theorem~\ref{thm:main} and Proposition~\ref{prop:targets}, with
+probability at least \(1-e^{-x}\), for all \(k\le K\),
+\[
+ \norm{\widetilde S^{(k)}-S_{\rm pdf}^{(k)}}_\infty
+ \le A_\Lambda\sqrt{z\alpha_k}+D(1+r)z\alpha_k+2\beta_k/\lambda,
+\]
+where \(\beta_1=0\).
+In particular, suppose both tail terms in \eqref{eq:U}--\eqref{eq:Vmom}
+are at most \(\alpha_{\min}:=\min_j\alpha_j\). Define
+\[
+ B_{\rm tar}=L_2G_\infty+L_2D+(L_3/2)A^2+L_2+L_3/2.
+\]
+Then \(\beta_k\le B_{\rm tar}(z_0+1)\alpha_{k-1}\).
+Since \(z_0+1\le2z\), the bound becomes
+\[
+ \boxed{\quad
+ \norm{\widetilde S^{(k)}-S_{\rm pdf}^{(k)}}_\infty
+ \le A_\Lambda\sqrt{z\alpha_k}
+     +\left\{D(1+r)+\frac{4rB_{\rm tar}}{\lambda}\right\}z\alpha_k
+ \quad}
+\]
+simultaneously over every stage and evaluation point.
+For \(\alpha_k\asymp(nh_k)^{-1}\), this is the claimed
+\(\sqrt{z/(nh_k)}+z/(nh_k)\) rate with constants independent of the stage.
+\end{corollary}
+\begin{proof}
+Use the triangle inequality and the preceding proposition.
+The extra tail assumption and \(\alpha_{\min}\le\alpha_{k-1}\) give the
+stated \(\beta_k\) bound directly. Apply
+\(\alpha_{k-1}\le r\alpha_k\). At stage one the target correction is zero.
+\end{proof}
+
+\section{A nonempty regime with a growing number of components}
+For an explicit example, let \(n\) be a power of two, \(X\) be constant,
+and \(\varepsilon\sim N(0,\sigma^2)\), with \(H=2\sigma\).
+At stage \(k\), average within a partition into \(2^{k-1}\) equal blocks,
+each partition refining the preceding one. These weights are an example
+covered by the general theorem, rather than the repository's convolution
+weights. Here
+\[
+ \alpha_k=2^{k-1}/n,\qquad a=2,\quad C_\alpha=1,\quad V_k=W_k.
+\]
+The reference is constant at stage one and zero thereafter.
+The averaging projections satisfy \(W_mW_l=W_lW_m=W_l\) for \(l\le m\),
+so \(B_{m:l}=I-W_m\) and \(C_B=2\) suffices for all partial products.
+The curvature lower bound is
+\(\lambda=\sqrt{2/\pi}/\sqrt{H^2+\sigma^2}\).
+With \(t=\sigma^2/H^2=1/4\), Cauchy--Schwarz gives
+\[
+ d\le\sqrt{\frac{\E g^2}{(\E g)^2}-1}
+   =\sqrt{\frac{1+t}{\sqrt{1+2t}}-1}<\frac12
+   =\frac{a-1}{C_BC_\alpha}.
+\]
+Thus every constant in Theorem~\ref{thm:main}, including \(\eta>0\),
+can be fixed independently of \(n,K\).
+
+Choose \(K\le c\log_2 n\) for any fixed \(0<c<1\).
+Then \(z\bar\alpha=O(n^{c-1}\log n)\to0\) at fixed confidence,
+and \(x_*\) is eventually at least a positive constant times \(n^{1-c}\).
+The quantity \(M_4\) grows at most polynomially in \(n\); hence both
+exponential tail terms are eventually smaller than
+\(\alpha_{\min}=1/n\). Also \(V_k^{\rm mom}\) and \(\beta_k\) tend to zero
+uniformly in \(k\), so the target-localization conditions hold.
+Consequently the final all-components rate, including the second-order
+target correction, holds for all sufficiently large \(n\) in this
+explicit growing-stage regime. The sufficient conditions are nonvacuous.
+
+\section{Scope and application to the submitted design}
+The propagation and induction gaps are closed under
+\eqref{eq:dispersion} and the explicit finest-scale restriction
+\eqref{eq:eta}. The target gap is closed under the fourth-moment,
+tail, and target-localization conditions above. The original theorem
+without these added restrictions remains unproved.
+
+For the submitted Gaussian example, an analytic Gaussian integration
+formula gives \(d\approx0.1711181\). The finite-design operator computation
+gives \(C_B\approx2.1127187\) and \(C_\alpha\approx1.0045416\), for which
+the dispersion threshold is approximately \(0.1951707\). Thus the new
+stability inequality passes a floating-point check in that example.
+The much stronger sample-size restriction \(z\bar\alpha\le\eta\) does
+not pass at \(n=1000\). The theorem therefore does not certify those
+particular Monte Carlo runs. The diagnostic reports this failure explicitly.
+The numerical operator values are not interval-certified constants.
+
+For reproducibility, the Gaussian dispersion computation uses an exact
+one-dimensional integration identity. Write
+\(B=\sqrt{H^2+\sigma^2}\),
+\(\mu(c)=\sqrt{2/\pi}B^{-1}\exp[-c^2/(2B^2)]\), and
+\(t_c=H\sqrt{2\log\{(\sqrt{2/\pi}/H)/\mu(c)\}}\).
+Let \(P_0(c)\) be the probability that a \(N(c,\sigma^2)\) variable lies
+in \([-t_c,t_c]\), and \(P_1(c)\) the same probability for
+\(N(cH^2/B^2,\sigma^2H^2/B^2)\). Completing the square gives
+\[
+ \E|\rho''(c+\varepsilon)-\mu(c)|
+       =2\mu(c)\{P_1(c)-P_0(c)\}.
+\]
+Indeed, the positive part occurs exactly on \(|c+\varepsilon|\le t_c\),
+the tilted Gaussian integral of \(\rho''\) there is \(\mu(c)P_1(c)\),
+and the centered variable has mean zero. The diagnostic checks this
+formula against adaptive quadrature.
+
+The proof of Lemma~\ref{lem:chaos} is self-contained; sharper inequalities
+are available in Gine, Latala and Zinn,
+\href{https://arxiv.org/abs/math/0003228}{\emph{Exponential and moment
+inequalities for U-statistics}}. Sharper constants, removal of the
+dispersion restriction, and general boundary designs are separate questions.
+
+\end{document}

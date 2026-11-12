@@ -1,0 +1,57 @@
+{
+  "scope": "Floating-point evaluation of sufficient conditions, not interval certification",
+  "n": 1000,
+  "windows": [
+    501,
+    355,
+    251,
+    177,
+    125,
+    89,
+    63,
+    45,
+    31
+  ],
+  "sigma": 0.4,
+  "H": 0.8,
+  "gaussian_deviation_formula_max_quadrature_difference": 5.412337245047638e-16,
+  "maximum_curvature_dispersion": 0.1711180942468408,
+  "curvature_dispersion_by_stage": [
+    0.1711180942468408,
+    0.1559377560651499,
+    0.1528380193207034,
+    0.13930141536342897,
+    0.12223283391576978,
+    0.11739180143692828,
+    0.1148449536371675,
+    0.11114267203623164,
+    0.10878086114517806
+  ],
+  "population_product_bound": 2.112718706469909,
+  "max_propagation_split_error": 7.578573185673676e-17,
+  "constants": {
+    "dispersion_condition_passes": true,
+    "critical_dispersion": 0.1951707444488789,
+    "chosen_delta": 0.18314441934785985,
+    "induction_coefficient_q": 0.9383804927578727,
+    "leading_constant": 28.918788226312504,
+    "accumulated_error_constant": 57.83757645262501,
+    "single_pass_remainder_constant": 22.81207096090812,
+    "propagation_forcing_constant": 12274.440253746661,
+    "accumulated_remainder_constant": 1446072.7505239213,
+    "sample_size_threshold_eta": 3.99926237149112e-10,
+    "individual_thresholds": {
+      "bernstein_simplification": 1.0,
+      "single_pass_hessian": 0.013763057115099174,
+      "single_pass_location": 0.0028241360103041105,
+      "curvature_dispersion": 3.184936472602792e-05,
+      "induction_localization": 3.99926237149112e-10
+    }
+  },
+  "confidence_x": 2.995732273553991,
+  "z_times_alpha_max": 1.4371360865387752,
+  "sample_size_condition_passes": false,
+  "target_moment_cutoff_x_star": -11.407564945304252,
+  "paper_target_conditions_applicable": false,
+  "conclusion": "The dispersion condition passes. The sample-size condition fails; this theorem does not certify the n=1000 experiment."
+}

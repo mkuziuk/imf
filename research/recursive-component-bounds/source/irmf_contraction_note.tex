@@ -1,0 +1,541 @@
+\documentclass[11pt]{article}
+\usepackage[a4paper,margin=27mm]{geometry}
+\usepackage{amsmath,amsthm,amsfonts,amssymb,mathtools,graphicx,booktabs}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\Pp}{\mathbb{P}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\defeq}{\stackrel{\mathrm{def}}{=}}
+\newcommand{\arginf}{\mathop{\mathrm{arg\,inf}}}
+\newcommand{\norm}[1]{\lVert#1\rVert}
+\newcommand{\IMFt}{\widetilde S}
+\newcommand{\Rem}{\mathrm{Rem}}
+\newcommand{\Wcal}{\mathcal W}
+\newtheorem{proposition}{Proposition}
+\newtheorem{lemma}[proposition]{Lemma}
+\newtheorem{theorem}[proposition]{Theorem}
+\theoremstyle{definition}
+\newtheorem*{remark}{Remark}
+\newtheorem*{gap}{Gap}
+\newtheorem*{status}{Status}
+\emergencystretch=3em
+\begin{document}
+\sloppy
+\begin{center}
+  {\Large IRMF components \(k\ge2\): a Fisher-expansion route to contraction\par}
+  \vspace{4pt}
+  {\large Linearised error recursion, composite operator bounds, and a
+   uniform sup-norm rate\par}
+  \vspace{4pt}
+  {\normalsize Draft --- work in progress (version 2: notation aligned with
+  IMF.pdf and the first-component notes)}
+\end{center}
+
+\paragraph{Sources and numbering.}
+\emph{IMF.pdf} is Spokoiny's note.  \emph{[P4.1]} is
+\texttt{proposition\_4\_1\_lemma\_4\_2.tex}, whose Proposition~4.1 and
+Lemma~4.2 keep the numbering of IMF.pdf.  The same results appear as
+Proposition~4.2 and Lemma~4.1 in \texttt{first\_irmf\_error\_targets.tex},
+which \texttt{second\_irmf\_error\_targets.tex} cites as ``Note~1''.  Below,
+``Proposition~4.1'' and ``Lemma~4.2'' always mean [P4.1].
+Appendix~\ref{sec:notation} lists every symbol and its source.
+
+\section{Purpose and status}
+
+The second-component draft propagates the step-one error through the random
+equivalent kernel \(M\) and bounds \(\norm{I-M}\) by \(\Gamma_1\ge2\).
+Iterated, this grows geometrically in \(k\).  This note replaces that route.
+At every stage it uses the Fisher expansion of Proposition~4.1,
+\(\IMFt_t-S_t=F_t^{-1}\nabla_t+R_t\), and keeps the random Jacobians only in
+second-order remainders.  The first-order part of the recursion is then
+driven by deterministic operators \(W^{(k)}_\phi\), and contraction becomes a
+statement about their composites.  All errors are measured in the sup norm
+over \(t\).
+
+\begin{status}
+Proved here: the exact decomposition (Lemma~\ref{lem:exact}), the uniform
+sup-norm bound for linear composites (Lemma~\ref{lem:linear}), its
+perturbation to the robust kernels (Lemma~\ref{lem:perturb}), and the
+concentration of the leading term (Proposition~\ref{prop:leading}).  The
+propagation remainder (Lemma~\ref{lem:phi}) has a proof sketch; the step that
+bounds a degenerate second-order U-statistic is not written out.
+Theorem~\ref{thm:main} is therefore conditional on Lemma~\ref{lem:phi}.
+\end{status}
+
+\section{Setting (IMF.pdf, Sections 2--3)}
+
+Observations \(Y_t=X_t+\varepsilon_t\) on a regular periodic design of \(n\)
+points, with \(\varepsilon_t\) i.i.d.\ from an arbitrary law: Gaussian, or
+Gaussian plus contamination.  The contrast is \(\rho=\rho_H\); as in [P4.1],
+\(|\rho'|\le L_1=1\), \(0\le\rho''\le L_2\), \(|\rho'''|\le L_3\).  Stage \(k\)
+has bandwidth \(h_k\), with \(h_{k+1}=h_k/a\), and unnormalised weights
+\(w^{(k)}_{u,t}\defeq K_{h_k}(t-u)\).  Following IMF.pdf, \((2.1)\),
+\[
+  N_k(t)\defeq\sum_uw^{(k)}_{u,t},\qquad
+  a^{(k)}_{u,t}\defeq\frac{w^{(k)}_{u,t}}{N_k(t)},\qquad
+  W^{(k)}[t,u]\defeq a^{(k)}_{u,t},\qquad
+  \alpha_k\defeq\max_{t,u}a^{(k)}_{u,t}.
+\]
+Here \(N_k(t)\) is the total kernel mass, called \(W_t\) in [P4.1], and
+\(\alpha_k\) is the largest single normalised weight (\(\alpha\) in
+\texttt{first\_irmf\_error\_targets.tex}); \(\alpha_k\asymp(nh_k)^{-1}\).
+The IRMF recursion is IMF.pdf, \((3.2)\):
+\[
+  Y^{(1)}\defeq Y,\qquad
+  \IMFt^{(k)}_t\defeq\arginf_x\sum_u\rho(Y^{(k)}_u-x)\,w^{(k)}_{u,t},\qquad
+  Y^{(k+1)}\defeq Y^{(k)}-\IMFt^{(k)}.
+\]
+Write \(\mathcal M_k\) for the map \(Y^{(k)}\mapsto\IMFt^{(k)}\), and let
+\(\phi(x)\defeq\E\rho(x+\varepsilon)\) as in [P4.1] and IMF.pdf, Section~3.1.
+For Gaussian noise, \(\phi=\rho_B\) with \(B=\sqrt{H^2+\sigma^2}\), as in
+\texttt{first\_irmf\_error\_targets.tex}.  For products of
+\(I-W^{(j)}\) we extend IMF.pdf's \(A^{(k)}\):
+\begin{gather*}
+  A^{(m:l)}\defeq(I-W^{(m)})\cdots(I-W^{(l)})\quad(A^{(m:l)}=I\text{ if }m<l),\\
+  A^{(k)}=A^{(k:1)},\qquad \Wcal^{(k)}=W^{(k)}A^{(k-1)} .
+\end{gather*}
+Throughout, \(K\) is the number of stages, \(x>0\), and
+\(z_x\defeq x+\log(4nK)\).  This is [P4.1]'s \(x+\log(4m)\) with \(m=n\)
+evaluation points, repeated over \(K\) stages.
+
+\section{Reference path and true IMFs}\label{sec:reference}
+
+\paragraph{The \(\phi\)-path.}  Run the recursion on the clean signal with the
+averaged contrast:
+\[
+  X^{(1)}_\phi\defeq X,\qquad
+  S^{(k)}_{\phi,t}\defeq\arginf_x\sum_u\phi(X^{(k)}_{\phi,u}-x)\,w^{(k)}_{u,t},\qquad
+  X^{(k+1)}_\phi\defeq X^{(k)}_\phi-S^{(k)}_\phi .
+\]
+At stage one, \(S^{(1)}_\phi=S\), the population target of
+[P4.1] and IMF.pdf~\((4.1)\).  At every stage, \(S^{(k)}_\phi\) is the
+Proposition~4.1 target of the \emph{single pass}
+\(\mathcal M_k(X^{(k)}_\phi+\varepsilon)\).  That pass has deterministic signal
+\(X^{(k)}_\phi\) and independent noise, so Proposition~4.1 applies verbatim.
+The analysis uses
+\[
+  e^{(k)}\defeq\IMFt^{(k)}-S^{(k)}_\phi,\qquad
+  E^{(k)}\defeq\sum_{j<k}e^{(j)},\qquad
+  Y^{(k)}=X^{(k)}_\phi+\varepsilon-E^{(k)} .
+\]
+In IMF.pdf's notation, the stage-\(k\) noise is
+\(\varepsilon^{(k)}=\varepsilon-E^{(k)}\) along this path.  \(E^{(k)}\) is an
+accumulated error, not an expectation.
+
+\paragraph{IMF.pdf's true IMFs.}  IMF.pdf, Section~3.2, defines
+\(S^{(k)}_t\defeq\arginf_x\sum_u\E\rho(Y^{(k)}_u-x)\,w^{(k)}_{u,t}\) with
+\(X^{(k+1)}=X^{(k)}-S^{(k)}\), so it averages over the law of the actual
+residual noise \(\varepsilon^{(k)}\).  The two targets coincide at \(k=1\).
+For \(k\ge2\) they differ only because \(\varepsilon^{(k)}=\varepsilon-E^{(k)}\)
+and \(E^{(k)}=O((z_x\alpha_{k-1})^{1/2})\).  Expanding \(\phi_k\) around
+\(\phi\) gives a deterministic difference of second order,
+\(O(\alpha_{k-1})\).  This difference propagates through the same bounded
+composites as below (Gap~4).  Numerically, with 400 repeats on the test
+signal, \(\norm{S^{(k)}-S^{(k)}_\phi}\) is below the Monte Carlo resolution
+at every stage: an RMS of 0.0006--0.0014 against an equal Monte Carlo
+standard error.  Theorem~\ref{thm:main} therefore also describes
+\(\IMFt^{(k)}-S^{(k)}\) up to a term of remainder order.
+
+\paragraph{Stage-\(k\) Fisher quantities ([P4.1], with signal \(X^{(k)}_\phi\)).}
+\[
+  F^{(k)}_t\defeq\sum_u\phi''(X^{(k)}_{\phi,u}-S^{(k)}_{\phi,t})\,w^{(k)}_{u,t},
+  \qquad
+  \nabla^{(k)}_t\defeq\sum_u\rho'(X^{(k)}_{\phi,u}+\varepsilon_u-S^{(k)}_{\phi,t})\,w^{(k)}_{u,t},
+\]
+with \(D^{(k)}_t\defeq(F^{(k)}_t)^{1/2}\).  Here \(\nabla^{(k)}\) is
+[P4.1]'s centered score: its mean is zero because
+\(\sum_u\phi'(X^{(k)}_{\phi,u}-S^{(k)}_{\phi,t})w^{(k)}_{u,t}=0\).  Write
+\(F^{(k)\,-1}\nabla^{(k)}\) for the vector with entries
+\(\nabla^{(k)}_t/F^{(k)}_t\).  The normalised curvature is
+\(\bar F^{(k)}_t\defeq F^{(k)}_t/N_k(t)\), and \(\lambda\le\min_{k,t}\bar
+F^{(k)}_t\), as in \texttt{first\_irmf\_error\_targets.tex}.  The
+\emph{population equivalent kernel} is
+\[
+  W^{(k)}_\phi[t,u]\defeq\frac{\phi''(X^{(k)}_{\phi,u}-S^{(k)}_{\phi,t})\,w^{(k)}_{u,t}}{F^{(k)}_t}
+  =\E\,\frac{\partial(\nabla^{(k)}_t/F^{(k)}_t)}{\partial\varepsilon_u}.
+\]
+It is deterministic, nonnegative and row-stochastic.  For linear IMF it is
+IMF.pdf's \(W^{(k)}\).  Write \(A^{(m:l)}_\phi\) and \(\Wcal^{(k)}_\phi\) for
+the products formed with \(W^{(j)}_\phi\).
+
+\section{Exact decomposition}
+
+Define the single-pass Fisher remainder and the propagation remainder:
+\[
+  R^{(k)}\defeq\mathcal M_k(X^{(k)}_\phi+\varepsilon)-S^{(k)}_\phi-F^{(k)\,-1}\nabla^{(k)},
+  \qquad
+  \Phi^{(k)}\defeq\mathcal M_k(X^{(k)}_\phi+\varepsilon)-\mathcal M_k(Y^{(k)})-W^{(k)}_\phi E^{(k)} .
+\]
+\(R^{(k)}\) is [P4.1]'s \(R_t\) for the stage-\(k\) single pass.  Define the
+transfer operators
+\(T^{(k,k)}\defeq I\) and \(T^{(k,j)}\defeq-W^{(k)}_\phi A^{(k-1:j+1)}_\phi\)
+for \(j<k\).
+
+\begin{lemma}[Exact decomposition]\label{lem:exact}
+For every \(k\ge1\),
+\[
+  e^{(k)}=L^{(k)}+\Rem^{(k)},\qquad
+  L^{(k)}\defeq\sum_{j\le k}T^{(k,j)}F^{(j)\,-1}\nabla^{(j)},\qquad
+  \Rem^{(k)}\defeq\sum_{j\le k}T^{(k,j)}\bigl(R^{(j)}-\Phi^{(j)}\bigr).
+\]
+\end{lemma}
+
+\begin{proof}
+By definition,
+\(e^{(k)}=F^{(k)\,-1}\nabla^{(k)}+R^{(k)}-\Phi^{(k)}-W^{(k)}_\phi E^{(k)}\).
+Hence
+\(E^{(k+1)}=(I-W^{(k)}_\phi)E^{(k)}+F^{(k)\,-1}\nabla^{(k)}+R^{(k)}-\Phi^{(k)}\)
+with \(E^{(1)}=0\), so
+\(E^{(k)}=\sum_{j<k}A^{(k-1:j+1)}_\phi(F^{(j)\,-1}\nabla^{(j)}+R^{(j)}-\Phi^{(j)})\).
+Substitute.
+\end{proof}
+
+\begin{remark}
+For \(\rho(x)=x^2/2\): \(F^{(k)\,-1}\nabla^{(k)}=W^{(k)}\varepsilon\) and
+\(R^{(k)}=\Phi^{(k)}=0\).  The identity
+\(\sum_{j<k}A^{(k-1:j+1)}W^{(j)}=I-A^{(k-1)}\) then recovers IMF.pdf,
+Lemma~2.3: \(\IMFt^{(k)}-S^{(k)}=\Wcal^{(k)}\varepsilon\).  For IRMF the same
+telescoping holds for the mean Jacobian:
+\(\E\,\partial L^{(k)}/\partial\varepsilon=\Wcal^{(k)}_\phi\).  So
+\(L^{(k)}\) is linear IMF with \(W\) replaced by \(W_\phi\), acting on bounded
+scores.  The random Jacobians enter only through \(\Phi^{(k)}\).
+\end{remark}
+
+\section{Deterministic operator bounds}
+
+For a circulant operator, \(\norm\cdot_\infty\) (the
+\(\ell_\infty\to\ell_\infty\) norm) is the \(\ell_1\) norm of its impulse
+response.  Let \(\hat w_k(\omega)\) be the multiplier of \(W^{(k)}\) on
+\(\Z\), \(\omega\in[-\pi,\pi]\).  Wrapping to the periodic grid does not
+increase \(\ell_1\) norms.  Assume, for constants \(c_K\ge1\) and \(C_-\):
+\begin{itemize}
+\item[(K1)] \(|\hat w_k(\omega)|\le c_K\min\{1,(nh_k|\omega|)^{-2}\}\);
+\item[(K2)] \(|\hat w_k'(\omega)|\le c_Knh_k\min\{nh_k|\omega|,(nh_k|\omega|)^{-2}\}\);
+\item[(K3)] \(0\le1-\hat w_k(\omega)\le c_K\min\{(nh_k\omega)^2,1\}\);
+\item[(K4)] \(\prod_k(1+\hat w_k(\omega)_-)\le C_-\).
+\end{itemize}
+(K1)--(K3) hold for \((1-|u|)_+^2\), the kernel used in the experiments,
+and for Epanechnikov \(\tfrac34(1-u^2)_+\).  No third derivative of \(K\)
+is needed.  IMF.pdf, Section~2.3, writes ``Epanechnikov
+\(\tfrac34(1-|u|)^2_+\)''; these are two different kernels.  (K4) holds with
+\(C_-=1\) for positive-definite kernels.  For Epanechnikov, \(\hat w_k<0\)
+only where \(nh_k|\omega|\ge4.49\), so \(C_-<\infty\).
+
+\begin{lemma}[Linear composites, uniform in \(k\)]\label{lem:linear}
+Under (K1)--(K4) there is \(C_*=C(c_K,C_-,a)\) such that for all
+\(l\le m\) and \(l\le k\):
+\[
+  \norm{A^{(m:l)}}_2\le C_-,\qquad
+  \norm{A^{(m:l)}}_\infty\le C_P\defeq1+C_*,\qquad
+  \norm{W^{(k)}A^{(k-1:l)}}_\infty\le C_* .
+\]
+\end{lemma}
+
+\begin{proof}
+\emph{\(\ell_1\) bound.}  For \(f\) on \(\Z\) and \(r\ge1\), Cauchy--Schwarz
+with weights \(1+d^2/r^2\) and Parseval give
+\(\sum_d|f(d)|\le(1+\pi r)^{1/2}(\norm{\hat f}^2+r^{-2}\norm{\hat f'}^2)^{1/2}\),
+where \(\norm g^2\defeq(2\pi)^{-1}\int_{-\pi}^{\pi}|g|^2\).
+
+\emph{Geometric sums.}  Let \(\Pi\defeq\prod_{i=l}^{k-1}(1-\hat w_i)\).  Since
+\(\hat w_i\le1\), \(|1-\hat w_i|\le1+(\hat w_i)_-\), so \(|\Pi|\le C_-\), and
+the same holds for every sub-product.  By (K2), with
+\(g(s)\defeq\min(s^2,s^{-1})\) and the \(nh_i\) geometric with ratio \(a\),
+\(\sum_i|\hat w_i'(\omega)|\le c_K|\omega|^{-1}\sum_ig(nh_i|\omega|)\le c_KG_a|\omega|^{-1}\),
+where \(G_a\defeq(1-a^{-2})^{-1}+(1-a^{-1})^{-1}\).
+
+\emph{Composite \(c=W^{(k)}A^{(k-1:l)}\).}  Here \(\hat c=\hat w_k\Pi\), so
+\(\norm{\hat c}^2\le C_-^2\norm{\hat w_k}^2\le C/(nh_k)\) by (K1).  The
+derivative is \(\hat c'=\hat w_k'\Pi-\hat w_k\sum_i\hat w_i'\Pi_{\ne i}\).
+The first term contributes \(\le C\,nh_k\) to \(\norm\cdot^2\).  For
+\(i\ne k-1\), the factor \(\Pi_{\ne i}\) contains the finest factor
+\(|1-\hat w_{k-1}|\le c_K\min\{1,(a\,nh_k\omega)^2\}\).  These terms are
+therefore bounded by
+\(c_K^3C_-G_a\min\{1,(nh_k\omega)^{-2}\}\min\{a^2(nh_k)^2|\omega|,|\omega|^{-1}\}\),
+whose square integrates to \(\le Ca\,nh_k\).  The term \(i=k-1\) is bounded
+by \(c_K^2C_-\,nh_{k-1}\min\{nh_{k-1}|\omega|,(nh_{k-1}|\omega|)^{-2}\}\) and
+contributes \(\le C\,nh_{k-1}\).  So \(\norm{\hat c'}^2\le C\,nh_k\), and the
+\(\ell_1\) bound with \(r=nh_k\) gives \(\norm c_1\le C_*\).
+
+\emph{Bare products \(A^{(m:l)}=I+g\).}  Here \(\hat g=\Pi-1\).  For
+\(|\omega|\ge1/(nh_m)\),
+\(|\hat g|\le C_-\sum_i|\hat w_i|\le C_-c_K(1-a^{-2})^{-1}(nh_m|\omega|)^{-2}\),
+and \(|\hat g|\le1+C_-\) everywhere, so \(\norm{\hat g}^2\le C/(nh_m)\).
+The derivative \(\hat g'=\Pi'\) is bounded as above without \(\hat w_k\), so
+\(\norm{\hat g'}^2\le C\,nh_m\).  Hence \(\norm g_1\le C_*\).  Finally,
+\(\norm{A^{(m:l)}}_2=\sup|\Pi|\le C_-\).
+\end{proof}
+
+\begin{remark}
+Each factor has \(\norm{I-W^{(k)}}_\infty\approx2\), so factor-by-factor
+bounds give \(2^k\).  The lemma uses scale separation instead: the finest
+factor \(1-\hat w_{k-1}\) vanishes quadratically at the frequencies where
+the coarser factors vary.  The same argument gives
+\(\norm{W^{(k)}A^{(k-1:j+1)}W^{(j)}}_\infty\lesssim a^{-2(k-j)}\).
+Lemma~\ref{lem:linear} replaces IMF.pdf, Lemma~2.2, which fails for
+Epanechnikov.  The single factors \(\norm{I-W^{(k)}}_2\) exceed one, but
+the products stay bounded.
+\end{remark}
+
+\begin{lemma}[Perturbation to the population kernels]\label{lem:perturb}
+Let \(\Delta^{(k)}_\phi\defeq W^{(k)}_\phi-W^{(k)}\),
+\(\tau_k\defeq\norm{\Delta^{(k)}_\phi}_\infty\), and
+\(\tau_\Sigma\defeq\sum_k\tau_k\).  If \(C_P\tau_\Sigma\le1/2\), then
+\[
+  \sup_{l\le m}\norm{A^{(m:l)}_\phi}_\infty\le2C_P,\qquad
+  \sup_{l\le k}\norm{W^{(k)}_\phi A^{(k-1:l)}_\phi}_\infty\le C_W\defeq2C_*+1 .
+\]
+Moreover, \(\tau_k\le L^\phi_3\,\omega_k/g^{\min}_k\).  Here \(\omega_k\) is
+the largest oscillation of \(X^{(k)}_\phi\) over a stage-\(k\) window,
+\(L^\phi_3\defeq\sup|\phi'''|\), and \(g^{\min}_k\) is the smallest value of
+\(\phi''(X^{(k)}_{\phi,u}-S^{(k)}_{\phi,t})\) over active pairs.
+\end{lemma}
+
+\begin{proof}
+Telescoping gives
+\(A^{(m:l)}_\phi-A^{(m:l)}=-\sum_{i=l}^mA^{(m:i+1)}\Delta^{(i)}_\phi A^{(i-1:l)}_\phi\).
+With \(M\defeq\sup\norm{A_\phi}_\infty\), this yields
+\(M\le C_P+C_P\tau_\Sigma M\), so \(M\le2C_P\).  Next,
+\(W^{(k)}_\phi A^{(k-1:l)}_\phi=W^{(k)}A^{(k-1:l)}-\sum_iW^{(k)}A^{(k-1:i+1)}\Delta^{(i)}_\phi A^{(i-1:l)}_\phi+\Delta^{(k)}_\phi A^{(k-1:l)}_\phi\),
+whose norm is at most \(C_*+2C_*C_P\tau_\Sigma+2C_P\tau_k\le2C_*+1\).
+For the bound on \(\tau_k\), write \(g_u=\phi''(X^{(k)}_{\phi,u}-S^{(k)}_{\phi,t})\)
+and \(\bar g=\sum_ua_{u,t}g_u\).  Then
+\(\sum_ua_{u,t}|g_u/\bar g-1|\le(\max g-\min g)/\min g\le L^\phi_3\omega_k/g^{\min}_k\).
+\end{proof}
+
+\section{The leading term}
+
+\begin{proposition}[Concentration of \(L^{(k)}\), no Gaussianity]\label{prop:leading}
+Suppose \(\sup_{l\le k}\norm{W^{(k)}_\phi A^{(k-1:l)}_\phi}_\infty\le C_W\),
+\(\bar F^{(j)}_t\ge\lambda\) for all \(j,t\), and
+\(\alpha_j\le\alpha_ka^{-(k-j)}\).  Then with probability at least
+\(1-e^{-x}\), simultaneously for all \(k\le K\) and \(t\),
+\[
+  |L^{(k)}_t|\le\frac{C_W}{\lambda}\Bigl\{
+    \frac{\sqrt{2\alpha_kz_x}}{1-a^{-1/2}}
+    +\frac{2\alpha_kz_x}{3(1-a^{-1})}\Bigr\}.
+\]
+\end{proposition}
+
+\begin{proof}
+Since \(F^{(j)\,-1}_{t'}\nabla^{(j)}_{t'}=\sum_u\bigl(a^{(j)}_{u,t'}/\bar F^{(j)}_{t'}\bigr)\,\rho'(X^{(j)}_{\phi,u}+\varepsilon_u-S^{(j)}_{\phi,t'})\),
+we can write \(L^{(k)}_t=\sum_u\xi_{t,u}(\varepsilon_u)\).  The summands are
+independent, \(\E L^{(k)}_t=0\), and \(|\xi_{t,u}|\le\sum_jb_j(u)\), where
+\(b_j(u)\defeq\lambda^{-1}\sum_{t'}|T^{(k,j)}[t,t']|\,a^{(j)}_{u,t'}\).  Then
+\(\norm{b_j}_1\le C_W/\lambda\) and \(\norm{b_j}_\infty\le C_W\alpha_j/\lambda\).
+By Minkowski,
+\(\sum_u\mathrm{Var}\,\xi_{t,u}\le(\sum_j\norm{b_j}_2)^2\le(C_W/\lambda)^2(\sum_j\alpha_j^{1/2})^2\).
+The centered summands are bounded by \(2(C_W/\lambda)\sum_j\alpha_j\).
+Apply Bernstein's inequality, sum the geometric series, and take a union
+bound over the \(nK\) pairs \((k,t)\).
+\end{proof}
+
+Only \(|\rho'|\le1\) is used, so the bound also holds under contamination.
+Only sup-norm composite bounds are needed, not \(\ell_2\) contraction.  The
+factor \((1-a^{-1/2})^{-1}\approx6.3\) for \(a=\sqrt2\) is the price of
+ignoring cancellations.  The sharp variance is
+\(\approx v^2\norm{\Wcal^{(k)}_\phi[t,\cdot]}_2^2\le
+v^2\norm{A^{(k-1)}_\phi}_2^2\norm{W^{(k)}_\phi[t,\cdot]}_2^2\), with
+\(v\defeq(\E\rho'(\varepsilon)^2)^{1/2}/\E\rho''(\varepsilon)\).  At
+\(H=2\sigma\), \(v/\sigma=1.0034\).  This matches the simulations but is not
+proved (Gap~3).
+
+\section{Remainders}
+
+\begin{lemma}[Fisher remainder at each stage]\label{lem:fisher}
+At stage \(j\), Proposition~4.1 applies to the single pass
+\(\mathcal M_j(X^{(j)}_\phi+\varepsilon)\), with signal \(X^{(j)}_\phi\) and weights
+\(w^{(j)}\).  On its event, with [P4.1]'s stage-\(j\) constants
+\(C_1,C_2,C_3,\delta,D_{\min}\) and \(z_x\) as above,
+\[
+  \max_t\bigl|D^{(j)}_tR^{(j)}_t\bigr|\le\frac1{D_{\min}}\Bigl\{
+    \frac{9C_1^2C_3}{8(1-\delta)^3}+\frac{C_1C_2}{1-\delta}\Bigr\},
+  \qquad\text{hence}\qquad
+  \norm{R^{(j)}}_\infty\le\mathcal R^{(j)}\le A_Rz_x\alpha_j .
+\]
+Lemma~4.2 uses Bernstein's inequality with \(|\rho'|\le L_1\) and
+\(\rho''\le L_2\) only, so no Gaussian assumption is needed.
+\end{lemma}
+
+\begin{lemma}[Propagation remainder; proof sketch]\label{lem:phi}
+Let \(\Lambda^{(k)}\defeq\sum_{j<k}L^{(j)}\) and
+\(\Theta^{(k)}\defeq E^{(k)}-\Lambda^{(k)}\).  Suppose that on the events of
+the earlier stages, \(\norm{E^{(k)}}_\infty\le A_E(z_x\alpha_{k-1})^{1/2}\)
+and \(\norm{\Theta^{(k)}}_\infty\le A_\Theta z_x\alpha_{k-1}\).  Then,
+outside an event of probability \(e^{-x}\),
+\(\norm{\Phi^{(k)}}_\infty\le A_\Phi z_x\alpha_{k-1}\).
+\end{lemma}
+
+\begin{proof}[Sketch]
+Let \(y=X^{(k)}_\phi+\varepsilon\), let \(J(s)\) be the Jacobian of \(\mathcal M_k\)
+at \(y-sE^{(k)}\), and let \(\bar M[t,u]\defeq\rho''(y_u-S^{(k)}_{\phi,t})\,w^{(k)}_{u,t}/F^{(k)}_t\),
+which is the draft's \(M\) at stage \(k\).  Then
+\(\Phi^{(k)}=\Phi_{\mathrm{quad}}+\Phi_{\mathrm{loc}}+\Phi_{\mathrm{fl}}\):
+\begin{itemize}
+\item \(\Phi_{\mathrm{quad}}=\int_0^1(J(s)-J(0))\,ds\,E^{(k)}\).  It is
+  quadratic: \(\norm{\Phi_{\mathrm{quad}}}_\infty\le CL_3\norm{E^{(k)}}_\infty^2/\lambda\).
+\item \(\Phi_{\mathrm{loc}}=(J(0)-\bar M)(E^{(k)}-E^{(k)}_t\mathbf1)\), from
+  the location and normalisation errors.  Since \(J(0)\) and
+  \(W^{(k)}_\phi\) have unit row sums, only \(E^{(k)}-E^{(k)}_t\) enters.
+  The errors are of order \(C_1+C_2\), so
+  \(\norm{\Phi_{\mathrm{loc}}}_\infty\le C\sqrt{z_x\alpha_k}\,\norm{E^{(k)}}_\infty\).
+\item \(\Phi_{\mathrm{fl},t}=\sum_u\zeta_{t,u}(\varepsilon_u)(E^{(k)}_u-E^{(k)}_t)\),
+  with \(\zeta\) centered, independent over \(u\), and bounded by
+  \(L_2a^{(k)}_{u,t}/\lambda\).  Split \(E^{(k)}=\Lambda^{(k)}+\Theta^{(k)}\).
+  The \(\Theta\)-part is at most \(2L_2\norm{\Theta^{(k)}}_\infty/\lambda\).
+  The \(\Lambda\)-part is a bilinear form in independent variables, since
+  \(\Lambda^{(k)}=\sum_v\gamma_{\cdot,v}(\varepsilon_v)\) with
+  \(\E\Lambda^{(k)}=0\).  Its diagonal is \(O(\alpha_{k-1})\).  Its
+  off-diagonal part is a degenerate second-order U-statistic; decoupling and
+  two conditional Bernstein bounds give \(Cz_x(\alpha_k\alpha_{k-1})^{1/2}\).
+  \emph{This step is not written out.}
+\end{itemize}
+\end{proof}
+
+\section{Uniform sup-norm rate}
+
+\begin{theorem}[Conditional on Lemma~\ref{lem:phi}]\label{thm:main}
+Assume a composite bound \(C_W\) (from Lemma~\ref{lem:perturb}, or verified
+for the given \(\phi\)-path), \(\bar F^{(j)}\ge\lambda\), the smallness
+conditions of Proposition~4.1 at every stage \(j\le K\), and
+\(\alpha_j\le\alpha_ka^{-(k-j)}\).  Then there are \(A_1,A_2\), independent of
+\(k\), such that with probability at least \(1-3e^{-x}\), simultaneously for
+all \(k\le K\),
+\[
+  \max_t\bigl|\IMFt^{(k)}_t-S^{(k)}_{\phi,t}\bigr|\le A_1\sqrt{z_x\alpha_k}+A_2\,z_x\alpha_k,
+  \qquad\alpha_k\asymp(nh_k)^{-1}.
+\]
+\end{theorem}
+
+\begin{proof}
+By Lemma~\ref{lem:exact} and the composite bound,
+\(\norm{\Rem^{(k)}}_\infty\le(1+C_W)\sum_{j\le k}(\mathcal R^{(j)}+\norm{\Phi^{(j)}}_\infty)\).
+Proposition~\ref{prop:leading} bounds \(L^{(k)}\).  The hypotheses of
+Lemma~\ref{lem:phi} at stage \(k\) follow by induction:
+\(\norm{E^{(k)}}\le\sum_{j<k}\norm{e^{(j)}}\) is a geometric sum, and
+\(\Theta^{(k)}=\sum_{j<k}A^{(k-1:j+1)}_\phi(R^{(j)}-\Phi^{(j)})\) with
+\(\norm{A_\phi}_\infty\le2C_P\).  Finally,
+\(\sum_{j\le k}z_x\alpha_j\le z_x\alpha_k/(1-a^{-1})\).
+\end{proof}
+
+This is the one-step rate of [P4.1] at every stage, with constants that do
+not grow with \(k\).  It is the robust analogue of IMF.pdf, Lemma~2.5.
+
+\section{Numerical evidence}\label{sec:numerics}
+
+All runs use one smooth test signal, a slow baseline plus a chirp with standard deviation 0.39 (\(n=1000\), periodic, windows
+\(501,355,\dots,31\), weights \((1-|u|)_+^2\)), \(\sigma=0.4\), \(H=0.8\),
+and an exact safeguarded Newton M-smoother.  The reference is the
+\(\phi\)-path, with \(\phi\) computed exactly: closed form for Gaussian noise,
+and Gauss--Laguerre quadrature over the contamination law
+\(\pm s\,\mathrm{Exp}(1)\), added with probability \(p\).  The script is
+\texttt{irmf\_leading\_term\_mc.py}.
+
+\begin{table}[h]\centering\small\setlength\tabcolsep{3.5pt}
+\begin{tabular}{lrrrrr|rrrrrr}
+\toprule
+ & & & & & & \multicolumn{6}{c}{\(\norm{e^{(k)}-L^{(k)}}_\infty/\norm{e^{(k)}}_\infty\) (\%), stage \(k\)}\\
+scenario & reps & \(\max\tau_k\) & \(\tau_\Sigma\) & \(\norm{A_\phi}_2\) & comp.\ \(\infty\) & 1 & 2 & 3 & 5 & 7 & 9\\
+\midrule
+Gaussian & 300 & 0.08 & 0.23 & 1.000 & 1.00 & 1.3 & 2.4 & 3.0 & 4.2 & 6.2 & 10.4 \\
+Gaussian, $3\times$ signal & 200 & 0.51 & 1.68 & 1.051 & 1.00 & 2.4 & 4.2 & 4.9 & 5.8 & 7.3 & 10.6 \\
+$p=0.2$, $2\sigma$ & 200 & 0.08 & 0.22 & 1.000 & 1.00 & 2.1 & 3.9 & 4.8 & 8.1 & 14.4 & 26.1 \\
+$p=0.2$, $6\sigma$ & 200 & 0.08 & 0.22 & 1.000 & 1.00 & 2.9 & 5.7 & 7.4 & 12.8 & 23.0 & 41.6 \\
+\bottomrule
+\end{tabular}
+\caption{Leading-term accuracy (medians over repeats).  ``comp.\ \(\infty\)''
+is \(\max_{l\le k}\norm{W^{(k)}_\phi A^{(k-1:l)}_\phi}_\infty\);
+\(\norm{A_\phi}_2\) is \(\max_k\norm{A^{(k-1)}_\phi}_2\).  The contamination
+rows use additive contamination with probability \(p=0.2\) and scale
+\(2\sigma\) or \(6\sigma\).}
+\end{table}
+
+\begin{figure}[h]\centering
+\includegraphics[width=\textwidth]{{{artifact:art_4a665027-9fe4-4ae1-a30b-74df4fcb47ee}}}
+\caption{Median sup norms by stage.  The black line is the component error.
+The orange line is the leading-term error, the gap between the error and
+the leading term.  It is driven by the single-pass Fisher remainder
+\(R^{(k)}\) (purple); the propagation remainder \(\Phi^{(k)}\) (green) is
+smaller.  300 repeats for the Gaussian panel, 200 for the others.}
+\end{figure}
+
+\paragraph{Findings.}
+\begin{enumerate}
+\item Composite sup norms are \(\le1.00\) in every scenario, while bare
+  products reach \(2.11\)--\(2.14\).  On a 21-stage schedule
+  (\(n=2^{16}\)) the linear composites stay \(\le1.000\) for both kernels.
+  The bare products stay \(\le2.14\) for \((1-|u|)_+^2\) and \(\le2.25\) for
+  Epanechnikov, and \(\norm{A}_2\le1.000\) and \(\le1.097\).
+\item For the test signal, \(C_P\tau_\Sigma=2.11\times0.234=0.49\le1/2\), so
+  Lemma~\ref{lem:perturb} applies, with no margin.  With a \(3\times\) signal,
+  \(\tau_\Sigma=1.68\) and the lemma does not apply.  Even
+  \(\norm{I-W^{(1)}_\phi}_2=1.05\) there, yet every composite is \(\le1\).
+\item The fully telescoped model \(\Wcal^{(k)}_\phi\eta\), with
+  \(\eta_u=\rho'(\varepsilon_u)/\E\rho''(\varepsilon)\), is as accurate as
+  \(L^{(k)}\).
+\item Under contamination, the expansion degrades at the finest windows
+  (26\% and 42\% at the 31-point window).  There the single-pass remainder
+  dominates: at \(6\sigma\), \(\norm{R^{(9)}}_\infty=0.128\) against
+  \(\norm{e^{(9)}}_\infty=0.225\), while \(\norm{\Phi^{(9)}}_\infty=0.038\).
+  This is Proposition~4.1's local-sample-size condition, not a failure of
+  propagation.
+\end{enumerate}
+
+\section{Gaps}
+\begin{gap}[1. Lemma~\ref{lem:phi}]
+Write out the decoupled U-statistic bound, uniformly in \(t\).
+\end{gap}
+\begin{gap}[2. Composite bound for tilted kernels]
+Lemma~\ref{lem:perturb} needs \(C_P\tau_\Sigma\le1/2\); the simulations show
+\(\norm{\Wcal_\phi}_\infty\le1\) far beyond that.  Treat
+\(W^{(k)}_\phi\) as a variable-coefficient convolution whose symbol varies on
+the coarser scale \(h_{k-1}\).
+\end{gap}
+\begin{gap}[3. Sharp constant]
+Prove \(\mathrm{Var}\,L^{(k)}_t\approx v^2\norm{\Wcal^{(k)}_\phi[t,\cdot]}_2^2\),
+for example with Efron--Stein and the mean-Jacobian telescoping.
+\end{gap}
+\begin{gap}[4. Targets]
+Prove \(\norm{S^{(k)}-S^{(k)}_\phi}_\infty=O(z_x\alpha_{k-1})\) for IMF.pdf's
+true IMFs.  The simulations show no difference at Monte Carlo resolution.
+Separately, relate \(S^{(k)}_\phi\) to the clean \(\rho\)-run \(X^{\mathrm b}\)
+of the second-component draft: the per-stage shifts are \(O(\sigma^2)\),
+deterministic, and propagate through the same composites.
+\end{gap}
+\begin{gap}[5. Design]
+Lemma~\ref{lem:linear} uses the periodic grid (circulant operators).
+\end{gap}
+\begin{gap}[6. Finest scales under contamination]
+Cap \(K\) by a local-sample-size condition \(nh_K\gtrsim z_x\).
+\end{gap}
+
+\appendix
+\section{Notation and its sources}\label{sec:notation}
+\footnotesize
+\begin{tabular}{p{0.25\textwidth}p{0.36\textwidth}p{0.27\textwidth}}
+\toprule
+symbol & meaning & source\\
+\midrule
+\(Y^{(k)},\ \IMFt^{(k)},\ h_k,\ a\) & residual, fitted IMF, bandwidth, factor & IMF.pdf \S2.2, (3.2)\\
+\(W^{(k)},\ A^{(k)},\ \Wcal^{(k)}\) & linear smoother, residual product, component operator & IMF.pdf (2.1)--(2.2)\\
+\(A^{(m:l)}\) & partial product \((I-W^{(m)})\cdots(I-W^{(l)})\) & new; \(A^{(k)}=A^{(k:1)}\)\\
+\(S^{(k)},\ X^{(k)},\ \varepsilon^{(k)}\) & true IMF, true residual, residual noise & IMF.pdf \S3.2\\
+\(S^{(k)}_\phi,\ X^{(k)}_\phi\) & \(\phi\)-path target and clean residual & new; \(S^{(1)}_\phi=S\) of [P4.1]\\
+\(w^{(k)}_{u,t}=K_{h_k}(t-u)\) & unnormalised weights & [P4.1] (\(w_{u,t}\)), IMF.pdf\\
+\(N_k(t)\) & kernel mass \(\sum_uw^{(k)}_{u,t}\) & IMF.pdf; \(W_t\) in [P4.1]\\
+\(a^{(k)}_{u,t},\ \alpha_k\) & normalised weights, largest weight & first-component note (\(a_{u,t},\alpha\))\\
+\(\phi,\ B\) & averaged contrast, \(\sqrt{H^2+\sigma^2}\) & [P4.1]; first-component note\\
+\(F^{(k)}_t,\ D^{(k)}_t,\ \nabla^{(k)}_t,\ R^{(k)}\) & curvature, its root, centered score, remainder & [P4.1] (4.x), at stage \(k\)\\
+\(\bar F^{(k)}_t,\ \lambda\) & normalised curvature and lower bound & first-component note\\
+\(L_1,L_2,L_3\); \(C_1,C_2,C_3\); \(\delta,\ D_{\min}\) & contrast and Fisher constants & [P4.1]\\
+\(z_x\) & \(x+\log(4nK)\) & [P4.1] with \(m=n\), \(\times K\) stages\\
+\(W^{(k)}_\phi,\ A^{(m:l)}_\phi,\ \Wcal^{(k)}_\phi\) & population equivalent kernel and its products & new\\
+\(e^{(k)},\ E^{(k)},\ L^{(k)}\); \(\Phi^{(k)},\ T^{(k,j)}\) & error, accumulated error, leading term, propagation remainder, transfer operator & new\\
+\(\bar M\) & random equivalent kernel & second-component draft (\(M\))\\
+\bottomrule
+\end{tabular}
+
+\medskip\noindent
+Definitional equalities use \(\stackrel{\mathrm{def}}{=}\), as in IMF.pdf;
+[P4.1] and the first- and second-component notes write \(\vcentcolon=\).
+\end{document}

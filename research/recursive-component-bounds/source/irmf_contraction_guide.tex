@@ -1,0 +1,397 @@
+\documentclass[11pt]{article}
+\usepackage[a4paper,margin=25mm]{geometry}
+\usepackage{amsmath,amssymb,mathtools,graphicx,booktabs,xcolor}
+\usepackage[most]{tcolorbox}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\defeq}{\stackrel{\mathrm{def}}{=}}
+\newcommand{\arginf}{\mathop{\mathrm{arg\,inf}}}
+\newcommand{\norm}[1]{\lVert#1\rVert}
+\newcommand{\IMFt}{\widetilde S}
+\newcommand{\Wcal}{\mathcal W}
+\newtcolorbox{idea}{colback=teal!6,colframe=teal!60!black,boxrule=0.6pt,arc=2pt,left=6pt,right=6pt,top=4pt,bottom=4pt}
+\newtcolorbox{formula}{colback=orange!6,colframe=orange!70!black,boxrule=0.6pt,arc=2pt,left=6pt,right=6pt,top=4pt,bottom=4pt}
+\setlength{\parskip}{4pt}\setlength{\parindent}{0pt}
+\emergencystretch=3em\sloppy
+\begin{document}
+\begin{center}
+{\LARGE Why later IRMF components stay accurate}\\[4pt]
+{\large A guided tour of the contraction argument for components \(k\ge2\)}\\[4pt]
+{\normalsize Companion to \texttt{irmf\_contraction\_note.pdf} (version 2). Work in progress.}
+\end{center}
+
+\begin{idea}
+\textbf{What you will take away.}
+\begin{enumerate}\setlength{\itemsep}{1pt}
+\item Every IRMF stage subtracts a noisy fit, so errors could pile up.  They
+  do not, and the reason is visible in frequency: each component takes its
+  own band of frequencies.
+\item In the sup norm (the largest error over all time points), one stage on
+  its own can double an error.  A chain of stages cannot, because the
+  stages work at well-separated scales.
+\item The robust fit behaves, to first order, like a linear smoother with
+  \emph{bent weights}, \(W_\phi\).  The Fisher expansion of the first
+  component, applied at every stage, makes this exact.
+\item What remains is a sum of small second-order terms.  It is largest at
+  the finest windows under heavy contamination.
+\end{enumerate}
+\end{idea}
+
+\paragraph{The test setting used in all figures.}
+One smooth test signal on \(n=1000\) equally spaced points, periodic at the
+ends: a slow baseline plus a chirp, with standard deviation 0.39.  Noise
+\(\sigma=0.4\), contrast \(\rho_H\) with \(H=0.8\), weights \((1-|u|)_+^2\),
+nine stages with windows of \(501,355,251,\dots,31\) points (\(a=\sqrt2\)).
+Some figures also use the same signal multiplied by three, or add
+contamination to 20\% of the points.
+
+
+\section{The question}
+
+IRMF fits a robust local level with a wide window, subtracts it, and repeats
+on the residual with a narrower window (IMF.pdf, (3.2)):
+\[
+  \IMFt^{(k)}_t\defeq\arginf_x\sum_u\rho\bigl(Y^{(k)}_u-x\bigr)\,w^{(k)}_{u,t},
+  \qquad Y^{(k+1)}\defeq Y^{(k)}-\IMFt^{(k)},\qquad h_{k+1}=h_k/a .
+\]
+The first component was handled by the Fisher expansion
+(Proposition~4.1 of \texttt{proposition\_4\_1\_lemma\_4\_2.tex}):
+\[
+  \IMFt_t-S_t=F_t^{-1}\nabla_t+R_t,
+\]
+whose leading term has size \(\sqrt{z_x/(nh)}\).  The question is whether
+component \(k\) keeps the error size of \emph{its own} window,
+\(\sqrt{z_x/(nh_k)}\), or whether the errors of earlier stages pile up.
+
+Why worry?  Stage \(k\) sees the error of stage \(k-1\) inside its input, and
+subtracting a fit can amplify a signal.  For any smoother \(W\) with
+nonnegative weights summing to one, the sup norm satisfies
+\(\norm{I-W}_\infty=2-2\,W[t,t]\approx2\): a spike at one point, minus a
+spread-out bump, has absolute mass 2.  Bounding one factor at a time gives
+\(2^{k-1}\) after \(k\) stages.  The bound in
+\texttt{second\_irmf\_error\_targets.tex} hits this wall: its constant
+\(\Gamma_1\ge2\) is raised to the power \(k\).
+
+\section{Warm-up: linear IMF in frequency language}
+
+For \(\rho(x)=x^2/2\) everything is linear, and IMF.pdf, Lemma~2.3 gives
+\[
+  \IMFt^{(k)}-S^{(k)}=W^{(k)}A^{(k-1)}\varepsilon,\qquad
+  A^{(k-1)}=(I-W^{(k-1)})\cdots(I-W^{(1)}).
+\]
+On the periodic grid every \(W^{(k)}\) is a convolution, so each acts on a
+frequency \(\omega\) by multiplying it by a number \(\hat w_k(\omega)\), its
+\emph{gain}.  Products of operators become products of gains:
+\[
+  \text{gain of component }k\text{'s error filter}
+  =\hat w_k(\omega)\prod_{j<k}\bigl(1-\hat w_j(\omega)\bigr).
+\]
+
+\begin{figure}[h]\centering
+\includegraphics[width=\textwidth]{T1_frequency.pdf}
+\caption{\textbf{How linear IMF shares noise between stages.}
+Each curve says how strongly a filter lets a frequency through: 1 means
+fully, 0 means not at all.  Colour marks the stage, from dark (stage~1,
+widest window) to light (stage~9, narrowest).
+\textbf{Left:} one smoother lets slow variations through and blocks fast
+ones; a narrower window lets more through.
+\textbf{Middle:} the filter that produces the error of component \(k\).
+Each one is a hump over its own range of frequencies.  The dashed curve is
+what is left for the final residual.
+\textbf{Right:} the subtraction \(I-W^{(k)}\) of each stage (one row per
+stage).  Dark means the frequency is removed, light means it is kept.
+\emph{Takeaway:} every frequency is handled by one or two stages, so noise is
+shared out between stages, not multiplied.}
+\end{figure}
+
+Read panel b as a filter bank: every frequency is assigned mostly to one or
+two components, and the bumps sum to at most one.  Noise therefore cannot
+grow from stage to stage in this picture.  It is only \emph{shared out}
+across stages.  For a positive-definite kernel every factor has gain in
+\([0,1]\), so \(\norm{A^{(k)}}_2\le1\) in the \(\ell_2\) (energy) norm.
+
+\section{The sup norm: one stage can double, a chain cannot}
+
+Energy is not the sup norm.  Figure~\ref{fig:impulse} shows what happens to
+the largest error.
+
+\begin{figure}[h]\centering
+\includegraphics[width=\textwidth]{T3_impulse_norms.pdf}
+\caption{\textbf{How large the error filters are in the sup norm} (the largest
+error over all time points).
+\textbf{Left:} the filter that produces the error of component \(k\),
+drawn in time.  The horizontal axis is measured in window half-widths of
+that stage.  The curves for stages 3, 5, 7 and 9 lie on top of each other:
+every stage uses the same filter shape at its own scale.
+\textbf{Right:} three sizes per stage, on a log scale.  Orange: the worst
+case if every stage could double the error, \(2^{k-1}\).  Purple: the actual
+size of the chain of subtractions \(A^{(k-1)}\); it stays near 2.  Green: the
+actual size of the error filter of component \(k\); it stays below 0.5 from
+stage~2 on.
+\emph{Takeaway:} the worst case never happens.}
+\label{fig:impulse}
+\end{figure}
+
+\begin{idea}
+\textbf{Why the chain does not grow: scale separation.}  Look again at
+Figure~1c.  At any frequency, the coarse stages have already switched to
+``keep'' (gain \(\approx1\)) and the fine stages are still at ``remove''
+(gain \(\approx0\)).  Only one or two stages are in between.  A product of
+many factors is therefore never a product of many numbers that are all
+slightly above or below one.  It is a few ones, one transition, and zeros.
+The proof (Lemma~2 of the note) turns this into a bound on the \(\ell_1\)
+norm of the composite filter, using one fact: the finest factor
+\(1-\hat w_{k-1}\) vanishes quadratically exactly where the coarser factors
+are still changing.
+\end{idea}
+
+The resulting statement, uniform in \(k\), is
+\[
+  \norm{W^{(k)}A^{(k-1:l)}}_\infty\le C_*,\qquad \norm{A^{(m:l)}}_\infty\le1+C_*,
+\]
+for all partial products \(A^{(m:l)}=(I-W^{(m)})\cdots(I-W^{(l)})\).  On a
+21-stage schedule (\(n=2^{16}\)) the computed values stay at most
+\(1.00\) and \(2.14\).
+
+\section{An aside: the Epanechnikov kernel}
+
+IMF.pdf, Lemma~2.2 claims \(\norm{A^{(k)}}\le1\).  That fails for
+Epanechnikov \(\tfrac34(1-u^2)_+\), because its Fourier transform has
+negative lobes: \(1-\hat w\) can exceed one.  Figure~\ref{fig:epa} shows why
+this does no real harm.
+
+\begin{figure}[h]\centering
+\includegraphics[width=\textwidth]{T4_epanechnikov.pdf}
+\caption{\textbf{The Epanechnikov kernel.}
+Each curve shows, for one stage, by how much the subtraction \(I-W^{(k)}\)
+scales each frequency.  The vertical axis is zoomed near 1; a value above the
+orange line means that frequency is amplified.
+\textbf{Left}, kernel \((1-|u|)_+^2\): no stage amplifies anything.
+\textbf{Right}, Epanechnikov: every stage amplifies a little, up to 8.7\%,
+but each at different frequencies.
+The dashed curve is the product over all nine stages.  It peaks at 1.077,
+so the small amplifications do not add up.}
+\label{fig:epa}
+\end{figure}
+
+The overshoot happens only where \(nh_k|\omega|\gtrsim4.5\), and because
+the bandwidths shrink geometrically, at a fixed frequency the overshoots add
+up to a bounded total.  So the kernel question is not fatal for the
+contraction.  The bound needs Fourier decay of order \(\omega^{-2}\); it does
+not need a third derivative of \(K\).
+
+\section{From linear to robust}
+
+\subsection{Making every stage a first-component problem}
+
+For the robust fit, we need a reference to measure errors against.  Use the
+\emph{\(\phi\)-path}: run the same recursion on the clean signal, with the
+noise-averaged contrast \(\phi(x)=\E\rho(x+\varepsilon)\):
+\[
+  X^{(1)}_\phi\defeq X,\qquad
+  S^{(k)}_{\phi,t}\defeq\arginf_x\sum_u\phi\bigl(X^{(k)}_{\phi,u}-x\bigr)w^{(k)}_{u,t},
+  \qquad X^{(k+1)}_\phi\defeq X^{(k)}_\phi-S^{(k)}_\phi .
+\]
+Why this path: feed stage \(k\) the clean residual plus \emph{fresh} noise,
+\(X^{(k)}_\phi+\varepsilon\).  That is exactly the first-component problem
+with signal \(X^{(k)}_\phi\), and its population target is
+\(S^{(k)}_\phi\).  So Proposition~4.1 applies at every stage, unchanged:
+\[
+  \text{single pass at stage }k:\qquad
+  \mathcal M_k(X^{(k)}_\phi+\varepsilon)-S^{(k)}_\phi
+  =F^{(k)\,-1}\nabla^{(k)}+R^{(k)} .
+\]
+The actual stage-\(k\) input differs from this by the errors made so far,
+\(E^{(k)}=\sum_{j<k}e^{(j)}\): \(Y^{(k)}=X^{(k)}_\phi+\varepsilon-E^{(k)}\).
+
+IMF.pdf, Section~3.2 defines the ``true IMFs'' \(S^{(k)}\) with the law of
+the actual residual noise \(\varepsilon-E^{(k)}\) instead of
+\(\varepsilon\).  Since \(E^{(k)}\) is small, the two targets differ only at
+second order.  In 400 simulated repeats they were indistinguishable: the
+difference was within Monte Carlo error at every stage.
+
+\subsection{The robust smoother as a linear smoother with bent weights}
+
+How does the stage-\(k\) fit respond to a small change \(E\) in its input?
+To first order, through the derivative of the leading term
+\(F^{-1}\nabla\), averaged over the noise:
+\[
+  W^{(k)}_\phi[t,u]\defeq\frac{\phi''\bigl(X^{(k)}_{\phi,u}-S^{(k)}_{\phi,t}\bigr)\,w^{(k)}_{u,t}}{F^{(k)}_t}.
+\]
+This is a deterministic matrix whose rows are nonnegative and sum to one, a
+smoother like \(W^{(k)}\).  Its weights are the kernel weights multiplied by
+the curvature \(\phi''\) at each point's distance from the local fit.
+
+\begin{figure}[h]\centering
+\includegraphics[width=\textwidth]{T5_kernel_tilt.pdf}
+\caption{\textbf{What the robust fit listens to}, for one stage-1 window (centred at
+the dotted line).
+\textbf{Top:} the clean signal inside the window (black) and the value the
+fit aims at (orange).
+\textbf{Bottom:} how much each point counts.  Grey dashed: linear weights.
+Green: weights of the linearised robust fit, \(W^{(1)}_\phi\).
+\textbf{Left:} for the test signal the two weight curves almost coincide.
+\textbf{Right:} with the signal three times larger, points whose value is
+far from the orange line count less, and points close to it count more.
+\emph{Takeaway:} to first order the robust fit is a linear smoother whose
+weights bend towards points near the current fit.}
+\label{fig:tilt}
+\end{figure}
+
+\begin{idea}
+\textbf{Bent weights.}  The robust fit listens most to points close to its
+current value.  If the signal is nearly flat on the scale of
+\(B=\sqrt{H^2+\sigma^2}\), the bending cancels in the normalisation and
+\(W_\phi=W\): robust IMF behaves like linear IMF to first order.  If the
+signal varies more, the weights bend, but they stay a smoother.
+\end{idea}
+
+\section{The decomposition}
+
+Put the two pieces together at every stage: fresh noise enters through the
+Fisher leading term, and old errors are partly removed by \(W_\phi\), exactly
+as in linear IMF.  Collecting the stages (Lemma~1 of the note) gives an
+exact identity:
+
+\begin{formula}
+\[
+  \underbrace{\IMFt^{(k)}-S^{(k)}_\phi}_{\text{error }e^{(k)}}
+  =\underbrace{\sum_{j\le k}T^{(k,j)}F^{(j)\,-1}\nabla^{(j)}}_{\text{leading term }L^{(k)}}
+  +\underbrace{\sum_{j\le k}T^{(k,j)}\bigl(R^{(j)}-\Phi^{(j)}\bigr)}_{\text{remainder}},
+\]
+\[
+  T^{(k,k)}=I,\qquad T^{(k,j)}=-W^{(k)}_\phi(I-W^{(k-1)}_\phi)\cdots(I-W^{(j+1)}_\phi).
+\]
+\(R^{(j)}\): the Fisher remainder of the stage-\(j\) single pass
+(Proposition~4.1).  \(\Phi^{(j)}\): the error of treating the response to
+\(E^{(j)}\) as linear.
+\end{formula}
+
+Three remarks make the formula readable.
+\begin{itemize}
+\item In the linear case the remainder is zero and the leading term is IMF.pdf's
+  \(W^{(k)}A^{(k-1)}\varepsilon\).
+\item For IRMF the leading term is ``linear IMF with bent weights, acting on
+  bounded scores''.  The transfer operators \(T^{(k,j)}\) are exactly the
+  composites of Section~3, built from \(W_\phi\) instead of \(W\).
+\item The random parts of the fit enter only through \(R\) and \(\Phi\),
+  which are products of two small quantities.
+\end{itemize}
+
+\begin{figure}[h]\centering
+\includegraphics[width=\textwidth]{T6_error_vs_leading.pdf}
+\caption{\textbf{Checking the leading term point by point.}
+Each dot is one time point in one of 20 simulated data sets (Gaussian
+noise).  Horizontal axis: the leading term \(L^{(k)}_t\).  Vertical axis:
+the actual error of component \(k\).  A dot on the diagonal means the
+leading term predicts the error exactly.  The four panels are stages 1, 2,
+5 and 8.
+\emph{Takeaway:} the dots sit on the diagonal; the printed medians show the
+typical miss is 30 to 150 times smaller than the typical error.}
+\end{figure}
+
+\section{Why the leading term is small at every stage}
+
+The leading term is a sum over observations, \(L^{(k)}_t=\sum_u\xi_{t,u}(\varepsilon_u)\),
+with independent pieces.  Each piece is bounded because the score
+\(\rho'\) is bounded (\(|\rho'|\le1\)), and its size is set by the transfer
+operators and the weights.  Bernstein's inequality then gives, for every
+stage and time point at once,
+\[
+  |L^{(k)}_t|\lesssim\frac{C_W}{\lambda}\sqrt{\frac{z_x}{nh_k}} .
+\]
+\begin{itemize}
+\item \(C_W\) is the sup-norm bound on the composites (Section~3, with bent
+  weights), and it does not depend on \(k\).
+\item Earlier stages have wider windows, so their weights are geometrically
+  smaller; their contributions sum to a constant multiple of the last one.
+\item Only the boundedness of \(\rho'\) is used, so this step holds under
+  contamination as well.  That is the robust advantage.
+\end{itemize}
+
+The bent-weight composites are still bounded.  This is proved when the total
+bending is small (\(C_P\tau_\Sigma\le\tfrac12\); the test signal gives 0.49).
+In simulation it holds far beyond that: \(\le1\) even for the \(3\times\)
+signal.
+
+\section{The remainders, and where the picture breaks}
+
+\begin{figure}[h]\centering
+\includegraphics[width=\textwidth]{{{artifact:art_4a665027-9fe4-4ae1-a30b-74df4fcb47ee}}}
+\caption{\textbf{Error budget by stage.}
+Each line is the largest value over time, taken as a median over simulated
+data sets, on a log scale.  Black: the error of component \(k\).  Orange: how
+far that error is from the leading term.  Purple and green: the two parts of
+the orange difference.  Purple is the remainder of the Fisher expansion at
+that stage; green is the error of treating the effect of earlier errors as
+linear.
+The four panels are: Gaussian noise; the signal three times larger; and 20\%
+of the points contaminated with spikes of size \(2\sigma\) or \(6\sigma\).
+\emph{Takeaway:} orange stays well below black, except at the finest
+stages under strong contamination, and there the cause is purple, the
+remainder of a single stage.}
+\end{figure}
+
+\begin{itemize}
+\item Without contamination the gap is 1--10\% of the error, and the Fisher
+  remainder sets it.  Its size follows \(1/(nh_k)\), the second-order rate of
+  Proposition~4.1.
+\item With 20\% contamination at \(6\sigma\) the gap reaches 42\% at the
+  31-point window.  There the single-pass remainder is \(0.128\) against an
+  error of \(0.225\).  This is the local-sample-size condition of
+  Proposition~4.1 failing at a small window; the propagation error is only
+  \(0.038\).
+\item Each remainder is of order \(z_x/(nh_j)\), and these sizes form a
+  geometric series, so their sum is dominated by the last stage.
+\end{itemize}
+
+\section{What is proved and what is open}
+
+\begin{center}\small
+\begin{tabular}{p{0.55\textwidth}p{0.35\textwidth}}
+\toprule
+statement & status\\
+\midrule
+Exact decomposition \(e=L+\text{remainder}\) & proved\\
+Linear composites bounded in sup norm, uniformly in \(k\), including Epanechnikov & proved (Fourier argument)\\
+Bent-weight composites bounded when the bending is small & proved; holds numerically far beyond\\
+Leading term \(\lesssim\sqrt{z_x/(nh_k)}\) uniformly, also under contamination & proved (Bernstein)\\
+Fisher remainder at each stage & Proposition~4.1, applied stage by stage\\
+Propagation remainder \(\Phi\) is second order & sketch; one U-statistic step open\\
+Uniform rate \(A_1\sqrt{z_x/(nh_k)}+A_2z_x/(nh_k)\) & conditional on the line above\\
+IMF.pdf true IMFs \(S^{(k)}\) vs \(\phi\)-path & equal numerically; proof open\\
+Sharp constant, non-periodic design, finest windows under contamination & open\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{Cheat sheet}
+
+\begin{center}\small
+\begin{tabular}{ll}
+\toprule
+symbol & meaning (source)\\
+\midrule
+\(Y^{(k)},\ \IMFt^{(k)},\ h_k\) & residual, fitted IMF, bandwidth (IMF.pdf)\\
+\(W^{(k)},\ A^{(k)}\) & linear smoother; product \((I-W^{(k)})\cdots(I-W^{(1)})\) (IMF.pdf)\\
+\(S^{(k)}\) & true IMF, averaged over the actual residual noise (IMF.pdf \S3.2)\\
+\(X^{(k)}_\phi,\ S^{(k)}_\phi\) & clean residual and target of the \(\phi\)-path (new)\\
+\(F^{(k)}_t,\ \nabla^{(k)}_t,\ R^{(k)}\) & curvature, centered score, Fisher remainder at stage \(k\) (Prop.~4.1)\\
+\(W^{(k)}_\phi\) & population equivalent kernel: linear weights bent by \(\phi''\) (new)\\
+\(T^{(k,j)}\) & how a stage-\(j\) error reaches component \(k\) (new)\\
+\(z_x\) & \(x+\log(4nK)\): union over all time points and stages\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{idea}
+\textbf{In five sentences.}  Each IRMF stage is a first-component problem
+plus the errors handed down from earlier stages.  The Fisher expansion turns
+each stage into a bent-weight linear smoother acting on bounded scores, plus
+a second-order remainder.  The handed-down errors pass through chains of
+\(I-W_\phi\), which in the sup norm stay bounded because the stages work at
+well-separated scales.  Bounded scores give Bernstein bounds at every stage,
+with the rate of the stage's own window.  What is left is second order and
+small, except at the finest windows under heavy contamination.
+\end{idea}
+
+\end{document}
