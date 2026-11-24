@@ -1,349 +1,365 @@
 % In IRMF.tex, insert \input{irmf_component_proofs} immediately after \input{IMF}.
 \section{Finite-sample bounds for the IRMF components}\label{irmfproof:section}
 
-At the first fit, the estimation error is the empirical score divided by
-the population curvature, up to a smaller remainder. At the second fit,
-part of that first error has already been subtracted from the data.
-We show how to subtract its contribution from the second score and repeat
-the argument at each scale. For a window containing \(m\) equally weighted
-observations, the leading error at that scale is of order \(\sqrt{z/m}\)
-and, under the conditions below, the remainder is of order \(z/m\), where \(z=\xx+\log(10n k_{\max})\)
-at confidence \(1-\ex^{-\xx}\).
+At the first fit, the leading error is the score divided by the curvature.
+Later fits inherit the errors of the components already subtracted. For a window of \(m\) equally weighted observations, we will approximate
+the error by a term of order \(\sqrt{z/m}\) and bound the remainder by a term
+of order \(z/m\).
 
-Throughout, the \(n\) grid points, the signal and the bandwidths are fixed,
-\(\Data_u=\Signal_u+\eps_u\) with i.i.d.\ errors of finite first moment,
-and the kernel weights are nonnegative with positive row sums. All maxima
-over \(t\) are on this grid.
+The \(n\) grid points, signal and bandwidths are fixed.
+We assume \(\Data_u=\Signal_u+\eps_u\) with i.i.d.\ errors of finite first
+moment and nonnegative kernel weights with positive row sums. All maxima over
+\(t\) are on this grid. We use confidence \(1-\ex^{-\xx}\), with \(\xx>0\)
+and \(z=\xx+\log(10n k_{\max})\) for the simultaneous bounds.
 
 \subsection{The first component}\label{irmfproof:first}
 
-In \eqref{miuygtd5r6wguwhd7r54we} let the contrast be convex, coercive and
-\(C^3\), with \(|\rhohu'|\le L_1\), \(0\le\rhohu''\le L_2\), and
-\(|\rhohu'''|\le L_3\). Write \(h=h_1\), \(Q_t^2=\sum_u\Kern_h(t-u)^2\),
-\(\kappa_t=\max_u\Kern_h(t-u)\), \(\DFN_t=\sqrt{\IF_t}\), \(\DFN_{\min}=\min_t\DFN_t>0\),
-and \(z_1=\xx+\log(4n)\) for \(\xx>0\). The score, curvature and third
-derivative in Lemma~\ref{LRMFloc} have respective bounds
-\begin{align*}
- \CONSTi_1&=\max_t L_1(Q_t\sqrt{2z_1}+2\kappa_t z_1/3)/\DFN_t,\\
- \CONSTi_2&=\max_t L_2(Q_t\sqrt{2z_1}+\kappa_t z_1/3)/\DFN_t,
- &\CONSTi_3&=\max_t L_3N_h(t)/\DFN_t^2 .
-\end{align*}
+For the fit in \eqref{miuygtd5r6wguwhd7r54we}, assume that the contrast is
+convex, coercive and \(C^3\), with \(|\rhohu'|\le L_1\),
+\(0\le\rhohu''\le L_2\) and \(|\rhohu'''|\le L_3\).
+Recall the centered score \(\nabla_t\), the population curvature \(\IF_t\)
+and \(\DFN_t=\sqrt{\IF_t}\). Write \(\DFN_{\min}=\min_t\DFN_t>0\).
+The three bounds \(\CONSTi_1,\CONSTi_2,\CONSTi_3\) from
+Lemma~\ref{LRMFloc} control the score fluctuation, curvature fluctuation
+and third derivative, respectively. Their finite-grid values are given
+in \eqref{irmfproof:eq:first-calibration}.
 
 \begin{proposition}\label{irmfproof:first-bound}
-If \(\delta_*=\CONSTi_2/\DFN_{\min}<1\) and
-\(\CONSTi_1\CONSTi_3/[\DFN_{\min}(1-\delta_*)^2]<4/9\), then with
-probability at least \(1-\ex^{-\xx}\),
+Suppose \(\CONSTi_2<\DFN_{\min}\). The empirical Newton step in curvature
+units is bounded, on the event below, by
+\(R=\CONSTi_1/(1-\CONSTi_2/\DFN_{\min})\).
+If \(R\CONSTi_3/(\DFN_{\min}-\CONSTi_2)<4/9\), then with probability at
+least \(1-\ex^{-\xx}\),
 \begin{equation}\label{irmfproof:first-expansion}
  \max_t\DFN_t|\IMFt_t-\IMFs_t-\IF_t^{-1}\nabla_t|
- \le \frac{1}{\DFN_{\min}}\left\{
- \frac{\CONSTi_1\CONSTi_2}{1-\delta_*}
- +\frac{9\CONSTi_1^2\CONSTi_3}{8(1-\delta_*)^3}\right\}.
+ \le \frac{R\CONSTi_2}{\DFN_{\min}}
+      +\frac{9R^2\CONSTi_3}{8(\DFN_{\min}-\CONSTi_2)} .
 \end{equation}
-On the same event,
-\(\max_t\DFN_t|\IMFt_t-\IMFs_t|\le3\CONSTi_1/[2(1-\delta_*)]\).
+On the same event, \(\max_t\DFN_t|\IMFt_t-\IMFs_t|\le 3R/2\).
 \end{proposition}
 
-\begin{proof}
-Fix \(t\), set \(\xs=\IMFs_t\), and use the empirical contrast \(\fp\)
-in \eqref{fjiuy9iw3ojlggeefr}. The population score equation gives
-\(\fp'(\xs)=-\nabla_t\), since differentiation in the fitted location
-introduces a minus sign. The centered score summands have total variance
-at most \(L_1^2 Q_t^2\) and maximum size \(2L_1\kappa_t\); the corresponding
-curvature bounds are \(L_2^2 Q_t^2\) and \(L_2\kappa_t\).
-Bernstein's inequality gives \(|\nabla_t|\le\DFN_t\CONSTi_1\) and
-\(|\IFP-\IF_t|\le\DFN_t\CONSTi_2\) for all \(t\), with failure probability
-at most \(4n\ex^{-z_1}\), where \(\IFP=\fp''(\xs)\).
-The third-derivative bound gives
-\(\max(\sup|\fs'''|,\sup|\fp'''|)\le\DFN_t^2\CONSTi_3\), so
-\(|\fs''(y)-\fs''(\xs)|\le\DFN_t^2\CONSTi_3|y-\xs|\).
+\subsection{How errors enter the later fits}\label{irmfproof:sec:recursive}
 
-In curvature units \(v=\DFN_t(y-\xs)\), put \(g(v)=\fp(y)\),
-\(c=g''(0)\ge1-\delta_*\), \(b=|g'(0)|/c\), and
-\(\tau=\CONSTi_3/\DFN_t\). Taylor's inequality gives
-\(|g'(v)-g'(0)-cv|\le\tau v^2/2\). Since \(\tau b/c<4/9\), the
-derivative has opposite signs at \(\pm3b/2\) if \(b>0\), and curvature
-stays positive between them. Thus its zero \(v_\circ\) satisfies
-\(|v_\circ|\le3b/2\), also when \(b=0\). At that zero,
-\(|v_\circ+g'(0)/c|\le9\tau b^2/(8c)\). This bounds the error using
-\(\IFP^{-1}\nabla_t\). Replacing \(\IFP\) by \(\IF_t\) costs at most
-\(\CONSTi_1\CONSTi_2/[\DFN_t(1-\delta_*)]\) in curvature units.
-Use \(b\le\CONSTi_1/(1-\delta_*)\) and maximize both bounds over \(t\).
-\end{proof}
-
-\subsection{How the first error enters the later fits}\label{irmfproof:sec:recursive}
-
-Take the Gaussian-smoothed absolute loss \(\rhohu=\rhohu_H\) of
-Lemma~\ref{Lrhohu}. Write \(\KS_{tu}^{(k)}=\Kern_{h_k}(t-u)/N_k(t)\)
-for the weights in \eqref{dfikkj3ujvyhwedrgg} and
-\(\alpha_k=\max_{t,u}\KS_{tu}^{(k)}\). For this loss \(|\rhohu'|\le1\),
-\(0<\rhohu''\le L_2=\sqrt{2/\pi}/H\) and
-\(|\rhohu'''|\le L_3=\sqrt{2/\pi}\,\ex^{-1/2}/H^2\).
-Each row score is strictly decreasing in the fitted location, with limits
-\(1\) and \(-1\), so its zero is unique.
-The true component \(\IMFs^{(k)}\) uses the law of the actual residual
-\(\Data^{(k)}\). For the proof we also need a deterministic reference:
-start at \(\Signal_{\rhohum}^{(1)}=\Signal\), fit each row using
-\(\rhohum(y)=\E\rhohu(y+\eps_1)\), then subtract that fit,
+Take the Gaussian-smoothed absolute loss \(\rhohu_H\) of Lemma~\ref{Lrhohu}.
+Let \(\KS_{tu}^{(k)}=\Kern_{h_k}(t-u)/N_k(t)\) be the row weights and
+\(\alpha_k=\max_{t,u}\KS_{tu}^{(k)}\). With equal weights,
+\(1/\alpha_k\) is the window size. We compare each fitted component with
+a deterministic reference. Start at \(\Signal_{\rhohum}^{(1)}=\Signal\)
+and fit using the original noise law \(\rhohum(y)=\E\rhohu_H(y+\eps_1)\)
+at every stage,
 \[
  \IMFs_{\rhohum,t}^{(k)}
-  =\arginf_s\sum_u\KS_{tu}^{(k)}\rhohum(\Signal_{\rhohum,u}^{(k)}-s),
- \qquad \Signal_{\rhohum}^{(k+1)}=\Signal_{\rhohum}^{(k)}-\IMFs_{\rhohum}^{(k)}.
+ =\arginf_s\sum_u\KS_{tu}^{(k)}\rhohum(\Signal_{\rhohum,u}^{(k)}-s),
+ \qquad \Signal_{\rhohum}^{(k+1)}=\Signal_{\rhohum}^{(k)}-\IMFs_{\rhohum}^{(k)} .
 \]
-The two targets coincide at stage one. On the reference path, define
-\(y_{ktu}=\Signal_{\rhohum,u}^{(k)}+\eps_u-\IMFs_{\rhohum,t}^{(k)}\),
-\(g_{ktu}=\rhohu''(y_{ktu})\), and \(f_{kt}=\sum_u\KS_{tu}^{(k)}\E g_{ktu}\).
-The score term \(b_k\) and the matrix \(V_k\) that transmits a change
-in the input are
-\[
- b_{kt}=\frac{\sum_u\KS_{tu}^{(k)}\rhohu'(y_{ktu})}{f_{kt}},
- \qquad V_k[t,u]=\frac{\KS_{tu}^{(k)}\E g_{ktu}}{f_{kt}} .
-\]
-Each row of \(V_k\) sums to one, and \(b_{1t}=\IF_t^{-1}\nabla_t\). At the next fit the leading
-error is \(b_2-V_2b_1\). In general, accumulate the preceding leading
-errors in \(\Lambda_k\) and set
+The reference equals the true population component at stage one.
+At later stages the true component uses the law of the actual residuals,
+which include the errors of previous fits.
+
+At the reference fit, \(b_{kt}\) is the empirical score divided by the
+expected curvature. Each entry \(V_k[t,u]\) is observation \(u\)'s share of
+that curvature, including its kernel weight, as in \eqref{irmfproof:eq:row}.
+Each row of \(V_k\) sums to one. At stage one the leading error is
+\(b_{1t}=\IF_t^{-1}\nabla_t\). At stage two it is \(b_2-V_2b_1\).
+For all stages the same rule defines the leading error,
 \begin{equation}\label{irmfproof:eq:lambda}
- \Lambda_1=0,\qquad \mathcal L_k=b_k-V_k\Lambda_k,\qquad
- \Lambda_{k+1}=\Lambda_k+\mathcal L_k .
+ \mathcal L_k=b_k-V_k\sum_{j<k}\mathcal L_j .
 \end{equation}
 
-\paragraph{Conditions.}
-Assume \(f_{kt}\ge\lambda>0\) and
-\(\alpha_j\le C_\alpha\alpha_k\hband^{-(k-j)}\) for \(j\le k\),
-with \(\hband>1\), \(C_\alpha\ge1\). Write
-\(B_{m:l}=(\Id-V_m)\cdots(\Id-V_l)\), with empty product \(\Id\).
-We need stability of every such product and limited variation of curvature:
-\begin{equation}\label{irmfproof:eq:dispersion}
- \max_{l\le m}\|B_{m:l}\|_\infty\le C_B,\qquad
- d=\max_{k,t}\frac{\sum_u\KS_{tu}^{(k)}\E|g_{ktu}-\E g_{ktu}|}{f_{kt}}
-       <\frac{\hband-1}{C_B C_\alpha},\qquad C_B\ge1 .
-\end{equation}
-Here \(\|\cdot\|_\infty\) is the maximum absolute row sum for matrices and
-the maximum absolute entry for vectors.
+The window conditions in \eqref{irmfproof:eq:row}--\eqref{irmfproof:eq:dispersion}
+control relative window sizes, curvature and the growth of earlier errors.
 
 \begin{theorem}\label{irmfproof:thm:main}
-Put \(u_k=\sqrt{z\alpha_k}\), \(r=C_\alpha/\hband\) and
-\(\alpha_{\max}=\max_k\alpha_k\). If \(z\alpha_{\max}\le\eta\), then with
-probability at least \(1-\ex^{-\xx}\), simultaneously for \(1\le k\le k_{\max}\),
+Suppose \(z\alpha_k\le\eta\) at every stage. With probability at least
+\(1-\ex^{-\xx}\), simultaneously over all stages,
 \begin{equation}\label{irmfproof:eq:expansion}
- \|\mathcal L_k\|_\infty\le A_\Lambda u_k,\qquad
+ \|\mathcal L_k\|_\infty\le A\sqrt{z\alpha_k},\qquad
  \|\IMFt^{(k)}-\IMFs_{\rhohum}^{(k)}-\mathcal L_k\|_\infty
- \le C_\Theta(1+r)u_k^2 .
+   \le C z(\alpha_k+\alpha_{k-1}) .
 \end{equation}
-Section~\ref{irmfproof:app:constants} gives \(A_\Lambda,C_\Theta,\eta\) in
-terms of \(H,\lambda,\hband,C_\alpha,C_B,d\).
+Here \(\alpha_0=0\). Section~\ref{irmfproof:app:constants} gives \(A,C,\eta\)
+in terms of the loss and the window conditions. The geometric bound on the
+weights makes the remainder of order \(z\alpha_k\).
 \end{theorem}
-
-\begin{proof}
-Write \(e_k=\IMFt^{(k)}-\IMFs_{\rhohum}^{(k)}\), \(E_k=\sum_{j<k}e_j\)
-and \(\Theta_k=E_k-\Lambda_k\). The actual input is
-\(\Data^{(k)}=\Signal_{\rhohum}^{(k)}+\eps-E_k\). Below all vector and
-matrix norms are \(\|\cdot\|_\infty\), and \(u_0=\alpha_0=0\).
-
-\emph{Compare the two fitted locations.}
-For a fixed row, let \(\Delta_0\) be the fitted displacement from its reference
-value on input \(\Signal_{\rhohum}^{(k)}+\eps\). Subtracting \(E_k\) from
-this input changes the displacement to \(e_k(t)\). A row fit is nondecreasing
-in each observation and translation equivariant, so
-\(\Delta=\Delta_0-e_k(t)\) satisfies \(|\Delta|\le\|E_k\|\). Define
-\[
- Z_k[t,u]=\KS_{tu}^{(k)}(g_{ktu}-\E g_{ktu})/f_{kt},\qquad
- R_k(t)=\Delta_0-b_{kt},\qquad \Phi_k(t)=\Delta-(V_k E_k)_t .
-\]
-The empirical score on the first input at the reference fit is \(f_{kt}b_{kt}\). Since
-\(\sum_u(\KS_{tu}^{(k)})^2\le\alpha_k\), Bernstein's inequality gives
-\[
- |f_{kt}b_{kt}|\le\sqrt2\,u_k+2u_k^2/3\le c_u u_k,\quad
- |f_{kt}(Z_k\mathbf1)_t|\le L_2 c_v u_k,\quad
- \|Z_k\|\le d+b_0c_v u_k\le\delta .
-\]
-The last bound applies the one-sided inequality to the weighted absolute
-curvature deviations. Their unweighted values after division by \(f_{kt}\)
-lie in \([0,b_0]\). These three bounds cost at most \(5n k_{\max}\ex^{-z}\)
-in all. At the reference fit the empirical curvature is at least
-\(3\lambda/4\). It stays above \(\lambda/2\) within \(2c_u u_k/\lambda\)
-by the choice of \(\eta\), so the score changes sign across that interval and
-\(|\Delta_0|\le2c_u u_k/\lambda\). Expanding the score from the reference value to this zero gives
-\(|R_k(t)|\le |(Z_k\mathbf1)_t \Delta_0|+L_3 \Delta_0^2/(2\lambda)\le A_R u_k^2\).
-
-For the change \(\Delta\), subtract the two score equations. With \(G_u\) the
-average of \(\rhohu''\) between \(y_{ktu}-\Delta_0\) and
-\(y_{ktu}-\Delta_0-E_k(u)+\Delta\), this gives
-\(\sum_u\KS_{tu}^{(k)}G_u(E_k(u)-\Delta)=0\).
-The Lipschitz bound yields
-\(|G_u-g_{ktu}|\le L_3(|\Delta_0|+|E_k(u)-\Delta|/2)\).
-Substituting \(g_{ktu}+(G_u-g_{ktu})\) and dividing by \(f_{kt}\) gives
-\[
- \|\Phi_k-Z_k E_k\|\le C_{\rm loc}u_k\|E_k\|+
-                       (2L_3/\lambda)\|E_k\|^2 .
-\]
-Indeed the row-sum fluctuation contributes at most
-\(|(Z_k\mathbf1)_t \Delta|\), and \(|E_k(u)-\Delta|\le2\|E_k\|\).
-By the definitions of \(R_k\) and \(\Phi_k\),
-\begin{equation}\label{irmfproof:eq:recursion}
- e_k=b_k-V_kE_k+R_k-\Phi_k .
-\end{equation}
-
-\emph{Account for the shared noise.}
-By \eqref{irmfproof:eq:lambda},
-\(\Lambda_k=\sum_{j<k}B_{k-1:j+1}b_j\). In this sum and in
-\(\mathcal L_k=b_k-V_k\Lambda_k\), each matrix multiplying \(b_j\) has
-norm at most \(C_B\). The schedule gives
-\(\sum_{j\le m}\alpha_j\le s_1\alpha_m\) and
-\(\sum_{j\le m}\sqrt{\alpha_j}\le s_2\sqrt{\alpha_m}\).
-Summing the two terms of the score bound separately yields
-\(\|\Lambda_k\|\le A_\Lambda u_{k-1}\) and \(\|\mathcal L_k\|\le A_\Lambda u_k\).
-
-Group the same sum by observation to write
-\(\Lambda_k(u)=\sum_v\gamma_{uv}(\eps_v)\). Each score summand at \(v\)
-can be centered because the whole row score has mean zero.
-Thus \(\E\gamma_{uv}=0\) and
-\[
- |\gamma_{uv}|\le G_{uv}:=\frac{2}{\lambda}
- \sum_{j<k}\sum_s |B_{k-1:j+1}[u,s]|\KS_{sv}^{(j)} .
-\]
-Summing the maximum weight and the Euclidean row norm gives
-\(\max_v G_{uv}\le G_\infty\alpha_{k-1}\) and
-\(\|G_{u,\cdot}\|_2\le G_2\sqrt{\alpha_{k-1}}\).
-In \((Z_k\Lambda_k)_t\), the terms with \(u=v\) contribute
-at most \(b_0G_\infty\alpha_{k-1}\). For \(u\ne v\), the kernels
-\(Z_k[t,u]\gamma_{uv}(\eps_v)\) are centered in each noise variable.
-Their envelopes \(H_{uv}=b_0\KS_{tu}^{(k)}G_{uv}\) satisfy
-\(\sum H_{uv}^2\le b_0^2G_2^2\alpha_k\alpha_{k-1}\).
-
-By the moment inequality in Section~\ref{irmfproof:app:constants}, the
-off-diagonal sum has magnitude at most \(32\ex z(\sum H_{uv}^2)^{1/2}\) except
-with probability \(\ex^{-z}\) per row and stage. Hence
-\[
- \|Z_k\Lambda_k\|\le b_0G_\infty\alpha_{k-1}
-             +32\ex\,b_0G_2 z\sqrt{\alpha_k\alpha_{k-1}} .
-\]
-Together the bounds fail with probability at most
-\(6n k_{\max}\ex^{-z}\le\ex^{-\xx}\).
-
-\emph{Close the induction.}
-Suppose \(\|\Theta_j\|\le C_\Theta u_{j-1}^2\) through stage \(k\), starting
-with \(E_1=\Lambda_1=0\). Since \(C_\Theta\sqrt\eta\le A_\Lambda\),
-\(\|E_j\|\le A u_{j-1}\), where \(A=2A_\Lambda\).
-Split \(Z_jE_j=Z_j\Lambda_j+Z_j\Theta_j\). The bounds above and
-\(\alpha_{j-1}\le r\alpha_j\) give
-\(\|\Phi_j\|\le P(A)u_j^2+\delta C_\Theta u_{j-1}^2\).
-Subtracting \eqref{irmfproof:eq:lambda} from \eqref{irmfproof:eq:recursion}
-in the accumulated recursion gives
-\(\Theta_{k+1}=\sum_{j\le k}B_{k:j+1}(R_j-\Phi_j)\).
-Since \(\sum_{j\le k}\alpha_{j-1}\le C_\alpha\alpha_k/(\hband-1)\),
-\[
- \|\Theta_{k+1}\|\le
- \{C_Bs_1(A_R+P(A))+q C_\Theta\}u_k^2=C_\Theta u_k^2 .
-\]
-Thus \(\|E_{k+1}\|\le A u_k\) and
-\(\|\Phi_k\|\le\{P(A)+\delta C_\Theta r\}u_k^2\) at every stage.
-Finally \(e_k-\mathcal L_k=\Theta_{k+1}-\Theta_k\), giving the second
-bound in \eqref{irmfproof:eq:expansion}.
-\end{proof}
 
 \subsection{Returning to the true IMF}\label{irmfproof:sec:targets}
 
-The first-stage target is already \(\IMFs_t\). At later stages the shift depends on how earlier fits changed the residuals.
-In the expected score, contributions from distinct observations cancel.
-Write \(z_0=\log(10n k_{\max})\), \(\xx_*=\eta/\alpha_{\max}-z_0>0\), and
-assume \(\mu_4=\E|\eps_1|^4<\infty\). Let \(m_{\rhohu}\) solve
-\(\E\rhohu'(\eps_1-m_{\rhohu})=0\) and put
-\(M=2^{k_{\max}+1}(\|\Signal\|_\infty+(n\mu_4)^{1/4}+|m_{\rhohu}|)\).
-For \(k\ge2\), put
-\begin{align*}
- U_k&=C_\Theta(z_0+1)\alpha_{k-1}+(M+C_B k_{\max}/\lambda)\ex^{-\xx_*/2},\\
- T_k&=A^2(z_0+1)\alpha_{k-1}+M^2\ex^{-\xx_*/2},\\
- \beta_k&=L_2(G_\infty\alpha_{k-1}+U_k)+L_3T_k/2,\qquad \beta_1=0 .
-\end{align*}
+At the reference fit, \eqref{irmfproof:eq:target-calibration} gives two bounds,
+\(\beta_k\) on the magnitude of the new expected score and \(T_k\) on the
+mean squared accumulated error. Assume here that \(\E|\eps_1|^4<\infty\)
+and \(\log(10n k_{\max})\max_j\alpha_j<\eta\).
+
 \begin{corollary}\label{irmfproof:cor:population}
-If \(L_3\sqrt{T_k}\le\lambda/4\) and \(\beta_k\le\lambda^2/(8L_3)\)
-at stage \(k\ge2\), then deterministically
-\(\|\IMFs^{(k)}-\IMFs_{\rhohum}^{(k)}\|_\infty\le 2\beta_k/\lambda\).
-At \(k=1\) the shift is zero. If the conditions hold at every later stage,
-the event of Theorem~\ref{irmfproof:thm:main} gives, simultaneously,
+At stage one the two population fits coincide. At any later stage where
+\(L_3\sqrt{T_k}\le\lambda/4\) and \(\beta_k\le\lambda^2/(8L_3)\), their
+distance is at most \(2\beta_k/\lambda\) in sup norm. If these conditions
+hold at every later stage, the event of Theorem~\ref{irmfproof:thm:main} gives
 \[
  \|\IMFt^{(k)}-\IMFs^{(k)}\|_\infty
- \le A_\Lambda u_k+C_\Theta(1+r)u_k^2+2\beta_k/\lambda .
+ \le A\sqrt{z\alpha_k}+Cz(\alpha_k+\alpha_{k-1})+2\beta_k/\lambda,
+ \qquad \beta_1=0 .
 \]
-If both exponential terms in \(U_k,T_k\) are at most \(\min_j\alpha_j\),
-put \(B_{\rm tar}=L_2(G_\infty+C_\Theta+1)+(L_3/2)(A^2+1)\).
-Then \(\beta_k\le B_{\rm tar}(z_0+1)\alpha_{k-1}\) for \(k\ge2\), so the
-last term is at most \((4r B_{\rm tar}/\lambda)u_k^2\).
-For \(\alpha_k\asymp(nh_k)^{-1}\) this gives the simultaneous rate
+If the two tail terms in \eqref{irmfproof:eq:target-calibration} are at most
+\(\min_j\alpha_j\), the shift is of order \(z\alpha_k\). For
+\(\alpha_k\asymp(nh_k)^{-1}\) the simultaneous rate is then
 \(\sqrt{z/(nh_k)}+z/(nh_k)\) when the constants are uniform across designs.
 \end{corollary}
 
-\begin{proof}
-The induction gives \(\E\|\Theta_k\|_\infty\le U_k\) and
-\(\E\|E_k\|_\infty^2\le T_k\) by tail integration. In detail, if
-\(\P(X>c(z_0+s))\le\ex^{-s}\) for \(0<s\le\xx_*\), integrating up to
-\(c(z_0+\xx_*)\) and using Cauchy--Schwarz on the excess gives
-\(\E X\le c(z_0+1)+\|X\|_{L^2}\ex^{-\xx_*/2}\).
-To apply this to both errors, observe that an empirical fit lies between
-its extreme inputs and a reference fit between its own extreme inputs
-shifted by \(m_{\rhohu}\). Thus \(\|\Data^{(j+1)}\|_\infty\le2\|\Data^{(j)}\|_\infty\)
-and \(\|\Signal_{\rhohum}^{(j+1)}\|_\infty\le2\|\Signal_{\rhohum}^{(j)}\|_\infty+|m_{\rhohu}|\).
-Iteration and \(\E\|\eps\|_\infty^4\le n\mu_4\) give
-\(\|\|E_k\|_\infty\|_{L^4}\le M\). Also
-\(\|\Lambda_k\|_\infty\le C_B k_{\max}/\lambda\) pathwise.
+\subsection{Proofs}
 
-At \(\IMFs_{\rhohum,t}^{(k)}\) the true population score is
-\(\sum_u\KS_{tu}^{(k)}\E\rhohu'(y_{ktu}-E_k(u))\).
-Expand once about \(y_{ktu}\). The constant term sums to zero. In the linear term \(\E[g_{ktu}\Lambda_k(u)]\), independence and centering
-cancel every \(\gamma_{uv}(\eps_v)\) except \(v=u\), leaving at most
-\(L_2 G_\infty\alpha_{k-1}\). The remaining linear and quadratic terms
-are bounded by \(L_2 U_k\) and \(L_3T_k/2\). Thus the score has magnitude
-at most \(\beta_k\). The population loss has curvature at least
-\(\lambda-L_3\sqrt{T_k}\) at the reference fit and at least \(\lambda/2\) within
-\(2\beta_k/\lambda\). The score therefore has its zero within \(2\beta_k/\lambda\) of the reference fit.
-Adding this displacement to \eqref{irmfproof:eq:expansion} gives the
-estimation bound. Its last simplification uses \(z_0+1\le2z\) and
-\(\alpha_{k-1}\le r\alpha_k\).
+\begin{proof}[Proof of Proposition~\ref{irmfproof:first-bound}]
+Write \(K_t=(\Kern_{h_1}(t-u))_u\) for the row of unnormalized weights
+and \(z_1=\xx+\log(4n)\). The finite-grid bounds in Lemma~\ref{LRMFloc} are
+\begin{equation}\label{irmfproof:eq:first-calibration}
+ \begin{aligned}
+ \CONSTi_1&=\max_t L_1(\sqrt{2z_1}\,\|K_t\|_2+2z_1\|K_t\|_\infty/3)/\DFN_t,\\
+ \CONSTi_2&=\max_t L_2(\sqrt{2z_1}\,\|K_t\|_2+z_1\|K_t\|_\infty/3)/\DFN_t,
+ \qquad \CONSTi_3=\max_t L_3\|K_t\|_1/\DFN_t^2 .
+ \end{aligned}
+\end{equation}
+Indeed, the centered score summands have total variance at most
+\(L_1^2\|K_t\|_2^2\) and maximum size \(2L_1\|K_t\|_\infty\).
+For the curvature the corresponding bounds are \(L_2^2\|K_t\|_2^2\) and
+\(L_2\|K_t\|_\infty\). Bernstein's inequality and a union over rows cost
+at most \(4n\ex^{-z_1}\). On this event \(|\nabla_t|\le\DFN_t\CONSTi_1\) and
+\(|\IFP-\IF_t|\le\DFN_t\CONSTi_2\), where \(\IFP=\fp''(\xs)\) and
+\(\xs=\IMFs_t\) as in \eqref{fjiuy9iw3ojlggeefr}. The third derivatives
+of both contrasts are bounded by \(\DFN_t^2\CONSTi_3\).
+
+Fix a row. Since \(\fp'(\xs)=-\nabla_t\), the empirical Newton step is
+\(v=\nabla_t/\IFP\), with \(\DFN_t|v|\le R\).
+Taylor's inequality bounds \(|\fp'(\xs+s)-\IFP(s-v)|\) by
+\(\DFN_t^2\CONSTi_3 s^2/2\). We have
+\(\DFN_t^2\CONSTi_3|v|/\IFP\le R\CONSTi_3/(\DFN_{\min}-\CONSTi_2)<4/9\).
+Hence the score brackets zero at \(s=\pm3|v|/2\), with positive curvature
+between the endpoints. Convexity gives \(|\IMFt_t-\xs|\le3|v|/2\), also
+when \(v=0\). Using this displacement in the Taylor bound gives
+\[
+ \DFN_t|\IMFt_t-\xs-v|
+ \le \frac{9\DFN_t^3\CONSTi_3 v^2}{8\IFP}
+ \le \frac{9R^2\CONSTi_3}{8(\DFN_{\min}-\CONSTi_2)} .
+\]
+Replacing \(v\) by \(\IF_t^{-1}\nabla_t\) costs at most
+\(R\CONSTi_2/\DFN_{\min}\) in curvature units. This proves both bounds.
 \end{proof}
 
-\subsection{Constants and the quadratic sum}\label{irmfproof:app:constants}
+\paragraph{Row formulas and window conditions for Theorem~\ref{irmfproof:thm:main}.}
+At the reference fit write \(y_{ktu}=\Signal_{\rhohum,u}^{(k)}+\eps_u-
+\IMFs_{\rhohum,t}^{(k)}\), \(g_{ktu}=\rhohu_H''(y_{ktu})\) and
+\(f_{kt}=\sum_u\KS_{tu}^{(k)}\E g_{ktu}\). The score divided by its
+curvature, \(b_k\), and the weights that transmit earlier errors, \(V_k\), are
+\begin{equation}\label{irmfproof:eq:row}
+ b_{kt}=\frac{\sum_u\KS_{tu}^{(k)}\rhohu_H'(y_{ktu})}{f_{kt}},\qquad
+ V_k[t,u]=\frac{\KS_{tu}^{(k)}\E g_{ktu}}{f_{kt}} .
+\end{equation}
+Assume \(f_{kt}\ge\lambda>0\) and
+\(\alpha_j\le C_\alpha\alpha_k\hband^{-(k-j)}\) for \(j\le k\), where
+\(\hband>1\) and \(C_\alpha\ge1\). Every consecutive product
+\((\Id-V_m)\cdots(\Id-V_l)\) has norm at most \(C_B\ge1\).
+Use the maximum absolute row sum for matrix norms and the maximum absolute
+entry for vector norms. The curvature fluctuations must satisfy
+\begin{equation}\label{irmfproof:eq:dispersion}
+ d=\max_{k,t}\frac{\sum_u\KS_{tu}^{(k)}\E|g_{ktu}-\E g_{ktu}|}{f_{kt}}
+ <\frac{\hband-1}{C_B C_\alpha} .
+\end{equation}
 
-The score and curvature bounds use \(c_u=\sqrt2+2/3\), \(c_v=\sqrt2+1/3\)
-and \(b_0=L_2/\lambda\). For the bandwidth schedule put
+\begin{proof}[Proof of Theorem~\ref{irmfproof:thm:main}]
+Write \(e_k=\IMFt^{(k)}-\IMFs_{\rhohum}^{(k)}\) and accumulate the actual
+and leading errors as \(E_k=\sum_{j<k}e_j\) and
+\(\Lambda_k=\sum_{j<k}\mathcal L_j\). Both start at zero. The input to the
+next fit is exactly \(\Data^{(k)}=\Signal_{\rhohum}^{(k)}+\eps-E_k\).
+Below \(u_k=\sqrt{z\alpha_k}\), including \(u_0=0\), and norms without a
+subscript are sup norms.
+
+\emph{One fit.}
+In a fixed row, first fit \(\Signal_{\rhohum}^{(k)}+\eps\), before subtracting
+\(E_k\). Denote the resulting vector of fitted displacements from the reference
+by \(e^0\). Write the centered curvature matrix as
+\(Z_k[t,u]=\KS_{tu}^{(k)}(g_{ktu}-\E g_{ktu})/f_{kt}\).
+Since \(\sum_u(\KS_{tu}^{(k)})^2\le\alpha_k\), Bernstein's inequality gives
 \[
- s_1=\frac{C_\alpha}{1-\hband^{-1}},\qquad
- s_2=\frac{\sqrt{C_\alpha}}{1-\hband^{-1/2}},\qquad r=\frac{C_\alpha}{\hband}.
+ |f_{kt}b_{kt}|\le\sqrt2\,u_k+2u_k^2/3,\qquad
+ |f_{kt}(Z_k\mathbf1)_t|\le\lambda\nu u_k,\qquad
+ \|Z_k\|\le d+\nu u_k\le\delta .
 \]
-The score and its observation-wise envelopes have constants
+Here \(\nu\) and \(\delta\) are given in Section~\ref{irmfproof:app:constants}.
+The last estimate uses the one-sided bound on the absolute curvature deviations,
+whose values before weighting lie in \([0,L_2/\lambda]\) after division by
+\(f_{kt}\). All three estimates hold except on a set of probability
+\(5n k_{\max}\ex^{-z}\) or less. The choice of \(\eta\) makes the empirical
+curvature at the reference fit at least \(3\lambda/4\). It stays above
+\(\lambda/2\) within \(\ell u_k\), where
+\(\ell=2(\sqrt2+2/3)/\lambda\), since \(|\rhohu_H'''|\le L_3\).
+The score at the reference fit has magnitude at most \(\lambda\ell u_k/2\),
+so \(\|e^0\|\le\ell u_k\). Taylor expansion at the reference fit gives
 \[
- A_\Lambda=\frac{C_B}{\lambda}(\sqrt2\,s_2+2s_1/3),\qquad
- G_\infty=\frac{2C_Bs_1}{\lambda},\qquad G_2=\frac{2C_Bs_2}{\lambda}.
+ \|e^0-b_k\|\le\|Z_k\mathbf1\|\,\|e^0\|
+                  +L_3\|e^0\|^2/(2\lambda).
 \]
-A single fitted location uses
+
+\emph{Subtracting earlier errors.}
+Let \(\Delta=e^0(t)-e_k(t)\). Each row fit is nondecreasing in its inputs
+and translation equivariant, so \(|\Delta|\le\|E_k\|\).
+Subtract the two score equations. The mean value theorem gives
+\(\sum_u\KS_{tu}^{(k)}\rhohu_H''(\xi_u)(E_k(u)-\Delta)=0\), where \(\xi_u\)
+lies between \(y_{ktu}-e^0(t)\) and \(y_{ktu}-e^0(t)-E_k(u)+\Delta\).
+Thus \(|\rhohu_H''(\xi_u)-g_{ktu}|\le L_3(\|e^0\|+2\|E_k\|)\).
+Replace \(\rhohu_H''(\xi_u)\) by \(g_{ktu}\) in that identity and divide
+by \(f_{kt}\). The row-sum fluctuation contributes at most
+\(|(Z_k\mathbf1)_t\Delta|\), and \(|E_k(u)-\Delta|\le2\|E_k\|\). Hence
 \[
- A_R=\frac{2L_2c_uc_v}{\lambda^2}+\frac{2L_3c_u^2}{\lambda^3},\qquad
- C_{\rm loc}=\frac{L_2c_v}{\lambda}+\frac{4L_3c_u}{\lambda^2}.
+ \|e^0-e_k-(V_k+Z_k)E_k\|
+ \le \left[\nu u_k+\frac{2L_3}{\lambda}(\ell u_k+2\|E_k\|)\right]\|E_k\| .
 \]
-For the induction choose any \(d<\delta<(\hband-1)/(C_B C_\alpha)\). Set
-\(q=C_B C_\alpha\delta/(\hband-1)<1\), \(A=2A_\Lambda\) and
-\begin{align*}
- P(A)&=\frac{4L_3}{\lambda}A^2 r+C_{\rm loc}A\sqrt r
-             +b_0G_\infty r+32\ex\,b_0G_2\sqrt r,\\
- C_\Theta&=C_Bs_1\{A_R+P(A)\}/(1-q).
-\end{align*}
-The finest admissible scale satisfies \(z\alpha_{\max}\le\eta\), where
+Adding the one-fit bound above gives the error in the recursion,
+\begin{equation}\label{irmfproof:eq:recursion}
+ \|e_k-b_k+(V_k+Z_k)E_k\|
+ \le u_k^2 P(\|E_k\|/u_k),
+ \qquad
+ P(x)=\ell\nu+\frac{L_3\ell^2}{2\lambda}
+             +x\left[\nu+\frac{2L_3}{\lambda}(\ell+2x)\right].
+\end{equation}
+
+\emph{Shared observations.}
+Let \(B_{m:l}=(\Id-V_m)\cdots(\Id-V_l)\), with empty product \(\Id\).
+Iterating \eqref{irmfproof:eq:lambda} gives
+\(\Lambda_k=\sum_{j<k}B_{k-1:j+1}b_j\). In this sum and in
+\(\mathcal L_k=b_k-V_k\Lambda_k\), each matrix multiplying \(b_j\) has norm
+at most \(C_B\). The window schedule gives
+\((C_B/\lambda)\sum_{j\le m}\alpha_j^p\le s_p\alpha_m^p\) for
+\(p=1/2,1\), with \(s_p\) in Section~\ref{irmfproof:app:constants}.
+Summing the two terms of the score bound separately and using \(u_k\le1\)
+gives \(\|\Lambda_k\|\le A u_{k-1}\) and \(\|\mathcal L_k\|\le A u_k\).
+
+Group the sum for \(\Lambda_k(u)\) by observation as
+\(\sum_v\gamma_{uv}(\eps_v)\). Centering each score summand at \(v\)
+leaves its row sum unchanged since the population score is zero. Thus
+\(\E\gamma_{uv}=0\) and a deterministic envelope is
 \[
- \sqrt\eta=\min\left\{1,\frac{\lambda}{4L_2c_v},
-  \frac{\lambda^2}{8L_3c_u},\frac{\delta-d}{b_0c_v},\frac{A_\Lambda}{C_\Theta}\right\}.
+ |\gamma_{uv}|\le G_{uv}
+ =\frac{2}{\lambda}\sum_{j<k}\sum_s|B_{k-1:j+1}[u,s]|\KS_{sv}^{(j)} .
 \]
+Summing the maximum weight and the Euclidean row norm gives
+\(\max_v G_{uv}\le2s_1\alpha_{k-1}\) and
+\(\|G_{u,\cdot}\|_2\le2s_{1/2}\sqrt{\alpha_{k-1}}\).
+In \((Z_k\Lambda_k)_t\) the diagonal terms therefore total at most
+\(2(L_2/\lambda)s_1\alpha_{k-1}\) in magnitude. Off the diagonal,
+\(Z_k[t,u]\gamma_{uv}(\eps_v)\) is centered in each noise variable.
+Its envelope is \((L_2/\lambda)\KS_{tu}^{(k)}G_{uv}\).
+The sum of squared envelopes is at most
+\((2L_2 s_{1/2}/\lambda)^2\alpha_k\alpha_{k-1}\).
+The quadratic moment inequality proved below now gives
+\begin{equation}\label{irmfproof:eq:shared}
+ \|Z_k\Lambda_k\|\le\frac{2L_2}{\lambda}
+ \left(s_1\alpha_{k-1}+32\ex\,s_{1/2}z\sqrt{\alpha_k\alpha_{k-1}}\right) .
+\end{equation}
+This costs at most \(n k_{\max}\ex^{-z}\). Together the estimates fail with
+probability at most \(6n k_{\max}\ex^{-z}\le\ex^{-\xx}\).
+
+\emph{Induction.}
+Write \(r=C_\alpha/\hband\), so \(u_{j-1}^2\le r u_j^2\).
+Assume \(\|E_j-\Lambda_j\|\le C u_{j-1}^2\) through stage \(k\).
+Since \(C\sqrt\eta\le A\), this gives \(\|E_j\|\le2A u_{j-1}\).
+Split \(Z_jE_j=Z_j\Lambda_j+Z_j(E_j-\Lambda_j)\).
+By \eqref{irmfproof:eq:recursion} and \eqref{irmfproof:eq:shared}, the error
+\(e_j-b_j+V_jE_j\) has norm at most
+\[
+ u_j^2\left[P(2A\sqrt r)+\frac{2L_2}{\lambda}
+       (s_1r+32\ex\,s_{1/2}\sqrt r)\right]+\delta C u_{j-1}^2 .
+\]
+For the change of fit alone, \(\|e^0-e_j-V_jE_j\|\) obeys the same
+bound with \(P(0)\) subtracted inside the brackets.
+To accumulate these errors, multiply each by \(B_{k:j+1}\) and sum over
+\(j\le k\). The sums of \(C_Bu_j^2\) and \(C_Bu_{j-1}^2\) are bounded by
+\(\lambda s_1u_k^2\) and \(C_B C_\alpha u_k^2/(\hband-1)\), respectively.
+The definition of \(C\) in \eqref{irmfproof:eq:cutoff} therefore gives
+\(\|E_{k+1}-\Lambda_{k+1}\|\le C u_k^2\). The induction starts at zero.
+Taking the difference of two consecutive accumulated errors gives
+\(\|e_k-\mathcal L_k\|\le C(u_k^2+u_{k-1}^2)\), as claimed.
+\end{proof}
+
+\begin{proof}[Proof of Corollary~\ref{irmfproof:cor:population}]
+Set \(z_0=\log(10n k_{\max})\) and \(\xx_*=\eta/\max_j\alpha_j-z_0\).
+The induction gives \(\|E_k-\Lambda_k\|\le C(z_0+\xx)\alpha_{k-1}\)
+and \(\|E_k\|^2\le4A^2(z_0+\xx)\alpha_{k-1}\) with probability
+\(1-\ex^{-\xx}\) or greater for \(0<\xx\le\xx_*\). To bound expectations
+past this cutoff, let \(m_{\rhohu}\) solve \(\E\rhohu_H'(\eps_1-m_{\rhohu})=0\)
+and put
+\[
+ M=2^{k_{\max}+1}\bigl(\|\Signal\|_\infty
+           +(n\E|\eps_1|^4)^{1/4}+|m_{\rhohu}|\bigr).
+\]
+An empirical fit lies between its extreme inputs. A reference fit lies
+between its own extreme inputs shifted by \(m_{\rhohu}\). Thus the residual
+sup norm at most doubles per stage for the data, and grows by at most a
+factor two plus \(|m_{\rhohu}|\) for the reference. Using
+\(E_k=\Signal_{\rhohum}^{(k)}+\eps-\Data^{(k)}\) and
+\(\E\|\eps\|_\infty^4\le n\E|\eps_1|^4\) gives
+\(\|\|E_k\|\|_{L^4}\le M\). Also \(\|\Lambda_k\|\le C_B k_{\max}/\lambda\)
+pathwise, since \(|\rhohu_H'|\le1\).
+
+If \(\P(X>c(z_0+s))\le\ex^{-s}\) for \(0<s\le\xx_*\), tail integration up
+to the cutoff and Cauchy--Schwarz on the excess give
+\(\E X\le c(z_0+1)+\|X\|_{L^2}\ex^{-\xx_*/2}\).
+Apply this to \(\|E_k\|^2\) and \(\|E_k-\Lambda_k\|\).
+At the reference fit, expand the expected score
+\(\sum_u\KS_{tu}^{(k)}\E\rhohu_H'(y_{ktu}-E_k(u))\).
+The constant term sums to zero. In \(\E[g_{ktu}\Lambda_k(u)]\), independence
+and centering cancel all terms with \(v\ne u\), leaving at most
+\(2L_2s_1\alpha_{k-1}\) in magnitude. The two other terms are bounded by
+\(L_2\E\|E_k-\Lambda_k\|\) and \((L_3/2)\E\|E_k\|^2\).
+The resulting bounds on the squared error and score magnitude are, for \(k\ge2\),
+\begin{equation}\label{irmfproof:eq:target-calibration}
+ \begin{aligned}
+ T_k&=4A^2(z_0+1)\alpha_{k-1}+M^2\ex^{-\xx_*/2},\\
+ \beta_k&=L_2\bigl[2s_1\alpha_{k-1}+C(z_0+1)\alpha_{k-1}
+        +(M+C_B k_{\max}/\lambda)\ex^{-\xx_*/2}\bigr]+L_3T_k/2 .
+ \end{aligned}
+\end{equation}
+The population curvature is at least \(\lambda-L_3\sqrt{T_k}\ge3\lambda/4\)
+at the reference fit and at least \(\lambda/2\) within \(2\beta_k/\lambda\).
+The unique score zero lies within that distance. Add this shift to
+\eqref{irmfproof:eq:expansion}. If the two exponential terms, with their
+prefactors in \(T_k\) and the square brackets, are at most \(\min_j\alpha_j\),
+\(\beta_k\le [L_2(2s_1+C+1)+(L_3/2)(4A^2+1)](z_0+1)\alpha_{k-1}\).
+Now use \(z_0+1\le2z\) and \(\alpha_{k-1}\le(C_\alpha/\hband)\alpha_k\).
+\end{proof}
+
+\subsection{Evaluating the bounds}\label{irmfproof:app:constants}
+
+For \(\rhohu_H\) take \(L_2=\sqrt{2/\pi}/H\) and
+\(L_3=\sqrt{2/\pi}\,\ex^{-1/2}/H^2\). The two geometric sums for the score give
+\[
+ s_p=\frac{C_B C_\alpha^p}{\lambda(1-\hband^{-p})},\qquad
+ A=\sqrt2\,s_{1/2}+2s_1/3 .
+\]
+In \eqref{irmfproof:eq:recursion}, the one-fit displacement uses
+\(\ell=2(\sqrt2+2/3)/\lambda\) and the curvature fluctuation uses
+\(\nu=(\sqrt2+1/3)L_2/\lambda\).
+Set \(r=C_\alpha/\hband\) and choose any
+\(d<\delta<(\hband-1)/(C_B C_\alpha)\). The recursion and cutoff use
+\begin{equation}\label{irmfproof:eq:cutoff}
+ \begin{aligned}
+ C&=\frac{\lambda s_1}{1-C_B C_\alpha\delta/(\hband-1)}
+    \left[P(2A\sqrt r)+\frac{2L_2}{\lambda}
+       (s_1 r+32\ex\,s_{1/2}\sqrt r)\right],\\
+ \sqrt\eta&=\min\left\{1,\frac{1}{4\nu},\frac{\lambda}{4L_3\ell},
+                \frac{\delta-d}{\nu},\frac{A}{C}\right\}.
+ \end{aligned}
+\end{equation}
 
 \paragraph{The off-diagonal sum.}
-For independent coordinates and kernels centered in each argument with
-\(|h_{uv}|\le H_{uv}\), write \(S=\sum_{u\ne v}h_{uv}(\eps_u,\eps_v)\).
-Split the indices by independent fair coins into
-\(I\) and \(I^c\). Each ordered pair crosses from \(I\) to \(I^c\) with
-probability \(1/4\), so for even \(p\ge2\), Jensen's inequality bounds the full \(L^p\) norm by four times
-the largest cross-sum norm. For a fixed split, condition on the observations
-in \(I\) and symmetrize over \(I^c\). Then condition on the observations in
-\(I^c\) and their signs and symmetrize over \(I\). Separate centering
-justifies each step, at a cost of two each. Apply the Rademacher moment
-bound \(\|\sum_i r_i a_i\|_{L^p}\le\sqrt p\,\|a\|_2\) to the two sets of
-signs, using the triangle inequality in \(L^{p/2}\) between applications.
-Hence \(\|S\|_{L^p}\) is at most \(16p(\sum H_{uv}^2)^{1/2}\).
-Taking \(p=2\lceil z/2\rceil\le2z\) and applying Markov's inequality at
-\(\ex\) times this norm gives failure probability at most \(\ex^{-z}\) for the claimed bound.
+Write \(S=\sum_{u\ne v}h_{uv}(\eps_u,\eps_v)\) for a sum over independent
+coordinates, with each kernel centered in both arguments and bounded in magnitude by \(H_{uv}\).
+Split the indices by independent fair coins into \(I\) and
+\(I^c\). An ordered pair crosses from \(I\) to \(I^c\) with probability
+\(1/4\), so Jensen's inequality bounds \(\|S\|_{L^p}\) by four times the
+largest cross-sum norm. For a fixed split, condition on the observations
+in \(I\) and symmetrize over \(I^c\). Then condition on those in \(I^c\)
+and their signs and symmetrize over \(I\). Separate centering justifies
+each step, at a cost of two each. For even \(p\ge2\) the Rademacher moment
+bound \(\|\sum_i r_i a_i\|_{L^p}\le\sqrt p\,\|a\|_2\) applies to each
+set of signs. The triangle inequality in \(L^{p/2}\) between applications
+gives \(\|S\|_{L^p}\le16p(\sum H_{uv}^2)^{1/2}\).
+With \(p=2\lceil z/2\rceil\le2z\), Markov's inequality gives
+\(|S|\le32\ex z(\sum H_{uv}^2)^{1/2}\) except with probability \(\ex^{-z}\).
