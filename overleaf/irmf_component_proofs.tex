@@ -1,0 +1,692 @@
+% In IRMF.tex, immediately after \input{IMF}, add \input{irmf_component_proofs}.
+% The finite-grid statement below supplies the missing first-component bound.
+% For the score convention in IMF.tex, its remainder subtracts F_t^{-1} nabla_t.
+% This fragment uses the definitions and theorem environments of that manuscript.
+\section{Finite-sample bounds for the IRMF components}
+\label{irmfproof:section}
+
+We bound the error of the local contrast fit on the finite observation grid
+\(\mathcal T_n\), of size \(n\). The locations, signal and bandwidths are
+deterministic. The observations satisfy \(\Data_u=\Signal_u+\eps_u\)
+with independent identically distributed errors and \(\E|\eps_u|<\infty\).
+All kernels are nonnegative with positive row sums. We start with the
+single fit in \eqref{miuygtd5r6wguwhd7r54we}. Each subsequent fit uses
+the residuals in \eqref{ifvkekmuyt55tjnuejdd}.
+
+\subsection{The first component}
+\label{irmfproof:first}
+Let \(\rhohu\) be convex, coercive and three times continuously
+differentiable, with \(|\rhohu'|\le L_1\), \(0\le\rhohu''\le L_2\)
+and \(|\rhohu'''|\le L_3\). Write \(h=h_1\),
+\(N_h(t)=\sum_u\Kern_h(t-u)\),
+\(Q_t^2=\sum_u\Kern_h(t-u)^2\), and \(\kappa_t=\max_u\Kern_h(t-u)\).
+Use \(\rhohum(x)=\E\rhohu(x+\eps)\). At the first population fit,
+the curvature, its square root and the centered score are
+\begin{align*}
+ \IF_t &= \sum_u \rhohum''(\Signal_u-\IMFs_t)\Kern_h(t-u),
+ &\DFN_t&=\sqrt{\IF_t},\\
+ \nabla_t&=\sum_u\{\rhohu'(\Data_u-\IMFs_t)
+                 -\E\rhohu'(\Data_u-\IMFs_t)\}\Kern_h(t-u).
+\end{align*}
+Assume \(\DFN_{\min}=\min_t\DFN_t>0\). For \(\xx>0\), set
+\(z_1=\xx+\log(4n)\) and
+\begin{align*}
+ \CONSTi_1&=\max_t\frac{L_1}{\DFN_t}
+       \bigl(Q_t\sqrt{2z_1}+2\kappa_t z_1/3\bigr),\\
+ \CONSTi_2&=\max_t\frac{L_2}{\DFN_t}
+       \bigl(Q_t\sqrt{2z_1}+\kappa_t z_1/3\bigr),&
+ \CONSTi_3&=\max_t\frac{L_3N_h(t)}{\DFN_t^2}.
+\end{align*}
+
+\begin{proposition}\label{irmfproof:first-bound}
+Put \(\dltw_*=\CONSTi_2/\DFN_{\min}\).
+If \(\dltw_*<1\) and
+\(\CONSTi_1\CONSTi_3/[\DFN_{\min}(1-\dltw_*)^2]<4/9\),
+then, on a set \(\Omega(\xx)\) of probability at least \(1-\ex^{-\xx}\),
+\begin{equation}
+ \max_{t\in\mathcal T_n}\DFN_t
+   \bigl|\IMFt_t-\IMFs_t-\IF_t^{-1}\nabla_t\bigr|
+ \le \frac{1}{\DFN_{\min}}
+   \left\{\frac{\CONSTi_1\CONSTi_2}{1-\dltw_*}
+   +\frac{9\CONSTi_1^2\CONSTi_3}{8(1-\dltw_*)^3}\right\}.
+ \label{irmfproof:first-expansion}
+\end{equation}
+On this set, \(\max_t\DFN_t|\IMFt_t-\IMFs_t|
+ \le 3\CONSTi_1/[2(1-\dltw_*)]\).
+\end{proposition}
+
+\begin{proof}
+Fix \(t\) and use \(\fs,\fp\) from \eqref{fjiuy9iw3ojlggeefr}, so
+\(\xs=\IMFs_t\), \(\xp=\IMFt_t\), and \(\IFP=\fp''(\xs)\).
+Bounded derivatives justify differentiation under the expectation.
+Since \(\fs'(\xs)=0\), differentiating with respect to the fitted location
+gives \(\fp'(\xs)=-\nabla_t\). This fixes the sign of the linear term in
+\eqref{irmfproof:first-expansion}.
+
+For the centered score summands, the maximum absolute size and sum of
+variances are bounded by \(2L_1\kappa_t\) and \(L_1^2 Q_t^2\). For the
+centered curvature they are bounded by \(L_2\kappa_t\) and \(L_2^2Q_t^2\).
+Two applications of Bernstein's inequality and a union bound over \(t\)
+give an exceptional probability at most \(4n\ex^{-z_1}=\ex^{-\xx}\).
+Thus \(|\fp'(\xs)|/\DFN_t\le\CONSTi_1\) and
+\(|\IFP-\IF_t|/\DFN_t\le\CONSTi_2\) on \(\Omega(\xx)\).
+These are the scaled bounds in part (i) of Lemma~\ref{LRMFloc}.
+For its remaining parts, \(\sup_y|\fp'''(y)|/\DFN_t^2\le\CONSTi_3\),
+and the same bound on \(\fs'''\) gives
+\(|\fs''(y)-\fs''(\xs)|/\DFN_t^2\le\CONSTi_3 r/\DFN_t\)
+whenever \(\DFN_t|y-\xs|\le r\).
+
+Write \(g(v)=\fp(\xs+v/\DFN_t)\), \(c=g''(0)=\IFP/\IF_t
+\ge1-\dltw_*\), and \(\biasp=|g'(0)|/c\le\CONSTi_1/(1-\dltw_*)\).
+Taylor's inequality gives
+\[
+ |g'(v)-g'(0)-cv|\le \tfrac12\tau v^2,\qquad
+ \tau=\CONSTi_3/\DFN_t,\qquad \tau\biasp/c<4/9.
+\]
+If \(\biasp=0\), the unique minimizer is \(v=0\). Otherwise, at
+\(r=3\biasp/2\), \(g'(r)\ge c\biasp/2-9\tau\biasp^2/8>0\)
+and \(g'(-r)\le-c\biasp/2+9\tau\biasp^2/8<0\).
+Also \(g''(v)\ge c-\tau r>0\) for \(|v|\le r\).
+Convexity therefore gives a unique minimizer
+\(v_\circ=\DFN_t(\xp-\xs)\) with \(|v_\circ|\le3\biasp/2\).
+Expanding \(g'(v_\circ)=0\) bounds
+\(|v_\circ+g'(0)/c|\le9\tau\biasp^2/(8c)\).
+Finally,
+\[
+ \DFN_t|\IFP^{-1}-\IF_t^{-1}|\,|\nabla_t|
+ \le \frac{\CONSTi_1\CONSTi_2}{\DFN_t(1-\dltw_*)}.
+\]
+Adding the two errors and taking the maximum proves the proposition.
+\end{proof}
+
+\begingroup
+\newcommand{\irmfproofnorm}[1]{\lVert#1\rVert}
+
+\subsection{The recursive fits}
+\label{irmfproof:sec:recursive}
+Take \(\rhohu=\rhohu_H\) as in Lemma~\ref{Lrhohu}. This loss satisfies
+\[
+ |\rhohu'|\le1,\qquad 0<\rhohu''\le L_2,\qquad |\rhohu'''|\le L_3,\qquad
+ L_2=\sqrt{2/\pi}/H,\quad L_3=\sqrt{2/\pi}\,\ex^{-1/2}/H^2.
+\]
+The row weights of the kernel matrix in \eqref{dfikkj3ujvyhwedrgg} are
+\[
+ \KS_{tu}^{(k)}=\Kern_{h_k}(t-u)/N_k(t),\qquad
+ N_k(t)=\sum_u\Kern_{h_k}(t-u),\qquad
+ \alpha_k=\max_{t,u}\KS_{tu}^{(k)} .
+\]
+Normalizing a row leaves its minimizer unchanged. Denote the vector of
+local fits at bandwidth \(h_k\) by \(\mathcal M_k(y)\), so that
+\[
+ \mathcal M_k(y)_t=\arginf_s\sum_u\KS_{tu}^{(k)}\rhohu(y_u-s),
+ \qquad \IMFt^{(k)}=\mathcal M_k(\Data^{(k)}).
+\]
+The true IMF \(\IMFs^{(k)}\) uses the law of the actual residual
+\(\Data_u^{(k)}=\Signal_u^{(k)}+\eps_u^{(k)}\);
+its expected contrast is \(\rhohum_k(\Signal_u^{(k)}-s,u)\).
+To handle dependence in \(\eps^{(k)}\), introduce an auxiliary deterministic
+path, indicated by a subscript \(\rhohum\). It uses the original noise
+law \(\rhohum(x)=\E\rhohu(x+\eps)\) at every stage.
+\begin{align*}
+ \Signal_{\rhohum}^{(1)}&=\Signal,&
+ \IMFs_{\rhohum,t}^{(k)}
+   &=\arginf_s\sum_u\KS_{tu}^{(k)}
+              \rhohum(\Signal_{\rhohum,u}^{(k)}-s),\\
+ \Signal_{\rhohum}^{(k+1)}&=\Signal_{\rhohum}^{(k)}-\IMFs_{\rhohum}^{(k)}.
+\end{align*}
+Bounded derivatives justify the population score equations. Each score decreases strictly from \(1\) to \(-1\) as the fitted location increases. Its unique zero defines the fit. At stage one
+\(\IMFs_{\rhohum,t}^{(1)}=\IMFs_t\). After the first subtraction the actual
+and auxiliary residuals generally have different laws.
+For \(c_{tu}^{(k)}=\Signal_{\rhohum,u}^{(k)}-\IMFs_{\rhohum,t}^{(k)}\), define
+\begin{align*}
+ g_{ktu}(\eps_u)&=\rhohu''(c_{tu}^{(k)}+\eps_u),&
+ f_{kt}&=\sum_u \KS_{tu}^{(k)}\E g_{ktu},\\
+ q_{kt}&=\sum_u \KS_{tu}^{(k)}\rhohu'(c_{tu}^{(k)}+\eps_u),&
+ b_{kt}&=q_{kt}/f_{kt},&
+ V_k[t,u]&=\KS_{tu}^{(k)}\E g_{ktu}/f_{kt}.
+\end{align*}
+The population score equation gives \(\E q_{kt}=0\). In particular,
+\(q_{1t}=\nabla_t/N_1(t)\) and \(f_{1t}=\IF_t/N_1(t)\).
+Thus \(b_{1t}=\IF_t^{-1}\nabla_t\), exactly the term in
+\eqref{irmfproof:first-expansion}.
+Every \(V_k\) is deterministic and row stochastic. We impose a lower bound
+on the curvature, a geometric schedule
+for the weights, and a stability bound for all consecutive residual
+operators. In formulas,
+\begin{align}
+ f_{kt}&\ge\lambda>0,\label{irmfproof:eq:curvature}\\
+ \alpha_j&\le C_\alpha\alpha_k \hband^{-(k-j)}
+       \quad(j\le k),\qquad \hband>1,\quad C_\alpha\ge1,\label{irmfproof:eq:schedule}\\
+ \irmfproofnorm{B_{m:l}}_\infty&\le C_B\quad
+       (1\le l\le m\le k_{\max}),\qquad C_B\ge1,\label{irmfproof:eq:products}\\
+ B_{m:l}&=(\Id-V_m)\cdots(\Id-V_l),\qquad B_{m:l}=\Id\quad(m<l).\notag
+\end{align}
+Here the matrix norm is the maximum absolute row sum. This product measures
+how much a perturbation introduced at stage \(l\) can grow by stage \(m\).
+
+We also assume the following bound on the variation of single-observation curvature.
+\begin{equation}
+ d:=\max_{k,t}\frac{\sum_u \KS_{tu}^{(k)}
+                \E|g_{ktu}-\E g_{ktu}|}{f_{kt}}
+       <\frac{\hband-1}{C_BC_\alpha}.
+ \label{irmfproof:eq:dispersion}
+\end{equation}
+The numerator averages the mean absolute curvature deviation over the window.
+The denominator is the mean curvature of the whole
+fit. The upper limit ensures that the coefficient of the accumulated
+remainder in the induction is less than one.
+
+Write \(\bar\alpha=\max_{j\le k_{\max}}\alpha_j\), \(z_0=\log(10n k_{\max})\),
+\(z=z_0+\xx\), and \(r=C_\alpha/\hband\).
+To compute the linear approximation, start with \(\Lambda_1=0\) and set
+\begin{equation}
+ \mathcal L_k=b_k-V_k\Lambda_k,\qquad
+ \Lambda_{k+1}=\Lambda_k+\mathcal L_k. \label{irmfproof:eq:lambda}
+\end{equation}
+For example, \(\mathcal L_1=b_1\) and \(\mathcal L_2=b_2-V_2b_1\).
+The subtracted term is the part of the first score that reaches the second fit.
+\begin{theorem}[Simultaneous component bounds]\label{irmfproof:thm:main}
+Assume \eqref{irmfproof:eq:curvature}--\eqref{irmfproof:eq:dispersion}.
+Let \(\xx>0\) satisfy \(z\bar\alpha\le\eta\), with
+\(A_\Lambda,C_{\Theta},\eta>0\) specified in Section~\ref{irmfproof:app:constants}.
+With probability at least \(1-\ex^{-\xx}\), for every \(1\le k\le k_{\max}\),
+\begin{align}
+ \irmfproofnorm{\mathcal L_k}_\infty &\le A_\Lambda\sqrt{z\alpha_k}, \label{irmfproof:eq:L-bound}\\
+ \irmfproofnorm{\IMFt^{(k)}-\IMFs_{\rhohum}^{(k)}-\mathcal L_k}_\infty
+       &\le C_{\Theta}(1+r)z\alpha_k, \label{irmfproof:eq:expansion}\\
+ \irmfproofnorm{\IMFt^{(k)}-\IMFs_{\rhohum}^{(k)}}_\infty
+       &\le A_\Lambda\sqrt{z\alpha_k}+C_{\Theta}(1+r)z\alpha_k. \label{irmfproof:eq:main}
+\end{align}
+\end{theorem}
+For a window with \(m_k\) equal weights, \(\alpha_k=1/m_k\).
+The leading term then scales as \(\sqrt{z/m_k}\) and the error of the
+linear approximation as \(z/m_k\). Both bounds hold for the same draw
+of the original noise. The constants are common to all stages. Across a
+sequence of designs they are uniform when the formulas in
+Section~\ref{irmfproof:app:constants} give bounded error constants and a common
+positive lower bound on \(\eta\).
+
+\subsection{The population fits to the actual residuals}\label{irmfproof:sec:targets}
+Assume now \(\mu_4=\E|\eps_1|^4<\infty\). With the row weights defined above, the true IMF satisfies
+\[
+ \IMFs_t^{(k)}
+       =\arginf_s\sum_u \KS_{tu}^{(k)}\E\rhohu(\Data_u^{(k)}-s).
+\]
+Let \(m_\rhohu\) be the unique root of
+\(\E\rhohu'(\eps_1-m_\rhohu)=0\).
+By the end of the preceding stage the random fits have shifted each
+observation. The expected score at \(\IMFs_{\rhohum}^{(k)}\) measures the bias
+introduced by this shift. The quantity \(\beta_k\) below bounds that score.
+
+Suppose
+\[
+ \xx_*=\eta/\bar\alpha-z_0>0,\qquad
+ M_4=2^{k_{\max}+1}\{\irmfproofnorm{\Signal}_\infty+(n\mu_4)^{1/4}+|m_\rhohu|\}.
+\]
+The cutoff \(\xx_*\) is the largest confidence parameter allowed by the
+finest-scale condition. For \(k\ge2\), use \(A=2A_\Lambda\) and the
+constant \(G_\infty\) of Section~\ref{irmfproof:app:constants} to set
+\begin{align}
+ U_k&=C_{\Theta}\alpha_{k-1}(z_0+1)
+       +(M_4+C_B k_{\max}/\lambda)\ex^{-\xx_*/2},\label{irmfproof:eq:U}\\
+ T_k&=A^2\alpha_{k-1}(z_0+1)+M_4^2\ex^{-\xx_*/2},\label{irmfproof:eq:Vmom}\\
+ \beta_k&=L_2G_\infty\alpha_{k-1}
+                  +L_2U_k+(L_3/2)T_k.\label{irmfproof:eq:beta}
+\end{align}
+Here \(U_k\) bounds the expected accumulated linearization error and
+\(T_k\) bounds the second moment of the accumulated component error. The proof in Section~\ref{irmfproof:sec:targetproof} shows why the bias has no term of order \(\sqrt{\alpha_{k-1}}\) when the tail terms are small.
+
+\begin{proposition}[Deterministic target correction]\label{irmfproof:prop:targets}
+Assume \eqref{irmfproof:eq:curvature}--\eqref{irmfproof:eq:dispersion}, \(\mu_4<\infty\) and
+\(\xx_*>0\). At any stage \(2\le k\le k_{\max}\) satisfying
+\begin{equation}
+ L_3\sqrt{T_k}\le\lambda/4,\qquad
+ \beta_k\le\lambda^2/(8L_3),\label{irmfproof:eq:target-smallness}
+\end{equation}
+we have
+\[
+ \irmfproofnorm{\IMFs^{(k)}-\IMFs_{\rhohum}^{(k)}}_\infty
+       \le2\beta_k/\lambda.
+\]
+At \(k=1\) the two targets coincide.
+\end{proposition}
+\begin{corollary}[Simultaneous bounds for the residual-law targets]\label{irmfproof:cor:population}
+Suppose the hypotheses of Theorem~\ref{irmfproof:thm:main} hold at \(\xx\), the noise has a finite
+fourth moment and \eqref{irmfproof:eq:target-smallness} holds at each \(2\le k\le k_{\max}\).
+Then, with
+probability at least \(1-\ex^{-\xx}\), for all \(k\le k_{\max}\),
+\[
+ \irmfproofnorm{\IMFt^{(k)}-\IMFs^{(k)}}_\infty
+ \le A_\Lambda\sqrt{z\alpha_k}+C_{\Theta}(1+r)z\alpha_k+2\beta_k/\lambda,
+\]
+where \(\beta_1=0\).
+In particular, suppose both tail terms in \eqref{irmfproof:eq:U}--\eqref{irmfproof:eq:Vmom}
+are at most \(\alpha_{\min}:=\min_j\alpha_j\). Define
+\[
+ B_{\rm tar}=L_2G_\infty+L_2C_{\Theta}+(L_3/2)A^2+L_2+L_3/2.
+\]
+Then for \(k\ge2\), \(\beta_k\le B_{\rm tar}(z_0+1)\alpha_{k-1}\).
+Since \(z_0+1\le2z\), the bound becomes
+\[
+ \boxed{
+ \irmfproofnorm{\IMFt^{(k)}-\IMFs^{(k)}}_\infty
+ \le A_\Lambda\sqrt{z\alpha_k}
+     +\left\{C_{\Theta}(1+r)+\frac{4rB_{\rm tar}}{\lambda}\right\}z\alpha_k
+ }
+\]
+simultaneously over every stage and evaluation point.
+For \(\alpha_k\asymp(nh_k)^{-1}\), this is the claimed
+\(\sqrt{z/(nh_k)}+z/(nh_k)\) rate with constants independent of the stage.
+\end{corollary}
+\begin{proof}
+Use the triangle inequality and the preceding proposition.
+The extra tail assumption and \(\alpha_{\min}\le\alpha_{k-1}\) give the
+stated \(\beta_k\) bound directly. Apply
+\(\alpha_{k-1}\le r\alpha_k\). At stage one the target correction is zero.
+\end{proof}
+
+\subsection{Proof of Theorem~\ref{irmfproof:thm:main}}
+The proof follows the noise from one fit to the next. First we expand
+the recursion around the fixed-noise path. The random curvature in this
+expansion multiplies an error that depends on the same observations.
+Centering by observation makes its leading contribution quadratic.
+The remaining contribution involves the accumulated remainder itself.
+The strict dispersion bound makes its coefficient smaller than one.
+\paragraph{How an error reaches the next fit}
+Set
+\[
+ e_k=\IMFt^{(k)}-\IMFs_{\rhohum}^{(k)},\quad
+ E_k=\sum_{j<k}e_j,\quad
+ R_k=\mathcal M_k(\Signal_{\rhohum}^{(k)}+\eps)-\IMFs_{\rhohum}^{(k)}-b_k,
+\]
+and
+\[
+ \Phi_k=\mathcal M_k(\Signal_{\rhohum}^{(k)}+\eps)
+              -\mathcal M_k(\Data^{(k)})-V_kE_k.
+\]
+Then \(\Data^{(k)}=\Signal_{\rhohum}^{(k)}+\eps-E_k\) and
+\begin{equation}
+ E_{k+1}=(\Id-V_k)E_k+b_k+R_k-\Phi_k. \label{irmfproof:eq:recursion}
+\end{equation}
+Subtract \eqref{irmfproof:eq:lambda} from \eqref{irmfproof:eq:recursion}. The accumulated
+linearization error \(\Theta_k=E_k-\Lambda_k\) starts at zero, and
+\(e_k-\mathcal L_k=\Theta_{k+1}-\Theta_k\). Iteration gives
+\begin{equation}
+ \Lambda_k=\sum_{j<k}B_{k-1:j+1}b_j,\qquad
+ \Theta_k=\sum_{j<k}B_{k-1:j+1}(R_j-\Phi_j).
+ \label{irmfproof:eq:unroll}
+\end{equation}
+All stages use the same original noise vector. Independence is used only
+across its coordinates.
+
+\paragraph{One event for all observations and stages}
+The operator of centered curvature fluctuations is
+\[
+ Z_k[t,u]=\frac{\KS_{tu}^{(k)}}{f_{kt}}(g_{ktu}-\E g_{ktu}).
+\]
+The matrix \(Z_k\) and the vector \(\Lambda_k\) depend on the same
+observations. Their product is the term that requires a quadratic bound.
+All constants below are collected in Section~\ref{irmfproof:app:constants}.
+
+\begin{lemma}\label{irmfproof:lem:event}
+If \(z\bar\alpha\le1\), where \(\bar\alpha=\max_k\alpha_k\), there is
+one event of probability at least \(1-\ex^{-\xx}\) on which all the following
+bounds hold simultaneously:
+\begin{align}
+ |q_{kt}|&\le c_u\sqrt{z\alpha_k},\notag\\
+ \left|\sum_u \KS_{tu}^{(k)}g_{ktu}-f_{kt}\right|
+       &\le L_2c_v\sqrt{z\alpha_k},\label{irmfproof:eq:score-hess}\\
+ \irmfproofnorm{Z_k}_\infty&\le d+b_0c_v\sqrt{z\alpha_k},\label{irmfproof:eq:Znorm}\\
+ \irmfproofnorm{\Lambda_k}_\infty&\le A_\Lambda\sqrt{z\alpha_{k-1}},
+       \quad k=2,\ldots,k_{\max}+1,\label{irmfproof:eq:Lambda-bound}\\
+ \irmfproofnorm{Z_k\Lambda_k}_\infty
+   &\le b_0G_\infty\alpha_{k-1}
+          +32\ex\,b_0G_2 z\sqrt{\alpha_k\alpha_{k-1}},
+          \quad k\ge2.\label{irmfproof:eq:ZLambda}
+\end{align}
+The leading component also satisfies \eqref{irmfproof:eq:L-bound} on this event.
+\end{lemma}
+\begin{proof}
+The score and curvature estimates follow from two-sided Bernstein bounds
+using \(\sum_u(\KS_{tu}^{(k)})^2\le\alpha_k\), centered summand bounds
+\(2\KS_{tu}^{(k)}\) and \(L_2\KS_{tu}^{(k)}\), and variance proxies
+\(\alpha_k\) and \(L_2^2\alpha_k\). Their union costs at most
+\(4n k_{\max}\ex^{-z}\). For \eqref{irmfproof:eq:Znorm}, apply the one-sided bound to the
+independent variables \(|g_{ktu}-\E g_{ktu}|/f_{kt}\in[0,b_0]\).
+Their mean weighted sum is at most \(d\), and the union costs \(n k_{\max}\ex^{-z}\).
+
+Keep both terms of the score Bernstein bound before simplifying
+\eqref{irmfproof:eq:score-hess}. On the very same event,
+\[
+ \irmfproofnorm{b_j}_\infty\le\lambda^{-1}
+ \{\sqrt{2z\alpha_j}+(2/3)z\alpha_j\}.
+\]
+In \eqref{irmfproof:eq:unroll}, each transfer matrix multiplying \(b_j\) has norm
+at most \(C_B\). The same holds for \(\mathcal L_k\), whose matrices are
+\(\Id\) at \(j=k\) and \(-V_kB_{k-1:j+1}\) at \(j<k\).
+For a sum ending at stage \(m\), \eqref{irmfproof:eq:schedule} gives
+\(\sum_{j\le m}\sqrt{\alpha_j}\le s_2\sqrt{\alpha_m}\) and
+\(\sum_{j\le m}\alpha_j\le s_1\alpha_m\).
+Since \(z\alpha_m\le1\), summing the score bound gives
+\(A_\Lambda\sqrt{z\alpha_m}\). Taking \(m=k-1\) or \(m=k\)
+proves \eqref{irmfproof:eq:Lambda-bound} and \eqref{irmfproof:eq:L-bound}, respectively.
+
+For the product bound, index the score by its original observation.
+Let \(\xi_{jsv}=\rhohu'(c_{sv}^{(j)}+\eps_v)
+-\E\rhohu'(c_{sv}^{(j)}+\eps_v)\). Centering the summands of
+\(q_{js}\) leaves their weighted sum unchanged, since \(\E q_{js}=0\).
+Thus the contribution of observation \(v\) to \(\Lambda_k(u)\) is
+\[
+ \gamma_{uv}^{(k)}(\eps_v)=
+   \sum_{j<k}\sum_s B_{k-1:j+1}[u,s]\,
+       \frac{\KS_{sv}^{(j)}}{f_{js}}\,\xi_{jsv}.
+\]
+In particular,
+\[
+ \Lambda_k(u)=\sum_v\gamma_{uv}^{(k)}(\eps_v),\qquad
+ \E\gamma_{uv}^{(k)}=0,\qquad
+ |\gamma_{uv}^{(k)}|\le\Gamma_{uv}^{(k)},
+\]
+where a valid deterministic envelope is
+\[
+ \Gamma_{uv}^{(k)}
+ =\frac2\lambda\sum_{j<k}\sum_s
+       |B_{k-1:j+1}[u,s]|\KS_{sv}^{(j)}.
+\]
+Minkowski's inequality and \eqref{irmfproof:eq:schedule} give
+\[
+ \max_{u,v}\Gamma_{uv}^{(k)}\le G_\infty\alpha_{k-1},\qquad
+ \max_u\left(\sum_v(\Gamma_{uv}^{(k)})^2\right)^{1/2}
+       \le G_2\sqrt{\alpha_{k-1}}.
+\]
+For fixed \(k,t\), expand \( (Z_k\Lambda_k)_t
+=\sum_{u,v}Z_k[t,u]\gamma_{uv}^{(k)}(\eps_v)\).
+The diagonal is bounded in absolute value by
+\(b_0G_\infty\alpha_{k-1}\).
+Off the diagonal the terms are centered in each independent argument.
+Their envelopes \(b_0\KS_{tu}^{(k)}\Gamma_{uv}^{(k)}\) have squared sum at
+most \(b_0^2G_2^2\alpha_k\alpha_{k-1}\).
+Lemma~\ref{irmfproof:lem:chaos} and a union bound cost at most \(n k_{\max}\ex^{-z}\).
+The total failure probability is at most \(6n k_{\max}\ex^{-z}\le\ex^{-\xx}\).
+\end{proof}
+
+\paragraph{Propagation through one fitted location}
+\begin{lemma}\label{irmfproof:lem:propagation}
+Suppose \eqref{irmfproof:eq:score-hess} holds and
+\[
+ L_2c_v\sqrt{z\alpha_k}\le\lambda/4,\qquad
+ c_u\sqrt{z\alpha_k}\le\lambda^2/(8L_3).
+\]
+Then \(\irmfproofnorm{R_k}_\infty\le A_Rz\alpha_k\). Furthermore, for every
+realized \(E_k\), with \(\Theta_k=E_k-\Lambda_k\),
+\begin{align}
+ \irmfproofnorm{\Phi_k}_\infty
+ \le {}&\frac{4L_3}{\lambda}\irmfproofnorm{E_k}_\infty^2
+       +C_{\rm loc}\sqrt{z\alpha_k}\irmfproofnorm{E_k}_\infty \notag\\
+      &+\irmfproofnorm{Z_k\Lambda_k}_\infty
+       +\irmfproofnorm{Z_k}_\infty\irmfproofnorm{\Theta_k}_\infty .
+ \label{irmfproof:eq:propagation}
+\end{align}
+No independence between \(E_k\) and the noise is assumed.
+\end{lemma}
+\begin{proof}
+Fix a row and let \(y=\Signal_{\rhohum}^{(k)}+\eps\).
+At the population target the empirical curvature differs from \(f_{kt}\)
+by at most \(v=L_2c_v\sqrt{z\alpha_k}\), and the absolute score is at most
+\(s_0=c_u\sqrt{z\alpha_k}\).
+Within distance \(2s_0/\lambda\), the curvature is at least
+\(\lambda-v-2L_3s_0/\lambda\ge\lambda/2\).
+The empirical score therefore has its zero in this interval.
+If its displacement is \(h\), Taylor's formula yields
+\[
+ |h-q_{kt}/f_{kt}|
+ \le\frac{v|h|+L_3h^2/2}{\lambda}
+ \le\frac{2s_0v}{\lambda^2}+\frac{2L_3s_0^2}{\lambda^3}
+ \le A_Rz\alpha_k .
+\]
+
+Strict positivity of the fitted curvature allows implicit differentiation
+of the score equation. At an input \(w\) the Jacobian has entries
+\[
+ J(w)[t,u]=
+ \frac{\KS_{tu}^{(k)}\rhohu''(w_u-\mathcal M_k(w)_t)}
+      {\sum_v \KS_{tv}^{(k)}\rhohu''(w_v-\mathcal M_k(w)_t)}.
+\]
+Each row is nonnegative with sum one. Integrating the Jacobian along
+the line between any two inputs shows that the fit is \(1\)-Lipschitz in
+the sup norm. For nonnegative vectors \(p,q\) of
+positive mass,
+\begin{equation}
+ \left\|\frac p{\sum p}-\frac q{\sum q}\right\|_1
+       \le\frac{2\|p-q\|_1}{\sum q}.
+ \label{irmfproof:eq:normalization}
+\end{equation}
+This follows by adding and subtracting \(p/\sum q\).
+
+The empirical curvature at the single-pass fit is at least \(\lambda/2\).
+Let \(J(s)=J(y-sE_k)\). The Lipschitz property gives
+\[
+ |(y_u-sE_k(u)-\mathcal M_k(y-sE_k)_t)
+       -(y_u-\mathcal M_k(y)_t)|
+       \le2s\irmfproofnorm{E_k}_\infty .
+\]
+Apply \eqref{irmfproof:eq:normalization}, using the curvature at \(s=0\) in its
+denominator, to get
+\(\irmfproofnorm{J(s)-J(0)}_\infty\le8L_3s\irmfproofnorm{E_k}_\infty/\lambda\).
+Thus the integrated quadratic error is at most
+\(4L_3\irmfproofnorm{E_k}_\infty^2/\lambda\).
+At other points on the segment, positivity suffices because the denominator
+in \eqref{irmfproof:eq:normalization} is evaluated at \(s=0\).
+
+Set \(\overline M[t,u]=\KS_{tu}^{(k)}g_{ktu}/f_{kt}=V_k[t,u]+Z_k[t,u]\).
+Write \(p_u=\KS_{tu}^{(k)}\rhohu''(y_u-\mathcal M_k(y)_t)\),
+\(p_+=\sum_u p_u\), and \(w_u=\KS_{tu}^{(k)}g_{ktu}\). The fit moves by
+at most \(2s_0/\lambda\).
+Thus \(\|p-w\|_1\le 2L_3s_0/\lambda\) and
+\(|p_+-f_{kt}|\le v+\|p-w\|_1\). Inserting \(p/f_{kt}\) between
+\(p/p_+\) and \(w/f_{kt}\) gives the row bound
+\((|p_+-f_{kt}|+\|p-w\|_1)/f_{kt}\). Taking the maximum gives
+\[
+ \irmfproofnorm{J(0)-\overline M}_\infty
+ \le\frac{v+4L_3s_0/\lambda}{\lambda}
+ \le C_{\rm loc}\sqrt{z\alpha_k}.
+\]
+Finally, the exact integral identity is
+\[
+ \Phi_k=\int_0^1(J(s)-J(0))E_k\,ds
+          +(J(0)-\overline M)E_k+Z_k\Lambda_k+Z_k\Theta_k .
+\]
+Taking norms proves \eqref{irmfproof:eq:propagation}.
+\end{proof}
+
+\paragraph{Closing the recursion}
+\begin{proof}[Proof of Theorem~\ref{irmfproof:thm:main}]
+Work on the single event in Lemma~\ref{irmfproof:lem:event}.
+Equation \eqref{irmfproof:eq:eta} ensures the single-pass conditions and
+\(\irmfproofnorm{Z_j}_\infty\le\delta\).
+Use \(q,C_{\Theta},P(A)\) from Section~\ref{irmfproof:app:constants}. The base case is \(E_1=\Lambda_1=\Theta_1=0\).
+
+Suppose \(\irmfproofnorm{\Theta_j}_\infty\le C_{\Theta}z\alpha_{j-1}\) for all \(2\le j\le k\).
+Then \eqref{irmfproof:eq:Lambda-bound} and \(C_{\Theta}\sqrt{z\bar\alpha}\le A_\Lambda\)
+give \(\irmfproofnorm{E_j}_\infty\le A\sqrt{z\alpha_{j-1}}\).
+Since \(\alpha_{j-1}\le r\alpha_j\) and \(z\ge1\), insert these bounds
+and \eqref{irmfproof:eq:ZLambda} into \eqref{irmfproof:eq:propagation} to obtain
+\[
+ \irmfproofnorm{\Phi_j}_\infty
+       \le P(A)z\alpha_j+\delta C_{\Theta}z\alpha_{j-1}.
+\]
+For \(j=1\) use \(\Phi_1=0\) and set \(\alpha_0=0\).
+Applying the partial-product bound directly in \eqref{irmfproof:eq:unroll} yields
+\begin{align*}
+ \irmfproofnorm{\Theta_{k+1}}_\infty
+ &\le C_Bz\left\{(A_R+P(A))\sum_{j=1}^k\alpha_j
+                   +\delta C_{\Theta}\sum_{j=1}^{k-1}\alpha_j\right\}\\
+ &\le\left\{C_Bs_1(A_R+P(A))
+              +\frac{C_BC_\alpha\delta}{\hband-1}C_{\Theta}\right\}z\alpha_k
+ =C_{\Theta}z\alpha_k .
+\end{align*}
+This closes the induction because \eqref{irmfproof:eq:remainder-constant} solves the displayed
+inequality with \(q<1\), while \eqref{irmfproof:eq:eta} fixed \(A\) in advance.
+It also proves the \(E\) bound at the next stage by adding \(\Lambda_{k+1}\).
+In particular the proof gives the auxiliary estimates
+\begin{align}
+ \irmfproofnorm{\Theta_{k+1}}_\infty&\le C_{\Theta}z\alpha_k,\qquad
+ \irmfproofnorm{E_{k+1}}_\infty\le A\sqrt{z\alpha_k},\label{irmfproof:eq:closed}\\
+ \irmfproofnorm{\Phi_k}_\infty&\le\{P(A)+\delta C_{\Theta}r\}z\alpha_k.\label{irmfproof:eq:Phi-final}
+\end{align}
+Finally \(Q_k=e_k-\mathcal L_k=\Theta_{k+1}-\Theta_k\), so
+\(\irmfproofnorm{Q_k}_\infty\le C_{\Theta}(1+r)z\alpha_k\); combine with
+\eqref{irmfproof:eq:L-bound}.
+\end{proof}
+
+\subsection{Proof of Proposition~\ref{irmfproof:prop:targets}}\label{irmfproof:sec:targetproof}
+\begin{proof}
+First, the high-probability estimates imply
+\begin{equation}
+ \E\irmfproofnorm{\Theta_k}_\infty\le U_k,\qquad
+ \E\irmfproofnorm{E_k}_\infty^2\le T_k.
+ \label{irmfproof:eq:moments}
+\end{equation}
+To control the exceptional event, observe that an empirical fit lies between its
+smallest and largest input. A \(\rhohum\)-fit lies between
+\(\min_u x_u+m_\rhohu\) and \(\max_u x_u+m_\rhohu\).
+Writing \(F_j=\|\Signal_{\rhohum}^{(j)}\|_\infty\) and \(N_j=\|\Data^{(j)}\|_\infty\),
+these brackets give \(F_{j+1}\le2F_j+|m_\rhohu|\) and \(N_{j+1}\le2N_j\).
+Iteration and \(E_k=\Signal_{\rhohum}^{(k)}+\eps-\Data^{(k)}\) give
+\[
+ \irmfproofnorm{E_k}_\infty
+ \le2^{k_{\max}+1}(\irmfproofnorm{\Signal}_\infty+\irmfproofnorm{\eps}_\infty+|m_\rhohu|),
+ \qquad \irmfproofnorm{\Lambda_k}_\infty\le C_B k_{\max}/\lambda.
+\]
+Since \(\E\irmfproofnorm{\eps}_\infty^4\le n\mu_4\), the \(L^4\) norm of
+the first bound is at most \(M_4\). Thus the \(L^2\) norm of
+\(\irmfproofnorm{\Theta_k}_\infty\) is at most \(M_4+C_B k_{\max}/\lambda\).
+
+Integrate the tails in \eqref{irmfproof:eq:closed} for \(0<\xx\le \xx_*\).
+For \(\Theta_k\), integration up to \(C_{\Theta}\alpha_{k-1}(z_0+\xx_*)\)
+gives at most \(C_{\Theta}\alpha_{k-1}(z_0+1)\). Beyond this threshold, the
+event is contained in the exceptional event at \(\xx_*\).
+Cauchy--Schwarz bounds its contribution by
+\((M_4+C_B k_{\max}/\lambda)\ex^{-\xx_*/2}\).
+Apply the same argument to \(\irmfproofnorm{E_k}_\infty^2\), whose \(L^2\) norm
+is at most \(M_4^2\), to obtain \eqref{irmfproof:eq:moments}.
+
+At \(\IMFs_{\rhohum,t}^{(k)}\), the population score for the actual residuals equals
+\(\sum_u \KS_{tu}^{(k)}\E\rhohu'(c_{tu}^{(k)}+\eps_u-E_k(u))\).
+Taylor expansion around \(c_{tu}^{(k)}+\eps_u\) gives
+\[
+ \left|\text{population score}\right|
+ \le\left|\sum_u \KS_{tu}^{(k)}\E[g_{ktu}\Lambda_k(u)]\right|
+       +L_2\E\irmfproofnorm{\Theta_k}_\infty
+       +(L_3/2)\E\irmfproofnorm{E_k}_\infty^2 .
+\]
+In the representation \(\Lambda_k(u)=\sum_v\gamma_{uv}^{(k)}(\eps_v)\),
+all \(v\ne u\) terms have zero expectation even after multiplication by
+\(g_{ktu}(\eps_u)\). The remaining diagonal is bounded by
+\(L_2G_\infty\alpha_{k-1}\).
+This proves the score bound \(\beta_k\), including the required
+first-order cancellation.
+
+The actual population curvature at \(\IMFs_{\rhohum,t}^{(k)}\) is at least
+\(f_{kt}-L_3\E\irmfproofnorm{E_k}_\infty\ge3\lambda/4\) by
+\eqref{irmfproof:eq:target-smallness} and Jensen's inequality.
+Within distance \(2\beta_k/\lambda\) it is at least \(\lambda/2\).
+The score is decreasing and its derivative there is at most
+\(-\lambda/2\). Since its absolute value at the center is at most
+\(\beta_k\), its unique zero lies within \(2\beta_k/\lambda\).
+At \(k=1\), \(E_1=0\) and the two population score equations coincide.
+\end{proof}
+
+\subsection{Constants and the finest-scale threshold}\label{irmfproof:app:constants}
+Define
+\[
+ c_u=\sqrt2+2/3,\qquad c_v=\sqrt2+1/3,\qquad b_0=L_2/\lambda.
+\]
+Summing the geometric weight schedule gives
+\[
+ s_1=\frac{C_\alpha}{1-\hband^{-1}},\qquad
+ s_2=\frac{\sqrt{C_\alpha}}{1-\hband^{-1/2}},\qquad r=\frac{C_\alpha}{\hband}.
+\]
+The score and curvature bounds use
+\[
+ A_\Lambda=\frac{C_B}{\lambda}(\sqrt2s_2+2s_1/3),\qquad
+ G_\infty=\frac{2C_Bs_1}{\lambda},\qquad G_2=\frac{2C_Bs_2}{\lambda}.
+\]
+The single-pass error and the change in its Jacobian use
+\[
+ A_R=\frac{2L_2c_uc_v}{\lambda^2}+\frac{2L_3c_u^2}{\lambda^3},
+ \qquad C_{\rm loc}=\frac{L_2c_v}{\lambda}+\frac{4L_3c_u}{\lambda^2}.
+\]
+Choose any fixed
+\[
+ d<\delta<\frac{\hband-1}{C_BC_\alpha},\qquad
+ q=\frac{C_BC_\alpha\delta}{\hband-1}<1,\qquad A=2A_\Lambda .
+\]
+The midpoint of the displayed interval is one possible choice of \(\delta\).
+Put
+\begin{align}
+ P(A)&=\frac{4L_3}{\lambda}A^2r+C_{\rm loc}A\sqrt r
+          +b_0G_\infty r+32\ex\,b_0G_2\sqrt r,\label{irmfproof:eq:P}\\
+ C_{\Theta}&=\frac{C_Bs_1\{A_R+P(A)\}}{1-q},\label{irmfproof:eq:remainder-constant}\\
+ \eta&=\min\left\{1,
+   \left(\frac{\lambda}{4L_2c_v}\right)^2,
+   \left(\frac{\lambda^2}{8L_3c_u}\right)^2,
+   \left(\frac{\delta-d}{b_0c_v}\right)^2,
+   \left(\frac{A_\Lambda}{C_{\Theta}}\right)^2\right\}.\label{irmfproof:eq:eta}
+\end{align}
+Every quantity here is deterministic and specified before the induction.
+
+\subsection{A moment bound for centered quadratic sums}\label{irmfproof:app:chaos}
+\begin{lemma}\label{irmfproof:lem:chaos}
+Let \(Z_1,\ldots,Z_n\) be independent. For \(u\ne v\), suppose
+\(h_{uv}(Z_u,Z_v)\) is centered in each argument separately and
+\(|h_{uv}|\le H_{uv}\), with deterministic \(H_{uv}\).
+For every even integer \(p\ge2\),
+\[
+ \left\|\sum_{u\ne v}h_{uv}(Z_u,Z_v)\right\|_{L^p}
+       \le16p\left(\sum_{u\ne v}H_{uv}^2\right)^{1/2}.
+\]
+Consequently, for \(z\ge2\), outside a set of probability at most \(\ex^{-z}\),
+\[
+ \left|\sum_{u\ne v}h_{uv}(Z_u,Z_v)\right|
+       \le32\ex\,z\left(\sum_{u\ne v}H_{uv}^2\right)^{1/2}.
+\]
+The kernels need not be symmetric or identical.
+\end{lemma}
+\begin{proof}
+Choose a random subset \(A\) by independent fair coins, independently of
+the \(Z_u\). Each ordered pair \(u\ne v\) belongs to \(A\times A^c\) with
+probability \(1/4\). Thus the full sum is four times the conditional
+average of its cross-partition sum. Jensen's inequality bounds its
+\(L^p\) norm by four times the largest \(L^p\) norm of such a sum.
+
+Fix a partition. Conditional on the variables in \(A\), symmetrize the
+independent centered contributions indexed by \(v\in A^c\). This costs
+a factor two and introduces independent Rademacher signs \(s_v\).
+Conditional on \(Z_{A^c}\) and these signs, symmetrize over \(u\in A\).
+Centering in the other argument justifies this second step, which costs
+another factor two and introduces signs \(r_u\).
+The usual symmetrization inequality follows directly by subtracting an
+independent copy, applying conditional Jensen, inserting signs into the
+symmetric differences, and applying the triangle inequality.
+
+For even \(p\), the Rademacher moment inequality
+\[
+ \left\|\sum_i r_i a_i\right\|_{L^p}
+       \le\sqrt p\left(\sum_i a_i^2\right)^{1/2}
+\]
+follows by expanding the moment and comparing even multiplicities with a
+Gaussian moment, bounded by \(p^{p/2}\).
+Apply it twice, with Minkowski's inequality in \(L^{p/2}\) between
+applications, to obtain
+\[
+ \left\|\sum_{u\in A,v\in A^c}r_us_v h_{uv}(Z_u,Z_v)
+        \right\|_{L^p(r,s)}
+ \le p\left(\sum_{u\in A,v\in A^c}|h_{uv}(Z_u,Z_v)|^2\right)^{1/2}.
+\]
+The envelope makes the right side deterministic. The factors are
+\(4\cdot2\cdot2=16\). Finally take \(p=2\lceil z/2\rceil\), so
+\(z\le p\le2z\), and apply Markov's inequality at
+\(\ex\) times the \(L^p\) bound.
+\end{proof}
+\endgroup
