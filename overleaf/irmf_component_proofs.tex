@@ -84,9 +84,19 @@ weights makes the remainder of order \(z\alpha_k\).
 
 \subsection{Returning to the true IMF}\label{irmfproof:sec:targets}
 
-At the reference fit, \eqref{irmfproof:eq:target-calibration} gives two bounds,
-\(\beta_k\) on the magnitude of the new expected score and \(T_k\) on the
-mean squared accumulated error. Assume here that \(\E|\eps_1|^4<\infty\)
+To pass from the reference component to the true population component, write
+\[
+ \IMFt^{(k)}-\IMFs^{(k)}
+ =\underbrace{\bigl(\IMFt^{(k)}-\IMFs_{\rhohum}^{(k)}\bigr)}_{\text{error relative to the reference}}
+ +\underbrace{\bigl(\IMFs_{\rhohum}^{(k)}-\IMFs^{(k)}\bigr)}_{\text{shift between population targets}} .
+\]
+Theorem~\ref{irmfproof:thm:main} controls the first term. The second is zero
+at stage one. At later stages, subtracting estimated components changes the
+residual distribution. Corollary~\ref{irmfproof:cor:population} bounds the
+resulting shift using \(\beta_k\), a bound on the true expected score magnitude
+at the reference fit, and \(T_k\), a bound on the mean squared accumulated error.
+Both are given in \eqref{irmfproof:eq:target-calibration}.
+Assume here that \(\E|\eps_1|^4<\infty\)
 and \(\log(6n k_{\max})\max_j\alpha_j<\eta\).
 
 \begin{corollary}\label{irmfproof:cor:population}
