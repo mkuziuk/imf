@@ -26,17 +26,16 @@ and third derivative, respectively. Their finite-grid values are given
 in \eqref{irmfproof:eq:first-calibration}.
 
 \begin{proposition}\label{irmfproof:first-bound}
-Suppose \(\CONSTi_2<\DFN_{\min}\). The empirical Newton step in curvature
-units is bounded, on the event below, by
-\(R=\CONSTi_1/(1-\CONSTi_2/\DFN_{\min})\).
-If \(R\CONSTi_3/(\DFN_{\min}-\CONSTi_2)<4/9\), then with probability at
-least \(1-\ex^{-\xx}\),
+Suppose \(\CONSTi_2<\DFN_{\min}\) and
+\(\DFN_{\min}\CONSTi_1\CONSTi_3/(\DFN_{\min}-\CONSTi_2)^2<4/9\).
+Then with probability at least \(1-\ex^{-\xx}\),
 \begin{equation}\label{irmfproof:first-expansion}
  \max_t\DFN_t|\IMFt_t-\IMFs_t-\IF_t^{-1}\nabla_t|
- \le \frac{R\CONSTi_2}{\DFN_{\min}}
-      +\frac{9R^2\CONSTi_3}{8(\DFN_{\min}-\CONSTi_2)} .
+ \le \frac{\CONSTi_1\CONSTi_2}{\DFN_{\min}-\CONSTi_2}
+      +\frac{9\DFN_{\min}^2\CONSTi_1^2\CONSTi_3}{8(\DFN_{\min}-\CONSTi_2)^3} .
 \end{equation}
-On the same event, \(\max_t\DFN_t|\IMFt_t-\IMFs_t|\le 3R/2\).
+On the same event,
+\(\max_t\DFN_t|\IMFt_t-\IMFs_t|\le 3\DFN_{\min}\CONSTi_1/[2(\DFN_{\min}-\CONSTi_2)]\).
 \end{proposition}
 
 \subsection{How errors enter the later fits}\label{irmfproof:sec:recursive}
@@ -127,21 +126,20 @@ at most \(4n\ex^{-z_1}\). On this event \(|\nabla_t|\le\DFN_t\CONSTi_1\) and
 \(\xs=\IMFs_t\) as in \eqref{fjiuy9iw3ojlggeefr}. The third derivatives
 of both contrasts are bounded by \(\DFN_t^2\CONSTi_3\).
 
-Fix a row. Since \(\fp'(\xs)=-\nabla_t\), the empirical Newton step is
-\(v=\nabla_t/\IFP\), with \(\DFN_t|v|\le R\).
-Taylor's inequality bounds \(|\fp'(\xs+s)-\IFP(s-v)|\) by
-\(\DFN_t^2\CONSTi_3 s^2/2\). We have
-\(\DFN_t^2\CONSTi_3|v|/\IFP\le R\CONSTi_3/(\DFN_{\min}-\CONSTi_2)<4/9\).
-Hence the score brackets zero at \(s=\pm3|v|/2\), with positive curvature
-between the endpoints. Convexity gives \(|\IMFt_t-\xs|\le3|v|/2\), also
-when \(v=0\). Using this displacement in the Taylor bound gives
-\[
- \DFN_t|\IMFt_t-\xs-v|
- \le \frac{9\DFN_t^3\CONSTi_3 v^2}{8\IFP}
- \le \frac{9R^2\CONSTi_3}{8(\DFN_{\min}-\CONSTi_2)} .
-\]
-Replacing \(v\) by \(\IF_t^{-1}\nabla_t\) costs at most
-\(R\CONSTi_2/\DFN_{\min}\) in curvature units. This proves both bounds.
+Since \(\fp'(\xs)=-\nabla_t\), the Newton step is \(v=\nabla_t/\IFP\).
+From \(\IFP\ge\DFN_t(\DFN_t-\CONSTi_2)\) we get
+\(\DFN_t|v|\le\CONSTi_1/(1-\CONSTi_2/\DFN_{\min})\).
+Taylor's inequality gives \(|\fp'(\xs+s)-\IFP(s-v)|\le\DFN_t^2\CONSTi_3 s^2/2\).
+For \(v\ne0\), the linear score at \(s=\pm3|v|/2\) has opposite signs
+and magnitude at least \(\IFP|v|/2\). Its error there is at most
+\(9\DFN_t^2\CONSTi_3 v^2/8<\IFP|v|/2\) by the \(4/9\) hypothesis.
+Thus the score brackets zero, giving \(|\IMFt_t-\xs|\le3|v|/2\) by convexity.
+This also holds for \(v=0\) since \(\IFP>0\). At the fitted zero, Taylor's bound gives
+\(\DFN_t|\IMFt_t-\xs-v|\le 9\DFN_t^3\CONSTi_3 v^2/(8\IFP)\).
+The bounds on \(\DFN_t|v|\) and \(\IFP\) give the second term of \eqref{irmfproof:first-expansion}.
+Replacing \(v\) by \(\IF_t^{-1}\nabla_t\) costs
+\(|v|\,|\IF_t-\IFP|/\DFN_t\le\CONSTi_1\CONSTi_2/(\DFN_{\min}-\CONSTi_2)\)
+in curvature units, giving the first term.
 \end{proof}
 
 \paragraph{Row formulas and window conditions for Theorem~\ref{irmfproof:thm:main}.}
