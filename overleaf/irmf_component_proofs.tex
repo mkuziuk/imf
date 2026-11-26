@@ -10,7 +10,8 @@ The \(n\) grid points, signal and bandwidths are fixed.
 We assume \(\Data_u=\Signal_u+\eps_u\) with i.i.d.\ errors of finite first
 moment and nonnegative kernel weights with positive row sums. All maxima over
 \(t\) are on this grid. We use confidence \(1-\ex^{-\xx}\), with \(\xx>0\)
-and \(z=\xx+\log(10n k_{\max})\) for the simultaneous bounds.
+and \(z=\xx+\log(6n k_{\max})\) for the simultaneous bounds.
+The factor \(6\) counts the tail bounds used at each grid point and stage.
 
 \subsection{The first component}\label{irmfproof:first}
 
@@ -87,7 +88,7 @@ weights makes the remainder of order \(z\alpha_k\).
 At the reference fit, \eqref{irmfproof:eq:target-calibration} gives two bounds,
 \(\beta_k\) on the magnitude of the new expected score and \(T_k\) on the
 mean squared accumulated error. Assume here that \(\E|\eps_1|^4<\infty\)
-and \(\log(10n k_{\max})\max_j\alpha_j<\eta\).
+and \(\log(6n k_{\max})\max_j\alpha_j<\eta\).
 
 \begin{corollary}\label{irmfproof:cor:population}
 At stage one the two population fits coincide. At any later stage where
@@ -183,10 +184,13 @@ Since \(\sum_u(\KS_{tu}^{(k)})^2\le\alpha_k\), Bernstein's inequality gives
  \|Z_k\|\le d+\nu u_k\le\delta .
 \]
 Here \(\nu\) and \(\delta\) are given in Section~\ref{irmfproof:app:constants}.
-The last estimate uses the one-sided bound on the absolute curvature deviations,
-whose values before weighting lie in \([0,L_2/\lambda]\) after division by
-\(f_{kt}\). All three estimates hold except on a set of probability
-\(5n k_{\max}\ex^{-z}\) or less. The choice of \(\eta\) makes the empirical
+For each row and stage, one-sided Bernstein gives \(\ex^{-z}\) for the
+upper tail of the centered score and \(\ex^{-z}\) for its negative.
+The centered curvature costs \(2\ex^{-z}\) for the same reason.
+For the weighted absolute deviations we need only the upper tail, costing
+\(\ex^{-z}\). Each normalized deviation lies in \([0,L_2/\lambda]\)
+and the weighted sum has mean at most \(d\).
+The choice of \(\eta\) makes the empirical
 curvature at the reference fit at least \(3\lambda/4\). It stays above
 \(\lambda/2\) within \(\ell u_k\), where
 \(\ell=2(\sqrt2+2/3)/\lambda\), since \(|\rhohu_H'''|\le L_3\).
@@ -253,8 +257,10 @@ The quadratic moment inequality proved below now gives
  \|Z_k\Lambda_k\|\le\frac{2L_2}{\lambda}
  \left(s_1\alpha_{k-1}+32\ex\,s_{1/2}z\sqrt{\alpha_k\alpha_{k-1}}\right) .
 \end{equation}
-This costs at most \(n k_{\max}\ex^{-z}\). Together the estimates fail with
-probability at most \(6n k_{\max}\ex^{-z}\le\ex^{-\xx}\).
+Markov's inequality for \(|S|^p\) bounds both signs of the off-diagonal
+sum \(S\) in one step, costing \(\ex^{-z}\) per row and stage.
+The union bound therefore gives total failure probability at most
+\((2+2+1+1)n k_{\max}\ex^{-z}=\ex^{-\xx}\).
 
 \emph{Induction.}
 Write \(r=C_\alpha/\hband\), so \(u_{j-1}^2\le r u_j^2\).
@@ -279,7 +285,7 @@ Taking the difference of two consecutive accumulated errors gives
 \end{proof}
 
 \begin{proof}[Proof of Corollary~\ref{irmfproof:cor:population}]
-Set \(z_0=\log(10n k_{\max})\) and \(\xx_*=\eta/\max_j\alpha_j-z_0\).
+Set \(z_0=\log(6n k_{\max})\) and \(\xx_*=\eta/\max_j\alpha_j-z_0\).
 The induction gives \(\|E_k-\Lambda_k\|\le C(z_0+\xx)\alpha_{k-1}\)
 and \(\|E_k\|^2\le4A^2(z_0+\xx)\alpha_{k-1}\) with probability
 \(1-\ex^{-\xx}\) or greater for \(0<\xx\le\xx_*\). To bound expectations
@@ -361,5 +367,7 @@ each step, at a cost of two each. For even \(p\ge2\) the Rademacher moment
 bound \(\|\sum_i r_i a_i\|_{L^p}\le\sqrt p\,\|a\|_2\) applies to each
 set of signs. The triangle inequality in \(L^{p/2}\) between applications
 gives \(\|S\|_{L^p}\le16p(\sum H_{uv}^2)^{1/2}\).
-With \(p=2\lceil z/2\rceil\le2z\), Markov's inequality gives
-\(|S|\le32\ex z(\sum H_{uv}^2)^{1/2}\) except with probability \(\ex^{-z}\).
+For \(p=2\lceil z/2\rceil\) we have \(z\le p\le2z\) since \(z>1\).
+Markov at \(\ex\|S\|_{L^p}\) gives
+\(|S|\le32\ex z(\sum H_{uv}^2)^{1/2}\) except with probability
+at most \(\ex^{-p}\le\ex^{-z}\).
